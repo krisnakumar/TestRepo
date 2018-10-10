@@ -1,0 +1,65 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Transform" : "AWS::Serverless-2016-10-31",
+  "Description" : "An AWS Serverless Application.", 
+   
+  "Resources" : {
+   "ReportBuilderAPI" : {
+		"Type" : "AWS::Serverless::Api",
+		"Properties" : {
+			"Name":"ReportBuilder",
+			"StageName":"dev",
+			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder.json"			 
+	  }
+	},	
+	"Login" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler::Login",
+		"FunctionName":"Login",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,		
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],			
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/login",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+	"GetEmployees" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler::GetEmployees",
+		"FunctionName":"Employees",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/employees",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    }
+	  },
+  "Outputs" : {
+   
+  }
+}
