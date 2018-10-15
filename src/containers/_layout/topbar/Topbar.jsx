@@ -9,7 +9,7 @@ import TopbarNotification from './TopbarNotification';
 import TopbarSearch from './TopbarSearch';
 import TopbarLanguage from './TopbarLanguage';
 
-const logo = `${process.env.PUBLIC_URL}/img/content_logo.png`;
+const logo = `https://d2vkqsz7y0fh3j.cloudfront.net/img/content_logo.png?v=2`;
 
 
 class Topbar extends PureComponent {

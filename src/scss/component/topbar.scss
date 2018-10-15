@@ -2,7 +2,7 @@
   width: 100%;
   // position: fixed; To remove sticky header
   top: 0;
-  height: 47px;
+  height: 50px;
   z-index: 101;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
 
@@ -21,6 +21,9 @@
       opacity: 1;
     }
   }
+}
+.topbar--navigation {
+  height: 47px !important;
 }
 
 .topbar.topbar--navigation.menu-navigation {
@@ -100,9 +103,8 @@
 }
 
 p.topbar__left-logo {
-  width: 200px;
-  margin-left: 100px;
-  margin-top: 10px;
+  // margin-left: 114px;
+  margin-left: 12%;
 }
 
 .topbar__avatar {
@@ -687,6 +689,23 @@ p.topbar__avatar-name {
       }
     }
   }
+}
+
+.theme-light .topbar .topbar__nav-dropdown-toggle {
+  color: white;
+  width: 145px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Segoe UI',Arial !important;
+}
+
+.topbar__right {
+  margin-right: 3%;
+}
+
+body {
+  font-family: 'Segoe UI',Arial !important;
+  color: #0a1631 !important;
 }
 
 .topbar__search {

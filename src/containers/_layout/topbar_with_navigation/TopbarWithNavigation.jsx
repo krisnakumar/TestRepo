@@ -27,7 +27,8 @@ export default class TopbarWithNavigation extends PureComponent {
           <div className="topbar__right">   
             <nav className="topbar__nav">
                     {
-                      Object.keys(nav_menus).map(function(key) {
+                       Object.keys(nav_menus).map(function(key) {
+                        console.log(key)
                         return (
                           <UncontrolledDropdown key={key} className="topbar__nav-dropdown">
                             <DropdownToggle className="topbar__nav-dropdown-toggle">
