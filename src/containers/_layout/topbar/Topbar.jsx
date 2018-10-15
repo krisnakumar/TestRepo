@@ -1,4 +1,3 @@
-
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';

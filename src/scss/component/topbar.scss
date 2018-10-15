@@ -1,8 +1,8 @@
 .topbar {
   width: 100%;
-  // position: fixed; TO remove sticky header
+  // position: fixed; To remove sticky header
   top: 0;
-  height: 60px;
+  height: 47px;
   z-index: 101;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
 
@@ -23,10 +23,14 @@
   }
 }
 
+.topbar.topbar--navigation.menu-navigation {
+  background: #093254;
+}
+
 .topbar__wrapper {
   position: relative;
   display: flex;
-  height: 60px;
+  height: 47px;
 }
 
 .topbar__button {
@@ -98,6 +102,7 @@
 p.topbar__left-logo {
   width: 200px;
   margin-left: 100px;
+  margin-top: 10px;
 }
 
 .topbar__avatar {
@@ -129,6 +134,10 @@ p.topbar__left-logo {
 
 .topbar__avatar-img, .topbar__avatar-name, .topbar__icon {
   margin: auto 0;
+}
+
+p.topbar__avatar-name {
+  margin: 10px 10px 5px 0px;
 }
 
 .topbar__avatar-img {
@@ -254,7 +263,7 @@ p.topbar__left-logo {
 
 .topbar__profile {
   margin-bottom: 0;
-  margin-left: 20px;
+  // margin-left: 20px;
   position: relative;
 }
 

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Topbar from './topbar/Topbar';
+import Footer from './footer/Footer';
 import TopbarWithNavigation from './topbar_with_navigation/TopbarWithNavigation';
 import Sidebar from './sidebar/Sidebar';
 import SidebarMobile from './topbar_with_navigation/sidebar_mobile/SidebarMobile';
@@ -29,6 +30,7 @@ class Layout extends Component {
             changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
             changeSidebarVisibility={this.changeSidebarVisibility}
           />
+          <TopbarWithNavigation />
       </div>
     );
   }

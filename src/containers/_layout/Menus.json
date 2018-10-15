@@ -1,0 +1,8 @@
+{
+    "Menu": {
+        "Learn": ["My Assignments", "My Transcript", "My Downloads", "Purchase"],
+        "Manage": ["Course Assignments", "Users", "Company", "Tasks", "Events"],
+        "Reports": ["Qualifications", "Course Usage", "Exception Reports", "Custom Reports"],
+        "Settings": ["My Profile", "Change Password", "Change Username"]
+    }
+}

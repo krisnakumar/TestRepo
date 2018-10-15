@@ -8,22 +8,45 @@ import TopbarMail from './TopbarMail';
 import TopbarLanguage from './TopbarLanguage';
 import TopbarNotification from './TopbarNotification';
 import TopbarNav from './tobar_nav/TopbarNav';
+import Menus from '../Menus.json';
+import { DropdownItem, DropdownToggle, DropdownMenu, UncontrolledDropdown } from 'reactstrap';
+import TopbarNavLink from './tobar_nav/TopbarNavLink';
 
 export default class TopbarWithNavigation extends PureComponent {
-  static propTypes = {
-    changeMobileSidebarVisibility: PropTypes.func.isRequired,
+
+  componentDidMount(){
+    console.log(Menus);
   };
 
   render() {
-    const { changeMobileSidebarVisibility } = this.props;
+    var nav_menus = Menus.Menu;
 
     return (
-      <div className="topbar topbar--navigation">
+      <div className="topbar topbar--navigation menu-navigation">
         <div className="topbar__wrapper">
-          <TopbarNav />
-          <div className="topbar__right">
-            <TopbarNotification />
-            <TopbarProfile />
+          <div className="topbar__right">   
+            <nav className="topbar__nav">
+                    {
+                      Object.keys(nav_menus).map(function(key) {
+                        return (
+                          <UncontrolledDropdown key={key} className="topbar__nav-dropdown">
+                            <DropdownToggle className="topbar__nav-dropdown-toggle">
+                              {key}
+                            </DropdownToggle>
+                            <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
+                            {
+                              nav_menus[key].map((menu, index) => (
+                                <DropdownItem key={menu+index}>
+                                  <TopbarNavLink title={menu} route={"/"+menu.trim()} />
+                                </DropdownItem>
+                              ))
+                            }
+                          </DropdownMenu>
+                          </UncontrolledDropdown>
+                        )
+                      })
+                    }                  
+            </nav>
           </div>
         </div>
       </div>
