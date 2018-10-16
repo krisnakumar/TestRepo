@@ -1,10 +1,24 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
+import 'whatwg-fetch'
 import EditTable from '../../../shared/components/table/EditableTable';
 import Pagination from '../../../shared/components/pagination/Pagination';
+import ReactDataGrid from 'react-data-grid';
+import update from 'immutability-helper';
+import PropTypes from 'prop-types';
 
 export default class DataTable extends PureComponent {
+    static propTypes = {
+        heads: PropTypes.arrayOf(PropTypes.shape({
+          key: PropTypes.string,
+          name: PropTypes.string,
+          editable: PropTypes.bool,
+          sortable: PropTypes.bool,
+        })).isRequired,
+        rows: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+      };
+
   constructor() {
     super();
     this.heads = [
@@ -78,6 +92,25 @@ export default class DataTable extends PureComponent {
     };
   }
   
+  componentDidMount = () => {
+      this.getEmployees(6);
+  };
+
+  getEmployees = (userId) => {
+    let _self = this,
+         url = "https://pmo427as84.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
+    fetch(url)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let rows = _self.createRows(json);
+        _self.setState({ rows: rows});
+        _self.onChangePage([]);
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
 
   onChangePage = (pageOfItems) => {
     this.setState({ pageOfItems });
@@ -88,7 +121,7 @@ export default class DataTable extends PureComponent {
 
   createRows = (employees) => {
     const rows = [],
-          length = employees.length;
+          length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
       rows.push({
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
@@ -103,7 +136,35 @@ export default class DataTable extends PureComponent {
     return rows;
   };
 
+  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
+    const rows = this.state.rows.slice();
+
+    for (let i = fromRow; i <= toRow; i += 1) {
+      const rowToUpdate = rows[i];
+      rows[i] = update(rowToUpdate, { $merge: updated });
+    }
+
+    this.setState({ rows });
+  };
+
+  handleGridSort = (sortColumn, sortDirection) => {
+    const comparer = (a, b) => {
+      if (sortDirection === 'ASC') {
+        return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
+      } else if (sortDirection === 'DESC') {
+        return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
+      }
+    };
+
+    const sortRows = this.state.rows.slice(0);
+    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+
+    this.setState({ rows });
+  };
+
+  rowGetter = i => this.state.rows[i];
   render() {
+      const { rows } = this.state;
     return (
       <Col md={12} lg={12}>
         <Card>
@@ -120,8 +181,19 @@ export default class DataTable extends PureComponent {
               </select>
               entries
             </p>
-            <EditTable heads={this.heads} rows={this.state.rows} />
-            <Pagination items={this.state.rows} onChangePage={this.onChangePage} />
+            <div className="table">
+                <ReactDataGrid
+                    onGridSort={this.handleGridSort}
+                    enableCellSelect
+                    columns={this.heads}
+                    rowGetter={this.rowGetter}
+                    rowsCount={rows.length}
+                    onGridRowsUpdated={this.handleGridRowsUpdated}
+                    rowHeight={44}
+                    minColumnWidth={100}
+                />
+            </div>
+            <Pagination items={rows} onChangePage={this.onChangePage} />
           </CardBody>
         </Card>
       </Col>
