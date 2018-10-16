@@ -37,12 +37,14 @@
   border-radius: 0;
   border: none;
   margin: 0;
-  padding: 15px 0;
+  // padding: 15px 0;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
   font-size: 13px;
+  background: #093254;
+  transform: translate3d(0px, 35px, 0px) !important; 
 
   @include themify($themes) {
-    background: themed('colorBackground');
+    background: #0c3254;
   }
 
   button {
@@ -51,14 +53,14 @@
     cursor: pointer;
 
     @include themify($themes) {
-      color: themed('colorText');
+      color: none;
     }
 
     &:hover {
 
       @include themify($themes) {
-        background: themed('colorHover');
-        color: themed('colorText');
+        background: none;
+        color: none;
       }
     }
   }
@@ -68,10 +70,10 @@
   }
 
   .active button {
-    background-color: $color-blue;
+    background-color: none;
 
     &:hover {
-      background-color: $color-blue-hover;
+      background-color: none;
     }
   }
 }

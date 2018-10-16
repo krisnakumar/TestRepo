@@ -211,6 +211,7 @@ p.topbar__avatar-name {
   width: 100%;
   position: relative;
   cursor: pointer;
+  border-bottom: 1px dotted #aaa;
 
   @include themify($themes) {
     color: themed('colorText');
@@ -223,7 +224,7 @@ p.topbar__avatar-name {
     top: 0;
     height: 100%;
     width: 2px;
-    background: $color-accent;
+    // background: $color-accent;
     opacity: 0;
     transition: all 0.3s;
   }
@@ -243,6 +244,7 @@ p.topbar__avatar-name {
   margin: 0;
   font-size: 14px;
   line-height: 16px;
+  color: #ffffff !important; 
 }
 
 .topbar__link-icon {
@@ -555,7 +557,7 @@ p.topbar__avatar-name {
 }
 
 .topbar .topbar__nav-dropdown-toggle {
-  height: 60px;
+  // height: 60px;
   background: transparent;
   border-radius: 0;
   border: none;
@@ -566,7 +568,7 @@ p.topbar__avatar-name {
   margin: 0;
 
   @include themify($themes) {
-    color: themed('colorText');
+    color: none;
   }
 
   &:before {
@@ -576,7 +578,7 @@ p.topbar__avatar-name {
   &:hover, &:focus, &:active, &:focus:active {
 
     @include themify($themes) {
-      background-color: themed('colorHover');
+      background-color: none;
     }
   }
 
@@ -590,8 +592,8 @@ p.topbar__avatar-name {
 }
 
 .topbar__nav-dropdown-menu {
-  width: 240px;
-  border-top: 2px solid $color-accent;
+  // width: 240px;
+  // border-top: 2px solid $color-accent;
 
   button {
     padding: 0;
@@ -681,11 +683,11 @@ p.topbar__avatar-name {
   }
 
   .topbar__link {
-
+    
     &:hover {
 
       @include themify($themes) {
-        background-color: themed('colorBackground');
+        background-color: none;
       }
     }
   }
