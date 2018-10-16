@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
 import Layout from '../_layout/index';
+import Table from './components/DataTable';
 
 const logo = `${process.env.PUBLIC_URL}/img/content_logo.png`;
 
@@ -29,6 +30,13 @@ class Landing extends PureComponent {
       <div className="landing">
         <div className="landing__menu">
           <Layout />
+          <Container>
+            <Row>
+              <Col md={12}>              
+                <Table />
+              </Col>
+            </Row>
+          </Container>
         </div>
         <Header />
         <span ref={(section) => {
