@@ -22,5 +22,15 @@ namespace ReportBuilderAPI.DatabaseManager
         {
             return "EXEC GetEmployee " + userId;
         }
+
+        /// <summary>
+        /// Read list of employee details using userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static string GetWorkBookDetails(int userId, int completedWorkBooks, int workbookInDue, int pastWorkbook)
+        {
+            return "EXEC sp_GetWorkBook " + userId + "," + completedWorkBooks + "," + workbookInDue + "," + pastWorkbook;
+        }
     }
 }

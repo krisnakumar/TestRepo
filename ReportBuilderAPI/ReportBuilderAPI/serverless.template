@@ -7,16 +7,17 @@
    "ReportBuilderAPI" : {
 		"Type" : "AWS::Serverless::Api",
 		"Properties" : {
-			"Name":"ReportBuilder",
+			"Name":"ReportBuilder-response",
 			"StageName":"dev",
-			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder.json"			 
+			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder-auth.json"			 
 	  }
 	},	
+
 	"Login" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
-        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler::Login",
-		"FunctionName":"Login",
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
+		"FunctionName":"Login-response",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,		
@@ -38,8 +39,8 @@
 	"GetEmployees" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
-        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler::GetEmployees",
-		"FunctionName":"Employees",
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployees",
+		"FunctionName":"Employees-response",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,

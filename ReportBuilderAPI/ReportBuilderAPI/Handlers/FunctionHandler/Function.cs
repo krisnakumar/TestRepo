@@ -4,14 +4,13 @@ using ReportBuilderAPI.Handlers.RequestHandler;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Repository;
 using System;
-using System.Net;
 
 
 
 // <copyright file="EmployeeQueries.cs">
 // Copyright (c) 2018 All Rights Reserved
 // </copyright>
-// <author></author>
+// <author>Shoba Eswar</author>
 // <date>10-10-2018</date>
 // <summary>Handles Lambda operations</summary>
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -34,12 +33,12 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
             try
             {
-                return null;
+                return authenticationRepository.Login(request);
             }
             catch (Exception exception)
             {
                 LambdaLogger.Log(exception.ToString());
-                return null;
+                return ResponseBuilder.InternalError();
             }
         }
         /// <summary>
@@ -53,7 +52,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             EmployeeRepository employeeRepository = new EmployeeRepository();
             try
             {
-                return employeeRepository.GetEmployeeList(RequestReader.GetPathValue(request));                
+                return employeeRepository.GetEmployeeList(RequestReader.GetPathValue(request), RequestReader.ReadQueryString(request));                
             }
             catch (Exception getEmployees)
             {

@@ -1,4 +1,5 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
+using ReportBuilder.Models.Models;
 
 
 
@@ -15,6 +16,6 @@ namespace ReportBuilderAPI.IRepository
     /// </summary>
     public interface IEmployee
     {
-        APIGatewayProxyResponse GetEmployeeList(int userId);
+        APIGatewayProxyResponse GetEmployeeList(int userId, QueryStringModel queryStringModel);
     }
 }

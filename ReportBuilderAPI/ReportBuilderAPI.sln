@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportBuilder.Models", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataInterface.Database", "..\DataInterface.Database\DataInterface.Database.csproj", "{243A4356-93B2-42F6-BDED-F483393DE484}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportBuilder.UnitTest", "ReportBuilder.UnitTest\ReportBuilder.UnitTest.csproj", "{F66A65FC-4C66-423B-A6A0-E306ED748AC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{243A4356-93B2-42F6-BDED-F483393DE484}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{243A4356-93B2-42F6-BDED-F483393DE484}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{243A4356-93B2-42F6-BDED-F483393DE484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F66A65FC-4C66-423B-A6A0-E306ED748AC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F66A65FC-4C66-423B-A6A0-E306ED748AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F66A65FC-4C66-423B-A6A0-E306ED748AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F66A65FC-4C66-423B-A6A0-E306ED748AC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

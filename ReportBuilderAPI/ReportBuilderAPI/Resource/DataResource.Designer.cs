@@ -70,6 +70,51 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account doesn’t have login permission.
+        /// </summary>
+        internal static string ACCOUNT_NOT_HAVING_PERMISSION {
+            get {
+                return ResourceManager.GetString("ACCOUNT_NOT_HAVING_PERMISSION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password.
+        /// </summary>
+        internal static string INVALID_CREDENTILAS {
+            get {
+                return ResourceManager.GetString("INVALID_CREDENTILAS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid input.
+        /// </summary>
+        internal static string INVALID_INPUT {
+            get {
+                return ResourceManager.GetString("INVALID_INPUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New password is required.
+        /// </summary>
+        internal static string PASSWORD_REQ {
+            get {
+                return ResourceManager.GetString("PASSWORD_REQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permission denied.
+        /// </summary>
+        internal static string PERMISSION_DENIED {
+            get {
+                return ResourceManager.GetString("PERMISSION_DENIED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd.
         /// </summary>
         internal static string SECRET_KEY {

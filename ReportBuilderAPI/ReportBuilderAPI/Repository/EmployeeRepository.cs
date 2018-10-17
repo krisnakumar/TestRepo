@@ -2,6 +2,7 @@
 using Amazon.Lambda.Core;
 using DataInterface.Database;
 using Newtonsoft.Json;
+using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.DatabaseManager;
 using ReportBuilderAPI.Handlers.ResponseHandler;
@@ -31,13 +32,23 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetEmployeeList(int userId)
+        public APIGatewayProxyResponse GetEmployeeList(int userId, QueryStringModel queryStringModel)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<EmployeeResponse> employeeList = new List<EmployeeResponse>();
+            string query = string.Empty;
             try
             {
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(EmployeeQueries.ReadEmployeeDetails(userId));
+                if (queryStringModel != null)
+                {
+                    query = EmployeeQueries.GetWorkBookDetails(userId, queryStringModel.CompletedWorkBooks, queryStringModel.WorkBookInDue, queryStringModel.PastDueWorkBook);
+                }
+                else
+                {
+                    query = EmployeeQueries.ReadEmployeeDetails(userId);
+                }
+
+                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())

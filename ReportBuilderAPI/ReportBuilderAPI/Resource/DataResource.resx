@@ -120,6 +120,21 @@
   <data name="ACCESS_KEY" xml:space="preserve">
     <value>AKIAJHS5M3WOIIVH4V3A</value>
   </data>
+  <data name="ACCOUNT_NOT_HAVING_PERMISSION" xml:space="preserve">
+    <value>Account doesn’t have login permission</value>
+  </data>
+  <data name="INVALID_CREDENTILAS" xml:space="preserve">
+    <value>Invalid username or password</value>
+  </data>
+  <data name="INVALID_INPUT" xml:space="preserve">
+    <value>Invalid input</value>
+  </data>
+  <data name="PASSWORD_REQ" xml:space="preserve">
+    <value>New password is required</value>
+  </data>
+  <data name="PERMISSION_DENIED" xml:space="preserve">
+    <value>Permission denied</value>
+  </data>
   <data name="SECRET_KEY" xml:space="preserve">
     <value>pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd</value>
   </data>
