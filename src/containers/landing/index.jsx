@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
-import { Col, Row, Container } from 'reactstrap';
+import { Card, Col, Row, Container } from 'reactstrap';
 import scrollToComponent from 'react-scroll-to-component';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -32,18 +32,17 @@ class Landing extends PureComponent {
           <Layout />
           <Container>
             <Row>
-              <Col md={12}>              
-                <Table />
+              <Col md={12}> 
+                <Col md={12} lg={12}>
+                  <Card>
+                    <Table />                
+                    <Footer />
+                  </Card>
+                </Col>                            
               </Col>
             </Row>
           </Container>
         </div>
-        <Header />
-        <span ref={(section) => {
-          this.About = section;
-        }}
-        />
-        <Footer />
       </div>
     );
   }

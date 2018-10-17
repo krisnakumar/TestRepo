@@ -166,11 +166,9 @@ export default class DataTable extends PureComponent {
   render() {
       const { rows } = this.state;
     return (
-      <Col md={12} lg={12}>
-        <Card>
           <CardBody>
             <div className="card__title">
-             <div class="pageheader">
+             <div className="pageheader">
               <img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/body_learn.png?v=2"/> Workbook Dashboard
             </div>
             </div>
@@ -196,8 +194,6 @@ export default class DataTable extends PureComponent {
             </div>
             <Pagination items={rows} onChangePage={this.onChangePage} />
           </CardBody>
-        </Card>
-      </Col>
     );
   }
 }
