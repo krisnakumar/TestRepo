@@ -28,11 +28,11 @@ export default class TopbarProfile extends PureComponent {
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">
           <div className="topbar__menu">
-            <TopbarMenuLink title="User Profile" icon="user" path="/account/profile" />
-            <TopbarMenuLink title="Dashboard" icon="calendar-full" path="/default_pages/calendar" />
-            <TopbarMenuLink title="Events" icon="list" path="/default_pages/calendar" />
-            <TopbarMenuLink title="Help" icon="inbox" path="/mail" />
-            <TopbarMenuLink title="Sign Out" icon="exit" path="/log_in" />
+            <TopbarMenuLink title="User Profile" icon="fa fa-user-circle-o fa-lg" path="/account/profile" />
+            <TopbarMenuLink title="Dashboard" icon="fa fa-tachometer fa-lg" path="/default_pages/calendar" />
+            <TopbarMenuLink title="Events" icon="fa fa-calendar fa-lg" path="/default_pages/calendar" />
+            <TopbarMenuLink title="Help" icon="fa fa-info-circle fa-lg" path="/mail" />
+            <TopbarMenuLink title="Sign Out" icon="fa fa-sign-out fa-lg" path="/log_in" />
           </div>
         </Collapse>
       </div>

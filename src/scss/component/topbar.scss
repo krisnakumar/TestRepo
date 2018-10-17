@@ -174,7 +174,7 @@ p.topbar__avatar-name {
   // padding: 15px 0;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
   margin-top: 0;
-  background: #0a1631 !important;
+  background: #ffffff !important;
 
   @include themify($themes) {
     background: themed('colorBackground');
@@ -200,7 +200,7 @@ p.topbar__avatar-name {
   position: absolute;
   width: 100%;
   padding: 0 10px;
-  min-width: 220px;
+  min-width: 160px;
   right: 0;
 }
 
@@ -245,17 +245,18 @@ p.topbar__avatar-name {
   margin: 0;
   font-size: 14px;
   line-height: 16px;
-  color: #ffffff !important; 
+  font-family: 'Segoe UI',Arial !important;
+  color: #0a1631 !important;
 }
 
 .topbar__link-icon {
   margin-right: 10px;
-  font-size: 13px;
-  line-height: 13px;
-
-  @include themify($themes) {
-    color: themed('colorIcon');
-  }
+  font-size: 16px;
+  line-height: 16px;
+  color: #0a1631 !important;
+  // @include themify($themes) {
+  //   color: themed('colorIcon');
+  // }
 }
 
 .topbar__menu-divider {
