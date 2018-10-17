@@ -470,7 +470,7 @@ p.topbar__avatar-name {
 }
 
 .topbar__btn {
-  font-size: 18px;
+  font-size: 14px;
   height: 100%;
   padding: 0 10px;
   cursor: pointer;
@@ -697,14 +697,14 @@ p.topbar__avatar-name {
 
 .theme-light .topbar .topbar__nav-dropdown-toggle {
   color: white;
-  width: 130px;
+  width: 127px;
   font-size: 16px;
   font-weight: 500;
   font-family: 'Segoe UI',Arial !important;
 }
 
 .topbar__right {
-  margin-right: 3%;
+  margin-right: 6%;
 }
 
 body {
@@ -797,5 +797,22 @@ body {
 
   .topbar__nav-dropdown-toggle, .topbar__nav-link {
     width: 240px;
+  }
+}
+
+#notificationIcon {
+  min-height: 40px;
+  cursor: pointer;
+  color: #333;
+  margin: 18px -14px 0px 0px;
+}
+
+
+.copyright{
+  font-size: 11px;
+  
+  a { 
+    color: #333 !important;
+    text-decoration: underline;
   }
 }

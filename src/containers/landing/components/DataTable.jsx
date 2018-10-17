@@ -172,27 +172,29 @@ export default class DataTable extends PureComponent {
               <img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/body_learn.png?v=2"/> Workbook Dashboard
             </div>
             </div>
-            <p id="EntryCount">Show
-              <select className="select-options">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-              </select>
-              entries
-            </p>
-            <div className="table">
-                <ReactDataGrid
-                    onGridSort={this.handleGridSort}
-                    enableCellSelect
-                    columns={this.heads}
-                    rowGetter={this.rowGetter}
-                    rowsCount={rows.length}
-                    onGridRowsUpdated={this.handleGridRowsUpdated}
-                    rowHeight={44}
-                    minColumnWidth={100}
-                />
+            <div class="grid-container">
+              <p id="EntryCount">Show
+                <select className="select-options">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                </select>
+                entries
+              </p>
+              <div className="table">
+                  <ReactDataGrid
+                      onGridSort={this.handleGridSort}
+                      enableCellSelect
+                      columns={this.heads}
+                      rowGetter={this.rowGetter}
+                      rowsCount={rows.length}
+                      onGridRowsUpdated={this.handleGridRowsUpdated}
+                      rowHeight={44}
+                      minColumnWidth={100}
+                  />
+              </div>
             </div>
-            <Pagination items={rows} onChangePage={this.onChangePage} />
+            {/* <Pagination items={rows} onChangePage={this.onChangePage} /> */}
           </CardBody>
     );
   }
