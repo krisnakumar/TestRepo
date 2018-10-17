@@ -1,13 +1,5 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import TopbarSidebarButton from './TopbarSidebarButton';
-import TopbarProfile from './TopbarProfile';
-import TopbarMail from './TopbarMail';
-import TopbarLanguage from './TopbarLanguage';
-import TopbarNotification from './TopbarNotification';
-import TopbarNav from './tobar_nav/TopbarNav';
 import Menus from '../Menus.json';
 import { DropdownItem, DropdownToggle, DropdownMenu, UncontrolledDropdown, Dropdown } from 'reactstrap';
 import TopbarNavLink from './tobar_nav/TopbarNavLink';
@@ -16,29 +8,42 @@ export default class TopbarWithNavigation extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      menuStatus: {},
+      isHover: [],
       dropdownOpen: false
     };
   }
 
-  toggle(mainMenu) {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+  componentWillMount(){
+    var nav_menus = Menus,
+        _self = this;
+        nav_menus.map(function(mainMenu, index) {  
+          _self.state.isHover[index] =  false
+        });
   }
 
-  onMouseEnter(mainMenu, event) {
-    this.state[mainMenu] = true;
-    this.setState({ dropdownOpen: true });   
+  onMouseEnter(i) {
+    return () => {
+      if (this.state.isHover[i] === true) {
+        return this.state;
+      }
+      let isHover = [...this.state.isHover]
+      isHover[i] = true;
+      this.setState({ ...this.state, isHover });
+    }
   }
 
-  onMouseLeave(mainMenu, event) {
-    this.state[mainMenu] = false;
-    this.setState({ dropdownOpen: false });
+  onMouseLeave(i) {
+    return () => {
+      if (this.state.isHover[i] === false) {
+        return this.state;
+      }
+      let isHover = [...this.state.isHover]
+      isHover[i] = false;
+      this.setState({ ...this.state, isHover });
+    }
   }
 
   render() {
@@ -52,16 +57,15 @@ export default class TopbarWithNavigation extends PureComponent {
                     {
                        nav_menus.map(function(mainMenu, index) {                         
                         let menuName = mainMenu.name;
-                        _self.state[menuName] = false;
                         return (
                           <UncontrolledDropdown key={index} 
                                     className="topbar__nav-dropdown" 
-                                    onMouseOver={_self.onMouseEnter.bind(event, menuName)} 
-                                    onMouseLeave={_self.onMouseLeave.bind(event, menuName)} 
-                                    isOpen={_self.state[mainMenu.name]} >
+                                    onMouseOver={_self.onMouseEnter(index)} 
+                                    onMouseLeave={_self.onMouseLeave(index)}
+                                    isOpen={_self.state.isHover[index]} >
                             <DropdownToggle className="topbar__nav-dropdown-toggle">
-                              <img alt={mainMenu.name} src={mainMenu.iconUrl}/> 
-                              {mainMenu.name}
+                              <img alt={menuName} src={mainMenu.iconUrl}/> 
+                              {menuName}
                             </DropdownToggle>
                             <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
                             {
