@@ -1,8 +1,4 @@
-{
-    "Menu": {
-        "Learn": ["My Assignments", "My Transcript", "My Downloads", "Purchase"],
-        "Manage": ["Course Assignments", "Users", "Company", "Tasks", "Events"],
-        "Reports": ["Qualifications", "Course Usage", "Exception Reports", "Custom Reports"],
-        "Settings": ["My Profile", "Change Password", "Change Username"]
-    }
-}
+[ 
+    {"name":"Learn", "subMenu":[{"name":"My Assignments", "href":"somelink"},{"name":"My Transcript", "href":"somelink"}, {"name":"My Downloads", "href":"somelink"}, {"name":"Purchase", "href":"somelink"}], "iconUrl":"https://d2vkqsz7y0fh3j.cloudfront.net/img/topnav_learn.png?v=2", "href":"link of parent"},
+    {"name":"Manage", "subMenu":[{"name":"Course Assignments", "href":"somelink"},{"name":"Users", "href":"somelink"}, {"name":"Company", "href":"somelink"}, {"name":"Tasks", "href":"somelink"}, {"name":"Events", "href":"somelink"}], "iconUrl":"https://d2vkqsz7y0fh3j.cloudfront.net/img/topnav_manage.png?v=2", "href":"link of parent"}
+]

@@ -19,7 +19,7 @@ export default class TopbarWithNavigation extends PureComponent {
   };
 
   render() {
-    var nav_menus = Menus.Menu;
+    var nav_menus = Menus;
 
     return (
       <div className="topbar topbar--navigation menu-navigation">
@@ -27,18 +27,19 @@ export default class TopbarWithNavigation extends PureComponent {
           <div className="topbar__right">   
             <nav className="topbar__nav">
                     {
-                       Object.keys(nav_menus).map(function(key) {
-                        console.log(key)
+                       nav_menus.map(function(mainMenu, index) {
+                        console.log(mainMenu)
                         return (
-                          <UncontrolledDropdown key={key} className="topbar__nav-dropdown">
+                          <UncontrolledDropdown key={index} className="topbar__nav-dropdown">
                             <DropdownToggle className="topbar__nav-dropdown-toggle">
-                              {key}
+                              <img alt={mainMenu.name} src={mainMenu.iconUrl}/> 
+                              {mainMenu.name}
                             </DropdownToggle>
                             <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
                             {
-                              nav_menus[key].map((menu, index) => (
-                                <DropdownItem key={menu+index}>
-                                  <TopbarNavLink title={menu} route={"/"+menu.trim()} />
+                              mainMenu.subMenu.map((menu, index) => (
+                                <DropdownItem key={menu.name}>
+                                  <TopbarNavLink title={menu.name} route={"/"+menu.href} />
                                 </DropdownItem>
                               ))
                             }
