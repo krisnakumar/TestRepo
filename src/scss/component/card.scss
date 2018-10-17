@@ -11,9 +11,9 @@
 }
 
 .card-body {
-  padding: 30px;
+  padding: 25px;
   height: 100%;
-  border-radius: 5px;
+  // border-radius: 5px;
 
   @include themify($themes) {
     background-color: themed('colorBackground');

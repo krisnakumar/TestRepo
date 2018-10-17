@@ -41,7 +41,7 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   @media (min-width: 1200px) {
 
     .container {
-      max-width: 1140px;
+      max-width: 1550px;
     }
   }
 }
@@ -901,3 +901,12 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
   line-height: 1.54;
   margin: 0;
 }
+
+
+.pageheader {
+  font-size: 18px;
+    font-weight: 600;
+    color: #0a1631;
+    text-align: left;
+}
+

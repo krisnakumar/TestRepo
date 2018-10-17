@@ -170,10 +170,11 @@ export default class DataTable extends PureComponent {
         <Card>
           <CardBody>
             <div className="card__title">
-              <h5 className="bold-text">data table</h5>
-              <h5 className="subhead">Use table with column's option <span className="red-text">sortable</span></h5>
+             <div class="pageheader">
+              <img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/body_learn.png?v=2"/> Workbook Dashboard
             </div>
-            <p>Show
+            </div>
+            <p id="EntryCount">Show
               <select className="select-options">
                 <option value="10">10</option>
                 <option value="20">20</option>
