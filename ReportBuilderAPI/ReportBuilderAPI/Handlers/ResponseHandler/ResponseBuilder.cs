@@ -29,7 +29,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         {
             try
             {
-                EmployeeResponse employeeResponse = new EmployeeResponse
+                ErrorResponse employeeResponse = new ErrorResponse
                 {
                     Code = 33,
                     Message = DataResource.SYSTEM_ERROR
@@ -57,7 +57,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         {
             try
             {
-                EmployeeResponse employeeResponse = new EmployeeResponse
+                ErrorResponse errorResponse = new ErrorResponse
                 {
                     Code = 1,
                     Message = DataResource.INVALID_INPUT +": "+ fieldName
@@ -65,7 +65,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 var response = new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.BadRequest,
-                    Body = JsonConvert.SerializeObject(employeeResponse),
+                    Body = JsonConvert.SerializeObject(errorResponse),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
                 };
                 return response;
@@ -86,7 +86,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         {
             try
             {
-                EmployeeResponse employeeResponse = new EmployeeResponse
+                ErrorResponse errorResponse = new ErrorResponse
                 {
                     Code = 14,
                     Message = DataResource.PERMISSION_DENIED
@@ -94,7 +94,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 var response = new APIGatewayProxyResponse
                 {
                     StatusCode = (int)HttpStatusCode.Forbidden,
-                    Body = JsonConvert.SerializeObject(employeeResponse),
+                    Body = JsonConvert.SerializeObject(errorResponse),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
                 };
                 return response;
