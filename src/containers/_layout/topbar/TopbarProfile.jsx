@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import DownIcon from 'mdi-react/ChevronDownIcon';
 import { Collapse } from 'reactstrap';
 import TopbarMenuLink from './TopbarMenuLink';
 
@@ -23,7 +22,7 @@ export default class TopbarProfile extends PureComponent {
         <button className="topbar__avatar" onClick={this.toggle}>
           <p className="topbar__avatar-name">Tom Smith</p>
           <img className="topbar__avatar-img" src={Ava} alt="avatar" />
-          <DownIcon className="topbar__icon" />
+            <i id="downArrow" className="fa fa-caret-down" title="Down Arrow" aria-hidden="true" />
         </button>
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">

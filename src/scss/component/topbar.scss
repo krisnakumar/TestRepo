@@ -102,7 +102,7 @@
   width: 50%;
 }
 
-p.topbar__left-logo {
+a.topbar__left-logo {
   // margin-left: 114px;
   margin-left: 12%;
 }
@@ -804,7 +804,7 @@ body {
   min-height: 40px;
   cursor: pointer;
   color: #333;
-  margin: 18px -14px 0px 0px;
+  margin: 18px -10px 0px 0px;
 }
 
 
@@ -815,4 +815,8 @@ body {
     color: #333 !important;
     text-decoration: underline;
   }
+}
+
+#downArrow {
+  padding: 10px 0px 0px 5px;
 }

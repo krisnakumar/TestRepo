@@ -19,9 +19,9 @@ class Topbar extends PureComponent {
       <div className="topbar">
         <div className="topbar__wrapper">
           <div className="topbar__left">
-            <p className="topbar__left-logo">
+            <a className="topbar__left-logo" href= "https://dev.its-training.com/Login.aspx">
               <img src={logo} alt="" />
-            </p>
+            </a>
           </div>
           <div className="topbar__right">
             <TopbarNotification />

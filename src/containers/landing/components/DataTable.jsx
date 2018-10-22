@@ -14,7 +14,7 @@ export default class DataTable extends PureComponent {
           key: PropTypes.string,
           name: PropTypes.string,
           editable: PropTypes.bool,
-          sortable: PropTypes.bool,
+          sortable: PropTypes.bool
         })).isRequired,
         rows: PropTypes.arrayOf(PropTypes.shape()).isRequired,
       };
@@ -40,51 +40,26 @@ export default class DataTable extends PureComponent {
       {
         key: 'inDueWorkBooks',
         name: 'WorkBook Due',
-        sortable: true,
+        sortable: true
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due WorkBooks',
-        sortable: true,
+        sortable: true
       },
       {
         key: 'completedWorkBooks',
         name: 'Completed WorkBook',
-        sortable: true,
+        sortable: true
       },
       {
         key: 'total',
         name: 'Total',
-        sortable: true,
+        sortable: true
       },
     ];
 
-    this.employees = [
-        {
-          FirstName: 'Shoba',
-          LastName: 'Eswar',
-          WorkbookName: 'TestWorkbook',
-          Role: 'Tester',
-          AssignedWorkBooks: 1,
-          InDueWorkBooks: 0,
-          PastDueWorkBooks: 1,
-          CompletedWorkBooks: 0,
-          EmployeeCount: 0,
-          Code: 0
-        },
-        {
-          FirstName: 'Lee',
-          LastName: 'Bush',
-          WorkbookName: '',
-          Role: '',
-          AssignedWorkBooks: 0,
-          InDueWorkBooks: 0,
-          PastDueWorkBooks: 0,
-          CompletedWorkBooks: 0,
-          EmployeeCount: 0,
-          Code: 0
-        }
-      ];
+    this.employees = [];
 
     this.state = {
       rows: this.createRows(this.employees),
@@ -120,9 +95,19 @@ export default class DataTable extends PureComponent {
     - start.getTime()))).toLocaleDateString();
 
   createRows = (employees) => {
-    const rows = [],
+    var assignedWorkBooksCount = 0;
+    var inDueWorkBooksCount = 0;
+    var pastDueWorkBooksCount = 0;
+    var completedWorkBooksCount = 0;
+    var totalEmpCount = 0;
+    const rows = [], 
           length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
+      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBooks);
+      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBooks);
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBooks);
+      completedWorkBooksCount += parseInt(employees[i].CompletedWorkBooks);
+      totalEmpCount += parseInt(employees[i].EmployeeCount)
       rows.push({
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
         role: employees[i].Role,
@@ -133,6 +118,7 @@ export default class DataTable extends PureComponent {
         total: employees[i].EmployeeCount,
       });
     }
+    rows.push({employee: "Total", role: "", assignedWorkBooks:assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount , pastDueWorkBooks:pastDueWorkBooksCount, completedWorkBooks:completedWorkBooksCount, total:totalEmpCount});
     return rows;
   };
 
@@ -169,7 +155,7 @@ export default class DataTable extends PureComponent {
           <CardBody>
             <div className="card__title">
              <div className="pageheader">
-              <img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/body_learn.png?v=2"/> Workbook Dashboard
+              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
             </div>
             <div class="grid-container">
