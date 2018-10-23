@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Collapse } from 'reactstrap';
 import TopbarMenuLink from './TopbarMenuLink';

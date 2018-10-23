@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { PureComponent } from 'react';
 import DownIcon from 'mdi-react/ChevronDownIcon';
 import { Collapse } from 'reactstrap';
@@ -22,8 +23,8 @@ export default class TopbarProfile extends PureComponent {
       <div className="topbar__profile">
         <button className="topbar__avatar" onClick={this.toggle}>
           <img className="topbar__avatar-img" src={Ava} alt="avatar" />
-          <p className="topbar__avatar-name">Roman Johanson</p>
-          <DownIcon className="topbar__icon" />
+        <p className="topbar__avatar-name">Roman Johanson</p>
+        <DownIcon className="topbar__icon" />
         </button>
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">

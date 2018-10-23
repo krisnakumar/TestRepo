@@ -71,7 +71,7 @@ export default class TopbarWithNavigation extends PureComponent {
                             {
                               mainMenu.subMenu.map((menu, index) => (
                                 <DropdownItem key={menu.name+index}>
-                                  <TopbarNavLink title={menu.name} route={"/"+menu.href} />
+                                  <TopbarNavLink title={menu.name} route={menu.href} />
                                 </DropdownItem>
                               ))
                             }

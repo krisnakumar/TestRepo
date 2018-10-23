@@ -2,22 +2,10 @@
 import React, { PureComponent } from 'react';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
-import EditTable from '../../../shared/components/table/EditableTable';
-import Pagination from '../../../shared/components/pagination/Pagination';
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
-import PropTypes from 'prop-types';
 
 export default class DataTable extends PureComponent {
-    static propTypes = {
-        heads: PropTypes.arrayOf(PropTypes.shape({
-          key: PropTypes.string,
-          name: PropTypes.string,
-          editable: PropTypes.bool,
-          sortable: PropTypes.bool
-        })).isRequired,
-        rows: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-      };
 
   constructor() {
     super();
@@ -26,36 +14,51 @@ export default class DataTable extends PureComponent {
         key: 'employee',
         name: 'Employee',
         sortable: true,
+        width: 300,
+        editable: false,
+        cellClass: "text-left"
       },
       {
         key: 'role',
         name: 'Role',
         sortable: true,
+        editable: false,
+        cellClass: "text-left"
       },
       {
         key: 'assignedWorkBooks',
         name: 'Assigned WorkBook',
         sortable: true,
+        editable: false,
+        cellClass: "text-right"
       },
       {
         key: 'inDueWorkBooks',
         name: 'WorkBook Due',
-        sortable: true
+        sortable: true,
+        editable: false,
+        cellClass: "text-right"
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due WorkBooks',
-        sortable: true
+        sortable: true,
+        editable: false,
+        cellClass: "text-right"
       },
       {
         key: 'completedWorkBooks',
         name: 'Completed WorkBook',
-        sortable: true
+        sortable: true,
+        editable: false,
+        cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total',
-        sortable: true
+        sortable: true,
+        editable: false,
+        cellClass: "text-right"
       },
     ];
 
@@ -73,7 +76,7 @@ export default class DataTable extends PureComponent {
 
   getEmployees = (userId) => {
     let _self = this,
-         url = "https://pmo427as84.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
+         url = "https://t4k73ghz7f.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
     fetch(url)
     .then(function(response) {
       return response.json()
@@ -149,6 +152,7 @@ export default class DataTable extends PureComponent {
   };
 
   rowGetter = i => this.state.rows[i];
+
   render() {
       const { rows } = this.state;
     return (
@@ -158,7 +162,7 @@ export default class DataTable extends PureComponent {
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
             </div>
-            <div class="grid-container">
+            <div className="grid-container">
               <p id="EntryCount">Show
                 <select className="select-options">
                   <option value="10">10</option>
@@ -180,7 +184,6 @@ export default class DataTable extends PureComponent {
                   />
               </div>
             </div>
-            {/* <Pagination items={rows} onChangePage={this.onChangePage} /> */}
           </CardBody>
     );
   }

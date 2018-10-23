@@ -48,7 +48,7 @@ export default class TopbarNotification extends PureComponent {
     return (
       <div className="topbar__collapse">
         <button className=" topbar__btn" onClick={this.toggle}>
-          <i id="notificationIcon" class="fa fa-bell-o fa-lg " title="Notifications" aria-hidden="true"></i>
+          <i id="notificationIcon" className="fa fa-bell-o fa-lg " title="Notifications" aria-hidden="true"></i>
         </button>
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse
