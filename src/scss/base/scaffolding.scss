@@ -58,3 +58,15 @@ img {
 .text-right{
   text-align: right;
 }
+
+.modal-dialog.custom-modal-grid {
+  max-width: 1488px;
+  min-width: 800px;
+}
+
+@media (min-width: 576px){
+  .modal-dialog.custom-modal-grid {
+    max-width: 1188px;
+    min-width: 800px;
+  }
+}

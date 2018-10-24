@@ -1,17 +1,15 @@
+
 /* eslint-disable */
-import React, { PureComponent } from 'react';
+import React from 'react';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
-import WL2Modal from './WorkbookLevelTwo';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+class WorkbookLevelTwo extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default class DataTable extends PureComponent {
-
-  constructor() {
-    super();
     this.heads = [
       {
         key: 'employee',
@@ -22,22 +20,15 @@ export default class DataTable extends PureComponent {
         cellClass: "text-left"
       },
       {
-        key: 'role',
-        name: 'Role',
+        key: 'workbook',
+        name: 'Workbook',
         sortable: true,
         editable: false,
         cellClass: "text-left"
       },
       {
-        key: 'assignedWorkBooks',
-        name: 'Assigned WorkBook',
-        sortable: true,
-        editable: false,
-        cellClass: "text-right"
-      },
-      {
         key: 'inDueWorkBooks',
-        name: 'WorkBook Due',
+        name: 'WorkBook Due in 30 Days',
         sortable: true,
         editable: false,
         cellClass: "text-right"
@@ -58,7 +49,7 @@ export default class DataTable extends PureComponent {
       },
       {
         key: 'total',
-        name: 'Total',
+        name: 'Total Employees',
         sortable: true,
         editable: false,
         cellClass: "text-right"
@@ -68,19 +59,14 @@ export default class DataTable extends PureComponent {
     this.employees = [];
 
     this.state = {
+      modal: this.props.modal,      
       rows: this.createRows(this.employees),
       pageOfItems: [],
       levelTwoWB: false,
       level3WB: false
     };
+    this.toggle = this.toggle.bind(this);
   }
-  
-  updateModalState = (modelName) => {
-    let value = !this.state[modelName];
-    this.setState({
-      [modelName]: value
-    });
-  };
 
   componentDidMount = () => {
     this.getEmployees(10);
@@ -88,7 +74,7 @@ export default class DataTable extends PureComponent {
 
   getEmployees = (userId) => {
     let _self = this,
-         url = "https://t4k73ghz7f.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
+        url = "https://t4k73ghz7f.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
     fetch(url)
     .then(function(response) {
       return response.json()
@@ -106,27 +92,23 @@ export default class DataTable extends PureComponent {
     this.setState({ pageOfItems });
   };
 
-  getRandomDate = (start, end) => new Date(start.getTime() + (Math.random() * (end.getTime()
-    - start.getTime()))).toLocaleDateString();
-
   createRows = (employees) => {
-    var assignedWorkBooksCount = 0;
-    var inDueWorkBooksCount = 0;
-    var pastDueWorkBooksCount = 0;
-    var completedWorkBooksCount = 0;
-    var totalEmpCount = 0;
+    let assignedWorkBooksCount = 0,
+        inDueWorkBooksCount = 0,
+        pastDueWorkBooksCount = 0,
+        completedWorkBooksCount = 0,
+        totalEmpCount = 0;
     const rows = [], 
           length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
       assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBooks);
       inDueWorkBooksCount += parseInt(employees[i].InDueWorkBooks);
-      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBooks);
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBooks); 
       completedWorkBooksCount += parseInt(employees[i].CompletedWorkBooks);
-      totalEmpCount += parseInt(employees[i].EmployeeCount)
+      totalEmpCount += parseInt(employees[i].EmployeeCount);      
       rows.push({
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
-        role: employees[i].Role,
-        assignedWorkBooks: employees[i].AssignedWorkBooks,
+        workbook: employees[i].WorkbookName,
         inDueWorkBooks: employees[i].InDueWorkBooks,
         pastDueWorkBooks: employees[i].PastDueWorkBooks,
         completedWorkBooks: employees[i].CompletedWorkBooks,
@@ -139,6 +121,21 @@ export default class DataTable extends PureComponent {
 
     return rows;
   };
+
+  componentWillReceiveProps(newProps) {
+    if(this.state.modal != newProps.modal){
+      this.setState({
+        modal: newProps.modal
+      });
+    }
+  }
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+    this.props.updateState("levelTwoWB");
+  }
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
@@ -166,39 +163,16 @@ export default class DataTable extends PureComponent {
     this.setState({ rows });
   };
 
-  handleCellFocus = (args) => {
-    if(args.idx == 0 || args.idx == 6){
-      let levelTwoWB = this.state.levelTwoWB;
-      levelTwoWB = true;
-      this.setState({ ...this.state, levelTwoWB });
-    }
-    this.refs.reactDataGrid.deselect();
-  };
-
   rowGetter = i => this.state.rows[i];
 
   render() {
-      const { rows } = this.state;
+    const { rows } = this.state;
     return (
-          <CardBody>
-            <WL2Modal
-              updateState={this.updateModalState.bind(this)}
-              modal={this.state.levelTwoWB}
-            />
-            <div className="card__title">
-             <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
-            </div>
-            </div>
-            <div className="grid-container">
-              <p id="EntryCount">Show
-                <select className="select-options">
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                </select>
-                entries
-              </p>
+      <div>
+        <Modal isOpen={this.state.modal} toggle={this.toggle} centered={true} className="custom-modal-grid">
+          <ModalHeader toggle={this.toggle}>My Employees(Supervisor View)</ModalHeader>
+          <ModalBody>
+          <div className="grid-container">
               <div className="table">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
@@ -211,11 +185,14 @@ export default class DataTable extends PureComponent {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={44}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                   />
               </div>
             </div>
-          </CardBody>
+          </ModalBody>
+        </Modal>
+      </div>
     );
   }
 }
+
+export default WorkbookLevelTwo;
