@@ -23,6 +23,9 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LastName { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int UserId { get; set; }
+
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string WorkbookName { get; set; }

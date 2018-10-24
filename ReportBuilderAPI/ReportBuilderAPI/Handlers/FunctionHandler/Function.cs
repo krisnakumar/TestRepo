@@ -60,5 +60,26 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 return ResponseBuilder.InternalError();
             }
         }
+
+
+        /// <summary>
+        /// Get list of employees using userId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            WorkbookRepository workbookRepository = new WorkbookRepository();
+            try
+            {
+                return workbookRepository.GetWorkbookDetails(RequestReader.GetPathValue(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
     }
 }

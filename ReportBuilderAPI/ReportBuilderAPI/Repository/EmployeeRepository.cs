@@ -17,7 +17,7 @@ using System.Net;
 // <copyright file="EmployeeRepository.cs">
 // Copyright (c) 2018 All Rights Reserved
 // </copyright>
-// <author></author>
+// <author>Shoba Eswar</author>
 // <date>10-10-2018</date>
 // <summary>Repository that helps to read the data from the Table</summary>
 namespace ReportBuilderAPI.Repository
@@ -63,7 +63,8 @@ namespace ReportBuilderAPI.Repository
                             InDueWorkBooks = Convert.ToInt32(sqlDataReader["WorkbooksinDue"]),
                             PastDueWorkBooks = Convert.ToInt32(sqlDataReader["PastDueWorkbooks"]),
                             CompletedWorkBooks = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
-                            EmployeeCount = Convert.ToInt32(sqlDataReader["TotalEmployees"])
+                            EmployeeCount = Convert.ToInt32(sqlDataReader["TotalEmployees"]),
+                            UserId = Convert.ToInt32(sqlDataReader["UserId"])
                         };
                         employeeList.Add(employeeResponse);
                     }

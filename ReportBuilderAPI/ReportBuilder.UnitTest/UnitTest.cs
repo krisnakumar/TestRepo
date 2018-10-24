@@ -56,5 +56,28 @@ namespace ReportBuilder.UnitTest
             var userResponse = function.GetEmployees(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
+
+
+        /// <summary>
+        ///  Test method to get the workbook details
+        /// </summary>
+        [TestMethod]
+        public void GetWorkbookList()
+        {
+
+            Function function = new Function();
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "userId", "10" }
+
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                PathParameters = pathValues
+            };
+            var userResponse = function.GetWorkbookDetails(aPIGatewayProxyRequest, null);
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
     }
 }

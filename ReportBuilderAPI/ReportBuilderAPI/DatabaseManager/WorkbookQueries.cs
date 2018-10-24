@@ -1,0 +1,24 @@
+﻿// <copyright file="WorkbookQueries.cs">
+// Copyright (c) 2018 All Rights Reserved
+// </copyright>
+// <author></author>
+// <date>10-10-2018</date>
+// <summary>Queries that handles the workbook operations</summary>
+namespace ReportBuilderAPI.DatabaseManager
+{
+    /// <summary>
+    ///Queries that handles the workbook operations
+    /// </summary>
+    public class WorkbookQueries
+    {
+        /// <summary>
+        /// Read list of workbook details using userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static string ReadWorkbookDetails(int userId)
+        {
+            return "EXEC sp_GetWorkbook_Details " + userId;
+        }
+    }
+}
