@@ -1,4 +1,3 @@
-
 /* eslint-disable */
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -60,37 +59,13 @@ class WorkbookLevelTwo extends React.Component {
 
     this.state = {
       modal: this.props.modal,      
-      rows: this.createRows(this.employees),
+      rows: this.createRows(this.props.myEmployees),
       pageOfItems: [],
       levelTwoWB: false,
       level3WB: false
     };
     this.toggle = this.toggle.bind(this);
   }
-
-  componentDidMount = () => {
-    this.getEmployees(10);
-  };
-
-  getEmployees = (userId) => {
-    let _self = this,
-        url = "https://t4k73ghz7f.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
-    fetch(url)
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let rows = _self.createRows(json);
-        _self.setState({ rows: rows});
-        _self.onChangePage([]);
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
-  };
-
-  onChangePage = (pageOfItems) => {
-    this.setState({ pageOfItems });
-  };
 
   createRows = (employees) => {
     let assignedWorkBooksCount = 0,
@@ -124,8 +99,10 @@ class WorkbookLevelTwo extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
+      let rows = this.createRows(newProps.myEmployees);
       this.setState({
-        modal: newProps.modal
+        modal: newProps.modal,
+        rows: rows
       });
     }
   }

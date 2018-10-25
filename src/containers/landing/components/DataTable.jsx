@@ -71,7 +71,8 @@ export default class DataTable extends PureComponent {
       rows: this.createRows(this.employees),
       pageOfItems: [],
       levelTwoWB: false,
-      level3WB: false
+      level3WB: false,
+      myEmployees: {}
     };
   }
   
@@ -88,7 +89,7 @@ export default class DataTable extends PureComponent {
 
   getEmployees = (userId) => {
     let _self = this,
-         url = "https://t4k73ghz7f.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
+         url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
     fetch(url)
     .then(function(response) {
       return response.json()
@@ -96,6 +97,23 @@ export default class DataTable extends PureComponent {
         let rows = _self.createRows(json);
         _self.setState({ rows: rows});
         _self.onChangePage([]);
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+  getMyEmployees = (userId) => {
+    let _self = this,
+        url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
+    fetch(url)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let myEmployees = json,
+        levelTwoWB = _self.state.levelTwoWB;
+        levelTwoWB = true;
+        _self.setState({ ..._self.state, levelTwoWB, myEmployees });
         return json
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -124,6 +142,7 @@ export default class DataTable extends PureComponent {
       completedWorkBooksCount += parseInt(employees[i].CompletedWorkBooks);
       totalEmpCount += parseInt(employees[i].EmployeeCount)
       rows.push({
+        userId: employees[i].UserId,
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
         role: employees[i].Role,
         assignedWorkBooks: employees[i].AssignedWorkBooks,
@@ -168,9 +187,8 @@ export default class DataTable extends PureComponent {
 
   handleCellFocus = (args) => {
     if(args.idx == 0 || args.idx == 6){
-      let levelTwoWB = this.state.levelTwoWB;
-      levelTwoWB = true;
-      this.setState({ ...this.state, levelTwoWB });
+      let userId = this.state.rows[args.rowIdx].userId;
+      this.getMyEmployees(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -184,6 +202,7 @@ export default class DataTable extends PureComponent {
             <WL2Modal
               updateState={this.updateModalState.bind(this)}
               modal={this.state.levelTwoWB}
+              myEmployees={this.state.myEmployees}
             />
             <div className="card__title">
              <div className="pageheader">
