@@ -57,21 +57,24 @@ export default class TopbarWithNavigation extends PureComponent {
                     {
                        nav_menus.map(function(mainMenu, index) {                         
                         let menuName = mainMenu.name;
+                        let basePath = "https://dev.its-training.com";
                         return (
                           <UncontrolledDropdown key={index} 
                                     className="topbar__nav-dropdown" 
                                     onMouseOver={_self.onMouseEnter(index)} 
                                     onMouseLeave={_self.onMouseLeave(index)}
                                     isOpen={_self.state.isHover[index]} >
-                            <DropdownToggle className="topbar__nav-dropdown-toggle">
+                            <DropdownToggle className="topbar__nav-dropdown-toggle" href= {basePath + mainMenu.href}>
                               <img alt={menuName} src={mainMenu.iconUrl}/> 
                               {menuName}
                             </DropdownToggle>
                             <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
                             {
                               mainMenu.subMenu.map((menu, index) => (
-                                <DropdownItem key={menu.name+index}>
-                                  <TopbarNavLink title={menu.name} route={menu.href} />
+                              <DropdownItem key={menu.name+index}>
+                                 <a className= "topbar__link" title={menu.name} href={basePath + menu.href}>
+                                    <p className="topbar__link-title">{menu.name}</p>
+                                </a> 
                                 </DropdownItem>
                               ))
                             }
@@ -81,7 +84,7 @@ export default class TopbarWithNavigation extends PureComponent {
                       })
                     }                  
             </nav>
-          </div>
+          </div>+
         </div>
       </div>
     );

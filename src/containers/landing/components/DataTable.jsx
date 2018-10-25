@@ -84,7 +84,7 @@ export default class DataTable extends PureComponent {
   };
 
   componentDidMount = () => {
-    this.getEmployees(10);
+    this.getEmployees(6);
   };
 
   getEmployees = (userId) => {
