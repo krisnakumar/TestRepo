@@ -7,11 +7,11 @@
 
   .react-grid-HeaderCell, .react-grid-Cell {
     background: transparent;
-    border: none;
+    // border: none;
     padding: 0 10px;
 
     @include themify($themes) {
-      border-bottom: 1px solid themed('colorBorder');
+      border-bottom: 1px solid #babdc3;//1px solid themed('colorBorder');
       color: themed('colorText');
     }
   }
@@ -170,4 +170,11 @@
       background-color: themed('colorHover');
     }
   }
+}
+
+.react-grid-Cell {
+  background-color: #fff;
+  padding-right: 8px;
+  border-right: none;
+  border-bottom: 1px solid #babdc3;
 }

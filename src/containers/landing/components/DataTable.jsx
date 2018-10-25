@@ -5,6 +5,7 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import WL2Modal from './WorkbookLevelTwo';
+import WL3Modal from './AssignedWorkBook';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
@@ -72,7 +73,8 @@ export default class DataTable extends PureComponent {
       pageOfItems: [],
       levelTwoWB: false,
       level3WB: false,
-      myEmployees: {}
+      myEmployees: {},
+      assignedWorkBooks: {}
     };
   }
   
@@ -114,6 +116,23 @@ export default class DataTable extends PureComponent {
         levelTwoWB = _self.state.levelTwoWB;
         levelTwoWB = true;
         _self.setState({ ..._self.state, levelTwoWB, myEmployees });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+  getAssignedWorkbooks = (userId) => {
+    let _self = this,
+        url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned";
+    fetch(url)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let assignedWorkBooks = json,
+        level3WB = _self.state.level3WB;
+        level3WB = true;
+        _self.setState({ ..._self.state, level3WB, assignedWorkBooks });
         return json
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -189,6 +208,9 @@ export default class DataTable extends PureComponent {
     if(args.idx == 0 || args.idx == 6){
       let userId = this.state.rows[args.rowIdx].userId;
       this.getMyEmployees(userId);
+    } else if(args.idx == 2){
+      let userId = this.state.rows[args.rowIdx].userId;
+      this.getAssignedWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -204,20 +226,25 @@ export default class DataTable extends PureComponent {
               modal={this.state.levelTwoWB}
               myEmployees={this.state.myEmployees}
             />
+            <WL3Modal
+              updateState={this.updateModalState.bind(this)}
+              modal={this.state.level3WB}
+              myEmployees={this.state.assignedWorkBooks}
+            />
             <div className="card__title">
              <div className="pageheader">
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
             </div>
             <div className="grid-container">
-              <p id="EntryCount">Show
+              {/* <p id="EntryCount">Show
                 <select className="select-options">
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="30">30</option>
                 </select>
                 entries
-              </p>
+              </p> */}
               <div className="table">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
