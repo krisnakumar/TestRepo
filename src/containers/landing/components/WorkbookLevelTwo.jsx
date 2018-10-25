@@ -14,7 +14,7 @@ class WorkbookLevelTwo extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 300,
+        width: 250,
         editable: false,
         cellClass: "text-left"
       },
@@ -28,6 +28,7 @@ class WorkbookLevelTwo extends React.Component {
       {
         key: 'inDueWorkBooks',
         name: 'WorkBook Due in 30 Days',
+        width: 200,
         sortable: true,
         editable: false,
         cellClass: "text-right"

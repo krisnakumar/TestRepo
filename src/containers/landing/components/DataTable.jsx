@@ -20,7 +20,7 @@ export default class DataTable extends PureComponent {
         sortable: true,
         width: 300,
         editable: false,
-        cellClass: "text-left"
+        cellClass: "text-left text-clickable"
       },
       {
         key: 'role',
@@ -34,7 +34,7 @@ export default class DataTable extends PureComponent {
         name: 'Assigned WorkBook',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'inDueWorkBooks',
@@ -55,14 +55,14 @@ export default class DataTable extends PureComponent {
         name: 'Completed WorkBook',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'total',
         name: 'Total',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
     ];
 
@@ -229,7 +229,7 @@ export default class DataTable extends PureComponent {
             <WL3Modal
               updateState={this.updateModalState.bind(this)}
               modal={this.state.level3WB}
-              myEmployees={this.state.assignedWorkBooks}
+              assignedWorkBooks={this.state.assignedWorkBooks}
             />
             <div className="card__title">
              <div className="pageheader">
