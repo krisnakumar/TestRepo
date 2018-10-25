@@ -3,6 +3,7 @@ import sidebarReducer from './sidebarReducer';
 import cryptoTableReducer from './cryptoTableReducer';
 import newOrderTableReducer from './newOrderTableReducer';
 import customizerReducer from './customizerReducer';
+import loaderReducer from './loaderReducer';
 
 export {
   themeReducer,
@@ -10,4 +11,5 @@ export {
   cryptoTableReducer,
   newOrderTableReducer,
   customizerReducer,
+  loaderReducer,
 };

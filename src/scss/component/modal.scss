@@ -6,8 +6,13 @@
   max-width: 385px;
 }
 
+.modal-title {
+  font-weight: 700; 
+  font-size: 18px;
+}
+
 .modal-content {
-  border-radius: 0;
+  border-radius: 3px;
   border: none;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
   position: relative;

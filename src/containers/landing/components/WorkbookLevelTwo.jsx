@@ -5,6 +5,12 @@ import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 
+class EmptyRowsView extends React.Component{
+  render() {
+    return (<div className="no-records-found-modal">Sorry, no records</div>)
+  }
+};
+
 class WorkbookLevelTwo extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +58,7 @@ class WorkbookLevelTwo extends React.Component {
         name: 'Total Employees',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right last-column"
       },
     ];
 
@@ -143,6 +149,10 @@ class WorkbookLevelTwo extends React.Component {
 
   rowGetter = i => this.state.rows[i];
 
+  EmptyRowsView() {
+      return (<div>Sorry, no records :(</div>)
+  };
+
   render() {
     const { rows } = this.state;
     return (
@@ -163,6 +173,7 @@ class WorkbookLevelTwo extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={44}
                       minColumnWidth={100}
+                      emptyRowsView={EmptyRowsView} 
                   />
               </div>
             </div>

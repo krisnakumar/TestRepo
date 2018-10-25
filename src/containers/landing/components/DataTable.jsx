@@ -1,13 +1,18 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Card, CardBody, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import WL2Modal from './WorkbookLevelTwo';
 import WL3Modal from './AssignedWorkBook';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Loader from '../../_layout/loader/Loader';
 
+class DataTableEmptyRowsView extends React.Component{
+  render() {
+    return (<div className="no-records-found">Sorry, no records</div>)
+  }
+};
 
 export default class DataTable extends PureComponent {
 
@@ -62,7 +67,7 @@ export default class DataTable extends PureComponent {
         name: 'Total',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        cellClass: "text-right text-clickable last-column"
       },
     ];
 
@@ -219,8 +224,9 @@ export default class DataTable extends PureComponent {
 
   render() {
       const { rows } = this.state;
-    return (
+    return (         
           <CardBody>
+            {/* <Loader/>  */}
             <WL2Modal
               updateState={this.updateModalState.bind(this)}
               modal={this.state.levelTwoWB}
@@ -258,6 +264,7 @@ export default class DataTable extends PureComponent {
                       rowHeight={44}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
+                      emptyRowsView={DataTableEmptyRowsView} 
                   />
               </div>
             </div>

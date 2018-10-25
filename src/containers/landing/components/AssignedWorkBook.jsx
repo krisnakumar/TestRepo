@@ -5,6 +5,12 @@ import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 
+class AssignedWorkBookEmptyRowsView extends React.Component{
+  render() {
+    return (<div className="no-records-found-modal">Sorry, no records</div>)
+  }
+};
+
 class AssignedWorkBook extends React.Component {
   constructor(props) {
     super(props);
@@ -44,7 +50,7 @@ class AssignedWorkBook extends React.Component {
         name: 'Due Date',
         sortable: true,
         editable: false,
-        cellClass: "text-center"
+        cellClass: "text-center last-column"
       },
     ];
 
@@ -140,6 +146,7 @@ class AssignedWorkBook extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={44}
                       minColumnWidth={100}
+                      emptyRowsView={AssignedWorkBookEmptyRowsView} 
                   />
               </div>
             </div>

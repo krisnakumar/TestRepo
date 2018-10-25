@@ -6,6 +6,7 @@ import {
   sidebarReducer,
   themeReducer,
   customizerReducer,
+  loaderReducer,
 } from '../../redux/reducers/index';
 
 const reducer = combineReducers({
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   cryptoTable: cryptoTableReducer,
   newOrder: newOrderTableReducer,
   customizer: customizerReducer,
+  loader: loaderReducer,
 });
 const store = createStore(reducer);
 
