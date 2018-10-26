@@ -1,0 +1,144 @@
+/* eslint-disable */
+import React, { PureComponent } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+import { instanceOf, PropTypes } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
+ 
+
+class LogInForm extends PureComponent {
+  static propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    cookies: instanceOf(Cookies).isRequired
+  };
+
+  constructor(props) {
+    super(props);
+    const { cookies } = props;
+    this.state = {
+      showPassword: false,
+      toDashboard: false,
+      username: "",
+      password: ""
+    };
+
+    this.showPassword = this.showPassword.bind(this);
+    this.loginSubmit = this.loginSubmit.bind(this);
+    this.handleUserInput = this.handleUserInput.bind(this);
+    this.authenticate = this.authenticate.bind(this);
+  }
+
+  showPassword(e) {
+    e.preventDefault();
+    this.setState({
+      showPassword: !this.state.showPassword,
+    });
+  }
+
+  handleUserInput(event) {
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({ [name]: value });
+  }
+
+  loginSubmit(event){
+    event.preventDefault();
+    let userName = this.state.username;
+    let password = this.state.password;
+    if(userName && password){      
+      this.authenticate();
+    }
+  }
+
+  authenticate(){
+    let _self = this,
+        url = "https://hqvygbjg4m.execute-api.us-west-2.amazonaws.com/dev/login",
+        postData = {
+          "UserName": _self.state.username,
+          "Password": _self.state.password
+          };
+    fetch(url, 
+      {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify(postData)
+    }).then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        console.log(json);
+        if(json.AccessToken && json.IdentityToken){
+          const { cookies } = _self.props;
+          cookies.set('AccessToken', json.AccessToken, { path: '/' });
+          cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
+          _self.setState({ toDashboard: true });
+        } else {
+          _self.setState({ toDashboard: false });
+        }
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    });
+  }
+
+  render() {
+    const { handleSubmit } = this.props;
+
+    if (this.state.toDashboard === true) {
+      return <Redirect to='/reports' />
+    }
+
+    return (
+      <form className="form" onSubmit={this.loginSubmit}>
+        <div className="form__form-group">
+          <label className="form__form-group-label" htmlFor="name">Username</label>
+          <div className="form__form-group-field">
+            <Field
+              name="username"
+              id="userName"
+              component="input"
+              type="text"
+              placeholder=""
+              onChange={event => this.handleUserInput(event)}
+            />
+          </div>
+        </div>
+        <div className="form__form-group">
+          <label className="form__form-group-label" htmlFor="password">Password</label>
+          <div className="form__form-group-field">
+            <Field
+              name="password"
+              component="input"
+              id="password"
+              type={this.state.showPassword ? 'text' : 'password'}
+              placeholder=""
+              onChange={event => this.handleUserInput(event)}
+            />
+          </div>
+          <div className="account__forgot-password">
+            <a href="/PasswordRecovery.aspx">I forgot my password</a>
+          </div>
+        </div>
+        <div className="account__btns">
+          <button
+              type="submit"
+              className="btn btn-primary account__btn">
+                Login
+            </button>
+        </div>
+      </form>
+    );
+  }
+}
+
+export default reduxForm({
+  form: 'log_in_form', // a unique identifier for this form
+})(withCookies(LogInForm));

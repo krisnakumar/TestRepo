@@ -30,7 +30,8 @@
     }
 
     @include themify($themes) {
-      border: 1px solid themed('colorFieldsBorder');
+      border: 1px solid #ccc;
+      border-radius: 5px;
       color: themed('colorText');
     }
 

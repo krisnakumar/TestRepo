@@ -42,6 +42,7 @@
     "react-big-calendar": "^0.19.2",
     "react-chartjs-2": "^2.7.4",
     "react-color": "^2.14.1",
+    "react-cookie": "^3.0.4",
     "react-data-grid": "^3.0.10",
     "react-datepicker": "^1.2.2",
     "react-dev-utils": "^5.0.2",

@@ -103,3 +103,8 @@ img {
 .no-records-found-modal {
   margin: 10% 0% 10% 0%;
 }
+
+.react-grid-Canvas div ~ div.react-grid-Row:last-child div.react-grid-Cell {
+  text-decoration: none;
+  cursor: none;
+}

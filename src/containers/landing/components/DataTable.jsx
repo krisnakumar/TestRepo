@@ -212,9 +212,13 @@ export default class DataTable extends PureComponent {
   handleCellFocus = (args) => {
     if(args.idx == 0 || args.idx == 6){
       let userId = this.state.rows[args.rowIdx].userId;
-      this.getMyEmployees(userId);
+
+      if(userId)
+      this.getMyEmployees(userId);      
     } else if(args.idx == 2){
       let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
       this.getAssignedWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
@@ -243,14 +247,6 @@ export default class DataTable extends PureComponent {
             </div>
             </div>
             <div className="grid-container">
-              {/* <p id="EntryCount">Show
-                <select className="select-options">
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                </select>
-                entries
-              </p> */}
               <div className="table">
                   <ReactDataGrid
                       ref={'reactDataGrid'}

@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   overflow-y: auto;
+  background-color: #e0e0e0;
 
   &.account--photo {
     background: url(../shared/img/404/bg_404.png) no-repeat center;
@@ -76,7 +77,6 @@
 .account__btns {
   display: flex;
   width: calc(100% + 10px);
-  margin: -10px 0 -20px -10px;
 
   a {
     margin: 10px 0 20px 10px;
@@ -87,6 +87,8 @@
 .account__btn {
   width: 100%;
   margin-right: 0;
+  background: #5cb85c !important;
+  height: 40px;
 }
 
 .account__avatar {
