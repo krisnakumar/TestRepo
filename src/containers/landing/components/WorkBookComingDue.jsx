@@ -5,13 +5,13 @@ import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 
-class AssignedWorkBookEmptyRowsView extends React.Component{
+class WorkBookComingDueEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
 };
 
-class AssignedWorkBook extends React.Component {
+class WorkBookComingDue extends React.Component {
   constructor(props) {
     super(props);
 
@@ -32,8 +32,8 @@ class AssignedWorkBook extends React.Component {
         cellClass: "text-left"
       },
       {
-        key: 'completedTasks',
-        name: 'Completed/ Total Tasks',
+        key: 'workbookName',
+        name: 'WorkbookName',
         sortable: true,
         editable: false,
         cellClass: "text-center"
@@ -77,9 +77,10 @@ class AssignedWorkBook extends React.Component {
     for (let i = 0; i < length; i++) { 
         let dueDate = employees[i].DueDate.split("T")[0];
       rows.push({
+        userId: employees[i].UserId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        completedTasks: employees[i].CompletedTasks,
+        workbookName: employees[i].WorkbookName,
         percentageCompleted: employees[i].PercentageCompleted,
         dueDate: dueDate
       });
@@ -102,7 +103,7 @@ class AssignedWorkBook extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
-    this.props.updateState("isAssignedModal");
+    this.props.updateState("isComingDueModal");
   }
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -138,7 +139,7 @@ class AssignedWorkBook extends React.Component {
     return (
       <div>
         <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
+          <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">
@@ -153,7 +154,7 @@ class AssignedWorkBook extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={44}
                       minColumnWidth={100}
-                      emptyRowsView={AssignedWorkBookEmptyRowsView} 
+                      emptyRowsView={WorkBookComingDueEmptyRowsView} 
                   />
               </div>
             </div>
@@ -164,4 +165,4 @@ class AssignedWorkBook extends React.Component {
   }
 }
 
-export default AssignedWorkBook;
+export default WorkBookComingDue;

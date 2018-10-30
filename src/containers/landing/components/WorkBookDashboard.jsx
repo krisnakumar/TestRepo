@@ -4,13 +4,13 @@ import { Card, CardBody, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
-import MyEmployees from './MyEmployees';
-import AssignedWorkBook from './AssignedWorkBook';
-import Loader from '../../_layout/loader/Loader';
-
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-
+import MyEmployees from './MyEmployees';
+import AssignedWorkBook from './AssignedWorkBook';
+import WorkBookDuePast from './WorkBookDuePast';
+import WorkBookComingDue from './WorkBookComingDue';
+import Loader from '../../_layout/loader/Loader';
 
 class DataTableEmptyRowsView extends React.Component{
 
@@ -55,14 +55,14 @@ class WorkBookDashboard extends PureComponent {
         name: 'WorkBook Due',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due WorkBooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'completedWorkBooks',
@@ -85,10 +85,14 @@ class WorkBookDashboard extends PureComponent {
     this.state = {
       rows: this.createRows(this.employees),
       pageOfItems: [],
-      levelTwoWB: false,
-      level3WB: false,
+      isMyEmployeeModal: false,
+      isAssignedModal: false,
+      isPastDueModal: false,
+      isComingDueModal: false,
       myEmployees: {},
-      assignedWorkBooks: {}
+      assignedWorkBooks: {},
+      workBookDuePast: {},
+      workBookComingDue: {}
     };
   }
 
@@ -146,9 +150,9 @@ class WorkBookDashboard extends PureComponent {
       return response.json()
     }).then(function(json) { 
         let myEmployees = json,
-        levelTwoWB = _self.state.levelTwoWB;
-        levelTwoWB = true;
-        _self.setState({ ..._self.state, levelTwoWB, myEmployees });
+        isMyEmployeeModal = _self.state.isMyEmployeeModal;
+        isMyEmployeeModal = true;
+        _self.setState({ ..._self.state, isMyEmployeeModal, myEmployees });
         return json
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -168,9 +172,53 @@ class WorkBookDashboard extends PureComponent {
       return response.json()
     }).then(function(json) { 
         let assignedWorkBooks = json,
-        level3WB = _self.state.level3WB;
-        level3WB = true;
-        _self.setState({ ..._self.state, level3WB, assignedWorkBooks });
+        isAssignedModal = _self.state.isAssignedModal;
+        isAssignedModal = true;
+        _self.setState({ ..._self.state, isAssignedModal, assignedWorkBooks });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+  getPastDueWorkbooks = (userId) => {
+    const { cookies } = this.props;
+    let _self = this,
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/pastdue";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let workBookDuePast = json,
+        isPastDueModal = _self.state.isPastDueModal;
+        isPastDueModal = true;
+        _self.setState({ ..._self.state, isPastDueModal, workBookDuePast });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+  getComingDueWorkbooks = (userId) => {
+    const { cookies } = this.props;
+    let _self = this,
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/comingdue";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let workBookComingDue = json,
+        isComingDueModal = _self.state.isComingDueModal;
+        isComingDueModal = true;
+        _self.setState({ ..._self.state, isComingDueModal, workBookComingDue });
         return json
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -263,6 +311,16 @@ class WorkBookDashboard extends PureComponent {
 
       if(userId)
       this.getAssignedWorkbooks(userId);
+    } else if(args.idx == 4){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getPastDueWorkbooks(userId);
+    } else if(args.idx == 3){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getComingDueWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -273,16 +331,26 @@ class WorkBookDashboard extends PureComponent {
       const { rows } = this.state;
     return (         
           <CardBody>
-            {/* <Loader/>  */}
+            {/* <Loader/> */}
             <MyEmployees
               updateState={this.updateModalState.bind(this)}
-              modal={this.state.levelTwoWB}
+              modal={this.state.isMyEmployeeModal}
               myEmployees={this.state.myEmployees}
             />
             <AssignedWorkBook
               updateState={this.updateModalState.bind(this)}
-              modal={this.state.level3WB}
+              modal={this.state.isAssignedModal}
               assignedWorkBooks={this.state.assignedWorkBooks}
+            />
+             <WorkBookDuePast
+              updateState={this.updateModalState.bind(this)}
+              modal={this.state.isPastDueModal}
+              assignedWorkBooks={this.state.workBookDuePast}
+            />
+             <WorkBookComingDue
+              updateState={this.updateModalState.bind(this)}
+              modal={this.state.isComingDueModal}
+              assignedWorkBooks={this.state.workBookComingDue}
             />
             <div className="card__title">
              <div className="pageheader">

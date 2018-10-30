@@ -27,7 +27,7 @@ class Landing extends PureComponent {
 
   componentDidCatch(error, info) {
     // Display fallback UI
-    //this.setState({ hasError: true });
+    // this.setState({ hasError: true });
     // You can also log the error to an error reporting service
     console.log(error, info);
   }

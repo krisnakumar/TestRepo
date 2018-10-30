@@ -4,7 +4,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
-import AssignedWorkBook from './AssignedWorkBook';
+import WorkBookDuePast from './WorkBookDuePast';
+import WorkBookComingDue from './WorkBookComingDue';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -51,7 +52,7 @@ class MyEmployees extends React.Component {
         name: 'Past Due WorkBooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'completedWorkBooks',
@@ -75,10 +76,11 @@ class MyEmployees extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.myEmployees),
       pageOfItems: [],
-      levelTwoWB: false,
-      level3WB: false,
-      isAssignedWorkBook: false,
-      assignedWorkBooks: {}
+      isMyEmployeeModal: false,
+      isPastDueModal: false,
+      isComingDueModal: false,
+      workBookDuePast: {},
+      workBookComingDue: {}
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -86,32 +88,10 @@ class MyEmployees extends React.Component {
 
   componentDidCatch(error, info) {
     // Display fallback UI
-    //this.setState({ hasError: true });
+    // this.setState({ hasError: true });
     // You can also log the error to an error reporting service
     console.log(error, info);
   }
-
-  getAssignedWorkbooks = (userId) => {
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/assigned";
-    const { cookies } = _self.props;
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let assignedWorkBooks = json,
-        isAssignedWorkBook = _self.state.isAssignedWorkBook;
-        isAssignedWorkBook = true;
-        _self.setState({ ..._self.state, isAssignedWorkBook, assignedWorkBooks });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
-  };
 
   createRows = (employees) => {
     let assignedWorkBooksCount = 0,
@@ -144,6 +124,51 @@ class MyEmployees extends React.Component {
     return rows;
   };
 
+  getPastDueWorkbooks = (userId) => {
+    const { cookies } = this.props;
+    let _self = this,
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/pastdue";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let workBookDuePast = json,
+        isPastDueModal = _self.state.isPastDueModal;
+        isPastDueModal = true;
+        _self.setState({ ..._self.state, isPastDueModal, workBookDuePast });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+  getComingDueWorkbooks = (userId) => {
+    const { cookies } = this.props;
+    let _self = this,
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/comingdue";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let workBookComingDue = json,
+        isComingDueModal = _self.state.isComingDueModal;
+        isComingDueModal = true;
+        _self.setState({ ..._self.state, isComingDueModal, workBookComingDue });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
+
+
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.myEmployees);
@@ -158,7 +183,7 @@ class MyEmployees extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
-    this.props.updateState("levelTwoWB");
+    this.props.updateState("isMyEmployeeModal");
   }
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -211,12 +236,16 @@ class MyEmployees extends React.Component {
   };
 
   handleCellFocus = (args) => {
-    if(args.idx == 2){
+    if(args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId;
 
       if(userId)
-      this.getAssignedWorkbooks(userId); 
+      this.getPastDueWorkbooks(userId);
+    } else if(args.idx == 2){
+      let userId = this.state.rows[args.rowIdx].userId;
 
+      if(userId)
+      this.getComingDueWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -226,10 +255,15 @@ class MyEmployees extends React.Component {
     const { rows } = this.state;
     return (     
       <div>
-         <AssignedWorkBook
+         <WorkBookComingDue
             updateState={this.updateModalState.bind(this)}
-            modal={this.state.isAssignedWorkBook}
-            assignedWorkBooks={this.state.assignedWorkBooks}
+            modal={this.state.isComingDueModal}
+            assignedWorkBooks={this.state.workBookComingDue}
+          />
+           <WorkBookDuePast
+            updateState={this.updateModalState.bind(this)}
+            modal={this.state.isPastDueModal}
+            assignedWorkBooks={this.state.workBookDuePast}
           />
         <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees(Supervisor View)</ModalHeader>
