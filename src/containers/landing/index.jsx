@@ -8,7 +8,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
 import Layout from '../_layout/index';
-import Table from './components/DataTable';
+import Table from './components/WorkBookDashboard';
 
 const logo = `${process.env.PUBLIC_URL}/img/content_logo.png`;
 
@@ -24,6 +24,13 @@ class Landing extends PureComponent {
   changeToLight = () => {
     this.props.dispatch(changeThemeToLight());
   };
+
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    //this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    console.log(error, info);
+  }
 
   render() {
     return (

@@ -4,6 +4,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
+import AssignedWorkBook from './AssignedWorkBook';
+import { instanceOf, PropTypes } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
 class EmptyRowsView extends React.Component{
   render() {
@@ -11,7 +14,11 @@ class EmptyRowsView extends React.Component{
   }
 };
 
-class WorkbookLevelTwo extends React.Component {
+class MyEmployees extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -37,7 +44,7 @@ class WorkbookLevelTwo extends React.Component {
         width: 200,
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'pastDueWorkBooks',
@@ -69,10 +76,42 @@ class WorkbookLevelTwo extends React.Component {
       rows: this.createRows(this.props.myEmployees),
       pageOfItems: [],
       levelTwoWB: false,
-      level3WB: false
+      level3WB: false,
+      isAssignedWorkBook: false,
+      assignedWorkBooks: {}
     };
     this.toggle = this.toggle.bind(this);
+    this.updateModalState = this.updateModalState.bind(this);
   }
+
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    //this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    console.log(error, info);
+  }
+
+  getAssignedWorkbooks = (userId) => {
+    let _self = this,
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/assigned";
+    const { cookies } = _self.props;
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) { 
+        let assignedWorkBooks = json,
+        isAssignedWorkBook = _self.state.isAssignedWorkBook;
+        isAssignedWorkBook = true;
+        _self.setState({ ..._self.state, isAssignedWorkBook, assignedWorkBooks });
+        return json
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  };
 
   createRows = (employees) => {
     let assignedWorkBooksCount = 0,
@@ -89,6 +128,7 @@ class WorkbookLevelTwo extends React.Component {
       completedWorkBooksCount += parseInt(employees[i].CompletedWorkBooks);
       totalEmpCount += parseInt(employees[i].EmployeeCount);      
       rows.push({
+        userId: employees[i].UserId,
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
         workbook: employees[i].WorkbookName,
         inDueWorkBooks: employees[i].InDueWorkBooks,
@@ -141,8 +181,18 @@ class WorkbookLevelTwo extends React.Component {
       }
     };
 
-    const sortRows = this.state.rows.slice(0);
+    const beforePopRows = this.state.rows;
+    let totalRow = "";
+    if(beforePopRows.length > 0)
+    {
+      totalRow = beforePopRows.pop();
+    }
+
+    const sortRows = beforePopRows.slice(0);
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    
+    if(beforePopRows.length > 0)
+      rows.push(totalRow);
 
     this.setState({ rows });
   };
@@ -153,11 +203,35 @@ class WorkbookLevelTwo extends React.Component {
       return (<div>Sorry, no records :(</div>)
   };
 
+  updateModalState = (modelName) => {
+    let value = !this.state[modelName];
+    this.setState({
+      [modelName]: value
+    });
+  };
+
+  handleCellFocus = (args) => {
+    if(args.idx == 2){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getAssignedWorkbooks(userId); 
+
+    }
+    this.refs.reactDataGrid.deselect();
+  };
+
+
   render() {
     const { rows } = this.state;
-    return (
+    return (     
       <div>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} centered={true} className="custom-modal-grid">
+         <AssignedWorkBook
+            updateState={this.updateModalState.bind(this)}
+            modal={this.state.isAssignedWorkBook}
+            assignedWorkBooks={this.state.assignedWorkBooks}
+          />
+        <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees(Supervisor View)</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -174,6 +248,7 @@ class WorkbookLevelTwo extends React.Component {
                       rowHeight={44}
                       minColumnWidth={100}
                       emptyRowsView={EmptyRowsView} 
+                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                   />
               </div>
             </div>
@@ -184,4 +259,4 @@ class WorkbookLevelTwo extends React.Component {
   }
 }
 
-export default WorkbookLevelTwo;
+export default withCookies(MyEmployees);

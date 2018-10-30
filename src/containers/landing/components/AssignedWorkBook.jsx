@@ -64,6 +64,13 @@ class AssignedWorkBook extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    // this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    console.log(error, info);
+  }
+
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
@@ -130,7 +137,7 @@ class AssignedWorkBook extends React.Component {
     const { rows } = this.state;
     return (
       <div>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
           <ModalBody>
           <div className="grid-container">

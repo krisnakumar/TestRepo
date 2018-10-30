@@ -4,17 +4,26 @@ import { Card, CardBody, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
-import WL2Modal from './WorkbookLevelTwo';
-import WL3Modal from './AssignedWorkBook';
+import MyEmployees from './MyEmployees';
+import AssignedWorkBook from './AssignedWorkBook';
 import Loader from '../../_layout/loader/Loader';
 
+import { instanceOf, PropTypes } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
+
+
 class DataTableEmptyRowsView extends React.Component{
+
   render() {
     return (<div className="no-records-found">Sorry, no records</div>)
   }
 };
 
-export default class DataTable extends PureComponent {
+class WorkBookDashboard extends PureComponent {
+
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
 
   constructor() {
     super();
@@ -82,6 +91,15 @@ export default class DataTable extends PureComponent {
       assignedWorkBooks: {}
     };
   }
+
+
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    //this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    console.log(error, info);
+  }
+
   
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
@@ -95,9 +113,14 @@ export default class DataTable extends PureComponent {
   };
 
   getEmployees = (userId) => {
+    const { cookies } = this.props;
     let _self = this,
-         url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
-    fetch(url)
+         url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/employees";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
     .then(function(response) {
       return response.json()
     }).then(function(json) { 
@@ -111,9 +134,14 @@ export default class DataTable extends PureComponent {
   };
 
   getMyEmployees = (userId) => {
+    const { cookies } = this.props;
     let _self = this,
-        url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees";
-    fetch(url)
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/employees";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
     .then(function(response) {
       return response.json()
     }).then(function(json) { 
@@ -128,9 +156,14 @@ export default class DataTable extends PureComponent {
   };
 
   getAssignedWorkbooks = (userId) => {
+    const { cookies } = this.props;
     let _self = this,
-        url = "https://oj8d8t31yc.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned";
-    fetch(url)
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/assigned";
+    fetch(url,  {headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": cookies.get('IdentityToken')
+    }})
     .then(function(response) {
       return response.json()
     }).then(function(json) { 
@@ -202,9 +235,19 @@ export default class DataTable extends PureComponent {
         return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
       }
     };
+    
+    const beforePopRows = this.state.rows;
+    let totalRow = "";
+    if(beforePopRows.length > 0)
+    {
+      totalRow = beforePopRows.pop();
+    }
 
-    const sortRows = this.state.rows.slice(0);
+    const sortRows = beforePopRows.slice(0);
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    
+    if(beforePopRows.length > 0)
+      rows.push(totalRow);
 
     this.setState({ rows });
   };
@@ -231,12 +274,12 @@ export default class DataTable extends PureComponent {
     return (         
           <CardBody>
             {/* <Loader/>  */}
-            <WL2Modal
+            <MyEmployees
               updateState={this.updateModalState.bind(this)}
               modal={this.state.levelTwoWB}
               myEmployees={this.state.myEmployees}
             />
-            <WL3Modal
+            <AssignedWorkBook
               updateState={this.updateModalState.bind(this)}
               modal={this.state.level3WB}
               assignedWorkBooks={this.state.assignedWorkBooks}
@@ -268,3 +311,5 @@ export default class DataTable extends PureComponent {
     );
   }
 }
+
+export default withCookies(WorkBookDashboard);

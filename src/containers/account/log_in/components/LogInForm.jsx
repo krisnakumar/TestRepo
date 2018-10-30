@@ -34,6 +34,13 @@ class LogInForm extends PureComponent {
     this.authenticate = this.authenticate.bind(this);
   }
 
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    // this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    console.log(error, info);
+  }
+
   showPassword(e) {
     e.preventDefault();
     this.setState({
@@ -58,7 +65,7 @@ class LogInForm extends PureComponent {
 
   authenticate(){
     let _self = this,
-        url = "https://hqvygbjg4m.execute-api.us-west-2.amazonaws.com/dev/login",
+        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/login",
         postData = {
           "UserName": _self.state.username,
           "Password": _self.state.password
@@ -74,7 +81,6 @@ class LogInForm extends PureComponent {
     }).then(function(response) {
       return response.json()
     }).then(function(json) { 
-        console.log(json);
         if(json.AccessToken && json.IdentityToken){
           const { cookies } = _self.props;
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
