@@ -11,6 +11,7 @@ import AssignedWorkBook from './AssignedWorkBook';
 import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
 import Loader from '../../_layout/loader/Loader';
+import * as API from '../../../shared/utils/APIUtils';
 
 class DataTableEmptyRowsView extends React.Component{
 
@@ -89,17 +90,19 @@ class WorkBookDashboard extends PureComponent {
       isAssignedModal: false,
       isPastDueModal: false,
       isComingDueModal: false,
+      isCompletedModal: false,
       myEmployees: {},
       assignedWorkBooks: {},
       workBookDuePast: {},
-      workBookComingDue: {}
+      workBookComingDue: {},
+      workBookCompleted: {}
     };
   }
 
 
   componentDidCatch(error, info) {
     // Display fallback UI
-    //this.setState({ hasError: true });
+    // this.setState({ hasError: true });
     // You can also log the error to an error reporting service
     console.log(error, info);
   }
@@ -112,117 +115,84 @@ class WorkBookDashboard extends PureComponent {
     });
   };
 
-  componentDidMount = () => {
-    this.getEmployees(6);
+   componentDidMount() {    
+    this.getEmployees(6);  
   };
 
-  getEmployees = (userId) => {
+  async getEmployees(userId){
     const { cookies } = this.props;
-    let _self = this,
-         url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/employees";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let rows = _self.createRows(json);
-        _self.setState({ rows: rows});
-        _self.onChangePage([]);
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        rows = this.createRows(response);
+    this.setState({ rows: rows});
+    this.onChangePage([]);
   };
 
-  getMyEmployees = (userId) => {
+  async getMyEmployees(userId){
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/employees";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let myEmployees = json,
-        isMyEmployeeModal = _self.state.isMyEmployeeModal;
-        isMyEmployeeModal = true;
-        _self.setState({ ..._self.state, isMyEmployeeModal, myEmployees });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        myEmployees = response,
+        isMyEmployeeModal = this.state.isMyEmployeeModal;
+
+      isMyEmployeeModal = true;
+      this.setState({ ...this.state, isMyEmployeeModal, myEmployees });
   };
 
-  getAssignedWorkbooks = (userId) => {
+  async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/assigned";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let assignedWorkBooks = json,
-        isAssignedModal = _self.state.isAssignedModal;
-        isAssignedModal = true;
-        _self.setState({ ..._self.state, isAssignedModal, assignedWorkBooks });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        assignedWorkBooks = response,
+        isAssignedModal = this.state.isAssignedModal;
+
+    isAssignedModal = true;
+    this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
 
-  getPastDueWorkbooks = (userId) => {
+  async getPastDueWorkbooks(userId){
+    
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/pastdue";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let workBookDuePast = json,
-        isPastDueModal = _self.state.isPastDueModal;
-        isPastDueModal = true;
-        _self.setState({ ..._self.state, isPastDueModal, workBookDuePast });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookDuePast = response,
+        isPastDueModal = this.state.isPastDueModal;
+
+      isPastDueModal = true;
+      this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
 
-  getComingDueWorkbooks = (userId) => {
+  async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/comingdue";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let workBookComingDue = json,
-        isComingDueModal = _self.state.isComingDueModal;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookComingDue = response,
+        isComingDueModal = this.state.isComingDueModal;
+
         isComingDueModal = true;
-        _self.setState({ ..._self.state, isComingDueModal, workBookComingDue });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+    this.setState({ ...this.state, isComingDueModal, workBookComingDue });
+  };
+
+  async getCompletedWorkbooks(userId){
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookCompleted = response,
+        isCompletedModal = this.state.isCompletedModal;
+
+    isCompletedModal = true;
+    this.setState({ ...this.state, isCompletedModal, workBookCompleted });
   };
 
   onChangePage = (pageOfItems) => {
@@ -321,6 +291,11 @@ class WorkBookDashboard extends PureComponent {
 
       if(userId)
       this.getComingDueWorkbooks(userId);
+    } else if(args.idx == 5){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getCompletedWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };

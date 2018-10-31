@@ -65,7 +65,7 @@ class LogInForm extends PureComponent {
 
   authenticate(){
     let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/login",
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/login",
         postData = {
           "UserName": _self.state.username,
           "Password": _self.state.password
@@ -85,6 +85,7 @@ class LogInForm extends PureComponent {
           const { cookies } = _self.props;
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
+          cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
           _self.setState({ toDashboard: true });
         } else {
           _self.setState({ toDashboard: false });

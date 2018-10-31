@@ -8,6 +8,7 @@ import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import * as API from '../../../shared/utils/APIUtils';
 
 class EmptyRowsView extends React.Component{
   render() {
@@ -59,7 +60,7 @@ class MyEmployees extends React.Component {
         name: 'Completed WorkBook',
         sortable: true,
         editable: false,
-        cellClass: "text-right"
+        cellClass: "text-right text-clickable"
       },
       {
         key: 'total',
@@ -79,8 +80,10 @@ class MyEmployees extends React.Component {
       isMyEmployeeModal: false,
       isPastDueModal: false,
       isComingDueModal: false,
+      isCompletedModal: false,
       workBookDuePast: {},
-      workBookComingDue: {}
+      workBookComingDue: {},
+      workBookCompleted: {}
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -124,50 +127,45 @@ class MyEmployees extends React.Component {
     return rows;
   };
 
-  getPastDueWorkbooks = (userId) => {
+  async getPastDueWorkbooks(userId){
+    debugger
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/pastdue";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let workBookDuePast = json,
-        isPastDueModal = _self.state.isPastDueModal;
-        isPastDueModal = true;
-        _self.setState({ ..._self.state, isPastDueModal, workBookDuePast });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookDuePast = response,
+        isPastDueModal = this.state.isPastDueModal;
+
+      isPastDueModal = true;
+      this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
 
-  getComingDueWorkbooks = (userId) => {
+  async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
-    let _self = this,
-        url = "https://fp34gqm7i7.execute-api.us-west-2.amazonaws.com/test/users/"+ userId +"/workbooks/comingdue";
-    fetch(url,  {headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Authorization": cookies.get('IdentityToken')
-    }})
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) { 
-        let workBookComingDue = json,
-        isComingDueModal = _self.state.isComingDueModal;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookComingDue = response,
+        isComingDueModal = this.state.isComingDueModal;
+
         isComingDueModal = true;
-        _self.setState({ ..._self.state, isComingDueModal, workBookComingDue });
-        return json
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+    this.setState({ ...this.state, isComingDueModal, workBookComingDue });
   };
 
+  async getCompletedWorkbooks(userId){
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBookCompleted = response,
+        isCompletedModal = this.state.isCompletedModal;
+
+    isCompletedModal = true;
+    this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+  };
 
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
@@ -246,6 +244,12 @@ class MyEmployees extends React.Component {
 
       if(userId)
       this.getComingDueWorkbooks(userId);
+    } else if(args.idx == 4){
+      debugger;
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getCompletedWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
