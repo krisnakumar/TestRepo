@@ -18,6 +18,7 @@
     @include themify($themes) {
       color: themed('colorText');
       border-bottom-color: themed('colorBorder');
+      
     }
   }
 
@@ -54,7 +55,8 @@
     tr {
 
       @include themify($themes) {
-        border-bottom: 1px solid themed('colorBorder');
+        // border-bottom: 1px solid themed('colorBorder');
+        border-bottom: 1px solid #ddd
       }
 
       &:last-child {

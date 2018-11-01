@@ -40,7 +40,7 @@ img {
 }
 
 .table {
-  padding: 0 0 0 8px;
+  padding: 0 0 0 0px;
 }
 
 #EntryCount {
@@ -126,5 +126,10 @@ img {
 .react-grid-Row.react-grid-Row--odd {
   background: #eee;
   padding: 0;
-  margin-right: 20px;
+  border-bottom: 1px solid #e1ddddf7 !important;
+  // margin-right: 20px;
+}
+
+.react-grid-Row.react-grid-Row--even {
+  border-bottom: 1px solid #ddd !important;
 }

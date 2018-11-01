@@ -1,8 +1,9 @@
 .react-grid-Container {
 
   .react-grid-Header {
-    background: transparent;
+    background: #0c3254;
     box-shadow: none;
+    color: #fff;
   }
 
   .react-grid-HeaderCell, .react-grid-Cell {
@@ -10,7 +11,7 @@
     padding: 0 10px;
 
     @include themify($themes) {
-      border-bottom: 1px solid #babdc3;
+      // border-bottom: 1px solid #e1ddddf7;
       color: themed('colorText');
     }
   }
@@ -33,7 +34,7 @@
       transform: translateY(-50%);
       top: 50%;
       position: absolute;
-      color: #646777;
+      color: #ffffff;
     }
   }
 
@@ -173,5 +174,5 @@
   background-color: #fff;
   padding-right: 8px;
   border-right: none;
-  border-bottom: 1px solid #babdc3;
+  // border-bottom: 1px solid #e1ddddf7 !important;
 }
