@@ -156,7 +156,7 @@ class WorkBookProgress extends React.Component {
                       rowGetter={this.rowGetter}
                       rowsCount={rows.length}
                       onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={44}
+                      rowHeight={35}
                       minColumnWidth={100}
                       emptyRowsView={WorkBookProgressEmptyRowsView} 
                   />

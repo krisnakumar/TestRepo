@@ -6,6 +6,7 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
+import WorkBookCompleted from './WorkBookCompleted';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
@@ -42,7 +43,7 @@ class MyEmployees extends React.Component {
       },
       {
         key: 'inDueWorkBooks',
-        name: 'WorkBook Due in 30 Days',
+        name: 'Workbook Due in 30 Days',
         width: 200,
         sortable: true,
         editable: false,
@@ -50,14 +51,14 @@ class MyEmployees extends React.Component {
       },
       {
         key: 'pastDueWorkBooks',
-        name: 'Past Due WorkBooks',
+        name: 'Past Due Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
       },
       {
         key: 'completedWorkBooks',
-        name: 'Completed WorkBook',
+        name: 'Completed Workbook',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
@@ -269,8 +270,13 @@ class MyEmployees extends React.Component {
             modal={this.state.isPastDueModal}
             assignedWorkBooks={this.state.workBookDuePast}
           />
+          <WorkBookCompleted
+              updateState={this.updateModalState.bind(this)}
+              modal={this.state.isCompletedModal}
+              assignedWorkBooks={this.state.workBookCompleted}
+          />
         <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>My Employees(Supervisor View)</ModalHeader>
+          <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">
@@ -283,7 +289,7 @@ class MyEmployees extends React.Component {
                       rowGetter={this.rowGetter}
                       rowsCount={rows.length}
                       onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={44}
+                      rowHeight={35}
                       minColumnWidth={100}
                       emptyRowsView={EmptyRowsView} 
                       onCellSelected={(args) => { this.handleCellFocus(args) }}

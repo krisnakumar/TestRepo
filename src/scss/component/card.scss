@@ -19,12 +19,12 @@
 }
 
 .card__title {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-transform: uppercase;
   position: relative;
 
   &:not(:first-child) {
-    margin-top: 40px;
+    margin-top: 0px;
   }
 
   .subhead {

@@ -122,3 +122,9 @@ img {
 .account__btn:before {
   background-color: #5cb85c !important;
 }
+
+.react-grid-Row.react-grid-Row--odd {
+  background: #eee;
+  padding: 0;
+  margin-right: 20px;
+}

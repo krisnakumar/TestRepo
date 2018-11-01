@@ -33,7 +33,7 @@ class WorkBookComingDue extends React.Component {
       },
       {
         key: 'workbookName',
-        name: 'WorkbookName',
+        name: 'Workbook Name',
         sortable: true,
         editable: false,
         cellClass: "text-center"
@@ -81,7 +81,7 @@ class WorkBookComingDue extends React.Component {
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkbookName,
-        percentageCompleted: employees[i].PercentageCompleted,
+        percentageCompleted: employees[i].PercentageCompleted + "%",
         dueDate: dueDate
       });
     }
@@ -152,7 +152,7 @@ class WorkBookComingDue extends React.Component {
                       rowGetter={this.rowGetter}
                       rowsCount={rows.length}
                       onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={44}
+                      rowHeight={35}
                       minColumnWidth={100}
                       emptyRowsView={WorkBookComingDueEmptyRowsView} 
                   />

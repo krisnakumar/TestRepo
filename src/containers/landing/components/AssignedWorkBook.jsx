@@ -43,17 +43,17 @@ class AssignedWorkBook extends React.Component {
       },
       {
         key: 'completedTasks',
-        name: 'Completed/ Total Tasks',
+        name: 'Completed / Total Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center"
+        cellClass: "text-center text-clickable"
       },
       {
         key: 'percentageCompleted',
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        cellClass: "text-center"
+        cellClass: "text-center text-clickable"
       },
       {
         key: 'dueDate',
@@ -107,7 +107,7 @@ class AssignedWorkBook extends React.Component {
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         completedTasks: employees[i].CompletedTasks,
-        percentageCompleted: employees[i].PercentageCompleted,
+        percentageCompleted: employees[i].PercentageCompleted + "%",
         dueDate: dueDate
       });
     }
@@ -201,7 +201,7 @@ class AssignedWorkBook extends React.Component {
                       rowGetter={this.rowGetter}
                       rowsCount={rows.length}
                       onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={44}
+                      rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={AssignedWorkBookEmptyRowsView} 

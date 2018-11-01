@@ -10,6 +10,7 @@ import MyEmployees from './MyEmployees';
 import AssignedWorkBook from './AssignedWorkBook';
 import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
+import WorkBookCompleted from './WorkBookCompleted';
 import Loader from '../../_layout/loader/Loader';
 import * as API from '../../../shared/utils/APIUtils';
 
@@ -46,28 +47,28 @@ class WorkBookDashboard extends PureComponent {
       },
       {
         key: 'assignedWorkBooks',
-        name: 'Assigned WorkBook',
+        name: 'Assigned Workbook',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
       },
       {
         key: 'inDueWorkBooks',
-        name: 'WorkBook Due',
+        name: 'Workbook Due',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
       },
       {
         key: 'pastDueWorkBooks',
-        name: 'Past Due WorkBooks',
+        name: 'Past Due Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
       },
       {
         key: 'completedWorkBooks',
-        name: 'Completed WorkBook',
+        name: 'Completed Workbook',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
@@ -327,6 +328,11 @@ class WorkBookDashboard extends PureComponent {
               modal={this.state.isComingDueModal}
               assignedWorkBooks={this.state.workBookComingDue}
             />
+              <WorkBookCompleted
+              updateState={this.updateModalState.bind(this)}
+              modal={this.state.isCompletedModal}
+              assignedWorkBooks={this.state.workBookCompleted}
+            />
             <div className="card__title">
              <div className="pageheader">
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
@@ -343,7 +349,7 @@ class WorkBookDashboard extends PureComponent {
                       rowGetter={this.rowGetter}
                       rowsCount={rows.length}
                       onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={44}
+                      rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={DataTableEmptyRowsView} 
