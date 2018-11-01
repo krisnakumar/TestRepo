@@ -9,6 +9,7 @@ body {
   font-family: 'Roboto', sans-serif;
   font-size: 13px;
   line-height: 1.6;
+  background: #e0e0e0;
 }
 
 * {
@@ -107,4 +108,17 @@ img {
 .react-grid-Canvas div ~ div.react-grid-Row:last-child div.react-grid-Cell {
   text-decoration: none;
   cursor: default;
+}
+
+.login-label{
+  float: left;
+}
+
+.account__btn:active:focus:hover:focus-within:active:visited {
+  border-color: #5cb85c !important;
+  background-color: #5cb85c !important;
+}
+
+.account__btn:before {
+  background-color: #5cb85c !important;
 }

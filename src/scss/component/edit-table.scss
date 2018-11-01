@@ -7,20 +7,16 @@
 
   .react-grid-HeaderCell, .react-grid-Cell {
     background: transparent;
-    // border: none;
     padding: 0 10px;
 
     @include themify($themes) {
-      border-bottom: 1px solid #babdc3;//1px solid themed('colorBorder');
+      border-bottom: 1px solid #babdc3;
       color: themed('colorText');
     }
   }
 
   .react-grid-Cell {
-
-    &:focus {
-      outline: 1px solid $color-blue !important;
-    }
+    font-size: 12px;
   }
 
   .react-grid-Cell--locked:last-of-type, .react-grid-HeaderCell--locked {
@@ -32,7 +28,7 @@
   }
 
   .react-grid-HeaderCell {
-
+    font-size: 11px !important;
     & > * {
       transform: translateY(-50%);
       top: 50%;

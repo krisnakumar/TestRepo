@@ -569,6 +569,9 @@ p.topbar__avatar-name {
   align-items: center;
   margin: 0;
 
+  img{
+    padding: 5px;
+  }
   @include themify($themes) {
     color: none;
   }

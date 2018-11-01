@@ -100,13 +100,13 @@ class LogInForm extends PureComponent {
     const { handleSubmit } = this.props;
 
     if (this.state.toDashboard === true) {
-      return <Redirect to='/reports' />
+      return <Redirect to='/employeereports' />
     }
 
     return (
       <form className="form" onSubmit={this.loginSubmit}>
         <div className="form__form-group">
-          <label className="form__form-group-label" htmlFor="name">Username</label>
+          <label className="form__form-group-label  login-label" htmlFor="name">Username</label>
           <div className="form__form-group-field">
             <Field
               name="username"
@@ -119,7 +119,7 @@ class LogInForm extends PureComponent {
           </div>
         </div>
         <div className="form__form-group">
-          <label className="form__form-group-label" htmlFor="password">Password</label>
+          <label className="form__form-group-label login-label" htmlFor="password">Password</label>
           <div className="form__form-group-field">
             <Field
               name="password"
@@ -129,9 +129,6 @@ class LogInForm extends PureComponent {
               placeholder=""
               onChange={event => this.handleUserInput(event)}
             />
-          </div>
-          <div className="account__forgot-password">
-            <a href="/PasswordRecovery.aspx">I forgot my password</a>
           </div>
         </div>
         <div className="account__btns">

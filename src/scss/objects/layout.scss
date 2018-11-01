@@ -9,7 +9,7 @@
 .wrapper {
 
   @include themify($themes) {
-    background: themed('colorBackgroundBody');
+    background: #e0e0e0;//themed('colorBackgroundBody');
   }
 
   &.wrapper--full-width {

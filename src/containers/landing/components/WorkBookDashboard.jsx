@@ -33,7 +33,7 @@ class WorkBookDashboard extends PureComponent {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 300,
+        width: 240,
         editable: false,
         cellClass: "text-left text-clickable"
       },
