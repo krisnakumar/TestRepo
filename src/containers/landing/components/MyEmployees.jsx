@@ -1,7 +1,26 @@
 /* eslint-disable */
+/*
+* MyEmployees.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This javascript file will used render My employees(supervisor view) to list the employees 
+* Template: React.Component
+* Prerequisites: React and babel
+
+METHODS
+--------
+createRows(employees)
+getPastDueWorkbooks(userId)
+getComingDueWorkbooks(userId)
+getCompletedWorkbooks(userId)
+toggle()
+handleGridRowsUpdated(fromRow, toRow, updated)
+handleGridSort(sortColumn, sortDirection)
+updateModalState(modelName)
+handleCellFocus(args) 
+*/
+
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import WorkBookDuePast from './WorkBookDuePast';
@@ -11,6 +30,11 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 
+/**
+ * EmptyRowsView Class defines the React component to render
+ * the table components empty rows message if data is empty from API request
+ * extending the react-data-grid module.
+ */
 class EmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
@@ -129,7 +153,6 @@ class MyEmployees extends React.Component {
   };
 
   async getPastDueWorkbooks(userId){
-    debugger
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
@@ -246,7 +269,6 @@ class MyEmployees extends React.Component {
       if(userId)
       this.getComingDueWorkbooks(userId);
     } else if(args.idx == 4){
-      debugger;
       let userId = this.state.rows[args.rowIdx].userId;
 
       if(userId)

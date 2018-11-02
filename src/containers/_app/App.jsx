@@ -5,6 +5,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
 import Router from './Router';
 
+/**
+ * App Class defines the React component to render
+ * the inner container layout
+ * extending the Router, React and Component module.
+ */
 class App extends Component {
   constructor() {
     super();

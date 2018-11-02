@@ -173,6 +173,9 @@
 .react-grid-Cell {
   background-color: #fff;
   padding-right: 8px;
-  border-right: none;
-  // border-bottom: 1px solid #e1ddddf7 !important;
+  border-right: 1px solid #e1ddddf7 !important;
+}
+
+.last-column {
+  border-right: none !important;
 }

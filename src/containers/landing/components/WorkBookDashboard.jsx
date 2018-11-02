@@ -1,6 +1,28 @@
 /* eslint-disable */
+/*
+* WorkBookDashboard.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This javascript file will used render Workbook details to list the workbooks 
+* Template: React.Component
+* Prerequisites: React and babel
+
+METHODS
+--------
+createRows(employees)
+getEmployees(userId)
+getMyEmployees(userId)
+getAssignedWorkbooks(userId)
+getPastDueWorkbooks(userId)
+getComingDueWorkbooks(userId)
+getCompletedWorkbooks(userId)
+toggle()
+handleGridRowsUpdated(fromRow, toRow, updated)
+handleGridSort(sortColumn, sortDirection)
+updateModalState(modelName)
+handleCellFocus(args) 
+*/
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { CardBody} from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
@@ -11,11 +33,14 @@ import AssignedWorkBook from './AssignedWorkBook';
 import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
 import WorkBookCompleted from './WorkBookCompleted';
-import Loader from '../../_layout/loader/Loader';
 import * as API from '../../../shared/utils/APIUtils';
 
+/**
+ * DataTableEmptyRowsView Class defines the React component to render
+ * the table components empty rows message if data is empty from API request
+ * extending the react-table module.
+ */
 class DataTableEmptyRowsView extends React.Component{
-
   render() {
     return (<div className="no-records-found">Sorry, no records</div>)
   }

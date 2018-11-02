@@ -1,17 +1,25 @@
 /* eslint-disable */
+/*
+* LoginForm.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This javascript library will used render Login Form and perform authentication on submit
+* Template: React PureComponent
+* Prerequisites: React and babel
+
+METHODS
+--------
+showPassword( EVENT )
+loginSubmit(EVENT)
+handleUserInput( EVENT )
+authenticate()
+*/
+
 import React, { PureComponent } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
  
-
 class LogInForm extends PureComponent {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,

@@ -1,10 +1,30 @@
 /* eslint-disable */
+/*
+* WorkBookDuePast.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This javascript file will used render Workbook details to list the workbooks past due
+* Template: React.Component
+* Prerequisites: React and babel
+
+METHODS
+--------
+createRows(employees)
+toggle()
+handleGridRowsUpdated(fromRow, toRow, updated)
+handleGridSort(sortColumn, sortDirection)
+updateModalState(modelName)
+handleCellFocus(args) 
+*/
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 
+/**
+ * WorkBookDuePastEmptyRowsView Class defines the React component to render
+ * the table components empty rows message if data is empty from API request
+ * extending the react-table module.
+ */
 class WorkBookDuePastEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)

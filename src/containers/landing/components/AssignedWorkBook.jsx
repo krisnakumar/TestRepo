@@ -1,11 +1,9 @@
 /* eslint-disable */
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import WorkBookProgress from './WorkBookProgress';
-import Loader from '../../_layout/loader/Loader';
 import * as API from '../../../shared/utils/APIUtils';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';

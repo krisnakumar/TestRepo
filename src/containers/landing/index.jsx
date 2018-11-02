@@ -1,10 +1,8 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Card, Col, Row, Container } from 'reactstrap';
-import scrollToComponent from 'react-scroll-to-component';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Header from './components/Header';
 import Footer from './components/Footer';
 import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
 import Layout from '../_layout/index';

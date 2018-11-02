@@ -1,4 +1,17 @@
 /* eslint-disable */
+/*
+* APIUtils.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This JSX file will served as helper util class for all REST API calls
+* Template: React Functions
+* Prerequisites: whatwg-fetch
+
+METHODS
+--------
+ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) 
+
+*/
+
 import 'whatwg-fetch'
 
 export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) {
