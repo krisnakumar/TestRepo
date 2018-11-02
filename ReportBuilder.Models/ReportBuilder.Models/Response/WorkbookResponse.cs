@@ -17,5 +17,9 @@ namespace ReportBuilder.Models.Response
         public int PercentageCompleted { get; set; }
 
         public DateTime DueDate { get; set; }
+
+        public int WorkBookId { get; set; }
+
+        public DateTime CompletionDate { get; set; }
     }
 }

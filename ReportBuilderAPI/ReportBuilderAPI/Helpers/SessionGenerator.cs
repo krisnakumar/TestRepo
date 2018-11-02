@@ -41,6 +41,34 @@ namespace ReportBuilderAPI.Helpers
 
 
         /// <summary>
+        /// Get token from Cognito using username  and password
+        /// </summary>
+        /// <param name="userRequest"></param>
+        /// <returns>AuthFlowResponse</returns>
+        public AuthFlowResponse ProcessRefreshToken(UserRequest userRequest)
+        {
+            AuthFlowResponse authResponse;
+            try
+            {
+                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);
+                CognitoUserPool userPool = new CognitoUserPool(Constants.COGNITO_USERPOOLID, Constants.COGNITO_USERPOOL_CLIENTID, provider);
+                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider) {SessionTokens= new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
+                InitiateRefreshTokenAuthRequest authRequest = new InitiateRefreshTokenAuthRequest()
+                {
+                    AuthFlowType=AuthFlowType.REFRESH_TOKEN                    
+                };
+                authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;                
+                return authResponse;
+            }
+            catch (Exception sessionGeneratorException)
+            {
+                LambdaLogger.Log(sessionGeneratorException.ToString());
+                return null;
+            }
+        }
+
+
+        /// <summary>
         ///  Check AuthenticationResult using ChallengeName 
         /// </summary>
         /// <param name="challengeNameType"></param>

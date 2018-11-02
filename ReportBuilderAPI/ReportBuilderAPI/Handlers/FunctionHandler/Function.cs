@@ -41,6 +41,30 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 return ResponseBuilder.InternalError();
             }
         }
+
+
+
+        /// <summary>
+        /// Refresh Token once the token is expired
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            AuthenticationRepository authenticationRepository = new AuthenticationRepository();
+            try
+            {
+                return authenticationRepository.SilentAuth(request);
+            }
+            catch (Exception exception)
+            {
+                LambdaLogger.Log(exception.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
         /// <summary>
         /// Get list of employees using userId
         /// </summary>
@@ -52,7 +76,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             EmployeeRepository employeeRepository = new EmployeeRepository();
             try
             {
-                return employeeRepository.GetEmployeeList(RequestReader.GetPathValue(request), RequestReader.ReadQueryString(request));                
+                return employeeRepository.GetEmployeeList(RequestReader.GetUserId(request), RequestReader.ReadQueryString(request));
             }
             catch (Exception getEmployees)
             {
@@ -73,7 +97,110 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             WorkbookRepository workbookRepository = new WorkbookRepository();
             try
             {
-                return workbookRepository.GetWorkbookDetails(RequestReader.GetPathValue(request));
+                return workbookRepository.GetWorkbookDetails(RequestReader.GetUserId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
+        /// <summary>
+        /// Get list of past due workbooks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetPastDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            WorkbookRepository workbookRepository = new WorkbookRepository();
+            try
+            {
+                return workbookRepository.GetPastDueWorkbooks(RequestReader.GetUserId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+        /// <summary>
+        /// Get list of past due workbooks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetInDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            WorkbookRepository workbookRepository = new WorkbookRepository();
+            try
+            {
+                return workbookRepository.GetInDueWorkbooks(RequestReader.GetUserId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
+        /// <summary>
+        /// Get list of past due workbooks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetCompletedWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            WorkbookRepository workbookRepository = new WorkbookRepository();
+            try
+            {
+                return workbookRepository.GetCompletedWorkbooks(RequestReader.GetUserId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
+        /// <summary>
+        /// Get list of past due workbooks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetTaskList(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            TaskRepository taskRepository = new TaskRepository();
+            try
+            {
+                return taskRepository.GetTaskDetails(RequestReader.GetUserId(request), RequestReader.GetWorkbookId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+        /// <summary>
+        /// Get list of past due workbooks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse GetTaskAttemptsDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            TaskRepository taskRepository = new TaskRepository();
+            try
+            {
+                return taskRepository.GetTaskAttemptsDetails(RequestReader.GetUserId(request), RequestReader.GetWorkbookId(request), RequestReader.GetTaskId(request));
             }
             catch (Exception getEmployees)
             {

@@ -12,5 +12,13 @@ namespace ReportBuilder.Models.Models
 
         public int PastDueWorkBook { get; set; }
 
+        public string Param { get; set; }
+
+        public string CompletedWorkBook { get; set; }
+
+        public string WorkBooksInDue { get; set; }
+
+        public string PastDueWorkBooks { get; set; }
+
     }
 }

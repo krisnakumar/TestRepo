@@ -13,5 +13,8 @@ namespace ReportBuilderAPI.Utilities
         public const string CompletedWorkBooks = "COMPLETEDWORKBOOKS";
         public const string WorkBookInDue = "WORKBOOKINDUE";
         public const string PastDueWorkBook = "PASTDUEWORKBOOK";
+
+        public const string PARAM = "PARAM";
+
     }
 }

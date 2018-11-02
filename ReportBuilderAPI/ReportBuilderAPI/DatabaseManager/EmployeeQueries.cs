@@ -32,5 +32,16 @@ namespace ReportBuilderAPI.DatabaseManager
         {
             return "EXEC sp_GetWorkBook " + userId + "," + completedWorkBooks + "," + workbookInDue + "," + pastWorkbook;
         }
+
+
+        /// <summary>
+        /// Get company Id details using email 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static string GetCompanyId(string email)
+        {
+            return "SELECT Id FROM [USER] WHERE Email='" + email + "'";
+        }
     }
 }

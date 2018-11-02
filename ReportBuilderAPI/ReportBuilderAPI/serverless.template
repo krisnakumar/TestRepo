@@ -3,10 +3,11 @@
   "Transform" : "AWS::Serverless-2016-10-31",
   "Description" : "An AWS Serverless Application.",    
   "Resources" : {
+ 
    "ReportBuilderAPI" : {
 		"Type" : "AWS::Serverless::Api",
 		"Properties" : {
-			"Name":"ReportBuilder-Level2",
+			"Name":"ReportBuilder-Level3",
 			"StageName":"dev",
 			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder-auth.json"			 
 	  }
@@ -16,10 +17,10 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-		"FunctionName":"Login-Level2",
+		"FunctionName":"Login-Level3",
         "Runtime": "dotnetcore2.1",
-        "CodeUri": "",
-        "MemorySize": 256,		
+        "CodeUri": "",		
+        "MemorySize": 256,				
         "Timeout": 30,		
         "Role": null,
         "Policies": [ "AWSLambdaFullAccess" ],			
@@ -35,11 +36,12 @@
         }
       }
     },
+	
 	"GetEmployees" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployees",
-		"FunctionName":"Employees-Level2",
+		"FunctionName":"Employees-Level3",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -63,7 +65,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookDetails",
-		"FunctionName":"GetWorkbookDetails-Level2",
+		"FunctionName":"Workbooks-Level3",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -82,8 +84,154 @@
           }
         }
       }
+    },
+	"GetPastDueWorkbooks" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetPastDueWorkbookDetails",
+		"FunctionName":"PastDueWorkbooks-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/workbooks/pastdue",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+	"GetInDueWorkbooks" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetInDueWorkbookDetails",
+		"FunctionName":"ComingDueWorkbooks-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/workbooks/comingdue",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+	"GetCompletedWorkbooks" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompletedWorkbookDetails",
+		"FunctionName":"CompletedWorkbooks-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/workbooks/completed",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+	"SilentAuth" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
+		"FunctionName":"SilentAuth-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/login/refresh",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+
+	"GetTaskList" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskList",
+		"FunctionName":"GetTaskList-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/assigned-workbooks/{workbookId}/tasks",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+
+	"GetAttemptsList" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskAttemptsDetails",
+		"FunctionName":"GetAttemptsDetails-Level3",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/users/{userId}/assigned-workbooks/{workbookId}/tasks/{taskId}/attempt",
+              "Method": "GET"
+            }
+          }
+        }
+      }
     }
-	  },
+  },
   "Outputs" : {
    
   }

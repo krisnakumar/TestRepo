@@ -18,5 +18,9 @@ namespace ReportBuilder.Models.Request
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Password { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefreshToken { get; set; }
     }
 }

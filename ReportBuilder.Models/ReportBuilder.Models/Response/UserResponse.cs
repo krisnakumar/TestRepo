@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ReportBuilder.Models.Response
 {
@@ -20,6 +17,11 @@ namespace ReportBuilder.Models.Response
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string IdentityToken { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefreshToken { get; set; }
+
+        public int CompanyId { get; set; }
 
     }
 }
