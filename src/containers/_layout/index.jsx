@@ -4,17 +4,13 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Topbar from './topbar/Topbar';
-import Footer from './footer/Footer';
 import TopbarWithNavigation from './topbar_with_navigation/TopbarWithNavigation';
-import Sidebar from './sidebar/Sidebar';
-import SidebarMobile from './topbar_with_navigation/sidebar_mobile/SidebarMobile';
-import Customizer from './customizer/Customizer';
-import { BasicNotification } from '../../shared/components/Notification';
-import { changeMobileSidebarVisibility, changeSidebarVisibility } from '../../redux/actions/sidebarActions';
-import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
-import { changeBorderRadius, toggleBoxShadow, toggleTopNavigation } from '../../redux/actions/customizerActions';
 import { CustomizerProps, SidebarProps, ThemeProps } from '../../shared/prop-types/ReducerProps';
 
+/**
+ * Layout Class defines the React component to render
+ * the Layout components App
+ */
 class Layout extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
