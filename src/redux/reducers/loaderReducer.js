@@ -5,7 +5,7 @@ import {
   } from '../actions/loaderActions';
 
   const initialState = {
-    isLoaderShow: 'theme-light',
+    isLoaderShow: false,
   };
   
   export default function (state = initialState, action) {

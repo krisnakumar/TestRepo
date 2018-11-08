@@ -72,14 +72,14 @@ class WorkBookDashboard extends PureComponent {
       },
       {
         key: 'assignedWorkBooks',
-        name: 'Assigned Workbook',
+        name: 'Assigned Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
       },
       {
         key: 'inDueWorkBooks',
-        name: 'Workbook Due',
+        name: 'Workbooks Due',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
@@ -93,7 +93,7 @@ class WorkBookDashboard extends PureComponent {
       },
       {
         key: 'completedWorkBooks',
-        name: 'Completed Workbook',
+        name: 'Completed Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
@@ -150,7 +150,9 @@ class WorkBookDashboard extends PureComponent {
         level = this.state.level + 1,
         supervisorNames = this.state.supervisorNames;
     
-    supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
+    if(employees.length > 0)
+      supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
+
     myEmployeesArray.push(employees);
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames });
   };
@@ -405,7 +407,7 @@ class WorkBookDashboard extends PureComponent {
             />
             <div className="card__title">
              <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
+              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbooks Dashboard
             </div>
             </div>
             <div className="grid-container">

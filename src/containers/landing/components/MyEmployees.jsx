@@ -60,14 +60,14 @@ class MyEmployees extends React.Component {
       },
       {
         key: 'workbook',
-        name: 'Workbook',
+        name: 'Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-left"
       },
       {
         key: 'inDueWorkBooks',
-        name: 'Workbook Due in 30 Days',
+        name: 'Workbooks Due in 30 Days',
         width: 200,
         sortable: true,
         editable: false,
@@ -82,7 +82,7 @@ class MyEmployees extends React.Component {
       },
       {
         key: 'completedWorkBooks',
-        name: 'Completed Workbook',
+        name: 'Completed Workbooks',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable"
@@ -323,7 +323,7 @@ class MyEmployees extends React.Component {
 
   render() {
     const { rows, supervisorNames } = this.state;
-    let supervisorNamesLength = supervisorNames.length - 1;
+    let supervisorNamesLength = supervisorNames.length == 1 ? supervisorNames.length - 1 : supervisorNames.length - 2;
     let supervisorName = supervisorNames[supervisorNamesLength];
     return (     
       <div>
