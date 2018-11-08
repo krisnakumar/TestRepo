@@ -56,7 +56,7 @@ class MyEmployees extends React.Component {
         sortable: true,
         width: 250,
         editable: false,
-        cellClass: "text-left"
+        cellClass: "text-left text-clickable"
       },
       {
         key: 'workbook',
@@ -92,7 +92,7 @@ class MyEmployees extends React.Component {
         name: 'Total Employees',
         sortable: true,
         editable: false,
-        cellClass: "text-right last-column"
+        cellClass: "text-right last-column text-clickable"
       },
     ];
 
@@ -103,12 +103,16 @@ class MyEmployees extends React.Component {
       rows: this.createRows(this.props.myEmployees),
       pageOfItems: [],
       isMyEmployeeModal: false,
+      myEmployees: {},
+      myEmployeesArray: this.props.myEmployees || [],
+      level: this.props.level, 
       isPastDueModal: false,
       isComingDueModal: false,
       isCompletedModal: false,
       workBookDuePast: {},
       workBookComingDue: {},
-      workBookCompleted: {}
+      workBookCompleted: {},
+      supervisorNames: this.props.supervisorNames
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -121,7 +125,9 @@ class MyEmployees extends React.Component {
     console.log(error, info);
   }
 
-  createRows = (employees) => {
+  createRows = (employeesArray) => {
+    let employeesArrayLength = employeesArray.length - 1;
+    let employees = employeesArray[employeesArrayLength];
     let assignedWorkBooksCount = 0,
         inDueWorkBooksCount = 0,
         pastDueWorkBooksCount = 0,
@@ -146,10 +152,25 @@ class MyEmployees extends React.Component {
       });
     }
 
-    if(length > 0)
-    rows.push({employee: "Total", role: "", assignedWorkBooks:assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount , pastDueWorkBooks:pastDueWorkBooksCount, completedWorkBooks:completedWorkBooksCount, total:totalEmpCount});
+    if(length > 0){      
+      this.state.myEmployeesArray = employeesArray;
+      rows.push({employee: "Total", role: "", assignedWorkBooks:assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount , pastDueWorkBooks:pastDueWorkBooksCount, completedWorkBooks:completedWorkBooksCount, total:totalEmpCount});
+    }
+    
 
     return rows;
+  };
+
+  async getMyEmployees(userId){
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        myEmployees = response,
+        isMyEmployeeModal = this.state.isMyEmployeeModal;
+
+      this.props.updateMyEmployeesArray(myEmployees);
   };
 
   async getPastDueWorkbooks(userId){
@@ -196,16 +217,33 @@ class MyEmployees extends React.Component {
       let rows = this.createRows(newProps.myEmployees);
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        level: newProps.level,
+        supervisorNames: newProps.supervisorNames
+      });
+    } else if(this.state.level != newProps.level){
+      let rows = this.createRows(newProps.myEmployees);
+      this.setState({
+        modal: newProps.modal,
+        rows: rows,
+        level: newProps.level,
+        supervisorNames: newProps.supervisorNames
       });
     }
   }
 
   toggle() {
-    this.setState({
-      modal: !this.state.modal
-    });
-    this.props.updateState("isMyEmployeeModal");
+    let myEmployeesArray = this.state.myEmployeesArray,
+        length = myEmployeesArray.length;
+
+    if(length == 1){
+      this.setState({
+        modal: !this.state.modal
+      });
+      this.props.updateState("isMyEmployeeModal");
+    } else if(length >= 1){
+      this.props.popMyEmployeesArray();
+    }   
   }
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -258,7 +296,12 @@ class MyEmployees extends React.Component {
   };
 
   handleCellFocus = (args) => {
-    if(args.idx == 3){
+    if(args.idx == 0 || args.idx == 5){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getMyEmployees(userId);
+    } else if(args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId;
 
       if(userId)
@@ -279,7 +322,9 @@ class MyEmployees extends React.Component {
 
 
   render() {
-    const { rows } = this.state;
+    const { rows, supervisorNames } = this.state;
+    let supervisorNamesLength = supervisorNames.length - 1;
+    let supervisorName = supervisorNames[supervisorNamesLength];
     return (     
       <div>
          <WorkBookComingDue
@@ -298,7 +343,7 @@ class MyEmployees extends React.Component {
               assignedWorkBooks={this.state.workBookCompleted}
           />
         <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
+          <ModalHeader toggle={this.toggle}>My Employees - {supervisorName}</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">

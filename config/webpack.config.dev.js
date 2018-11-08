@@ -295,4 +295,12 @@ module.exports = {
   performance: {
     hints: false,
   },
+  devServer: {
+    historyApiFallback: true,
+  },
+  // plugins: [
+  //   new HtmlWebpackPlugin({
+  //     template: 'Public/index.html'
+  //   })
+  // ]
 };

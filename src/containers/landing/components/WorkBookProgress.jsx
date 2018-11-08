@@ -69,7 +69,7 @@ class WorkBookProgress extends React.Component {
         name: 'Incompleted Repetitions',
         sortable: true,
         editable: false,
-        cellClass: "text-center last-column"
+        cellClass: "text-center"
       },
       {
         key: 'completionPrecentage',
@@ -122,6 +122,9 @@ class WorkBookProgress extends React.Component {
     }
   }
 
+  /**
+   * @method
+   */
   toggle() {
     this.setState({
       modal: !this.state.modal
