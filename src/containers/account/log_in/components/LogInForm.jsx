@@ -19,7 +19,8 @@ import { Field, reduxForm } from 'redux-form';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
- 
+import Menus from '../../../_layout/Menus.json';
+
 class LogInForm extends PureComponent {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
@@ -94,6 +95,8 @@ class LogInForm extends PureComponent {
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
           cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
+          // set the localstorage for menu's
+          localStorage.setItem('menus', JSON.stringify(Menus));
           _self.setState({ toDashboard: true });
         } else {
           _self.setState({ toDashboard: false });

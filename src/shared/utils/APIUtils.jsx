@@ -24,10 +24,8 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
       }
     }).then(function(response) {
         // if(response.status)
-        console.log("response",response);
         return response.json();        
     }).then(function(json) { 
-        console.log("json",json);
         return json;
     }).catch(function(ex) {
         // Handle API Exception here       

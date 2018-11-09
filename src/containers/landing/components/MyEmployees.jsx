@@ -236,7 +236,7 @@ class MyEmployees extends React.Component {
     let myEmployeesArray = this.state.myEmployeesArray,
         length = myEmployeesArray.length;
 
-    if(length == 1){
+    if(length == 1 || length == 0){
       this.setState({
         modal: !this.state.modal
       });

@@ -40,7 +40,6 @@ class WorkBookProgress extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.heads = [
       {
         key: 'taskCode',
@@ -49,37 +48,37 @@ class WorkBookProgress extends React.Component {
         width: 300,
         editable: false,
         cellClass: "text-left"
-      },
-      {
+        },
+        {
         key: 'taskName',
-        name: 'OQ Task',
+        name: 'Task Name',
         sortable: true,
         editable: false,
         cellClass: "text-left"
-      },
-      {
+        },
+        {
         key: 'completedTasksCount',
-        name: 'Completed / Total Tasks',
+        name: 'Completed / Total Repetitions',
         sortable: true,
         editable: false,
         cellClass: "text-center"
-      },
-      {
+        },
+        {
         key: 'incompletedTasksCount',
-        name: 'Incompleted Repetitions',
+        name: 'Incomplete Repetitions',
         sortable: true,
         editable: false,
         cellClass: "text-center"
-      },
-      {
+        },
+        {
         key: 'completionPrecentage',
         name: 'Completion Precentage',
         sortable: true,
         editable: false,
         cellClass: "text-center last-column"
-      },
-    ];
-
+        }
+      ];
+    
     this.state = {
       modal: this.props.modal,      
       rows: this.createRows(this.props.workBooksProgress),
