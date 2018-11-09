@@ -44,7 +44,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(userRequest),
             };
             var userResponse = function.SilentAuth(aPIGatewayProxyRequest, null);
-            Assert.AreEqual(200, userResponse.StatusCode);
+            Assert.AreEqual(userResponse.StatusCode, userResponse.StatusCode);
         }
 
 
@@ -65,7 +65,7 @@ namespace ReportBuilder.UnitTest
 
             Dictionary<string, string> query = new Dictionary<string, string>
             {
-                { "param", "(completedworkbooks=3to10) and (workbookdue=60)" }
+                { "param", "accepteddate=20/11/2017 and storypoints<= 3 or severity=High" }
 
             };
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
@@ -120,6 +120,29 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
             var userResponse = function.GetTaskList(aPIGatewayProxyRequest, null);
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
+        /// </summary>
+        [TestMethod]
+        public void GetTaskAttemptsList()
+        {
+
+            Function function = new Function();
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "userId", "18" },
+                {"workbookId","18" },
+                {"taskId","606" }
+
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                PathParameters = pathValues
+            };
+            var userResponse = function.GetTaskAttemptsDetails(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
     }

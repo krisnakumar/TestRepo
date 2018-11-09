@@ -7,8 +7,18 @@ using ReportBuilderAPI.Resource;
 using ReportBuilderAPI.Utilities;
 using System;
 
+
+// <copyright file="IWorkbook.cs">
+// Copyright (c) 2018 All Rights Reserved
+// </copyright>
+// <author></author>
+// <date>01-11-2018</date>
+// <summary>Repository that helps to generate token in the cognito</summary>
 namespace ReportBuilderAPI.Helpers
 {
+    /// <summary>
+    /// Class that handle the token from the cognito
+    /// </summary>
     public class SessionGenerator
     {
         /// <summary>
@@ -28,9 +38,8 @@ namespace ReportBuilderAPI.Helpers
                 {
                     Password = userRequest.Password
                 };
-                authResponse = user.StartWithSrpAuthAsync(authRequest).Result;
+                authResponse = user.StartWithSrpAuthAsync(authRequest).Result;                
                 return authResponse;
-
             }
             catch (Exception sessionGeneratorException)
             {
@@ -69,7 +78,7 @@ namespace ReportBuilderAPI.Helpers
 
 
         /// <summary>
-        ///  Check AuthenticationResult using ChallengeName 
+        ///  Check AuthenticationResult using ChallengeNameType 
         /// </summary>
         /// <param name="challengeNameType"></param>
         /// <returns>message</returns>

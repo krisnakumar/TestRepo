@@ -11,8 +11,18 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Net;
 
+
+// <copyright file="EmployeeRepository.cs">
+// Copyright (c) 2018 All Rights Reserved
+// </copyright>
+// <author>Shoba Eswar</author>
+// <date>02-11-2018</date>
+// <summary>Repository that helps to read the task from the Table</summary>
 namespace ReportBuilderAPI.Repository
 {
+    /// <summary>
+    /// Class that handles the task details
+    /// </summary>
     public class TaskRepository : ITask
     {
 
@@ -21,7 +31,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="workbookId"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetTaskDetails(int userId, int workbookId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -37,6 +47,9 @@ namespace ReportBuilderAPI.Repository
                     {
                         TaskResponse employeeResponse = new TaskResponse
                         {
+                            TaskId = Convert.ToInt32(sqlDataReader["TaskId"]),
+                            UserId = userId,
+                            WorkbookId = workbookId,
                             TaskCode = Convert.ToString(sqlDataReader["TaskCode"]),
                             TaskName = Convert.ToString(sqlDataReader["TaskName"]),
                             CompletedTasksCount = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
@@ -67,7 +80,7 @@ namespace ReportBuilderAPI.Repository
         /// <param name="userId"></param>
         /// <param name="workbookId"></param>
         /// <param name="taskId"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetTaskAttemptsDetails(int userId, int workbookId, int taskId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -75,7 +88,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = TaskQueries.GetTaskAttemptsDetails(userId, taskId);
+                query = TaskQueries.GetTaskAttemptsDetails(userId, workbookId, taskId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -83,11 +96,12 @@ namespace ReportBuilderAPI.Repository
                     {
                         AttemptsResponse employeeResponse = new AttemptsResponse
                         {
-                            Status = Convert.ToString(sqlDataReader[""]),
-                            DateTime = Convert.ToDateTime(sqlDataReader[""]),
-                            Location = Convert.ToString(sqlDataReader[""]),
-                            Evaluator = Convert.ToString(sqlDataReader[""]),
-                            Comments = Convert.ToString(sqlDataReader[""])
+                            Attempt= Convert.ToString(sqlDataReader["Attempt"]),
+                            Status = Convert.ToString(sqlDataReader["Status"]),
+                            DateTime = Convert.ToDateTime(sqlDataReader["DateTaken"]),
+                            Location = Convert.ToString(sqlDataReader["Street1"]) + "," + Convert.ToString(sqlDataReader["Street2"]) + "," + Convert.ToString(sqlDataReader["City"]) + "," + Convert.ToString(sqlDataReader["State"]) + "," + Convert.ToString(sqlDataReader["Zip"]),
+                            Evaluator = Convert.ToString(sqlDataReader["EvaluatorName"]),
+                            Comments = Convert.ToString(sqlDataReader["Comments"])
                         };
                         attemptsList.Add(employeeResponse);
                     }

@@ -111,12 +111,12 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         /// Default response for internal error
         /// </summary>
         /// <param name="message"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public static APIGatewayProxyResponse UnAuthorized(string message)
         {
             try
             {
-                EmployeeResponse employeeResponse = new EmployeeResponse
+                ErrorResponse employeeResponse = new ErrorResponse
                 {
                     Code = 13,
                     Message = message

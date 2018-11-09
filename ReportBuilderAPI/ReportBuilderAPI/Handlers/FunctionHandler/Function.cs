@@ -70,7 +70,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetEmployees(APIGatewayProxyRequest request, ILambdaContext context)
         {
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -91,7 +91,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
@@ -112,7 +112,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetPastDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
@@ -132,7 +132,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetInDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
@@ -153,7 +153,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetCompletedWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
@@ -174,7 +174,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetTaskList(APIGatewayProxyRequest request, ILambdaContext context)
         {
             TaskRepository taskRepository = new TaskRepository();
@@ -194,7 +194,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetTaskAttemptsDetails(APIGatewayProxyRequest request, ILambdaContext context)
         {
             TaskRepository taskRepository = new TaskRepository();

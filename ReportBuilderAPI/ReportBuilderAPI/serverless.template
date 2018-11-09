@@ -7,7 +7,7 @@
    "ReportBuilderAPI" : {
 		"Type" : "AWS::Serverless::Api",
 		"Properties" : {
-			"Name":"ReportBuilder-Level3",
+			"Name":"ReportBuilder-Level4",
 			"StageName":"dev",
 			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder-auth.json"			 
 	  }
@@ -17,7 +17,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-		"FunctionName":"Login-Level3",
+		"FunctionName":"Login-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",		
         "MemorySize": 256,				
@@ -36,12 +36,12 @@
         }
       }
     },
-	
+
 	"GetEmployees" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployees",
-		"FunctionName":"Employees-Level3",
+		"FunctionName":"Employees-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -65,7 +65,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookDetails",
-		"FunctionName":"Workbooks-Level3",
+		"FunctionName":"Workbooks-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -89,7 +89,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetPastDueWorkbookDetails",
-		"FunctionName":"PastDueWorkbooks-Level3",
+		"FunctionName":"PastDueWorkbooks-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -113,7 +113,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetInDueWorkbookDetails",
-		"FunctionName":"ComingDueWorkbooks-Level3",
+		"FunctionName":"ComingDueWorkbooks-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -137,7 +137,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompletedWorkbookDetails",
-		"FunctionName":"CompletedWorkbooks-Level3",
+		"FunctionName":"CompletedWorkbooks-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -161,7 +161,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-		"FunctionName":"SilentAuth-Level3",
+		"FunctionName":"SilentAuth-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -186,7 +186,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskList",
-		"FunctionName":"GetTaskList-Level3",
+		"FunctionName":"GetTaskList-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -211,7 +211,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskAttemptsDetails",
-		"FunctionName":"GetAttemptsDetails-Level3",
+		"FunctionName":"GetAttemptsDetails-Level4",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -224,13 +224,13 @@
             "Type": "Api",
             "Properties": {		
 			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
-              "Path": "/users/{userId}/assigned-workbooks/{workbookId}/tasks/{taskId}/attempt",
+              "Path": "/users/{userId}/assigned-workbooks/{workbookId}/tasks/{taskId}/attempts",
               "Method": "GET"
             }
           }
         }
       }
-    }
+    }	
   },
   "Outputs" : {
    

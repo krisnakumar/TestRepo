@@ -25,7 +25,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the path parameters from the request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>userId</returns>
         public static int GetUserId(APIGatewayProxyRequest request)
         {
             int userId = 0;
@@ -46,7 +46,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the path parameters from the request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>workbookId</returns>
         public static int GetWorkbookId(APIGatewayProxyRequest request)
         {
             int workbookId = 0;
@@ -68,7 +68,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the path parameters from the request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>taskId</returns>
         public static int GetTaskId(APIGatewayProxyRequest request)
         {
             int taskId = 0;
@@ -90,7 +90,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the path parameters from the request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>QueryStringModel</returns>
         public static QueryStringModel ReadQueryString(APIGatewayProxyRequest request)
         {
             QueryStringModel queryStringModel = new QueryStringModel();
@@ -112,8 +112,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
                                 queryStringModel.PastDueWorkBook = Convert.ToInt32((!string.IsNullOrEmpty(Convert.ToString(parameters.Value))) ? Convert.ToString(parameters.Value) : "0");
                                 break;
                             case Constants.PARAM:
-                                queryStringModel.Param = Convert.ToString(parameters.Value);
-                                //GetRequiredValue(Convert.ToString(parameters.Value));
+                                queryStringModel.Param = Convert.ToString(parameters.Value);                                
                                 break;
                         }
                     }
@@ -144,7 +143,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         //        var matchedString= Regex.Matches(param, regex);
         //        regex = @"\((\w+)(\W+)(\w+)\)$";
         //        var matchedFinalString = Regex.Matches(param, regex);
-                
+
         //        foreach (dynamic query in matchedString)
         //        {
         //            var key= query.Groups[1].ToString();
@@ -180,7 +179,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the request body from the request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>UserRequest</returns>
         public static UserRequest GetRequestBody(APIGatewayProxyRequest request)
         {
             try

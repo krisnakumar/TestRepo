@@ -11,10 +11,24 @@ using ReportBuilderAPI.Helpers;
 using System;
 using System.Net;
 
+// <copyright file="AuthenticationRepository.cs">
+// Copyright (c) 2018 All Rights Reserved
+// </copyright>
+// <author>Shoba Eswar</author>
+// <date>10-10-2018</date>
+// <summary>Repository that helps to handle the session</summary>
 namespace ReportBuilderAPI.Repository
 {
+    /// <summary>
+    /// Repository that helps to handle the session
+    /// </summary>
     public class AuthenticationRepository
     {
+        /// <summary>
+        /// Login API to create session in cognito for valid users
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse Login(APIGatewayProxyRequest request)
         {
             SessionGenerator sessionGenerator = new SessionGenerator();
@@ -55,7 +69,7 @@ namespace ReportBuilderAPI.Repository
         /// Get companyId from database
         /// </summary>
         /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <returns>companyId</returns>
         private int GetCompanyId(string userName)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -77,9 +91,9 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
-        /// 
+        /// API to handle the silent Auth using refresh token
         /// </summary>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request)
         {
 
