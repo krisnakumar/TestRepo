@@ -180,7 +180,7 @@ class WorkBookDashboard extends PureComponent {
   async getEmployees(userId){
     const { cookies } = this.props;
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         rows = this.createRows(response);
     this.setState({ rows: rows});
@@ -191,7 +191,7 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response,
         myEmployeesArray = [],
@@ -209,7 +209,7 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         assignedWorkBooks = response,
         isAssignedModal = this.state.isAssignedModal;
@@ -223,7 +223,7 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookDuePast = response,
         isPastDueModal = this.state.isPastDueModal;
@@ -236,7 +236,7 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookComingDue = response,
         isComingDueModal = this.state.isComingDueModal;
@@ -249,7 +249,7 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookCompleted = response,
         isCompletedModal = this.state.isCompletedModal;

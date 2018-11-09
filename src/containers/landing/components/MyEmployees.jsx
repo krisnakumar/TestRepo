@@ -165,7 +165,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response,
         isMyEmployeeModal = this.state.isMyEmployeeModal;
@@ -177,7 +177,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookDuePast = response,
         isPastDueModal = this.state.isPastDueModal;
@@ -190,7 +190,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookComingDue = response,
         isComingDueModal = this.state.isComingDueModal;
@@ -203,7 +203,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBookCompleted = response,
         isCompletedModal = this.state.isCompletedModal;
@@ -343,7 +343,7 @@ class MyEmployees extends React.Component {
               assignedWorkBooks={this.state.workBookCompleted}
           />
         <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>My Employees - {supervisorName}</ModalHeader>
+          <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">

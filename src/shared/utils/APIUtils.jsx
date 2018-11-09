@@ -15,6 +15,8 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 import 'whatwg-fetch'
 
 export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) {
+    document.getElementById("loader-layer").classList.remove("loader-hide");
+    document.getElementById("loader-layer").classList.add("loader-show");
    return fetch(url, {
     method: type,
     headers: {
@@ -22,19 +24,25 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
         'Content-Type': 'application/json',
         "Authorization": token
       }
-    }).then(function(response) {
+    }).then(function(response) {        
+        document.getElementById("loader-layer").classList.remove("loader-show");
+        document.getElementById("loader-layer").classList.add("loader-hide");
         // if(response.status)
         return response.json();        
     }).then(function(json) { 
+        document.getElementById("loader-layer").classList.remove("loader-show");
+        document.getElementById("loader-layer").classList.add("loader-hide");
         return json;
     }).catch(function(ex) {
+        document.getElementById("loader-layer").classList.remove("loader-show");
+        document.getElementById("loader-layer").classList.add("loader-hide");
         // Handle API Exception here       
         console.log('parsing failed', ex);
     });
 }
 
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    return fetch("https://omwlc1qx62.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
+    return fetch("https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
      method: "POST",
      headers: {
          'Accept': 'application/json',

@@ -21,22 +21,19 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import WorkBookRepetition from './WorkBookRepetition';
-import * as API from '../../../shared/utils/APIUtils';
-
 
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class WorkBookProgressEmptyRowsView extends React.Component{
+class WorkBookRepetitionEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
 };
 
-class WorkBookProgress extends React.Component {
+class WorkBookRepetition extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -45,37 +42,44 @@ class WorkBookProgress extends React.Component {
     super(props);
     this.heads = [
       {
-        key: 'taskCode',
-        name: 'Task Code',
+        key: 'attempt',
+        name: 'Attempt',
         sortable: true,
-        width: 300,
+        // width: 300,
         editable: false,
         cellClass: "text-left"
         },
         {
-        key: 'taskName',
-        name: 'Task Name',
+        key: 'status',
+        name: 'Pass/Fail',
         sortable: true,
         editable: false,
         cellClass: "text-left"
         },
         {
-        key: 'completedTasksCount',
-        name: 'Completed / Total Repetitions',
+        key: 'dateTime',
+        name: 'Date/Time',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        cellClass: "text-center"
         },
         {
-        key: 'incompletedTasksCount',
-        name: 'Incomplete Repetitions',
+        key: 'location',
+        name: 'Location',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        cellClass: "text-center"
         },
         {
-        key: 'completionPrecentage',
-        name: 'Completion Precentage',
+        key: 'evaluator',
+        name: 'Evaluator',
+        sortable: true,
+        editable: false,
+        cellClass: "text-center"
+        },
+        {
+        key: 'comments',
+        name: 'Comments',
         sortable: true,
         editable: false,
         cellClass: "text-center last-column"
@@ -86,8 +90,6 @@ class WorkBookProgress extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
-      isWorkBookRepetitionModal: false,
-      workBooksRepetition: {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -104,43 +106,28 @@ class WorkBookProgress extends React.Component {
           length = workbooks ? workbooks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        userId: workbooks[i].UserId,
-        workBookId: workbooks[i].WorkbookId,
-        taskId: workbooks[i].TaskId,
-        taskCode: workbooks[i].TaskCode,
-        taskName: workbooks[i].TaskName,
-        completedTasksCount: workbooks[i].CompletedTasksCount + "/" + workbooks[i].TotalTasks,
-        incompletedTasksCount: workbooks[i].IncompletedTasksCount,
-        completionPrecentage: workbooks[i].CompletionPrecentage + "%"
+        userId:  workbooks[i].UserId,
+        attempt: workbooks[i].Attempt || 0,
+        status: workbooks[i].Status,
+        dateTime: workbooks[i].DateTime,
+        location: workbooks[i].Location,
+        evaluator: workbooks[i].Evaluator,
+        comments: workbooks[i].Comments
       });
     }
-debugger;
+
     return rows;
   };
 
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.workBooksProgress);
+      let rows = this.createRows(newProps.workBooksRepetition);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
     }
   }
-
-  async getWorkbookRepetitions(userId, workBookId, taskId){
-    debugger
-    const { cookies } = this.props;
-
-    let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksRepetition = response,
-        isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal;
-
-        isWorkBookRepetitionModal = true;
-    this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
-  };
 
   /**
    * @method
@@ -149,7 +136,7 @@ debugger;
     this.setState({
       modal: !this.state.modal
     });
-    this.props.updateState("isWorkBookProgressModal");
+    this.props.updateState("isWorkBookRepetitionModal");
   }
 
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -178,38 +165,14 @@ debugger;
     this.setState({ rows });
   };
 
-  updateModalState = (modelName) => {
-    let value = !this.state[modelName];
-    this.setState({
-      [modelName]: value
-    });
-  };
-
-  handleCellFocus = (args) => {
-    if(args.idx == 2 || args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-      let taskId = this.state.rows[args.rowIdx].taskId;
-      let workBookId = this.state.rows[args.rowIdx].workBookId;
-      debugger;
-      if(userId && taskId)
-      this.getWorkbookRepetitions(userId, workBookId, taskId);
-    } 
-    this.refs.reactDataGrid.deselect();
-  };
-
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
     return (
       <div>
-         <WorkBookRepetition
-            updateState={this.updateModalState.bind(this)}
-            modal={this.state.isWorkBookRepetitionModal}
-            workBooksRepetition={this.state.workBooksRepetition}
-          />
         <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">
@@ -224,8 +187,7 @@ debugger;
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookProgressEmptyRowsView} 
+                      emptyRowsView={WorkBookRepetitionEmptyRowsView} 
                   />
               </div>
             </div>
@@ -236,4 +198,4 @@ debugger;
   }
 }
 
-export default withCookies(WorkBookProgress);
+export default withCookies(WorkBookRepetition);
