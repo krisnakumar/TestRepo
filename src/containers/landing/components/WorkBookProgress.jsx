@@ -92,6 +92,14 @@ class WorkBookProgress extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
+  /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -99,6 +107,14 @@ class WorkBookProgress extends React.Component {
     console.log(error, info);
   }
 
+   /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param workbooks
+   * @returns rows
+   */
   createRows = (workbooks) => {
     const rows = [], 
           length = workbooks ? workbooks.length : 0;
@@ -118,6 +134,14 @@ class WorkBookProgress extends React.Component {
     return rows;
   };
 
+  /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.workBooksProgress);
@@ -128,6 +152,15 @@ class WorkBookProgress extends React.Component {
     }
   }
 
+  /**
+   * @method
+   * @name - getWorkbookRepetitions
+   * This method will used to get Workbook Repetitions details
+   * @param userId
+   * @param workBookId
+   * @param taskId
+   * @returns none
+   */
   async getWorkbookRepetitions(userId, workBookId, taskId){
     const { cookies } = this.props;
 
@@ -143,6 +176,10 @@ class WorkBookProgress extends React.Component {
 
   /**
    * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
    */
   toggle() {
     this.setState({
@@ -151,6 +188,15 @@ class WorkBookProgress extends React.Component {
     this.props.updateState("isWorkBookProgressModal");
   }
 
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -162,6 +208,14 @@ class WorkBookProgress extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -177,6 +231,13 @@ class WorkBookProgress extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
     this.setState({
@@ -184,6 +245,13 @@ class WorkBookProgress extends React.Component {
     });
   };
 
+  /**
+   * @method
+   * @name - handleCellFocus
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param args
+   * @returns none
+   */
   handleCellFocus = (args) => {
     if(args.idx == 2 || args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId;
@@ -196,6 +264,7 @@ class WorkBookProgress extends React.Component {
     this.refs.reactDataGrid.deselect();
   };
 
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {

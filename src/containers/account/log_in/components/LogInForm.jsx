@@ -95,7 +95,8 @@ class LogInForm extends PureComponent {
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
           cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
-          // set the localstorage for menu's
+          cookies.set('CompanyId', json.CompanyId, { path: '/' });
+          // set the localstorage for menu's 
           localStorage.setItem('menus', JSON.stringify(Menus));
           _self.setState({ toDashboard: true });
         } else {

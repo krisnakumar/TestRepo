@@ -128,6 +128,14 @@ class MyEmployees extends React.Component {
     this.updateModalState = this.updateModalState.bind(this);
   }
 
+  /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -135,6 +143,14 @@ class MyEmployees extends React.Component {
     console.log(error, info);
   }
 
+  /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param workbooks
+   * @returns rows
+   */
   createRows = (employeesArray) => {
     let employeesArrayLength = employeesArray.length - 1;
     let employees = employeesArray[employeesArrayLength];
@@ -173,6 +189,13 @@ class MyEmployees extends React.Component {
     return rows;
   };
 
+  /**
+   * @method
+   * @name - getMyEmployees
+   * This method will used to get My Employees details
+   * @param userId
+   * @returns none
+   */
   async getMyEmployees(userId){
     const { cookies } = this.props;
 
@@ -185,6 +208,13 @@ class MyEmployees extends React.Component {
       this.props.updateMyEmployeesArray(myEmployees);
   };
 
+  /**
+   * @method
+   * @name - getPastDueWorkbooks
+   * This method will used to get Past Due Workbooks details
+   * @param userId
+   * @returns none
+   */
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
 
@@ -198,6 +228,13 @@ class MyEmployees extends React.Component {
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
 
+  /**
+   * @method
+   * @name - getComingDueWorkbooks
+   * This method will used to get Coming Due Workbooks details
+   * @param userId
+   * @returns none
+   */
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
 
@@ -211,6 +248,13 @@ class MyEmployees extends React.Component {
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
   };
 
+   /**
+   * @method
+   * @name - getCompletedWorkbooks
+   * This method will used to get Completed Workbooks details
+   * @param userId
+   * @returns none
+   */
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
 
@@ -224,6 +268,13 @@ class MyEmployees extends React.Component {
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
   };
 
+  /**
+   * @method
+   * @name - getAssignedWorkbooks
+   * This method will used to get Assigned Workbooks details
+   * @param userId
+   * @returns none
+   */
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
 
@@ -237,6 +288,14 @@ class MyEmployees extends React.Component {
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
 
+  /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.myEmployees);
@@ -257,6 +316,13 @@ class MyEmployees extends React.Component {
     }
   }
 
+  /**
+   * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
+   */
   toggle() {
     let myEmployeesArray = this.state.myEmployeesArray,
         length = myEmployeesArray.length;
@@ -271,6 +337,15 @@ class MyEmployees extends React.Component {
     }   
   }
 
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -282,6 +357,14 @@ class MyEmployees extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -307,12 +390,16 @@ class MyEmployees extends React.Component {
     this.setState({ rows });
   };
 
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
-  EmptyRowsView() {
-      return (<div>Sorry, no records :(</div>)
-  };
-
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
     this.setState({
@@ -320,6 +407,13 @@ class MyEmployees extends React.Component {
     });
   };
 
+  /**
+   * @method
+   * @name - handleCellFocus
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param args
+   * @returns none
+   */
   handleCellFocus = (args) => {
     if(args.idx == 0 || args.idx == 6){
       let userId = this.state.rows[args.rowIdx].userId;

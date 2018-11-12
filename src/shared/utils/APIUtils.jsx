@@ -14,6 +14,18 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 
 import 'whatwg-fetch'
 
+/**
+* @method
+* @name - ProcessAPI
+* This method will call REST API according to the input from user
+* @param url
+* @param requestPayload
+* @param token
+* @param isLogin
+* @param type
+* @param isLoader
+* @returns json
+*/
 export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) {
     document.getElementById("loader-layer").classList.remove("loader-hide");
     document.getElementById("loader-layer").classList.add("loader-show");
@@ -27,7 +39,6 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
     }).then(function(response) {        
         document.getElementById("loader-layer").classList.remove("loader-show");
         document.getElementById("loader-layer").classList.add("loader-hide");
-        // if(response.status)
         return response.json();        
     }).then(function(json) { 
         document.getElementById("loader-layer").classList.remove("loader-show");
@@ -41,6 +52,16 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
     });
 }
 
+// WIP ::::::::
+/**
+* @method
+* @name - LoginRefresh
+* This method will call Login Refresh API if the session is expired 
+* @param requestPayload
+* @param token
+* @param isLoader
+* @returns none
+*/
 export async function LoginRefresh(requestPayload, token, isLoader) {
     return fetch("https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
      method: "POST",

@@ -19,6 +19,9 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
+import { instanceOf, PropTypes } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
+import WorkBookProgress from './WorkBookProgress';
 
 /**
  * WorkBookDuePastEmptyRowsView Class defines the React component to render
@@ -32,6 +35,11 @@ class WorkBookDuePastEmptyRowsView extends React.Component{
 };
 
 class WorkBookDuePast extends React.Component {
+
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -63,7 +71,7 @@ class WorkBookDuePast extends React.Component {
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        cellClass: "text-center"
+        cellClass: "text-center text-clickable"
       },
       {
         key: 'dueDate',
@@ -80,10 +88,20 @@ class WorkBookDuePast extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
+      isWorkBookProgressModal: false,
+      workBooksProgress: {}
     };
     this.toggle = this.toggle.bind(this);
   }
 
+  /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -91,6 +109,27 @@ class WorkBookDuePast extends React.Component {
     console.log(error, info);
   }
 
+  async getWorkBookProgress(userId, workBookId){
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        workBooksProgress = response,
+        isWorkBookProgressModal = this.state.isWorkBookProgressModal;
+
+        isWorkBookProgressModal = true;
+    this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+  };
+
+  /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param workbooks
+   * @returns rows
+   */
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
@@ -98,6 +137,7 @@ class WorkBookDuePast extends React.Component {
         let dueDate = employees[i].DueDate.split("T")[0];
       rows.push({
         userId: employees[i].UserId,
+        workBookId: employees[i].WorkBookId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkbookName,
@@ -109,6 +149,14 @@ class WorkBookDuePast extends React.Component {
     return rows;
   };
 
+  /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
     if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.assignedWorkBooks);
@@ -119,6 +167,13 @@ class WorkBookDuePast extends React.Component {
     }
   }
 
+  /**
+   * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
+   */
   toggle() {
     this.setState({
       modal: !this.state.modal
@@ -126,6 +181,29 @@ class WorkBookDuePast extends React.Component {
     this.props.updateState("isPastDueModal");
   }
 
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
+  updateModalState = (modelName) => {
+    let value = !this.state[modelName];
+    this.setState({
+      [modelName]: value
+    });
+  };
+
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -137,6 +215,14 @@ class WorkBookDuePast extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -152,12 +238,36 @@ class WorkBookDuePast extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleCellFocus
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param args
+   * @returns none
+   */
+  handleCellFocus = (args) => {
+    if(args.idx == 3){
+      let userId = this.state.rows[args.rowIdx].userId,
+          workBookId = this.state.rows[args.rowIdx].workBookId;
+
+      if(userId && workBookId)
+        this.getWorkBookProgress(userId, workBookId);      
+    }
+    this.refs.reactDataGrid.deselect();
+  };
+
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
     return (
       <div>
+        <WorkBookProgress
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isWorkBookProgressModal}
+          workBooksProgress={this.state.workBooksProgress}
+        />
         <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Past Due WorkBooks</ModalHeader>
           <ModalBody>
@@ -174,6 +284,7 @@ class WorkBookDuePast extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
+                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={WorkBookDuePastEmptyRowsView} 
                   />
               </div>
@@ -185,4 +296,4 @@ class WorkBookDuePast extends React.Component {
   }
 }
 
-export default WorkBookDuePast;
+export default withCookies(WorkBookDuePast);

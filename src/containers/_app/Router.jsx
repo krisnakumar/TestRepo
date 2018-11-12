@@ -1,10 +1,17 @@
-
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import MainWrapper from './MainWrapper';
 import Landing from '../landing/index';
 import Login from '../account/log_in/index';
 
+/**
+ * @method
+ * @name - Router
+ * This method will append router component with
+ * to Main Wrapper component
+ * @param none
+ * @returns none
+ */
 const Router = () => (
   <MainWrapper>
     <main>
