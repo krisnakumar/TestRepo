@@ -33,8 +33,8 @@ class AssignedWorkBook extends React.Component {
         cellClass: "text-left"
       },
       {
-        key: 'role',
-        name: 'Role',
+        key: 'workbookName',
+        name: 'Workbook Name',
         sortable: true,
         editable: false,
         cellClass: "text-left"
@@ -102,6 +102,7 @@ class AssignedWorkBook extends React.Component {
       rows.push({
         userId:  employees[i].UserId,
         workBookId: employees[i].WorkBookId,
+        workbookName: employees[i].WorkbookName,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         completedTasks: employees[i].CompletedTasks,

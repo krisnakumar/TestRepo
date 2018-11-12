@@ -26,6 +26,7 @@ import ReactDataGrid from 'react-data-grid';
 import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
 import WorkBookCompleted from './WorkBookCompleted';
+import AssignedWorkBook from './AssignedWorkBook';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
@@ -54,20 +55,27 @@ class MyEmployees extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 250,
+        width: 200,
         editable: false,
         cellClass: "text-left text-clickable"
       },
       {
-        key: 'workbook',
-        name: 'Workbooks',
+        key: 'role',
+        name: 'Role',
         sortable: true,
         editable: false,
         cellClass: "text-left"
       },
       {
+        key: 'assignedWorkBooks',
+        name: 'Assigned Workbooks',
+        sortable: true,
+        editable: false,
+        cellClass: "text-right text-clickable"
+      },
+      {
         key: 'inDueWorkBooks',
-        name: 'Workbooks Due in 30 Days',
+        name: 'Workbooks Due',
         width: 200,
         sortable: true,
         editable: false,
@@ -112,7 +120,9 @@ class MyEmployees extends React.Component {
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
-      supervisorNames: this.props.supervisorNames
+      supervisorNames: this.props.supervisorNames,      
+      isAssignedModal: false,
+      assignedWorkBooks: {},
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -143,6 +153,8 @@ class MyEmployees extends React.Component {
       totalEmpCount += parseInt(employees[i].EmployeeCount);      
       rows.push({
         userId: employees[i].UserId,
+        role: employees[i].Role,
+        assignedWorkBooks: employees[i].AssignedWorkBooks,
         employee: employees[i].FirstName + ' ' + employees[i].LastName,
         workbook: employees[i].WorkbookName,
         inDueWorkBooks: employees[i].InDueWorkBooks,
@@ -210,6 +222,19 @@ class MyEmployees extends React.Component {
 
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+  };
+
+  async getAssignedWorkbooks(userId){
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
+        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        assignedWorkBooks = response,
+        isAssignedModal = this.state.isAssignedModal;
+
+    isAssignedModal = true;
+    this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
 
   componentWillReceiveProps(newProps) {
@@ -296,26 +321,31 @@ class MyEmployees extends React.Component {
   };
 
   handleCellFocus = (args) => {
-    if(args.idx == 0 || args.idx == 5){
+    if(args.idx == 0 || args.idx == 6){
       let userId = this.state.rows[args.rowIdx].userId;
 
       if(userId)
       this.getMyEmployees(userId);
-    } else if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getPastDueWorkbooks(userId);
-    } else if(args.idx == 2){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getComingDueWorkbooks(userId);
     } else if(args.idx == 4){
       let userId = this.state.rows[args.rowIdx].userId;
 
       if(userId)
+      this.getPastDueWorkbooks(userId);
+    } else if(args.idx == 3){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getComingDueWorkbooks(userId);
+    } else if(args.idx == 5){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
       this.getCompletedWorkbooks(userId);
+    } else if(args.idx == 2){
+      let userId = this.state.rows[args.rowIdx].userId;
+
+      if(userId)
+      this.getAssignedWorkbooks(userId);
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -327,6 +357,11 @@ class MyEmployees extends React.Component {
     let supervisorName = supervisorNames[supervisorNamesLength];
     return (     
       <div>
+          <AssignedWorkBook
+             updateState={this.updateModalState.bind(this)}
+             modal={this.state.isAssignedModal}
+             assignedWorkBooks={this.state.assignedWorkBooks}
+           />
          <WorkBookComingDue
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isComingDueModal}

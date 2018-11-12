@@ -114,7 +114,7 @@ class WorkBookProgress extends React.Component {
         completionPrecentage: workbooks[i].CompletionPrecentage + "%"
       });
     }
-debugger;
+
     return rows;
   };
 
@@ -129,7 +129,6 @@ debugger;
   }
 
   async getWorkbookRepetitions(userId, workBookId, taskId){
-    debugger
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
@@ -190,9 +189,9 @@ debugger;
       let userId = this.state.rows[args.rowIdx].userId;
       let taskId = this.state.rows[args.rowIdx].taskId;
       let workBookId = this.state.rows[args.rowIdx].workBookId;
-      debugger;
+
       if(userId && taskId)
-      this.getWorkbookRepetitions(userId, workBookId, taskId);
+        this.getWorkbookRepetitions(userId, workBookId, taskId);
     } 
     this.refs.reactDataGrid.deselect();
   };

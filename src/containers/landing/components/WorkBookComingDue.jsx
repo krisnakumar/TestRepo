@@ -56,7 +56,7 @@ class WorkBookComingDue extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
-        cellClass: "text-center"
+        cellClass: "text-left"
       },
       {
         key: 'percentageCompleted',

@@ -100,7 +100,7 @@ class WorkBookDashboard extends PureComponent {
       },
       {
         key: 'total',
-        name: 'Total',
+        name: 'Total Employees',
         sortable: true,
         editable: false,
         cellClass: "text-right text-clickable last-column"
