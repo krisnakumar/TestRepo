@@ -123,7 +123,7 @@ class AssignedWorkBook extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
+        url = `https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/${userId}/assigned-workbooks/${workBookId}/tasks`,
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         workBooksProgress = response,
         isWorkBookProgressModal = this.state.isWorkBookProgressModal;

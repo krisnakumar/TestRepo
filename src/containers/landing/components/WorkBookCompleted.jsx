@@ -151,7 +151,7 @@ class WorkBookCompleted extends React.Component {
     return (
       <div>
         <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">

@@ -45,7 +45,6 @@ class WorkBookRepetition extends React.Component {
         key: 'attempt',
         name: 'Attempt',
         sortable: true,
-        // width: 300,
         editable: false,
         cellClass: "text-left"
         },

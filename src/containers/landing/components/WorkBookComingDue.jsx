@@ -186,7 +186,6 @@ class WorkBookComingDue extends React.Component {
   };
 
 handleCellFocus = (args) => {
-  debugger
     if(args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId,
           workBookId = this.state.rows[args.rowIdx].workBookId;

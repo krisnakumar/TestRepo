@@ -95,7 +95,8 @@ class LogInForm extends PureComponent {
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
           cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
-          cookies.set('CompanyId', json.CompanyId, { path: '/' });
+          cookies.set('UserId', json.UserId, { path: '/' });
+          cookies.set('CompanyId', json.UserId, { path: '/' });
           // set the localstorage for menu's 
           localStorage.setItem('menus', JSON.stringify(Menus));
           _self.setState({ toDashboard: true });
@@ -151,7 +152,7 @@ class LogInForm extends PureComponent {
             </button>
         </div>
         <div className="version-number">
-          <p>V0.8.181102.001</p> 
+          <p>V0.9.181112.002</p>
         </div>
       </form>
     );
