@@ -266,6 +266,7 @@ class WorkBookDuePast extends React.Component {
     return (
       <div>
         <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}

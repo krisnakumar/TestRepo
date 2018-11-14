@@ -458,21 +458,25 @@ class MyEmployees extends React.Component {
     return (     
       <div>
           <AssignedWorkBook
+             backdropClassName={"no-backdrop"}
              updateState={this.updateModalState.bind(this)}
              modal={this.state.isAssignedModal}
              assignedWorkBooks={this.state.assignedWorkBooks}
            />
          <WorkBookComingDue
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isComingDueModal}
             assignedWorkBooks={this.state.workBookComingDue}
           />
            <WorkBookDuePast
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isPastDueModal}
             assignedWorkBooks={this.state.workBookDuePast}
           />
           <WorkBookCompleted
+              backdropClassName={"no-backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}

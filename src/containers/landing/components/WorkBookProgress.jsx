@@ -274,6 +274,7 @@ class WorkBookProgress extends React.Component {
     return (
       <div>
          <WorkBookRepetition
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isWorkBookRepetitionModal}
             workBooksRepetition={this.state.workBooksRepetition}

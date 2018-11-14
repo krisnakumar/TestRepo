@@ -156,3 +156,7 @@ img {
 .loader-hide{
   display: none;
 }
+
+.modal-backdrop.show.no-backdrop {
+  background-color: #0000;
+}

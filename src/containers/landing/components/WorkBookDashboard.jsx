@@ -518,6 +518,7 @@ class WorkBookDashboard extends PureComponent {
     return (         
           <CardBody>
             <MyEmployees
+              backdropClassName={"backdrop"}
               fakeState={this.state.fakeState}
               level={this.state.level}
               updateState={this.updateModalState.bind(this)}
@@ -528,21 +529,25 @@ class WorkBookDashboard extends PureComponent {
               supervisorNames={this.state.supervisorNames}
             />
             <AssignedWorkBook
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isAssignedModal}
               assignedWorkBooks={this.state.assignedWorkBooks}
             />
              <WorkBookDuePast
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isPastDueModal}
               assignedWorkBooks={this.state.workBookDuePast}
             />
              <WorkBookComingDue
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isComingDueModal}
               assignedWorkBooks={this.state.workBookComingDue}
             />
             <WorkBookCompleted
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}
