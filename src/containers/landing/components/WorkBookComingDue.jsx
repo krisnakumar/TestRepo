@@ -106,13 +106,17 @@ class WorkBookComingDue extends React.Component {
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
+    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+        workBooksProgress = {};
+    isWorkBookProgressModal = true;
+    this.setState({ isWorkBookProgressModal, workBooksProgress });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksProgress = response,
-        isWorkBookProgressModal = this.state.isWorkBookProgressModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        isWorkBookProgressModal = true;
+    workBooksProgress = response;
+    isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
@@ -136,13 +140,11 @@ class WorkBookComingDue extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.assignedWorkBooks);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
-    }
   }
 
   toggle() {

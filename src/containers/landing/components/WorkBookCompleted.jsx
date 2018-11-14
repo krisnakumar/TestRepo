@@ -87,14 +87,13 @@ class WorkBookCompleted extends React.Component {
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
-    for (let i = 0; i < length; i++) { 
-        let dueDate = employees[i].DueDate.split("T")[0];
+    for (let i = 0; i < length; i++) {         
       rows.push({
         userId: employees[i].UserId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkbookName,
-        dueDate: dueDate
+        completionDate: employees[i].CompletionDate.split("T")[0]
       });
     }
 
@@ -102,13 +101,11 @@ class WorkBookCompleted extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.assignedWorkBooks);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
-    }
   }
 
   toggle() {

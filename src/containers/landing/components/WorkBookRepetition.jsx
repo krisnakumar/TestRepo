@@ -143,13 +143,11 @@ class WorkBookRepetition extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.workBooksRepetition);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
-    }
   }
 
   /**

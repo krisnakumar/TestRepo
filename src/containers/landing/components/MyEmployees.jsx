@@ -202,8 +202,7 @@ class MyEmployees extends React.Component {
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        myEmployees = response,
-        isMyEmployeeModal = this.state.isMyEmployeeModal;
+        myEmployees = response;
 
       this.props.updateMyEmployeesArray(myEmployees);
   };
@@ -218,12 +217,16 @@ class MyEmployees extends React.Component {
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isPastDueModal = this.state.isPastDueModal,
+        workBookDuePast = {};
+        isPastDueModal = true;
+    this.setState({ isPastDueModal, workBookDuePast });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookDuePast = response,
-        isPastDueModal = this.state.isPastDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+      workBookDuePast = response;
       isPastDueModal = true;
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
@@ -238,11 +241,16 @@ class MyEmployees extends React.Component {
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isComingDueModal = this.state.isComingDueModal,
+        workBookComingDue = {};
+        isComingDueModal = true;
+    this.setState({ isComingDueModal, workBookComingDue });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookComingDue = response,
-        isComingDueModal = this.state.isComingDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        workBookComingDue = response;
 
         isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
@@ -258,12 +266,16 @@ class MyEmployees extends React.Component {
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isCompletedModal = this.state.isCompletedModal,
+        workBookCompleted = {};
+    isCompletedModal = true;
+    this.setState({ isCompletedModal, workBookCompleted });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookCompleted = response,
-        isCompletedModal = this.state.isCompletedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+    workBookCompleted = response;
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
   };
@@ -278,12 +290,16 @@ class MyEmployees extends React.Component {
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isAssignedModal = this.state.isAssignedModal,
+        assignedWorkBooks = {};
+    isAssignedModal = true;
+    this.setState({ isAssignedModal, assignedWorkBooks });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        assignedWorkBooks = response,
-        isAssignedModal = this.state.isAssignedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+    assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
@@ -297,7 +313,6 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.myEmployees);
       this.setState({
         modal: newProps.modal,
@@ -305,15 +320,6 @@ class MyEmployees extends React.Component {
         level: newProps.level,
         supervisorNames: newProps.supervisorNames
       });
-    } else if(this.state.level != newProps.level){
-      let rows = this.createRows(newProps.myEmployees);
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        level: newProps.level,
-        supervisorNames: newProps.supervisorNames
-      });
-    }
   }
 
   /**

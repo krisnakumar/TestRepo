@@ -143,13 +143,11 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.workBooksProgress);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
-    }
   }
 
   /**
@@ -164,13 +162,17 @@ class WorkBookProgress extends React.Component {
   async getWorkbookRepetitions(userId, workBookId, taskId){
     const { cookies } = this.props;
 
+    let isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal,
+        workBooksRepetition = {};
+    isWorkBookRepetitionModal = true;
+    this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksRepetition = response,
-        isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        isWorkBookRepetitionModal = true;
+    workBooksRepetition = response;
+    isWorkBookRepetitionModal = true;
     this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
   };
 

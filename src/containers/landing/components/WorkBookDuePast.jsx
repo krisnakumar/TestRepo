@@ -22,6 +22,7 @@ import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import WorkBookProgress from './WorkBookProgress';
+import * as API from '../../../shared/utils/APIUtils';
 
 /**
  * WorkBookDuePastEmptyRowsView Class defines the React component to render
@@ -112,13 +113,17 @@ class WorkBookDuePast extends React.Component {
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
+    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+        workBooksProgress = {};
+    isWorkBookProgressModal = true;
+    this.setState({ isWorkBookProgressModal, workBooksProgress });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksProgress = response,
-        isWorkBookProgressModal = this.state.isWorkBookProgressModal;
-
-        isWorkBookProgressModal = true;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        
+    workBooksProgress = response;
+    isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
@@ -145,7 +150,6 @@ class WorkBookDuePast extends React.Component {
         dueDate: dueDate
       });
     }
-
     return rows;
   };
 
@@ -158,13 +162,11 @@ class WorkBookDuePast extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
       let rows = this.createRows(newProps.assignedWorkBooks);
       this.setState({
         modal: newProps.modal,
         rows: rows
       });
-    }
   }
 
   /**
