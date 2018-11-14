@@ -209,7 +209,7 @@ handleCellFocus = (args) => {
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
           <ModalBody>
           <div className="grid-container">

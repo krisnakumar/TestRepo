@@ -214,7 +214,7 @@ class WorkBookRepetition extends React.Component {
     const { rows } = this.state;
     return (
       <div>
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
           <ModalBody>
           <div className="grid-container">

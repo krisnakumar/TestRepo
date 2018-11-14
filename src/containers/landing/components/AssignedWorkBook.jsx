@@ -277,11 +277,12 @@ class AssignedWorkBook extends React.Component {
     return (
       <div>
         <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
           <ModalBody>
           <div className="grid-container">

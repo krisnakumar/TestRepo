@@ -278,7 +278,7 @@ class WorkBookProgress extends React.Component {
             modal={this.state.isWorkBookRepetitionModal}
             workBooksRepetition={this.state.workBooksRepetition}
           />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
           <ModalBody>
           <div className="grid-container">

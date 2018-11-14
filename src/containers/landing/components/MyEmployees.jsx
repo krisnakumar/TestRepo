@@ -477,7 +477,7 @@ class MyEmployees extends React.Component {
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}
           />
-        <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"}  isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
           <ModalBody>
           <div className="grid-container">

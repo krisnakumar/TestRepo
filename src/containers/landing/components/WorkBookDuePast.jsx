@@ -270,7 +270,7 @@ class WorkBookDuePast extends React.Component {
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Past Due WorkBooks</ModalHeader>
           <ModalBody>
           <div className="grid-container">
