@@ -1,0 +1,158 @@
+main {
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0 !important;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  background: #e0e0e0;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+ul, ol {
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+
+a {
+  color: $color-blue;
+  transition: all 0.3s;
+
+  &:hover {
+    text-decoration: none;
+    color: $color-blue-hover;
+  }
+}
+
+img {
+  // width: 100%;
+}
+
+.landing__menu {
+  background: #e0e0e0;
+}
+
+.table {
+  padding: 0 0 0 0px;
+}
+
+#EntryCount {
+  padding: 15px 0px 15px 18px;
+  border-bottom: 1px solid #aaaa;
+}
+
+.grid-container {
+  border: 1px solid #aaaaaa;
+  border-radius: 5px;
+}
+
+.text-left{
+  text-align: left;
+}
+.text-right{
+  text-align: right;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-clickable{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.modal-dialog.custom-modal-grid {
+  max-width: 1488px;
+  min-width: 800px;
+}
+
+.loader{
+  width: 100%;
+  height: 100%;
+  z-index: 8100; 
+  position: absolute; 
+  top: 0px; 
+  left: 0px; 
+  background: rgb(34, 34, 34); 
+  opacity: 0.7; 
+  display: block;
+}
+
+@media (min-width: 576px){
+  .modal-dialog.custom-modal-grid {
+    max-width: 1188px;
+    min-width: 800px;
+  }
+}
+
+.last-column {
+  border-right: none !important;
+}
+
+.no-records-found {
+  margin: 10% 0% 10% 43%;
+}
+
+.no-records-found-modal {
+  margin: 10% 0% 10% 0%;
+}
+
+.react-grid-Canvas div ~ div.react-grid-Row:last-child div.react-grid-Cell {
+  text-decoration: none;
+  cursor: default;
+}
+
+.login-label{
+  float: left;
+}
+
+.account__btn:active:focus:hover:focus-within:active:visited {
+  border-color: #5cb85c !important;
+  background-color: #5cb85c !important;
+}
+
+.account__btn:before {
+  background-color: #5cb85c !important;
+}
+
+.react-grid-Row.react-grid-Row--odd {
+  background: #eee;
+  padding: 0;
+  border-bottom: 1px solid #e1ddddf7 !important;
+  // margin-right: 20px;
+}
+
+.react-grid-Row.react-grid-Row--even {
+  border-bottom: 1px solid #ddd !important;
+}
+
+.version-number{
+  text-align: center;width: calc(100% + 10px);
+}
+
+#loader-layer{
+  width: 100%;
+  height: 100%;
+  z-index: 8100;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: rgb(34, 34, 34);
+  opacity: 0.7;
+}
+
+.loader-show{
+  display: block;
+}
+
+.loader-hide{
+  display: none;
+}
