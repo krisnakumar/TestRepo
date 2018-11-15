@@ -90,7 +90,8 @@ class WorkBookComingDue extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -140,10 +141,13 @@ class WorkBookComingDue extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -227,7 +231,7 @@ handleCellFocus = (args) => {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookComingDueEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookComingDueEmptyRowsView} 
                   />
               </div>
             </div>

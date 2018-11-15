@@ -90,7 +90,8 @@ class WorkBookDuePast extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -162,10 +163,13 @@ class WorkBookDuePast extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -288,7 +292,7 @@ class WorkBookDuePast extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookDuePastEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookDuePastEmptyRowsView} 
                   />
               </div>
             </div>

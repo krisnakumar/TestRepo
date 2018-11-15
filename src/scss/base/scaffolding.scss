@@ -98,11 +98,19 @@ img {
 }
 
 .no-records-found {
-  margin: 10% 0% 10% 43%;
+    margin: 10% 0% 10% 0%;
+    color: #888;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
 }
 
 .no-records-found-modal {
   margin: 10% 0% 10% 0%;
+  color: #888;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .react-grid-Canvas div ~ div.react-grid-Row:last-child div.react-grid-Cell {

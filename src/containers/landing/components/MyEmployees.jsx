@@ -123,6 +123,7 @@ class MyEmployees extends React.Component {
       supervisorNames: this.props.supervisorNames,      
       isAssignedModal: false,
       assignedWorkBooks: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -313,12 +314,22 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.myEmployees);
+      let rows = this.createRows(newProps.myEmployees),
+          isArray = Array.isArray(newProps.myEmployees),
+          isRows = newProps.myEmployees.length > 0 ? true : false;
+
+      var isInitial = false;
+
+      if(isArray && isRows){
+        isInitial = rows.length > 0 ? false : true;
+      } 
+
       this.setState({
         modal: newProps.modal,
         rows: rows,
         level: newProps.level,
-        supervisorNames: newProps.supervisorNames
+        supervisorNames: newProps.supervisorNames,
+        isInitial: isInitial
       });
   }
 
@@ -333,7 +344,7 @@ class MyEmployees extends React.Component {
     let myEmployeesArray = this.state.myEmployeesArray,
         length = myEmployeesArray.length;
 
-    if(length == 1 || length == 0){
+    if(length == 1 || length == 0 || length == undefined){
       this.setState({
         modal: !this.state.modal
       });
@@ -497,7 +508,7 @@ class MyEmployees extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={EmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && EmptyRowsView} 
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
                   />
               </div>

@@ -118,14 +118,15 @@ class WorkBookDashboard extends PureComponent {
       isComingDueModal: false,
       isCompletedModal: false,
       myEmployees: {},
-      myEmployeesArray: [],
+      myEmployeesArray: {},
       assignedWorkBooks: {},
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
       fakeState: false,
       level: 0,
-      supervisorNames: []
+      supervisorNames: [],
+      isInitial: false
     };
   }
 
@@ -153,9 +154,16 @@ class WorkBookDashboard extends PureComponent {
    */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
-    this.setState({
-      [modelName]: value
-    });
+    if(modelName == "isMyEmployeeModal"){
+      this.setState({
+        [modelName]: value,
+        myEmployeesArray: {}
+      });
+    } else {
+      this.setState({
+        [modelName]: value
+      });
+    }
   };
 
   /**
@@ -169,7 +177,7 @@ class WorkBookDashboard extends PureComponent {
     let myEmployeesArray = this.state.myEmployeesArray,
         level = this.state.level + 1,
         supervisorNames = this.state.supervisorNames;
-    
+
     if(employees.length > 0)
       supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
 
@@ -226,8 +234,9 @@ class WorkBookDashboard extends PureComponent {
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        rows = this.createRows(response);
-    this.setState({ rows: rows});
+        rows = this.createRows(response),
+        isInitial = true;
+    this.setState({ rows: rows, isInitial: isInitial});
     this.onChangePage([]);
   };
 
@@ -245,12 +254,13 @@ class WorkBookDashboard extends PureComponent {
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response,
-        myEmployeesArray = [],
+        myEmployeesArray = this.state.myEmployeesArray,
         isMyEmployeeModal = this.state.isMyEmployeeModal,
         fakeState = this.state.fakeState,
         level = this.state.level + 1 ;
-        myEmployeesArray.push(myEmployees);
-
+        
+      myEmployeesArray = [];
+      myEmployeesArray.push(myEmployees);
       fakeState = !fakeState;
       isMyEmployeeModal = true;
       this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
@@ -571,7 +581,7 @@ class WorkBookDashboard extends PureComponent {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={DataTableEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && DataTableEmptyRowsView} 
                   />
               </div>
             </div>

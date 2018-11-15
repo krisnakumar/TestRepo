@@ -87,7 +87,8 @@ class WorkBookProgress extends React.Component {
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
       isWorkBookRepetitionModal: false,
-      workBooksRepetition: {}
+      workBooksRepetition: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -143,10 +144,13 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksProgress);
+      let rows = this.createRows(newProps.workBooksProgress),
+          isArray = Array.isArray(newProps.workBooksProgress),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -296,7 +300,7 @@ class WorkBookProgress extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookProgressEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView} 
                   />
               </div>
             </div>

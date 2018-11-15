@@ -91,7 +91,8 @@ class AssignedWorkBook extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -173,10 +174,13 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -299,7 +303,7 @@ class AssignedWorkBook extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={AssignedWorkBookEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView} 
                   />
               </div>
             </div>

@@ -50,7 +50,7 @@ class WorkBookRepetition extends React.Component {
         },
         {
         key: 'status',
-        name: 'Pass/Fail',
+        name: 'Complete/Incomplete',
         sortable: true,
         editable: false,
         cellClass: "text-left"
@@ -89,6 +89,7 @@ class WorkBookRepetition extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -143,10 +144,13 @@ class WorkBookRepetition extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksRepetition);
+      let rows = this.createRows(newProps.workBooksRepetition),
+          isArray = Array.isArray(newProps.workBooksRepetition),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -230,7 +234,7 @@ class WorkBookRepetition extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={WorkBookRepetitionEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
                   />
               </div>
             </div>

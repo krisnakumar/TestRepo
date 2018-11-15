@@ -73,6 +73,7 @@ class WorkBookCompleted extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -101,10 +102,13 @@ class WorkBookCompleted extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -163,7 +167,7 @@ class WorkBookCompleted extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={WorkBookCompletedEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookCompletedEmptyRowsView} 
                   />
               </div>
             </div>
