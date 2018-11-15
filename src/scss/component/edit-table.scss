@@ -4,6 +4,9 @@
     background: #0c3254;
     box-shadow: none;
     color: #fff;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: 1px solid #fff;
   }
 
   .react-grid-HeaderCell, .react-grid-Cell {
@@ -29,6 +32,7 @@
   }
 
   .react-grid-HeaderCell {
+    border-bottom: none !important; 
     font-size: 11px !important;
     & > * {
       transform: translateY(-50%);
@@ -179,3 +183,4 @@
 .last-column {
   border-right: none !important;
 }
+
