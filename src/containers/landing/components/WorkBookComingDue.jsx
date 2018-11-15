@@ -90,7 +90,8 @@ class WorkBookComingDue extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -106,13 +107,17 @@ class WorkBookComingDue extends React.Component {
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
+    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+        workBooksProgress = {};
+    isWorkBookProgressModal = true;
+    this.setState({ isWorkBookProgressModal, workBooksProgress });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksProgress = response,
-        isWorkBookProgressModal = this.state.isWorkBookProgressModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        isWorkBookProgressModal = true;
+    workBooksProgress = response;
+    isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
@@ -136,13 +141,14 @@ class WorkBookComingDue extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
-    }
   }
 
   toggle() {
@@ -186,7 +192,6 @@ class WorkBookComingDue extends React.Component {
   };
 
 handleCellFocus = (args) => {
-  debugger
     if(args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId,
           workBookId = this.state.rows[args.rowIdx].workBookId;
@@ -204,11 +209,12 @@ handleCellFocus = (args) => {
     return (
       <div>
          <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -225,7 +231,7 @@ handleCellFocus = (args) => {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookComingDueEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookComingDueEmptyRowsView} 
                   />
               </div>
             </div>

@@ -123,6 +123,7 @@ class MyEmployees extends React.Component {
       supervisorNames: this.props.supervisorNames,      
       isAssignedModal: false,
       assignedWorkBooks: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -202,8 +203,7 @@ class MyEmployees extends React.Component {
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        myEmployees = response,
-        isMyEmployeeModal = this.state.isMyEmployeeModal;
+        myEmployees = response;
 
       this.props.updateMyEmployeesArray(myEmployees);
   };
@@ -218,12 +218,16 @@ class MyEmployees extends React.Component {
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isPastDueModal = this.state.isPastDueModal,
+        workBookDuePast = {};
+        isPastDueModal = true;
+    this.setState({ isPastDueModal, workBookDuePast });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookDuePast = response,
-        isPastDueModal = this.state.isPastDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+      workBookDuePast = response;
       isPastDueModal = true;
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
@@ -238,11 +242,16 @@ class MyEmployees extends React.Component {
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isComingDueModal = this.state.isComingDueModal,
+        workBookComingDue = {};
+        isComingDueModal = true;
+    this.setState({ isComingDueModal, workBookComingDue });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookComingDue = response,
-        isComingDueModal = this.state.isComingDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        workBookComingDue = response;
 
         isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
@@ -258,12 +267,16 @@ class MyEmployees extends React.Component {
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isCompletedModal = this.state.isCompletedModal,
+        workBookCompleted = {};
+    isCompletedModal = true;
+    this.setState({ isCompletedModal, workBookCompleted });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookCompleted = response,
-        isCompletedModal = this.state.isCompletedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+    workBookCompleted = response;
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
   };
@@ -278,12 +291,16 @@ class MyEmployees extends React.Component {
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isAssignedModal = this.state.isAssignedModal,
+        assignedWorkBooks = {};
+    isAssignedModal = true;
+    this.setState({ isAssignedModal, assignedWorkBooks });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        assignedWorkBooks = response,
-        isAssignedModal = this.state.isAssignedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+    assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
@@ -297,23 +314,23 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.myEmployees);
+      let rows = this.createRows(newProps.myEmployees),
+          isArray = Array.isArray(newProps.myEmployees),
+          isRows = newProps.myEmployees.length > 0 ? true : false;
+
+      var isInitial = false;
+
+      if(isArray && isRows){
+        isInitial = rows.length > 0 ? false : true;
+      } 
+
       this.setState({
         modal: newProps.modal,
         rows: rows,
         level: newProps.level,
-        supervisorNames: newProps.supervisorNames
+        supervisorNames: newProps.supervisorNames,
+        isInitial: isInitial
       });
-    } else if(this.state.level != newProps.level){
-      let rows = this.createRows(newProps.myEmployees);
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        level: newProps.level,
-        supervisorNames: newProps.supervisorNames
-      });
-    }
   }
 
   /**
@@ -327,7 +344,7 @@ class MyEmployees extends React.Component {
     let myEmployeesArray = this.state.myEmployeesArray,
         length = myEmployeesArray.length;
 
-    if(length == 1 || length == 0){
+    if(length == 1 || length == 0 || length == undefined){
       this.setState({
         modal: !this.state.modal
       });
@@ -452,26 +469,30 @@ class MyEmployees extends React.Component {
     return (     
       <div>
           <AssignedWorkBook
+             backdropClassName={"no-backdrop"}
              updateState={this.updateModalState.bind(this)}
              modal={this.state.isAssignedModal}
              assignedWorkBooks={this.state.assignedWorkBooks}
            />
          <WorkBookComingDue
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isComingDueModal}
             assignedWorkBooks={this.state.workBookComingDue}
           />
            <WorkBookDuePast
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isPastDueModal}
             assignedWorkBooks={this.state.workBookDuePast}
           />
           <WorkBookCompleted
+              backdropClassName={"no-backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}
           />
-        <Modal isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"}  isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -487,7 +508,7 @@ class MyEmployees extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={EmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && EmptyRowsView} 
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
                   />
               </div>

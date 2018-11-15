@@ -87,7 +87,8 @@ class WorkBookProgress extends React.Component {
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
       isWorkBookRepetitionModal: false,
-      workBooksRepetition: {}
+      workBooksRepetition: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -143,13 +144,14 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.workBooksProgress);
+      let rows = this.createRows(newProps.workBooksProgress),
+          isArray = Array.isArray(newProps.workBooksProgress),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
-    }
   }
 
   /**
@@ -164,13 +166,17 @@ class WorkBookProgress extends React.Component {
   async getWorkbookRepetitions(userId, workBookId, taskId){
     const { cookies } = this.props;
 
+    let isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal,
+        workBooksRepetition = {};
+    isWorkBookRepetitionModal = true;
+    this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksRepetition = response,
-        isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        isWorkBookRepetitionModal = true;
+    workBooksRepetition = response;
+    isWorkBookRepetitionModal = true;
     this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
   };
 
@@ -272,11 +278,12 @@ class WorkBookProgress extends React.Component {
     return (
       <div>
          <WorkBookRepetition
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isWorkBookRepetitionModal}
             workBooksRepetition={this.state.workBooksRepetition}
           />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -293,7 +300,7 @@ class WorkBookProgress extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookProgressEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView} 
                   />
               </div>
             </div>

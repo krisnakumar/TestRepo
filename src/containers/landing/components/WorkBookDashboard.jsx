@@ -118,14 +118,15 @@ class WorkBookDashboard extends PureComponent {
       isComingDueModal: false,
       isCompletedModal: false,
       myEmployees: {},
-      myEmployeesArray: [],
+      myEmployeesArray: {},
       assignedWorkBooks: {},
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
       fakeState: false,
       level: 0,
-      supervisorNames: []
+      supervisorNames: [],
+      isInitial: false
     };
   }
 
@@ -153,9 +154,16 @@ class WorkBookDashboard extends PureComponent {
    */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
-    this.setState({
-      [modelName]: value
-    });
+    if(modelName == "isMyEmployeeModal"){
+      this.setState({
+        [modelName]: value,
+        myEmployeesArray: {}
+      });
+    } else {
+      this.setState({
+        [modelName]: value
+      });
+    }
   };
 
   /**
@@ -169,7 +177,7 @@ class WorkBookDashboard extends PureComponent {
     let myEmployeesArray = this.state.myEmployeesArray,
         level = this.state.level + 1,
         supervisorNames = this.state.supervisorNames;
-    
+
     if(employees.length > 0)
       supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
 
@@ -200,7 +208,6 @@ class WorkBookDashboard extends PureComponent {
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames});
   };
 
-  
   /**
    * @method
    * @name - componentDidMount
@@ -227,8 +234,9 @@ class WorkBookDashboard extends PureComponent {
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        rows = this.createRows(response);
-    this.setState({ rows: rows});
+        rows = this.createRows(response),
+        isInitial = true;
+    this.setState({ rows: rows, isInitial: isInitial});
     this.onChangePage([]);
   };
 
@@ -246,12 +254,13 @@ class WorkBookDashboard extends PureComponent {
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response,
-        myEmployeesArray = [],
+        myEmployeesArray = this.state.myEmployeesArray,
         isMyEmployeeModal = this.state.isMyEmployeeModal,
         fakeState = this.state.fakeState,
         level = this.state.level + 1 ;
-        myEmployeesArray.push(myEmployees);
-
+        
+      myEmployeesArray = [];
+      myEmployeesArray.push(myEmployees);
       fakeState = !fakeState;
       isMyEmployeeModal = true;
       this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
@@ -267,12 +276,17 @@ class WorkBookDashboard extends PureComponent {
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isAssignedModal = this.state.isAssignedModal,
+        assignedWorkBooks = {};
+    isAssignedModal = true;
+    this.setState({ isAssignedModal, assignedWorkBooks });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        assignedWorkBooks = response,
-        isAssignedModal = this.state.isAssignedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+        
+    assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
   };
@@ -284,16 +298,19 @@ class WorkBookDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getPastDueWorkbooks(userId){
-    
+  async getPastDueWorkbooks(userId){    
     const { cookies } = this.props;
+
+    let isPastDueModal = this.state.isPastDueModal,
+        workBookDuePast = {};
+        isPastDueModal = true;
+    this.setState({ isPastDueModal, workBookDuePast });
 
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookDuePast = response,
-        isPastDueModal = this.state.isPastDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
+      workBookDuePast = response;
       isPastDueModal = true;
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
@@ -308,13 +325,17 @@ class WorkBookDashboard extends PureComponent {
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isComingDueModal = this.state.isComingDueModal,
+        workBookComingDue = {};
+        isComingDueModal = true;
+    this.setState({ isComingDueModal, workBookComingDue });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookComingDue = response,
-        isComingDueModal = this.state.isComingDueModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        isComingDueModal = true;
+    workBookComingDue = response;
+    isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
   };
 
@@ -328,11 +349,16 @@ class WorkBookDashboard extends PureComponent {
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
 
+    let isCompletedModal = this.state.isCompletedModal,
+        workBookCompleted = {};
+        isCompletedModal = true;
+    this.setState({ isCompletedModal, workBookCompleted });
+
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBookCompleted = response,
-        isCompletedModal = this.state.isCompletedModal;
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        workBookCompleted = response;
 
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
@@ -455,31 +481,41 @@ class WorkBookDashboard extends PureComponent {
       let employee = this.state.rows[args.rowIdx].employee;
       
       if(userId){        
-        let supervisorNames = this.state.supervisorNames; 
+        let supervisorNames = this.state.supervisorNames,
+            isMyEmployeeModal = this.state.isMyEmployeeModal,
+            myEmployeesArray =  this.state.myEmployeesArray;
+
         supervisorNames.push(employee);
+        isMyEmployeeModal = true;
+        myEmployeesArray = [];
+
+        this.setState({ isMyEmployeeModal, myEmployeesArray });
         this.getMyEmployees(userId);
       }
-
     } else if(args.idx == 2){
       let userId = this.state.rows[args.rowIdx].userId;
 
-      if(userId)
-      this.getAssignedWorkbooks(userId);
+      if(userId){        
+        this.getAssignedWorkbooks(userId);
+      }
     } else if(args.idx == 4){
       let userId = this.state.rows[args.rowIdx].userId;
 
-      if(userId)
-      this.getPastDueWorkbooks(userId);
+      if(userId){
+        this.getPastDueWorkbooks(userId);
+      }
     } else if(args.idx == 3){
       let userId = this.state.rows[args.rowIdx].userId;
 
-      if(userId)
-      this.getComingDueWorkbooks(userId);
+      if(userId){
+        this.getComingDueWorkbooks(userId);
+      }      
     } else if(args.idx == 5){
       let userId = this.state.rows[args.rowIdx].userId;
 
-      if(userId)
-      this.getCompletedWorkbooks(userId);
+      if(userId){
+        this.getCompletedWorkbooks(userId);
+      }      
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -492,6 +528,7 @@ class WorkBookDashboard extends PureComponent {
     return (         
           <CardBody>
             <MyEmployees
+              backdropClassName={"backdrop"}
               fakeState={this.state.fakeState}
               level={this.state.level}
               updateState={this.updateModalState.bind(this)}
@@ -502,21 +539,25 @@ class WorkBookDashboard extends PureComponent {
               supervisorNames={this.state.supervisorNames}
             />
             <AssignedWorkBook
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isAssignedModal}
               assignedWorkBooks={this.state.assignedWorkBooks}
             />
              <WorkBookDuePast
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isPastDueModal}
               assignedWorkBooks={this.state.workBookDuePast}
             />
              <WorkBookComingDue
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isComingDueModal}
               assignedWorkBooks={this.state.workBookComingDue}
             />
-              <WorkBookCompleted
+            <WorkBookCompleted
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}
@@ -540,7 +581,7 @@ class WorkBookDashboard extends PureComponent {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={DataTableEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && DataTableEmptyRowsView} 
                   />
               </div>
             </div>

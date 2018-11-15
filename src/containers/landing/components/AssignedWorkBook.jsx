@@ -91,7 +91,8 @@ class AssignedWorkBook extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -122,13 +123,17 @@ class AssignedWorkBook extends React.Component {
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
-    let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        workBooksProgress = response,
-        isWorkBookProgressModal = this.state.isWorkBookProgressModal;
+    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+    workBooksProgress = {};
+    isWorkBookProgressModal = true;
+    this.setState({ isWorkBookProgressModal, workBooksProgress });
 
-        isWorkBookProgressModal = true;
+    let token = cookies.get('IdentityToken'),
+        url = `https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/${userId}/assigned-workbooks/${workBookId}/tasks`,
+        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+    workBooksProgress = response;        
+    isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
@@ -169,13 +174,14 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
-    }
   }
 
   /**
@@ -275,11 +281,12 @@ class AssignedWorkBook extends React.Component {
     return (
       <div>
         <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -296,7 +303,7 @@ class AssignedWorkBook extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={AssignedWorkBookEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView} 
                   />
               </div>
             </div>

@@ -26,7 +26,7 @@ const Router = () => (
       </div>
       <Switch>
         <Route exact path="/" component={Login} />
-        <Route exact path="/employeereports" component={Landing} />
+        <Route exact path="/EmployeeReports" component={Landing} />
       </Switch>
     </main>
   </MainWrapper>

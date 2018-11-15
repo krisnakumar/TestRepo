@@ -73,6 +73,7 @@ class WorkBookCompleted extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
+      isInitial: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -87,14 +88,13 @@ class WorkBookCompleted extends React.Component {
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
-    for (let i = 0; i < length; i++) { 
-        let dueDate = employees[i].DueDate.split("T")[0];
+    for (let i = 0; i < length; i++) {         
       rows.push({
         userId: employees[i].UserId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkbookName,
-        dueDate: dueDate
+        completionDate: employees[i].CompletionDate.split("T")[0]
       });
     }
 
@@ -102,13 +102,14 @@ class WorkBookCompleted extends React.Component {
   };
 
   componentWillReceiveProps(newProps) {
-    if(this.state.modal != newProps.modal){
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
-    }
   }
 
   toggle() {
@@ -150,8 +151,8 @@ class WorkBookCompleted extends React.Component {
     const { rows } = this.state;
     return (
       <div>
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+          <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table">
@@ -166,7 +167,7 @@ class WorkBookCompleted extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={WorkBookCompletedEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookCompletedEmptyRowsView} 
                   />
               </div>
             </div>
