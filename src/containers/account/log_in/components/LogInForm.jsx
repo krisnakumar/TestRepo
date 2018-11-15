@@ -113,7 +113,7 @@ class LogInForm extends PureComponent {
     const { handleSubmit } = this.props;
 
     if (this.state.toDashboard === true) {
-      return <Redirect to='/employeereports' />
+      return <Redirect to='/EmployeeReports' />
     }
 
     return (
