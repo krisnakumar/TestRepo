@@ -496,7 +496,7 @@ class MyEmployees extends React.Component {
           <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
           <ModalBody>
           <div className="grid-container">
-              <div className="table">
+              <div className="table has-total-row">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}

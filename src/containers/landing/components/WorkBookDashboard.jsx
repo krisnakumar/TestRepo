@@ -564,11 +564,11 @@ class WorkBookDashboard extends PureComponent {
             />
             <div className="card__title">
              <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbooks Dashboard
+              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
             </div>
             <div className="grid-container">
-              <div className="table">
+              <div className="table has-total-row">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}

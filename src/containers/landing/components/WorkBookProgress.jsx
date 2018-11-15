@@ -61,14 +61,14 @@ class WorkBookProgress extends React.Component {
         },
         {
         key: 'completedTasksCount',
-        name: 'Completed / Total Repetitions',
+        name: 'Completed / Total Tasks',
         sortable: true,
         editable: false,
         cellClass: "text-center text-clickable"
         },
         {
         key: 'incompletedTasksCount',
-        name: 'Incomplete Repetitions',
+        name: 'Incomplete Tasks',
         sortable: true,
         editable: false,
         cellClass: "text-center text-clickable"
@@ -284,7 +284,7 @@ class WorkBookProgress extends React.Component {
             workBooksRepetition={this.state.workBooksRepetition}
           />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>      
           <ModalBody>
           <div className="grid-container">
               <div className="table">

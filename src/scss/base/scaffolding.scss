@@ -113,13 +113,16 @@ img {
   font-weight: 600;
 }
 
-.react-grid-Canvas div ~ div.react-grid-Row:last-child div.react-grid-Cell {
-  text-decoration: none;
-  cursor: default;
-}
-
 .login-label{
   float: left;
+}
+
+
+.has-total-row .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas div ~ div.react-grid-Row:last-child {
+  text-decoration: none;
+  cursor: default;
+  font-weight: 600;
+  background-color: #c4c4c4;
 }
 
 .account__btn:active:focus:hover:focus-within:active:visited {
@@ -135,7 +138,6 @@ img {
   background: #eee;
   padding: 0;
   border-bottom: 1px solid #e1ddddf7 !important;
-  // margin-right: 20px;
 }
 
 .react-grid-Row.react-grid-Row--even {
