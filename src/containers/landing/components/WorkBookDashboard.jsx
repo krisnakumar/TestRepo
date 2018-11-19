@@ -61,7 +61,9 @@ class WorkBookDashboard extends PureComponent {
         sortable: true,
         width: 240,
         editable: false,
-        cellClass: "text-left text-clickable"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-left"
       },
       {
         key: 'role',
@@ -75,35 +77,45 @@ class WorkBookDashboard extends PureComponent {
         name: 'Assigned Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("assignedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'inDueWorkBooks',
         name: 'Workbooks Due',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("inDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("pastDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'completedWorkBooks',
         name: 'Completed Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total Employees',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable last-column"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-right last-column"
       },
     ];
 
@@ -128,6 +140,41 @@ class WorkBookDashboard extends PureComponent {
       supervisorNames: [],
       isInitial: false
     };
+
+  }
+
+  employeeFormatter = (props) => {
+    if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { 
+          e.preventDefault(); 
+          let isMyEmployeeModal = true, 
+          myEmployeesArray = [];
+          this.setState({ isMyEmployeeModal, myEmployeesArray });
+          this.getMyEmployees(props.dependentValues.userId); }} 
+        className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
+
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
   }
 
   /**
@@ -468,54 +515,43 @@ class WorkBookDashboard extends PureComponent {
     this.setState({ rows });
   };
 
-  /**
+   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 0 || args.idx == 6){
-      let userId = this.state.rows[args.rowIdx].userId;
-      let employee = this.state.rows[args.rowIdx].employee;
-      
-      if(userId){        
-        let supervisorNames = this.state.supervisorNames,
-            isMyEmployeeModal = this.state.isMyEmployeeModal,
-            myEmployeesArray =  this.state.myEmployeesArray;
-
-        supervisorNames.push(employee);
-        isMyEmployeeModal = true;
-        myEmployeesArray = [];
-
-        this.setState({ isMyEmployeeModal, myEmployeesArray });
-        this.getMyEmployees(userId);
-      }
-    } else if(args.idx == 2){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){        
-        this.getAssignedWorkbooks(userId);
-      }
-    } else if(args.idx == 4){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getPastDueWorkbooks(userId);
-      }
-    } else if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getComingDueWorkbooks(userId);
-      }      
-    } else if(args.idx == 5){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getCompletedWorkbooks(userId);
-      }      
+  handleCellClick = (type, args) => {
+    let userId = 0;
+    switch(type) {
+      case "completedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getCompletedWorkbooks(userId);
+          }  
+          break;
+      case "assignedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getAssignedWorkbooks(userId);
+          }  
+          break;          
+      case "pastDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getPastDueWorkbooks(userId);
+          }  
+          break;   
+      case "inDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getComingDueWorkbooks(userId);
+          }  
+          break;
+      default:
+          break;
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -580,7 +616,6 @@ class WorkBookDashboard extends PureComponent {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={this.state.isInitial && DataTableEmptyRowsView} 
                   />
               </div>

@@ -57,7 +57,9 @@ class MyEmployees extends React.Component {
         sortable: true,
         width: 200,
         editable: false,
-        cellClass: "text-left text-clickable"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-left"
       },
       {
         key: 'role',
@@ -71,7 +73,9 @@ class MyEmployees extends React.Component {
         name: 'Assigned Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("assignedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'inDueWorkBooks',
@@ -79,28 +83,36 @@ class MyEmployees extends React.Component {
         width: 200,
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("inDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("pastDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'completedWorkBooks',
         name: 'Completed Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total Employees',
         sortable: true,
         editable: false,
-        cellClass: "text-right last-column text-clickable"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-right last-column"
       },
     ];
 
@@ -407,6 +419,78 @@ class MyEmployees extends React.Component {
     this.setState({ rows });
   };
 
+  employeeFormatter = (props) => {
+    if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { 
+          e.preventDefault(); 
+          this.getMyEmployees(props.dependentValues.userId); }} 
+        className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
+
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
+
+   /**
+   * @method
+   * @name - handleCellClick
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
+   * @param args
+   * @returns none
+   */
+  handleCellClick = (type, args) => {
+    let userId = 0;
+    switch(type) {
+      case "completedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getCompletedWorkbooks(userId);
+          }  
+          break;
+      case "assignedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getAssignedWorkbooks(userId);
+          }  
+          break;          
+      case "pastDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getPastDueWorkbooks(userId);
+          }  
+          break;   
+      case "inDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getComingDueWorkbooks(userId);
+          }  
+          break;
+      default:
+          break;
+    }
+    this.refs.reactDataGrid.deselect();
+  };
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
@@ -423,44 +507,6 @@ class MyEmployees extends React.Component {
       [modelName]: value
     });
   };
-
-  /**
-   * @method
-   * @name - handleCellFocus
-   * This method will trigger the event of API's respective to cell clicked Data Grid
-   * @param args
-   * @returns none
-   */
-  handleCellFocus = (args) => {
-    if(args.idx == 0 || args.idx == 6){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getMyEmployees(userId);
-    } else if(args.idx == 4){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getPastDueWorkbooks(userId);
-    } else if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getComingDueWorkbooks(userId);
-    } else if(args.idx == 5){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getCompletedWorkbooks(userId);
-    } else if(args.idx == 2){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId)
-      this.getAssignedWorkbooks(userId);
-    }
-    this.refs.reactDataGrid.deselect();
-  };
-
 
   render() {
     const { rows, supervisorNames } = this.state;
@@ -509,7 +555,6 @@ class MyEmployees extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       emptyRowsView={this.state.isInitial && EmptyRowsView} 
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                   />
               </div>
             </div>

@@ -64,14 +64,18 @@ class WorkBookProgress extends React.Component {
         name: 'Completed / Total Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedTasksCount", props),
+        cellClass: "text-center"
         },
         {
         key: 'incompletedTasksCount',
         name: 'Incomplete Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("incompletedTasksCount", props),
+        cellClass: "text-center"
         },
         {
         key: 'completionPrecentage',
@@ -251,23 +255,45 @@ class WorkBookProgress extends React.Component {
     });
   };
 
-  /**
+   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 2 || args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-      let taskId = this.state.rows[args.rowIdx].taskId;
-      let workBookId = this.state.rows[args.rowIdx].workBookId;
-
-      if(userId && taskId)
-        this.getWorkbookRepetitions(userId, workBookId, taskId);
-    } 
+  handleCellClick = (type, args) => {
+    let userId = 0,
+        workBookId = 0,
+        taskId = 0;
+    switch(type) {
+      case "incompletedTasksCount":
+      case "completedTasksCount":
+          userId = args.userId;
+          workBookId = args.workBookId;
+          taskId = args.taskId;
+          if(userId && workBookId && taskId)
+            this.getWorkbookRepetitions(userId, workBookId, taskId);
+          break;
+      default:
+          break;
+    }
     this.refs.reactDataGrid.deselect();
+  };
+
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
   };
 
   // This method is used to setting the row data in react data grid
@@ -299,7 +325,6 @@ class WorkBookProgress extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView} 
                   />
               </div>

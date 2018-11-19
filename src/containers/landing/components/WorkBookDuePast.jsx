@@ -72,7 +72,9 @@ class WorkBookDuePast extends React.Component {
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("percentageCompleted", props),
+        cellClass: "text-center"
       },
       {
         key: 'dueDate',
@@ -246,21 +248,41 @@ class WorkBookDuePast extends React.Component {
 
   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId,
-          workBookId = this.state.rows[args.rowIdx].workBookId;
-
-      if(userId && workBookId)
-        this.getWorkBookProgress(userId, workBookId);      
+  handleCellClick = (type, args) => {
+    let userId = 0,
+        workBookId = 0;
+    switch(type) {
+      case "percentageCompleted":
+          userId = args.userId;
+          workBookId = args.workBookId;
+          if(userId && workBookId)
+            this.getWorkBookProgress(userId, workBookId); 
+          break;
+      default:
+          break;
     }
     this.refs.reactDataGrid.deselect();
   };
+
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
@@ -291,7 +313,6 @@ class WorkBookDuePast extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
                       emptyRowsView={this.state.isInitial && WorkBookDuePastEmptyRowsView} 
                   />
               </div>
