@@ -12,6 +12,8 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 
 */
 
+import React, { PureComponent } from 'react';
+import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
 import 'whatwg-fetch'
 
 /**
@@ -36,10 +38,14 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
         'Content-Type': 'application/json',
         "Authorization": token
       }
-    }).then(function(response) {        
-        document.getElementById("loader-layer").classList.remove("loader-show");
-        document.getElementById("loader-layer").classList.add("loader-hide");
-        return response.json();        
+    }).then(function(response) {
+        if(response.status == 401){
+            window.location =window.location.origin;
+        } else {     
+            document.getElementById("loader-layer").classList.remove("loader-show");
+            document.getElementById("loader-layer").classList.add("loader-hide");
+            return response.json();
+        }       
     }).then(function(json) { 
         document.getElementById("loader-layer").classList.remove("loader-show");
         document.getElementById("loader-layer").classList.add("loader-hide");
