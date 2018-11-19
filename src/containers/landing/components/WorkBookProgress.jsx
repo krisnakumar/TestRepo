@@ -75,7 +75,7 @@ class WorkBookProgress extends React.Component {
         },
         {
         key: 'completionPrecentage',
-        name: 'Completion Precentage',
+        name: 'Percentage Completed',
         sortable: true,
         editable: false,
         cellClass: "text-center last-column"
