@@ -909,6 +909,10 @@ $landing-gradient-hover: linear-gradient(228deg, darken(rgba(127, 244, 222, 0.95
     font-weight: 600;
     color: #0a1631;
     text-align: left;
+    
+    img{
+      height: 28px;
+    }
 }
 
 .grid-title {
