@@ -101,6 +101,29 @@ namespace ReportBuilder.UnitTest
         }
 
 
+        /// <summary>
+        ///  Test method to get the workbook details
+        /// </summary>
+        [TestMethod]
+        public void GetCompletedWorkbookList()
+        {
+
+            Function function = new Function();
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "userId", "24" }
+
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                PathParameters = pathValues
+            };
+            var userResponse = function.GetCompletedWorkbookDetails(aPIGatewayProxyRequest, null);
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
         ///  Test method to get the workbook details
         /// </summary>
         [TestMethod]
@@ -110,8 +133,8 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
-                { "userId", "7" },
-                {"workbookId","30" }
+                { "userId", "18" },
+                {"workbookId","18" }
 
             };
 

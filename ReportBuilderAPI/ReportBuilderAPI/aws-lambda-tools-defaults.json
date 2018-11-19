@@ -13,5 +13,6 @@
     "s3-prefix"     : "ReportBuilder.API/",
     "template"      : "serverless.template",
     "s3-bucket"     : "reportbuilder-sandbox",
-    "stack-name"    : "reportbuilder-Level4"
+    "stack-name"    : "ReportBuilder-Version",
+    "mode"          : "merge"
 }

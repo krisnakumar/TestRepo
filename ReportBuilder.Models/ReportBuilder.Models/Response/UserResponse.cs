@@ -21,7 +21,10 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RefreshToken { get; set; }
 
+        public int UserId { get; set; }
+
         public int CompanyId { get; set; }
+        
 
     }
 }

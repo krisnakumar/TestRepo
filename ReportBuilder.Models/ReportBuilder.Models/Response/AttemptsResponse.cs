@@ -8,7 +8,7 @@ namespace ReportBuilder.Models.Response
     {
         public string Attempt { get; set; }
         public string Status { get; set; }
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
         public string Location { get; set; }
 
         public string Evaluator { get; set; }

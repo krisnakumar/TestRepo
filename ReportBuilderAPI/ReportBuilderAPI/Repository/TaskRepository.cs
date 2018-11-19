@@ -2,6 +2,7 @@
 using Amazon.Lambda.Core;
 using DataInterface.Database;
 using Newtonsoft.Json;
+using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.DatabaseManager;
 using ReportBuilderAPI.Handlers.ResponseHandler;
@@ -39,7 +40,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = TaskQueries.GetTaskList(userId, workbookId);
+                query = Task.GetTaskList(userId, workbookId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -55,7 +56,7 @@ namespace ReportBuilderAPI.Repository
                             CompletedTasksCount = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
                             IncompletedTasksCount = Convert.ToInt32(sqlDataReader["InCompletedWorkbooks"]),
                             TotalTasks = Convert.ToInt32(sqlDataReader["TotalTasks"]),
-                            CompletionPrecentage = (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]) / Convert.ToInt32(sqlDataReader["TotalTasks"])) * 100,
+                            CompletionPrecentage = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
                         };
                         taskList.Add(employeeResponse);
                     }
@@ -88,24 +89,25 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = TaskQueries.GetTaskAttemptsDetails(userId, workbookId, taskId);
+                query = Task.GetTaskAttemptsDetails(userId, workbookId, taskId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())
                     {
+                        TaskModel taskModel = JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"]));
                         AttemptsResponse employeeResponse = new AttemptsResponse
                         {
-                            Attempt= Convert.ToString(sqlDataReader["Attempt"]),
+                            Attempt = Convert.ToString(sqlDataReader["Attempt"]),
                             Status = Convert.ToString(sqlDataReader["Status"]),
-                            DateTime = Convert.ToDateTime(sqlDataReader["DateTaken"]),
+                            DateTime = Convert.ToDateTime(sqlDataReader["DateTaken"]).ToString("MM/dd/yyyy"),
                             Location = Convert.ToString(sqlDataReader["Street1"]) + "," + Convert.ToString(sqlDataReader["Street2"]) + "," + Convert.ToString(sqlDataReader["City"]) + "," + Convert.ToString(sqlDataReader["State"]) + "," + Convert.ToString(sqlDataReader["Zip"]),
-                            Evaluator = Convert.ToString(sqlDataReader["EvaluatorName"]),
-                            Comments = Convert.ToString(sqlDataReader["Comments"])
+                            Evaluator = Convert.ToString(sqlDataReader["EvaluatorName"]),                           
+                            Comments = taskModel.Comment
                         };
                         attemptsList.Add(employeeResponse);
                     }
-                }
+                }            
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(attemptsList), 0);
             }
             catch (Exception exception)

@@ -38,7 +38,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = WorkbookQueries.ReadWorkbookDetails(userId);
+                query = Workbook.ReadWorkbookDetails(userId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -50,8 +50,8 @@ namespace ReportBuilderAPI.Repository
                             WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
                             Role = Convert.ToString(sqlDataReader["Role"]),
                             CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]) / Convert.ToInt32(sqlDataReader["totalTasks"])) * 100,
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]),
+                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
+                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
                             UserId = Convert.ToInt32(sqlDataReader["UserId"]),
                             WorkBookId=Convert.ToInt32(sqlDataReader["workbookId"])
                         };
@@ -60,9 +60,9 @@ namespace ReportBuilderAPI.Repository
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
-            catch (Exception exception)
+            catch (Exception getWorkbookDetailsException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(getWorkbookDetailsException.ToString());
                 return ResponseBuilder.InternalError();
             }
             finally
@@ -84,7 +84,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = WorkbookQueries.ReadPastDueWorkbookDetails(userId);
+                query = Workbook.ReadPastDueWorkbookDetails(userId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -96,18 +96,19 @@ namespace ReportBuilderAPI.Repository
                             WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
                             Role = Convert.ToString(sqlDataReader["Role"]),
                             CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]) / Convert.ToInt32(sqlDataReader["totalTasks"])) * 100,
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"])
+                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),                            
+                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
+                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
+                            WorkBookId= Convert.ToInt32(sqlDataReader["workbookId"])
                         };
                         workbookList.Add(workbookResponse);
                     }
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
-            catch (Exception exception)
+            catch (Exception getPastDueWorkbooksException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(getPastDueWorkbooksException.ToString());
                 return ResponseBuilder.InternalError();
             }
             finally
@@ -129,7 +130,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = WorkbookQueries.ReadInDueWorkbookDetails(userId);
+                query = Workbook.ReadInDueWorkbookDetails(userId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -141,18 +142,20 @@ namespace ReportBuilderAPI.Repository
                             WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
                             Role = Convert.ToString(sqlDataReader["Role"]),
                             CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]) / Convert.ToInt32(sqlDataReader["totalTasks"])) * 100,
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"])
+                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
+                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
+                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
+                            WorkBookId= Convert.ToInt32(sqlDataReader["workbookId"])
+
                         };
                         workbookList.Add(workbookResponse);
                     }
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
-            catch (Exception exception)
+            catch (Exception getInDueWorkbooksException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(getInDueWorkbooksException.ToString());
                 return ResponseBuilder.InternalError();
             }
             finally
@@ -174,7 +177,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                query = WorkbookQueries.CompletedWorkbookDetails(userId);
+                query = Workbook.CompletedWorkbookDetails(userId);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -185,8 +188,9 @@ namespace ReportBuilderAPI.Repository
                             EmployeeName = Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"]),
                             WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
                             Role = Convert.ToString(sqlDataReader["Role"]),
-                            CompletionDate = Convert.ToDateTime(sqlDataReader["LastAttemptDate"]),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"])
+                            CompletionDate = Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy"),                            
+                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
+                            WorkBookId= Convert.ToInt32(sqlDataReader["workbookId"])
                         };
                         workbookList.Add(workbookResponse);
                     }

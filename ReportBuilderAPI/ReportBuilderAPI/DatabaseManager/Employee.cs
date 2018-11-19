@@ -11,7 +11,7 @@ namespace ReportBuilderAPI.DatabaseManager
     /// <summary>
     /// Class that handles the employee operations
     /// </summary>
-    public class EmployeeQueries
+    public class Employee
     {
         /// <summary>
         /// Read list of employee details using userId
@@ -39,7 +39,7 @@ namespace ReportBuilderAPI.DatabaseManager
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public static string GetCompanyId(string email)
+        public static string GetUserId(string email)
         {
             return "SELECT Id FROM [USER] WHERE Email='" + email + "'";
         }

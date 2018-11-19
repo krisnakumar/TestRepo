@@ -9,7 +9,7 @@ namespace ReportBuilderAPI.DatabaseManager
     /// <summary>
     /// Class that handles the queries for the task operations
     /// </summary>
-    public class TaskQueries
+    public class Task
     {
         /// <summary>
         /// get task list using userId and workbookid

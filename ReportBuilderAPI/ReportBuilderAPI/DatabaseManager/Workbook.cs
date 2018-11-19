@@ -9,7 +9,7 @@ namespace ReportBuilderAPI.DatabaseManager
     /// <summary>
     ///Queries that handles the workbook operations
     /// </summary>
-    public class WorkbookQueries
+    public class Workbook
     {
         /// <summary>
         /// Read list of workbook details using userId

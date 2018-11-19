@@ -42,17 +42,18 @@ namespace ReportBuilderAPI.Repository
                     string message = sessionGenerator.CheckChallenge(authResponse.ChallengeName);
                     return ResponseBuilder.UnAuthorized(message);
                 }
-                else if (authResponse != null && authResponse.AuthenticationResult != null)
-                {
-                    userResponse = new UserResponse
-                    {
-                        AccessToken = authResponse.AuthenticationResult.AccessToken,
-                        IdentityToken = authResponse.AuthenticationResult.IdToken,
-                        RefreshToken = authResponse.AuthenticationResult.RefreshToken,
-                        CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName))
-                    };
-                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
-                }
+                //else if (authResponse != null && authResponse.AuthenticationResult != null)
+                //{
+                //    userResponse = new UserResponse
+                //    {
+                //        AccessToken = authResponse.AuthenticationResult.AccessToken,
+                //        IdentityToken = authResponse.AuthenticationResult.IdToken,
+                //        RefreshToken = authResponse.AuthenticationResult.RefreshToken,
+                //        UserId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                //        CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                //    };
+                //    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
+                //}
                 else
                 {
                     return ResponseBuilder.BadRequest("Username and Password");
@@ -73,16 +74,16 @@ namespace ReportBuilderAPI.Repository
         private int GetCompanyId(string userName)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            int companyId = 0;
+            int userId = 0;
             try
             {
-                companyId = databaseWrapper.ExecuteScalar(EmployeeQueries.GetCompanyId(userName));
-                return companyId;
+                userId = databaseWrapper.ExecuteScalar(Employee.GetUserId(userName));
+                return userId;
             }
             catch (Exception exception)
             {
                 LambdaLogger.Log(exception.ToString());
-                return companyId;
+                return userId;
             }
             finally
             {
