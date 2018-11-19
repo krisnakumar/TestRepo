@@ -57,7 +57,7 @@ class WorkBookRepetition extends React.Component {
         },
         {
         key: 'dateTime',
-        name: 'Date/Time',
+        name: 'Last Attempted Date',
         sortable: true,
         editable: false,
         cellClass: "text-center"
