@@ -88,7 +88,7 @@ img {
 
 @media (min-width: 576px){
   .modal-dialog.custom-modal-grid {
-    max-width: 1188px;
+    max-width: 1205px;
     min-width: 800px;
   }
 }
@@ -175,4 +175,8 @@ img {
 
 .modal-backdrop.show.no-backdrop {
   background-color: #0000;
+}
+
+.cell-text-wrap{
+  white-space: pre-wrap  !important;
 }
