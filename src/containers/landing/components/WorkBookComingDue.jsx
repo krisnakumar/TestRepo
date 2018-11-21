@@ -50,14 +50,18 @@ class WorkBookComingDue extends React.Component {
         name: 'Employee',
         sortable: true,
         width: 300,
-        editable: false,
+        editable: false,        
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
         key: 'role',
         name: 'Role',
         sortable: true,
-        editable: false,
+        editable: false,        
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -65,6 +69,8 @@ class WorkBookComingDue extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -81,6 +87,8 @@ class WorkBookComingDue extends React.Component {
         name: 'Due Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -98,6 +106,14 @@ class WorkBookComingDue extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
+   /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -105,7 +121,14 @@ class WorkBookComingDue extends React.Component {
     console.log(error, info);
   }
 
-  
+     /**
+   * @method
+   * @name - getWorkBookProgress
+   * This method will used to get workbook progress details
+   * @param userId
+   * @param workBookId
+   * @returns none
+   */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
@@ -123,6 +146,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
+  /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param employees
+   * @returns rows
+   */
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
@@ -142,6 +173,14 @@ class WorkBookComingDue extends React.Component {
     return rows;
   };
 
+   /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
       let rows = this.createRows(newProps.assignedWorkBooks),
           isArray = Array.isArray(newProps.assignedWorkBooks),
@@ -153,6 +192,13 @@ class WorkBookComingDue extends React.Component {
       });
   }
 
+  /**
+   * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
+   */
   toggle() {
     this.setState({
       modal: !this.state.modal
@@ -160,6 +206,15 @@ class WorkBookComingDue extends React.Component {
     this.props.updateState("isComingDueModal");
   }
 
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -171,6 +226,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -186,6 +249,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ rows });
   };
 
+   
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
     this.setState({
@@ -217,6 +288,27 @@ class WorkBookComingDue extends React.Component {
     this.refs.reactDataGrid.deselect();
   };
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+	/**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
   workbookFormatter = (type, props) => {
     if(props.dependentValues.employee == "Total"){
       return (
@@ -230,8 +322,8 @@ class WorkBookComingDue extends React.Component {
       );
     }
   }
-  
 
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {

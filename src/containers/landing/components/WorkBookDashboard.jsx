@@ -70,6 +70,8 @@ class WorkBookDashboard extends PureComponent {
         name: 'Role',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -141,6 +143,12 @@ class WorkBookDashboard extends PureComponent {
       isInitial: false
     };
 
+  }
+
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
   }
 
   employeeFormatter = (props) => {

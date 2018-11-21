@@ -66,6 +66,8 @@ class MyEmployees extends React.Component {
         name: 'Role',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -419,6 +421,27 @@ class MyEmployees extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+   /**
+   * @method
+   * @name - employeeFormatter
+   * This method will format the employee name column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
   employeeFormatter = (props) => {
     if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
       return (
@@ -436,6 +459,14 @@ class MyEmployees extends React.Component {
     }
   }
 
+  /**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
   workbookFormatter = (type, props) => {
     if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
       return (

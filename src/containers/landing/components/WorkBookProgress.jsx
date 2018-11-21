@@ -50,6 +50,8 @@ class WorkBookProgress extends React.Component {
         sortable: true,
         width: 300,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
@@ -57,6 +59,8 @@ class WorkBookProgress extends React.Component {
         name: 'Task Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
@@ -82,6 +86,8 @@ class WorkBookProgress extends React.Component {
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
         }
       ];
@@ -282,6 +288,27 @@ class WorkBookProgress extends React.Component {
     this.refs.reactDataGrid.deselect();
   };
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+  
+  /**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
   workbookFormatter = (type, props) => {
     if(props.dependentValues.employee == "Total"){
       return (

@@ -50,7 +50,9 @@ class WorkBookDuePast extends React.Component {
         name: 'Employee',
         sortable: true,
         width: 300,
-        editable: false,
+        editable: false, 
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -58,6 +60,8 @@ class WorkBookDuePast extends React.Component {
         name: 'Role',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -65,6 +69,8 @@ class WorkBookDuePast extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -81,6 +87,8 @@ class WorkBookDuePast extends React.Component {
         name: 'Due Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -113,6 +121,15 @@ class WorkBookDuePast extends React.Component {
     console.log(error, info);
   }
 
+     
+   /**
+   * @method
+   * @name - getWorkBookProgress
+   * This method will used to get workbook progress details
+   * @param userId
+   * @param workBookId
+   * @returns none
+   */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
@@ -270,6 +287,27 @@ class WorkBookDuePast extends React.Component {
     this.refs.reactDataGrid.deselect();
   };
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+     return (
+       <span>{props.value}</span>
+     );
+   }
+
+	/**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
   workbookFormatter = (type, props) => {
     if(props.dependentValues.employee == "Total"){
       return (

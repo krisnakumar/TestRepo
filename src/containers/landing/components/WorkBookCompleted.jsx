@@ -42,6 +42,8 @@ class WorkBookCompleted extends React.Component {
         sortable: true,
         width: 300,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -49,6 +51,8 @@ class WorkBookCompleted extends React.Component {
         name: 'Role',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -56,6 +60,8 @@ class WorkBookCompleted extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
       },
       {
@@ -63,6 +69,8 @@ class WorkBookCompleted extends React.Component {
         name: 'Completion Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -78,6 +86,27 @@ class WorkBookCompleted extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */   
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+   /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -85,6 +114,14 @@ class WorkBookCompleted extends React.Component {
     console.log(error, info);
   }
 
+  /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param employees
+   * @returns rows
+   */
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
@@ -101,6 +138,14 @@ class WorkBookCompleted extends React.Component {
     return rows;
   };
 
+   /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
       let rows = this.createRows(newProps.assignedWorkBooks),
           isArray = Array.isArray(newProps.assignedWorkBooks),
@@ -112,6 +157,13 @@ class WorkBookCompleted extends React.Component {
       });
   }
 
+  /**
+   * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
+   */
   toggle() {
     this.setState({
       modal: !this.state.modal
@@ -119,6 +171,15 @@ class WorkBookCompleted extends React.Component {
     this.props.updateState("isCompletedModal");
   }
 
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */   
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -130,6 +191,14 @@ class WorkBookCompleted extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -144,7 +213,8 @@ class WorkBookCompleted extends React.Component {
 
     this.setState({ rows });
   };
-
+  
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {

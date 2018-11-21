@@ -46,6 +46,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Attempt',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
@@ -53,6 +55,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Complete/Incomplete',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
@@ -60,6 +64,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Last Attempted Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -67,6 +73,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Location',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -74,6 +82,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Evaluator',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -81,6 +91,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Comments',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
         }
       ];
@@ -92,6 +104,19 @@ class WorkBookRepetition extends React.Component {
       isInitial: false
     };
     this.toggle = this.toggle.bind(this);
+  }
+
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
   }
 
   /**
