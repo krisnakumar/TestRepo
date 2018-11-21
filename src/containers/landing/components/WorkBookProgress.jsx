@@ -129,6 +129,7 @@ class WorkBookProgress extends React.Component {
   createRows = (workbooks) => {
     const rows = [], 
           length = workbooks ? workbooks.length : 0;
+    let averageCompletionPrecentage = 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
         userId: workbooks[i].UserId,
@@ -140,7 +141,12 @@ class WorkBookProgress extends React.Component {
         incompletedTasksCount: workbooks[i].IncompletedTasksCount,
         completionPrecentage: workbooks[i].CompletionPrecentage + "%"
       });
+      averageCompletionPrecentage = averageCompletionPrecentage + workbooks[i].CompletionPrecentage;
     }
+    averageCompletionPrecentage = averageCompletionPrecentage / length;
+    
+    if(length > 0)
+      rows.push({taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount:"", incompletedTasksCount: "" , completionPrecentage:averageCompletionPrecentage + "%" });
 
     return rows;
   };
@@ -224,7 +230,7 @@ class WorkBookProgress extends React.Component {
     this.setState({ rows });
   };
 
-  /**
+   /**
    * @method
    * @name - handleGridSort
    * This method will update the rows of grid of Data Grid after the sort
@@ -241,8 +247,18 @@ class WorkBookProgress extends React.Component {
       }
     };
 
-    const sortRows = this.state.rows.slice(0);
+    const beforePopRows = this.state.rows;
+    let totalRow = "";
+    if(beforePopRows.length > 0)
+    {
+      totalRow = beforePopRows.pop();
+    }
+
+    const sortRows = beforePopRows.slice(0);
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    
+    if(beforePopRows.length > 0)
+      rows.push(totalRow);
 
     this.setState({ rows });
   };
@@ -340,7 +356,7 @@ class WorkBookProgress extends React.Component {
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>      
           <ModalBody>
           <div className="grid-container">
-              <div className="table">
+              <div className="table has-total-row">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}
