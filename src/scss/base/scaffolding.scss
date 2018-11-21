@@ -180,3 +180,29 @@ img {
 .cell-text-wrap{
   white-space: pre-wrap  !important;
 }
+
+.modal-header .close {
+  margin: 0rem 0rem 0rem auto;
+  background: #bc0202;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+}
+
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: normal;
+  line-height: 1;
+  color: #fff;
+  text-shadow: none;
+  opacity: 1;
+}
+
+.close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
+  color: #fff;
+  background: #fd0000;
+  text-decoration: none;
+  opacity: 1;
+}
+
