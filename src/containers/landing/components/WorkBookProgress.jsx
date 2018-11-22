@@ -98,7 +98,8 @@ class WorkBookProgress extends React.Component {
       pageOfItems: [],
       isWorkBookRepetitionModal: false,
       workBooksRepetition: {},
-      isInitial: false
+      isInitial: false,
+      selectedWorkbook: this.props.selectedWorkbook || {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -166,7 +167,8 @@ class WorkBookProgress extends React.Component {
       this.setState({
         modal: newProps.modal,
         rows: rows,
-        isInitial: isInitial
+        isInitial: isInitial,
+        selectedWorkbook: newProps.selectedWorkbook
       });
   }
 
@@ -289,6 +291,8 @@ class WorkBookProgress extends React.Component {
     let userId = 0,
         workBookId = 0,
         taskId = 0;
+    this.state.selectedWorkbook.taskCode = args.taskCode;
+    this.state.selectedWorkbook.taskName = args.taskName;
     switch(type) {
       case "incompletedTasksCount":
       case "completedTasksCount":
@@ -351,10 +355,16 @@ class WorkBookProgress extends React.Component {
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isWorkBookRepetitionModal}
             workBooksRepetition={this.state.workBooksRepetition}
+            selectedWorkbook={this.state.selectedWorkbook}
           />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>      
           <ModalBody>
+          <div className="grid-description"> 
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
+            <h6> </h6>
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
+          </div>
           <div className="grid-container">
               <div className="table has-total-row">
                   <ReactDataGrid

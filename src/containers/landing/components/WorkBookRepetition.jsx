@@ -101,7 +101,8 @@ class WorkBookRepetition extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
-      isInitial: false
+      isInitial: false,
+      selectedWorkbook: this.props.selectedWorkbook
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -175,7 +176,8 @@ class WorkBookRepetition extends React.Component {
       this.setState({
         modal: newProps.modal,
         rows: rows,
-        isInitial: isInitial
+        isInitial: isInitial,
+        selectedWorkbook: newProps.selectedWorkbook
       });
   }
 
@@ -246,6 +248,12 @@ class WorkBookRepetition extends React.Component {
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
           <ModalBody>
+          <div className="grid-description"> 
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
+            <h6> </h6>
+            <h6 className="bold">{this.state.selectedWorkbook ? this.state.selectedWorkbook.taskCode : ""} {this.state.selectedWorkbook ? this.state.selectedWorkbook.taskName : ""}</h6>
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
+          </div>           
           <div className="grid-container">
               <div className="table">
                   <ReactDataGrid

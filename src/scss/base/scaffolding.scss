@@ -209,3 +209,13 @@ img {
 .landing .container {
   min-height: calc(100% - 100px);
 }
+
+.grid-description{
+  text-align: left;
+  margin-bottom: 10px;
+
+    .bold{
+      font-weight: 700;
+      padding: 5px 0 5px 0;
+    }
+}

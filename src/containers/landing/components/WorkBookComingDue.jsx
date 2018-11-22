@@ -101,7 +101,8 @@ class WorkBookComingDue extends React.Component {
       pageOfItems: [],
       isWorkBookProgressModal: false,
       workBooksProgress: {},
-      isInitial: false
+      isInitial: false,
+      selectedWorkbook: {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -275,6 +276,7 @@ class WorkBookComingDue extends React.Component {
   handleCellClick = (type, args) => {
     let userId = 0,
         workBookId = 0;
+    this.state.selectedWorkbook = args;
     switch(type) {
       case "percentageCompleted":
           userId = args.userId;
@@ -335,6 +337,7 @@ class WorkBookComingDue extends React.Component {
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
+          selectedWorkbook={this.state.selectedWorkbook}
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
