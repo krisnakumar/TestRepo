@@ -62,7 +62,7 @@ class WorkBookCompleted extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-center"
+        cellClass: "text-left"
       },
       {
         key: 'completionDate',

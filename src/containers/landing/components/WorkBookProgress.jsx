@@ -65,7 +65,7 @@ class WorkBookProgress extends React.Component {
         },
         {
         key: 'completedTasksCount',
-        name: 'Completed / Total Tasks',
+        name: 'Completed / Total Repetitions',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -74,11 +74,11 @@ class WorkBookProgress extends React.Component {
         },
         {
         key: 'incompletedTasksCount',
-        name: 'Incomplete Tasks',
+        name: 'Incomplete Repetitions',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: (props) => this.workbookFormatter("incompletedTasksCount", props),
+        formatter: (props) => this.workbookIncompleteFormatter("incompletedTasksCount", props),
         cellClass: "text-center"
         },
         {
@@ -321,6 +321,28 @@ class WorkBookProgress extends React.Component {
     );
   }
   
+  /**
+   * @method
+   * @name - workbookIncompleteFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
+  workbookIncompleteFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total" || props.dependentValues.incompletedTasksCount == 0){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  };
+
   /**
    * @method
    * @name - workbookFormatter

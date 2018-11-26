@@ -152,7 +152,7 @@ class LogInForm extends PureComponent {
             </button>
         </div>
         <div className="version-number">
-          <p>V0.9.181112.002</p>
+          <p>V0.9.181122.003</p>
         </div>
       </form>
     );

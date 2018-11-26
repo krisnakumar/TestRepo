@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import MainWrapper from './MainWrapper';
 import Landing from '../landing/index';
 import Login from '../account/log_in/index';
+import QueryBuilder from '../query_builder/index';
 
 /**
  * @method
@@ -27,6 +28,7 @@ const Router = () => (
       <Switch>
         <Route exact path="/" component={Login} />
         <Route exact path="/EmployeeReports" component={Landing} />
+        <Route exact path="/QueryBuilder" component={QueryBuilder} />
       </Switch>
     </main>
   </MainWrapper>
