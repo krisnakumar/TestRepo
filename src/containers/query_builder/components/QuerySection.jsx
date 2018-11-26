@@ -20,6 +20,9 @@ import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import { Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
+import SplitterLayout from 'react-splitter-layout';
+
+import SplitPane  from 'react-split-pane';
 
 
 
@@ -76,7 +79,7 @@ class QuerySection extends PureComponent {
             <p className="card__description">Customized Queries</p>
             </div>
            
-            <div className="grid-container-fake">
+            <div className="grid-container-query-selection">
               <Row>
                 <Col xs="2">
                   <Select
@@ -99,9 +102,14 @@ class QuerySection extends PureComponent {
                   <Button className="query-section-button" size="sm" aria-label="Reset">
                     <span aria-hidden>&ndash;</span> Reset
                   </Button>
-                </Col>
-                {/* <Col xs="auto">.col-auto - variable width content</Col> */}
+                </Col>                
               </Row>
+            </div>
+      
+            <div className="wrapper">
+              <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
+                
+              </SplitterLayout>
             </div>
           </CardBody>
     );

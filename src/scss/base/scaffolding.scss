@@ -231,3 +231,33 @@ img {
   margin-left: 35px;
   margin-top: -5px;
 }
+
+.splitter-layout {
+  position: absolute;
+  display: flex;
+  left: 0;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0 25px;
+  max-height: calc(100% - 25%);
+}
+
+.splitter-layout .layout-pane {
+  border: 1px solid #ccc;
+  border-top: none;
+
+  div{
+    padding: 15px 15px 0px 15px;
+  }
+}
+
+.splitter-layout .layout-pane.layout-pane-primary {
+  border: 1px solid #ccc;
+  border-bottom: none;
+
+  div{
+    padding: 15px 15px 0px 15px;
+  }
+}
