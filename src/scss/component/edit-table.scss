@@ -4,6 +4,9 @@
     background: #0c3254;
     box-shadow: none;
     color: #fff;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: 1px solid #fff;
   }
 
   .react-grid-HeaderCell, .react-grid-Cell {
@@ -29,6 +32,7 @@
   }
 
   .react-grid-HeaderCell {
+    border-bottom: none !important; 
     font-size: 11px !important;
     & > * {
       transform: translateY(-50%);
@@ -97,8 +101,7 @@
   .react-grid-HeaderCell-sortable {
 
     .pull-right:before {
-      content: '';
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' style=\'width:24px;height:24px\' viewBox=\'0 0 24 24\'><path fill=\'#646777\' d=\'M9,3L5,7H8V14H10V7H13M16,17V10H14V17H11L15,21L19,17H16Z\' /></svg>');
+      content: '';      
       position: absolute;
       width: 18px;
       height: 16px;
@@ -179,3 +182,4 @@
 .last-column {
   border-right: none !important;
 }
+

@@ -50,14 +50,18 @@ class WorkBookComingDue extends React.Component {
         name: 'Employee',
         sortable: true,
         width: 300,
-        editable: false,
+        editable: false,        
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
         key: 'role',
         name: 'Role',
         sortable: true,
-        editable: false,
+        editable: false,        
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -65,6 +69,8 @@ class WorkBookComingDue extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -72,13 +78,17 @@ class WorkBookComingDue extends React.Component {
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("percentageCompleted", props),
+        cellClass: "text-center"
       },
       {
         key: 'dueDate',
         name: 'Due Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -90,11 +100,21 @@ class WorkBookComingDue extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false,
+      selectedWorkbook: {}
     };
     this.toggle = this.toggle.bind(this);
   }
 
+   /**
+   * @method
+   * @name - componentDidCatch
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+   */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -102,7 +122,14 @@ class WorkBookComingDue extends React.Component {
     console.log(error, info);
   }
 
-  
+     /**
+   * @method
+   * @name - getWorkBookProgress
+   * This method will used to get workbook progress details
+   * @param userId
+   * @param workBookId
+   * @returns none
+   */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
 
@@ -120,6 +147,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
+  /**
+   * @method
+   * @name - createRows
+   * This method will format the input data
+   * for Data Grid
+   * @param employees
+   * @returns rows
+   */
   createRows = (employees) => {
     const rows = [], 
           length = employees ? employees.length : 0;
@@ -139,14 +174,32 @@ class WorkBookComingDue extends React.Component {
     return rows;
   };
 
+   /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
+  /**
+   * @method
+   * @name - toggle
+   * This method will update the current of modal window
+   * @param workbooks
+   * @returns none
+   */
   toggle() {
     this.setState({
       modal: !this.state.modal
@@ -154,6 +207,15 @@ class WorkBookComingDue extends React.Component {
     this.props.updateState("isComingDueModal");
   }
 
+  /**
+   * @method
+   * @name - handleGridRowsUpdated
+   * This method will update the rows of grid of the current Data Grid
+   * @param fromRow
+   * @param toRow
+   * @param updated
+   * @returns none
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -165,6 +227,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ rows });
   };
 
+  /**
+   * @method
+   * @name - handleGridSort
+   * This method will update the rows of grid of Data Grid after the sort
+   * @param sortColumn
+   * @param sortDirection
+   * @returns none
+   */
   handleGridSort = (sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
@@ -180,6 +250,14 @@ class WorkBookComingDue extends React.Component {
     this.setState({ rows });
   };
 
+   
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
     this.setState({
@@ -187,17 +265,67 @@ class WorkBookComingDue extends React.Component {
     });
   };
 
-handleCellFocus = (args) => {
-    if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId,
-          workBookId = this.state.rows[args.rowIdx].workBookId;
-
-      if(userId && workBookId)
-        this.getWorkBookProgress(userId, workBookId);      
+  /**
+   * @method
+   * @name - handleCellClick
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
+   * @param args
+   * @returns none
+   */
+  handleCellClick = (type, args) => {
+    let userId = 0,
+        workBookId = 0;
+    this.state.selectedWorkbook = args;
+    switch(type) {
+      case "percentageCompleted":
+          userId = args.userId;
+          workBookId = args.workBookId;
+          if(userId && workBookId)
+            this.getWorkBookProgress(userId, workBookId); 
+          break;
+      default:
+          break;
     }
     this.refs.reactDataGrid.deselect();
   };
 
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+	/**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
+
+  // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
@@ -205,11 +333,13 @@ handleCellFocus = (args) => {
     return (
       <div>
          <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
+          selectedWorkbook={this.state.selectedWorkbook}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -225,8 +355,7 @@ handleCellFocus = (args) => {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookComingDueEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookComingDueEmptyRowsView} 
                   />
               </div>
             </div>

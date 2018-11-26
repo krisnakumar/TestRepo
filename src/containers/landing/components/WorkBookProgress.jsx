@@ -50,6 +50,8 @@ class WorkBookProgress extends React.Component {
         sortable: true,
         width: 300,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
@@ -57,27 +59,35 @@ class WorkBookProgress extends React.Component {
         name: 'Task Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
         key: 'completedTasksCount',
-        name: 'Completed / Total Repetitions',
+        name: 'Completed / Total Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedTasksCount", props),
+        cellClass: "text-center"
         },
         {
         key: 'incompletedTasksCount',
-        name: 'Incomplete Repetitions',
+        name: 'Incomplete Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("incompletedTasksCount", props),
+        cellClass: "text-center"
         },
         {
         key: 'completionPrecentage',
-        name: 'Completion Precentage',
+        name: 'Percentage Completed',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
         }
       ];
@@ -87,7 +97,9 @@ class WorkBookProgress extends React.Component {
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
       isWorkBookRepetitionModal: false,
-      workBooksRepetition: {}
+      workBooksRepetition: {},
+      isInitial: false,
+      selectedWorkbook: this.props.selectedWorkbook || {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -118,6 +130,7 @@ class WorkBookProgress extends React.Component {
   createRows = (workbooks) => {
     const rows = [], 
           length = workbooks ? workbooks.length : 0;
+    let averageCompletionPrecentage = 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
         userId: workbooks[i].UserId,
@@ -129,7 +142,12 @@ class WorkBookProgress extends React.Component {
         incompletedTasksCount: workbooks[i].IncompletedTasksCount,
         completionPrecentage: workbooks[i].CompletionPrecentage + "%"
       });
+      averageCompletionPrecentage = averageCompletionPrecentage + workbooks[i].CompletionPrecentage;
     }
+    averageCompletionPrecentage = averageCompletionPrecentage / length;
+    
+    if(length > 0)
+      rows.push({taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount:"", incompletedTasksCount: "" , completionPrecentage:averageCompletionPrecentage + "%" });
 
     return rows;
   };
@@ -143,10 +161,14 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksProgress);
+      let rows = this.createRows(newProps.workBooksProgress),
+          isArray = Array.isArray(newProps.workBooksProgress),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial,
+        selectedWorkbook: newProps.selectedWorkbook
       });
   }
 
@@ -210,7 +232,7 @@ class WorkBookProgress extends React.Component {
     this.setState({ rows });
   };
 
-  /**
+   /**
    * @method
    * @name - handleGridSort
    * This method will update the rows of grid of Data Grid after the sort
@@ -227,8 +249,18 @@ class WorkBookProgress extends React.Component {
       }
     };
 
-    const sortRows = this.state.rows.slice(0);
+    const beforePopRows = this.state.rows;
+    let totalRow = "";
+    if(beforePopRows.length > 0)
+    {
+      totalRow = beforePopRows.pop();
+    }
+
+    const sortRows = beforePopRows.slice(0);
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    
+    if(beforePopRows.length > 0)
+      rows.push(totalRow);
 
     this.setState({ rows });
   };
@@ -247,23 +279,68 @@ class WorkBookProgress extends React.Component {
     });
   };
 
-  /**
+   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 2 || args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-      let taskId = this.state.rows[args.rowIdx].taskId;
-      let workBookId = this.state.rows[args.rowIdx].workBookId;
-
-      if(userId && taskId)
-        this.getWorkbookRepetitions(userId, workBookId, taskId);
-    } 
+  handleCellClick = (type, args) => {
+    let userId = 0,
+        workBookId = 0,
+        taskId = 0;
+    this.state.selectedWorkbook.taskCode = args.taskCode;
+    this.state.selectedWorkbook.taskName = args.taskName;
+    switch(type) {
+      case "incompletedTasksCount":
+      case "completedTasksCount":
+          userId = args.userId;
+          workBookId = args.workBookId;
+          taskId = args.taskId;
+          if(userId && workBookId && taskId)
+            this.getWorkbookRepetitions(userId, workBookId, taskId);
+          break;
+      default:
+          break;
+    }
     this.refs.reactDataGrid.deselect();
+  };
+
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+  
+  /**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
   };
 
   // This method is used to setting the row data in react data grid
@@ -274,15 +351,22 @@ class WorkBookProgress extends React.Component {
     return (
       <div>
          <WorkBookRepetition
+            backdropClassName={"no-backdrop"}
             updateState={this.updateModalState.bind(this)}
             modal={this.state.isWorkBookRepetitionModal}
             workBooksRepetition={this.state.workBooksRepetition}
+            selectedWorkbook={this.state.selectedWorkbook}
           />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+          <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>      
           <ModalBody>
+          <div className="grid-description"> 
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
+            <h6> </h6>
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
+          </div>
           <div className="grid-container">
-              <div className="table">
+              <div className="table has-total-row">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}
@@ -294,8 +378,7 @@ class WorkBookProgress extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={WorkBookProgressEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView} 
                   />
               </div>
             </div>

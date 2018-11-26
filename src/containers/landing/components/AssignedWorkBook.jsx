@@ -52,6 +52,8 @@ class AssignedWorkBook extends React.Component {
         sortable: true,
         width: 300,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -59,6 +61,8 @@ class AssignedWorkBook extends React.Component {
         name: 'Workbook Name',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -66,20 +70,26 @@ class AssignedWorkBook extends React.Component {
         name: 'Completed / Total Tasks',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedTasks", props),
+        cellClass: "text-center"
       },
       {
         key: 'percentageCompleted',
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        cellClass: "text-center text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("percentageCompleted", props),
+        cellClass: "text-center"
       },
       {
         key: 'dueDate',
         name: 'Due Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -91,7 +101,9 @@ class AssignedWorkBook extends React.Component {
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
-      workBooksProgress: {}
+      workBooksProgress: {},
+      isInitial: false,
+      selectedWorkbook: {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -173,10 +185,13 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks);
+      let rows = this.createRows(newProps.assignedWorkBooks),
+          isArray = Array.isArray(newProps.assignedWorkBooks),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial
       });
   }
 
@@ -253,20 +268,64 @@ class AssignedWorkBook extends React.Component {
 
   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 2 || args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId,
-          workBookId = this.state.rows[args.rowIdx].workBookId;
-
-      if(userId && workBookId)
-        this.getWorkBookProgress(userId, workBookId);      
+  handleCellClick = (type, args) => {
+    let userId = 0,
+        workBookId = 0;
+        
+    this.state.selectedWorkbook = args;
+    switch(type) {
+      case "percentageCompleted":
+      case "completedTasks":
+          userId = args.userId;
+          workBookId = args.workBookId;
+          if(userId && workBookId)
+            this.getWorkBookProgress(userId, workBookId); 
+          break;
+      default:
+          break;
     }
     this.refs.reactDataGrid.deselect();
+  };
+
+   /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+  /**
+   * @method
+   * @name - workbookFormatter
+   * This method will format the workbooks column Data Grid
+   * @param type
+   * @param props
+   * @returns none
+   */
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
   };
   
   // This method is used to setting the row data in react data grid
@@ -277,11 +336,13 @@ class AssignedWorkBook extends React.Component {
     return (
       <div>
         <WorkBookProgress
+          backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isWorkBookProgressModal}
           workBooksProgress={this.state.workBooksProgress}
+          selectedWorkbook={this.state.selectedWorkbook}
         />
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
           <ModalBody>
           <div className="grid-container">
@@ -297,8 +358,7 @@ class AssignedWorkBook extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={AssignedWorkBookEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView} 
                   />
               </div>
             </div>

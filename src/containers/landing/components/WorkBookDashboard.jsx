@@ -61,13 +61,17 @@ class WorkBookDashboard extends PureComponent {
         sortable: true,
         width: 240,
         editable: false,
-        cellClass: "text-left text-clickable"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-left"
       },
       {
         key: 'role',
         name: 'Role',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -75,35 +79,45 @@ class WorkBookDashboard extends PureComponent {
         name: 'Assigned Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("assignedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'inDueWorkBooks',
         name: 'Workbooks Due',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("inDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'pastDueWorkBooks',
         name: 'Past Due Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("pastDueWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'completedWorkBooks',
         name: 'Completed Workbooks',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable"
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedWorkBooks", props),
+        cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total Employees',
         sortable: true,
         editable: false,
-        cellClass: "text-right text-clickable last-column"
+        getRowMetaData: row => row,
+        formatter: this.employeeFormatter,
+        cellClass: "text-right last-column"
       },
     ];
 
@@ -118,15 +132,57 @@ class WorkBookDashboard extends PureComponent {
       isComingDueModal: false,
       isCompletedModal: false,
       myEmployees: {},
-      myEmployeesArray: [],
+      myEmployeesArray: {},
       assignedWorkBooks: {},
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
       fakeState: false,
       level: 0,
-      supervisorNames: []
+      supervisorNames: [],
+      isInitial: false
     };
+
+  }
+
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
+  }
+
+  employeeFormatter = (props) => {
+    if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { 
+          e.preventDefault(); 
+          let isMyEmployeeModal = true, 
+          myEmployeesArray = [];
+          this.setState({ isMyEmployeeModal, myEmployeesArray });
+          this.getMyEmployees(props.dependentValues.userId); }} 
+        className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
+  }
+
+  workbookFormatter = (type, props) => {
+    if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
+        {props.value}
+      </span>
+      );
+    }
   }
 
   /**
@@ -153,9 +209,16 @@ class WorkBookDashboard extends PureComponent {
    */
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
-    this.setState({
-      [modelName]: value
-    });
+    if(modelName == "isMyEmployeeModal"){
+      this.setState({
+        [modelName]: value,
+        myEmployeesArray: {}
+      });
+    } else {
+      this.setState({
+        [modelName]: value
+      });
+    }
   };
 
   /**
@@ -169,7 +232,7 @@ class WorkBookDashboard extends PureComponent {
     let myEmployeesArray = this.state.myEmployeesArray,
         level = this.state.level + 1,
         supervisorNames = this.state.supervisorNames;
-    
+
     if(employees.length > 0)
       supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
 
@@ -226,8 +289,9 @@ class WorkBookDashboard extends PureComponent {
     let token = cookies.get('IdentityToken'),
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
-        rows = this.createRows(response);
-    this.setState({ rows: rows});
+        rows = this.createRows(response),
+        isInitial = true;
+    this.setState({ rows: rows, isInitial: isInitial});
     this.onChangePage([]);
   };
 
@@ -245,12 +309,13 @@ class WorkBookDashboard extends PureComponent {
         url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response,
-        myEmployeesArray = [],
+        myEmployeesArray = this.state.myEmployeesArray,
         isMyEmployeeModal = this.state.isMyEmployeeModal,
         fakeState = this.state.fakeState,
         level = this.state.level + 1 ;
-        myEmployeesArray.push(myEmployees);
-
+        
+      myEmployeesArray = [];
+      myEmployeesArray.push(myEmployees);
       fakeState = !fakeState;
       isMyEmployeeModal = true;
       this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
@@ -458,54 +523,43 @@ class WorkBookDashboard extends PureComponent {
     this.setState({ rows });
   };
 
-  /**
+   /**
    * @method
-   * @name - handleCellFocus
+   * @name - handleCellClick
    * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
    * @param args
    * @returns none
    */
-  handleCellFocus = (args) => {
-    if(args.idx == 0 || args.idx == 6){
-      let userId = this.state.rows[args.rowIdx].userId;
-      let employee = this.state.rows[args.rowIdx].employee;
-      
-      if(userId){        
-        let supervisorNames = this.state.supervisorNames,
-            isMyEmployeeModal = this.state.isMyEmployeeModal,
-            myEmployeesArray =  this.state.myEmployeesArray;
-
-        supervisorNames.push(employee);
-        isMyEmployeeModal = true;
-        myEmployeesArray = [];
-
-        this.setState({ isMyEmployeeModal, myEmployeesArray });
-        this.getMyEmployees(userId);
-      }
-    } else if(args.idx == 2){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){        
-        this.getAssignedWorkbooks(userId);
-      }
-    } else if(args.idx == 4){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getPastDueWorkbooks(userId);
-      }
-    } else if(args.idx == 3){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getComingDueWorkbooks(userId);
-      }      
-    } else if(args.idx == 5){
-      let userId = this.state.rows[args.rowIdx].userId;
-
-      if(userId){
-        this.getCompletedWorkbooks(userId);
-      }      
+  handleCellClick = (type, args) => {
+    let userId = 0;
+    switch(type) {
+      case "completedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getCompletedWorkbooks(userId);
+          }  
+          break;
+      case "assignedWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getAssignedWorkbooks(userId);
+          }  
+          break;          
+      case "pastDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getPastDueWorkbooks(userId);
+          }  
+          break;   
+      case "inDueWorkBooks":
+          userId = args.userId;
+          if(userId){
+            this.getComingDueWorkbooks(userId);
+          }  
+          break;
+      default:
+          break;
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -518,6 +572,7 @@ class WorkBookDashboard extends PureComponent {
     return (         
           <CardBody>
             <MyEmployees
+              backdropClassName={"backdrop"}
               fakeState={this.state.fakeState}
               level={this.state.level}
               updateState={this.updateModalState.bind(this)}
@@ -528,32 +583,36 @@ class WorkBookDashboard extends PureComponent {
               supervisorNames={this.state.supervisorNames}
             />
             <AssignedWorkBook
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isAssignedModal}
               assignedWorkBooks={this.state.assignedWorkBooks}
             />
              <WorkBookDuePast
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isPastDueModal}
               assignedWorkBooks={this.state.workBookDuePast}
             />
              <WorkBookComingDue
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isComingDueModal}
               assignedWorkBooks={this.state.workBookComingDue}
             />
             <WorkBookCompleted
+              backdropClassName={"backdrop"}
               updateState={this.updateModalState.bind(this)}
               modal={this.state.isCompletedModal}
               assignedWorkBooks={this.state.workBookCompleted}
             />
             <div className="card__title">
              <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbooks Dashboard
+              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
             </div>
             <div className="grid-container">
-              <div className="table">
+              <div className="table has-total-row">
                   <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}
@@ -565,8 +624,7 @@ class WorkBookDashboard extends PureComponent {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      onCellSelected={(args) => { this.handleCellFocus(args) }}
-                      emptyRowsView={DataTableEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && DataTableEmptyRowsView} 
                   />
               </div>
             </div>

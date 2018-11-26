@@ -46,20 +46,26 @@ class WorkBookRepetition extends React.Component {
         name: 'Attempt',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
         key: 'status',
-        name: 'Pass/Fail',
+        name: 'Complete/Incomplete',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-left"
         },
         {
         key: 'dateTime',
-        name: 'Date/Time',
+        name: 'Last Attempted Date',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -67,6 +73,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Location',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -74,6 +82,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Evaluator',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center"
         },
         {
@@ -81,6 +91,8 @@ class WorkBookRepetition extends React.Component {
         name: 'Comments',
         sortable: true,
         editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
         }
       ];
@@ -89,8 +101,23 @@ class WorkBookRepetition extends React.Component {
       modal: this.props.modal,      
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
+      isInitial: false,
+      selectedWorkbook: this.props.selectedWorkbook
     };
     this.toggle = this.toggle.bind(this);
+  }
+
+  /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  cellFormatter = (props) => {
+    return (
+      <span>{props.value}</span>
+    );
   }
 
   /**
@@ -143,10 +170,14 @@ class WorkBookRepetition extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksRepetition);
+      let rows = this.createRows(newProps.workBooksRepetition),
+          isArray = Array.isArray(newProps.workBooksRepetition),
+          isInitial = isArray;
       this.setState({
         modal: newProps.modal,
-        rows: rows
+        rows: rows,
+        isInitial: isInitial,
+        selectedWorkbook: newProps.selectedWorkbook
       });
   }
 
@@ -214,9 +245,15 @@ class WorkBookRepetition extends React.Component {
     const { rows } = this.state;
     return (
       <div>
-        <Modal isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
           <ModalBody>
+          <div className="grid-description"> 
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
+            <h6> </h6>
+            <h6 className="bold">{this.state.selectedWorkbook ? this.state.selectedWorkbook.taskCode : ""} {this.state.selectedWorkbook ? this.state.selectedWorkbook.taskName : ""}</h6>
+            <h5>{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
+          </div>           
           <div className="grid-container">
               <div className="table">
                   <ReactDataGrid
@@ -230,7 +267,7 @@ class WorkBookRepetition extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={WorkBookRepetitionEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
                   />
               </div>
             </div>

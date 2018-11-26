@@ -715,6 +715,36 @@ body {
   color: #0a1631 !important;
 }
 
+
+@mixin box-shadow($params) {
+  -webkit-box-shadow: $params;
+  -moz-box-shadow: $params;
+  box-shadow: $params;
+}
+
+$shadows: inset 0 0 6px rgba(0,0,0,0.5);
+
+::-webkit-scrollbar {
+  width:7px;
+}
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #b3b2b2;
+}
+::-webkit-scrollbar-thumb {
+  opacity: 0.1;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  @include box-shadow($shadows);
+}
+::-webkit-scrollbar-thumb:hover {
+  background:rgba(0,0,0,0.4);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background:rgba(0,0,0,0.05);
+}
+
 .topbar__search {
   display: none;
 }
