@@ -229,7 +229,10 @@ namespace DataInterface.Database
             finally
             {
                 //dispose the database Connection
-                sqlConnection.Dispose();
+                if (sqlConnection != null)
+                {
+                    sqlConnection.Dispose();
+                }
             }
         }
     }

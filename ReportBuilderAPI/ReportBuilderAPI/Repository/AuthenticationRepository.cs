@@ -42,18 +42,18 @@ namespace ReportBuilderAPI.Repository
                     string message = sessionGenerator.CheckChallenge(authResponse.ChallengeName);
                     return ResponseBuilder.UnAuthorized(message);
                 }
-                //else if (authResponse != null && authResponse.AuthenticationResult != null)
-                //{
-                //    userResponse = new UserResponse
-                //    {
-                //        AccessToken = authResponse.AuthenticationResult.AccessToken,
-                //        IdentityToken = authResponse.AuthenticationResult.IdToken,
-                //        RefreshToken = authResponse.AuthenticationResult.RefreshToken,
-                //        UserId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
-                //        CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
-                //    };
-                //    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
-                //}
+                else if (authResponse != null && authResponse.AuthenticationResult != null)
+                {
+                    userResponse = new UserResponse
+                    {
+                        AccessToken = authResponse.AuthenticationResult.AccessToken,
+                        IdentityToken = authResponse.AuthenticationResult.IdToken,
+                        RefreshToken = authResponse.AuthenticationResult.RefreshToken,
+                        UserId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                        CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                    };
+                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
+                }
                 else
                 {
                     return ResponseBuilder.BadRequest("Username and Password");

@@ -68,6 +68,28 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         /// Read the path parameters from the request
         /// </summary>
         /// <param name="request"></param>
+        /// <returns>workbookId</returns>
+        public static int GetCompanyId(APIGatewayProxyRequest request)
+        {
+            int workbookId = 0;
+            try
+            {
+                if (request.PathParameters != null && request.PathParameters.ContainsKey("companyId"))
+                    workbookId = Convert.ToInt32(request.PathParameters["companyId"]);
+                return workbookId;
+            }
+            catch (Exception getPathValueException)
+            {
+                LambdaLogger.Log(getPathValueException.ToString());
+                return workbookId;
+            }
+        }
+
+
+        /// <summary>
+        /// Read the path parameters from the request
+        /// </summary>
+        /// <param name="request"></param>
         /// <returns>taskId</returns>
         public static int GetTaskId(APIGatewayProxyRequest request)
         {
@@ -126,54 +148,6 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
                 return null;
             }
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="param"></param>
-        //public static void GetRequiredValue(string param)
-        //{
-        //    List<string> queries = new List<string>();
-        //    string regex = string.Empty;
-        //    string sqlQuery = string.Empty;
-        //    QueryStringModel queryStringModel = new QueryStringModel();
-        //    try
-        //    {
-        //        regex = @"\((\w+)(\W+)(\w+)\) (and|or)";
-        //        var matchedString= Regex.Matches(param, regex);
-        //        regex = @"\((\w+)(\W+)(\w+)\)$";
-        //        var matchedFinalString = Regex.Matches(param, regex);
-
-        //        foreach (dynamic query in matchedString)
-        //        {
-        //            var key= query.Groups[1].ToString();
-        //            var value = query.Groups[3].ToString();
-        //            var oper = query.Groups[4].ToString();
-
-        //            switch (query.Groups[1].ToString())
-        //            {
-        //                case Constants.CompletedWorkBooks:
-        //                    queryStringModel.CompletedWorkBook = Convert.ToString(value);
-        //                    break;
-        //                case Constants.WorkBookInDue:
-        //                    queryStringModel.WorkBookInDue = Convert.ToString(value);
-        //                        break;
-        //                case Constants.PastDueWorkBook:
-        //                    queryStringModel.PastDueWorkBook = Convert.ToInt32((!string.IsNullOrEmpty(Convert.ToString(parameters.Value))) ? Convert.ToString(parameters.Value) : "0");
-        //                    break;
-        //                case Constants.PARAM:
-        //                    queryStringModel.Param = Convert.ToString(parameters.Value);
-        //                    GetRequiredValue(Convert.ToString(parameters.Value));
-        //                    break;
-        //            }
-        //            sqlQuery = 
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        LambdaLogger.Log(exception.ToString());
-        //    }
-        //}
 
         /// <summary>
         /// Read the request body from the request

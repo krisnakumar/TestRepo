@@ -57,6 +57,7 @@ namespace ReportBuilderAPI.Helpers
         public AuthFlowResponse ProcessRefreshToken(UserRequest userRequest)
         {
             AuthFlowResponse authResponse;
+            
             try
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);

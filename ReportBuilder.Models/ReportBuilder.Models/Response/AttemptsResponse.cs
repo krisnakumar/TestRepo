@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ReportBuilder.Models.Response
+﻿namespace ReportBuilder.Models.Response
 {
     public class AttemptsResponse
     {
@@ -14,5 +10,6 @@ namespace ReportBuilder.Models.Response
         public string Evaluator { get; set; }
 
         public string Comments { get; set; }
+
     }
 }

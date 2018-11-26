@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ReportBuilder.Models.Models;
 
 
 // <copyright file="EmployeeResponse.cs">
@@ -42,6 +43,9 @@ namespace ReportBuilder.Models.Response
         public int Code { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
+
+
+        
 
     }
 }

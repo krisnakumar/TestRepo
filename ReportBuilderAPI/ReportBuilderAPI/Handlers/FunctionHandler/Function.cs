@@ -76,7 +76,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             EmployeeRepository employeeRepository = new EmployeeRepository();
             try
             {
-                return employeeRepository.GetEmployeeList(RequestReader.GetUserId(request), RequestReader.ReadQueryString(request));
+                return employeeRepository. GetEmployeeList(RequestReader.GetUserId(request), RequestReader.ReadQueryString(request));
             }
             catch (Exception getEmployees)
             {
@@ -208,5 +208,27 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 return ResponseBuilder.InternalError();
             }
         }
+
+
+        /// <summary>
+        /// Get list of employees using userId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetEmployeesQuerBuilder(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            EmployeeRepository employeeRepository = new EmployeeRepository();
+            try
+            {
+                return employeeRepository.GetEmployeeDetails(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
     }
 }

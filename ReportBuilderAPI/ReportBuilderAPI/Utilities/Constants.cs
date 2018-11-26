@@ -20,7 +20,54 @@ namespace ReportBuilderAPI.Utilities
         public const string WorkBookInDue = "WORKBOOKINDUE";
         public const string PastDueWorkBook = "PASTDUEWORKBOOK";
 
+
+
         public const string PARAM = "PARAM";
+
+
+
+
+        public const string ID = "ID";
+        public const string USERNAME = "USERNAME";
+        public const string USERNAME2 = "USERNAME2";
+        public const string DATECREATED = "DATECREATED";
+        public const string FIRSTNAME = "FIRSTNAME";
+        public const string MIDDLENAME = "MIDDLENAME";
+        public const string LASTNAME = "LASTNAME";
+        public const string EMAIL = "EMAIL";
+        public const string CITY = "CITY";
+        public const string STATE = "STATE";
+        public const string PHONE = "PHONE";
+        public const string ZIP = "ZIP";
+        public const string SUPERVISORID = "SUPERVISORID";
+        public const string ROLE = "ROLE";
+        public const string ISDIRECTREPORT = "ISDIRECTREPORT";
+        public const string ISENABLED = "ISENABLED";
+        public const string PHOTO = "PHOTO";
+        public const string ISNETWORKID = "ISNETWORKID";
+        public const string COMPANYNAME = "COMPANYNAME";
+        public const string COMPANYID = "COMPANYID";
+        public const string COMPANYCREATED = "COMPANYCREATED";
+        public const string LICENCETYPE = "LICENCETYPE";
+        public const string CONTRACTDATE = "CONTRACTDATE";
+        public const string DATEPAID = "DATEPAID";
+
+
+        public const string EMPLOYEE_NAME = "EMPLOYEE_NAME";
+        public const string CONTRACTOR_NAME = "CONTRACTOR_NAME";
+        public const string ASSIGNED_WORKBOOK = "ASSIGNED_WORKBOOK";
+        public const string WORKBOOK_NAME = "WORKBOOK_NAME";
+        public const string WORKBOOK_DUE = "WORKBOOK_DUE";
+        public const string PAST_DUE_WORKBOOK = "PAST_DUE_WORKBOOK";
+        public const string COMPLETED_WORKBOOK = "COMPLETED_WORKBOOK";
+        public const string INCOMPLETE_WORKBOOK = "INCOMPLETE_WORKBOOK";
+        public const string ASSIGNED_QUALIFICATIONS = "ASSIGNED_QUALIFICATIONS";
+        public const string COMPLETED_QUALIFICATIONS = "COMPLETED_QUALIFICATIONS";
+        public const string IN_COMPLETE_QUALIFICATIONS = "IN_COMPLETE_QUALIFICATIONS";
+        public const string PAST_DUE_QUALIFICATIONS = "PAST_DUE_QUALIFICATIONS";
+        public const string QUALIFICATIONS_IN_DUE = "QUALIFICATIONS_IN_DUE";
+        public const string TOTAL_EMPLOYEES = "TOTAL_EMPLOYEES";
+
 
     }
 }
