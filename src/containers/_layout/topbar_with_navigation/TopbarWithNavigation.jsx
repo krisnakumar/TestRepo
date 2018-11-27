@@ -86,7 +86,7 @@ export default class TopbarWithNavigation extends PureComponent {
                         })      
                     }                  
             </nav>
-          </div>+
+          </div>
         </div>
       </div>
     );

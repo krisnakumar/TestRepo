@@ -21,8 +21,7 @@ import * as API from '../../../shared/utils/APIUtils';
 import { Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
-
-import SplitPane  from 'react-split-pane';
+import QueryPane  from './QueryPane';
 
 
 
@@ -38,9 +37,9 @@ class QuerySection extends PureComponent {
     cookies: instanceOf(Cookies).isRequired
   };
 
-  constructor() {
-    super();
-    
+  constructor(props) {
+    super(props);
+
     this.state = {    
       selectedOption: options[0], 
       isClearable: false
@@ -107,8 +106,9 @@ class QuerySection extends PureComponent {
             </div>
       
             <div className="wrapper">
-              <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
-                
+              <SplitterLayout primaryIndex={0} primaryMinSize={200} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
+                <QueryPane />
+                <div></div>
               </SplitterLayout>
             </div>
           </CardBody>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 /*
-* QuerySection.jsx
+* QueryPane.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
 * This javascript file will used render Workbook details to list the workbooks 
 * Template: React.Component
@@ -12,16 +12,11 @@ METHODS
 */
 import React, { PureComponent } from 'react';
 import 'whatwg-fetch'
-import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import * as API from '../../../shared/utils/APIUtils';
-import { CardBody, Button, Container, Row, Col } from 'reactstrap';
-import Select from 'react-select';
-
-import SplitPane  from 'react-split-pane';
-
+import { Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
+import FieldData from './../data';
+import QueryClause from './QueryClause';
 
 class QueryPane extends PureComponent {
 
@@ -29,13 +24,12 @@ class QueryPane extends PureComponent {
     cookies: instanceOf(Cookies).isRequired
   };
 
-  constructor() {
-    super();
-    
+  constructor(props) {
+    super(props);
     this.state = {    
-      isClearable: false
-    };
-    
+      entity: "employees",
+      fieldData: FieldData.field["employees"].slice(0, 2),     
+    };  
   }
 
   /**
@@ -55,11 +49,22 @@ class QueryPane extends PureComponent {
 
   render() {
     return (         
-            <div className="query-builder-section">
-            
-            </div>
+        <div className="query-builder-section">
+          <Table className="query-section-table">
+             <thead>
+              <tr>
+                <th width="150">Add/Delete</th>
+                <th>And/Or</th>
+                <th>Field</th>
+                <th>Operator</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <QueryClause fieldData={this.state.fieldData}/>          
+        </Table> 
+      </div>
     );
   }
 }
 
-export default withCookies(QueryPane);``
+export default withCookies(QueryPane);

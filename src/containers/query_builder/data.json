@@ -1,0 +1,181 @@
+{
+	"combinators": [{
+			"value": "and",
+			"label": "AND"
+		},
+		{
+			"value": "or",
+			"label": "OR"
+		}
+	],
+	"operator": {
+		"others": [{
+				"value": "=",
+				"label": "="
+			},
+			{
+				"value": "!=",
+				"label": "!="
+			}
+		],
+		"int": [{
+				"value": "=",
+				"label": "="
+			},
+			{
+				"value": "!=",
+				"label": "!="
+			},
+			{
+				"value": "<=",
+				"label": "<="
+			},
+			{
+				"value": ">=",
+				"label": ">="
+			}
+		]
+	},
+	"field": {
+		"employees": [
+			{
+                "value": "id",
+				"type": "int",
+				"label": "Employee Id",
+				"validation": "NONE"
+			},
+			{
+                "value": "userName",
+				"type": "text",
+				"label": "User Name",
+				"validation": "NONE"
+			},
+			{
+                "value": "userName2",
+				"type": "text",
+				"label": "User Name 2",
+				"validation": "NONE"
+			},
+			{
+                "value": "dateCreated",
+				"type": "date",
+				"label": "Date Created",
+				"validation": "NONE"
+			},
+			{
+                "value": "firstName",
+				"type": "text",
+				"label": "First Name",
+				"validation": "NONE"
+			},
+			{
+                "value": "middleName",
+				"type": "text",
+				"label": "Middle Name",
+				"validation": "NONE"
+			},
+			{
+                "value": "lastName",
+				"type": "text",
+				"label": "Last Name",
+				"validation": "NONE"
+			},
+			{
+                "value": "email",
+				"type": "text",
+				"label": "Email",
+				"validation": "NONE"
+			},
+			{
+                "value": "city",
+				"type": "text",
+				"label": "City",
+				"validation": "NONE"
+			},
+			{
+                "value": "state",
+				"type": "text",
+				"label": "State",
+				"validation": "NONE"
+			},
+			{
+                "value": "zip",
+				"type": "int",
+				"label": "Zip",
+				"validation": "NONE"
+			},
+			{
+                "value": "phone",
+				"type": "int",
+				"label": "Phone",
+				"validation": "NONE"
+			},
+			{
+                "value": "supervisorId",
+				"type": "text",
+				"label": "Supervisor Id",
+				"validation": "NONE"
+			},
+			 {
+                "value": "role",
+				"type": "text",
+				"label": "Role",
+				"validation": "NONE"
+			},
+		 {
+                "value": "isDirectReport",
+				"type": "bool",
+				"label": "IsDirectReport",
+				"validation": "NONE"
+			},
+			{
+                "value": "isEnabled",
+				"type": "bool",
+				"label": "IsEnabled",
+				"validation": "NONE"
+			},
+			{
+                "value": "photo",
+				"type": "other",
+				"label": "Photo",
+				"validation": "NONE"
+			},
+			{
+                "value": "isNetworldId",
+				"type": "int",
+				"label": "IsNetworldId",
+				"validation": "NONE"
+			},
+			{
+                "value": "company",
+				"type": "text",
+				"label": "Company",
+				"validation": "NONE"
+			},
+			{
+                "value": "companyId",
+				"type": "int",
+				"label": "CompanyId",
+				"validation": "NONE"
+			},
+			{
+                "value": "licence",
+				"type": "text",
+				"label": "Licence",
+				"validation": "NONE"
+			},
+			 {
+                "value": "contractDate",
+				"type": "date",
+				"label": "Contract Date",
+				"validation": "NONE"
+			},
+		{
+                "value": "datePaid",
+				"type": "date",
+				"label": "Date Paid",
+				"validation": "NONE"
+			}
+        ]
+	}
+}
