@@ -30,6 +30,7 @@ class QueryPane extends PureComponent {
       entity: "employees",
       fieldData: FieldData.field["employees"].slice(0, 2),     
     };  
+    this.handleAddClause = this.handleAddClause.bind(this);
   }
 
   /**
@@ -45,7 +46,14 @@ class QueryPane extends PureComponent {
     // this.setState({ hasError: true });
     // You can also log the error to an error reporting service
     console.log(error, info);
-  }
+  };
+
+  handleAddClause(index){
+    // console.log("index", index);
+    if(index == "n"){
+
+    }
+  };
 
   render() {
     return (         
@@ -60,7 +68,9 @@ class QueryPane extends PureComponent {
                 <th>Value</th>
               </tr>
             </thead>
-            <QueryClause fieldData={this.state.fieldData}/>          
+            <QueryClause 
+              handleAddClause={this.handleAddClause}
+              fieldData={this.state.fieldData}/>          
         </Table> 
       </div>
     );
