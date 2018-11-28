@@ -28,13 +28,16 @@ namespace ReportBuilderAPI.Utilities
 
 
         public const string ID = "ID";
+        public const string ROLEID = "ROLEID";
         public const string USERNAME = "USERNAME";
+        public const string ALTERNATE_USERNAME = "ALTERNATE_USERNAME";
         public const string USERNAME2 = "USERNAME2";
         public const string DATECREATED = "DATECREATED";
         public const string FIRSTNAME = "FIRSTNAME";
         public const string MIDDLENAME = "MIDDLENAME";
         public const string LASTNAME = "LASTNAME";
         public const string EMAIL = "EMAIL";
+        public const string ADDRESS = "ADDRESS";
         public const string CITY = "CITY";
         public const string STATE = "STATE";
         public const string PHONE = "PHONE";
@@ -54,6 +57,7 @@ namespace ReportBuilderAPI.Utilities
 
 
         public const string EMPLOYEE_NAME = "EMPLOYEE_NAME";
+        public const string SUPERVISOR_NAME = "SUPERVISOR_NAME";
         public const string CONTRACTOR_NAME = "CONTRACTOR_NAME";
         public const string ASSIGNED_WORKBOOK = "ASSIGNED_WORKBOOK";
         public const string WORKBOOK_NAME = "WORKBOOK_NAME";
@@ -66,8 +70,23 @@ namespace ReportBuilderAPI.Utilities
         public const string IN_COMPLETE_QUALIFICATIONS = "IN_COMPLETE_QUALIFICATIONS";
         public const string PAST_DUE_QUALIFICATIONS = "PAST_DUE_QUALIFICATIONS";
         public const string QUALIFICATIONS_IN_DUE = "QUALIFICATIONS_IN_DUE";
-        public const string TOTAL_EMPLOYEES = "TOTAL_EMPLOYEES";
 
+        public const string TOTAL_EMPLOYEES = "TOTAL_EMPLOYEES";
+        public const string USER_CREATED_DATE = "USER_CREATED_DATE";
+
+        public const string USER_PERMS = "USER_PERMS";
+        public const string SETTINGS_PERMS = "SETTINGS_PERMS";
+        public const string COURSE_PERMS = "COURSE_PERMS";
+        public const string TRANSCRIPT_PERMS = "TRANSCRIPT_PERMS";
+        public const string COMPANY_PERMS= "COMPANY_PERMS";
+        public const string FORUM_PERMS = "FORUM_PERMS";
+        public const string COM_PERMS = "COM_PERMS";
+        public const string REPORTS_PERMS = "REPORTS_PERMS";
+        public const string ANNOUNCEMENT_PERMS= "ANNOUNCEMENT_PERMS";
+        public const string SYSTEM_PERMS = "SYSTEM_PERMS";
+
+        public const string USER_ID = "USER_ID";
+        public const string SUPERVISOR_ID = "SUPERVISOR_ID";
 
     }
 }

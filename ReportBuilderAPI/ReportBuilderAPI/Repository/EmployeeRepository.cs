@@ -12,6 +12,7 @@ using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net;
 
 
@@ -29,8 +30,6 @@ namespace ReportBuilderAPI.Repository
     /// </summary>
     public class EmployeeRepository : IEmployee, IDisposable
     {
-
-
 
         /// <summary>
         /// Get list of employee who currently working under the specific user
@@ -87,6 +86,53 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+        private readonly Dictionary<string, string> columnList = new Dictionary<string, string>()
+        {
+                { Constants.EMPLOYEE_NAME, ", u.FName AS FirstName, u.LName AS LastName  " },
+                { Constants.ROLE, ", r.Name AS Role "},
+                { Constants.USERNAME, ", u.UserName" },
+                { Constants.ALTERNATE_USERNAME, ", u.UserName2" },
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.id)" },
+                { Constants.EMAIL, ", u.Email" },
+                { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
+                { Constants.PHONE, ", u.Phone" },
+                { Constants.SUPERVISOR_NAME, ", (SELECT CONCAT(usr.LName, ',', usr.Fname ) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
+                { Constants.USER_CREATED_DATE, ", u. DateCreated" },
+                { Constants.USER_PERMS, ", u.UserPerms" },
+                { Constants.SETTINGS_PERMS, ", u.settingsperms" },
+                { Constants.COURSE_PERMS, ", u.courseperms" },
+                { Constants.TRANSCRIPT_PERMS, ", u.Transcriptperms" },
+                { Constants.COMPANY_PERMS, ", u.companyperms" },
+                { Constants.REPORTS_PERMS, ", u.reportsperms" },
+                { Constants.ANNOUNCEMENT_PERMS, ", u.announcementperms" },
+                { Constants.SYSTEM_PERMS, ",u.systemperms" },
+                { Constants.USER_ID, ", u. Id as userId" },
+                { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM Supervisor s WHERE userId=7) as supervisorId" },
+
+        };
+
+        private readonly Dictionary<string, string> conditions = new Dictionary<string, string>()
+        {
+            {Constants.ID, "u.ID" },
+            {Constants.USERNAME, "u.UserName" },
+            {Constants.USERNAME2, "u.UserName2" },
+            {Constants.USER_CREATED_DATE, "u.DateCreated" },
+            {Constants.FIRSTNAME, "u.FName" },
+            {Constants.LASTNAME, "u.LName" },
+            {Constants.MIDDLENAME, "u.MName" },
+            {Constants.EMAIL, "u.Email" },
+            {Constants.CITY, "u.City" },
+            {Constants.STATE, "u.State" },
+            {Constants.ZIP, "u.Zip" },
+            {Constants.PHONE, "u.phone" },
+            {Constants.ROLE, "r.Name" }
+        };
+
+
+        private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
+        {
+            { "LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} }
+        };
 
         /// <summary>
         /// 
@@ -95,83 +141,38 @@ namespace ReportBuilderAPI.Repository
         public APIGatewayProxyResponse GetEmployeeDetails(string requestBody, int companyId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            List<EmployeeModel> fieldList = new List<EmployeeModel>();
-            EmployeeRequest employeeRequest = new EmployeeRequest();
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
             EmployeeResponse employeeResponse = new EmployeeResponse();
-            string[] columnList;
-
+            List<string> fieldList = new List<string>();
             try
             {
+                selectQuery = "SELECT  ";
+                EmployeeRequest employeeRequest = JsonConvert.DeserializeObject<EmployeeRequest>(requestBody);
 
-                selectQuery = "SELECT DISTINCT ";
-                employeeRequest = JsonConvert.DeserializeObject<EmployeeRequest>(requestBody);
-                columnList = employeeRequest.ColumnList.Split('|');
-                foreach (string column in columnList)
-                {
-                    switch (column.ToUpper())
-                    {
-                        case Constants.EMPLOYEE_NAME:
-                            query += ", u.FName AS FirstName, u.LName AS LastName  ";
-                            break;
-                        case Constants.ROLE:
-                            query += ", r.Name AS Role ";
-                            tableJoin += "LEFT JOIN UserRole ur ON ur.userId=u.Id ";
-                            break;
-                        case Constants.WORKBOOK_NAME:
-                            query += ", wb.Name AS WorkbookName ";
-                            tableJoin += "	LEFT JOIN UserWorkBook uwb ON uwb.UserId=u.Id    LEFT JOIN WorkBook wb ON wb.Id = uwb.WorkBookId";
-                            break;
-                        case Constants.ASSIGNED_WORKBOOK:
-                            query += ", (SELECT COUNT(DISTINCT uwt.WorkBookId)  FROM dbo.UserWorkBook uwt WHERE uwt.UserId IN((SELECT u.Id UNION SELECT* FROM getChildUsers (u.Id))) AND uwt.IsEnabled = 1) AS AssignedWorkbooks";
-                            break;
-                        case Constants.INCOMPLETE_WORKBOOK:
-                            break;
-                        case Constants.WORKBOOK_DUE:
-                            break;
-                        case Constants.PAST_DUE_WORKBOOK:
-                            break;
-                        case Constants.COMPLETED_WORKBOOK:
-                            break;
-                        case Constants.ASSIGNED_QUALIFICATIONS:
-
-                            break;
-                        case Constants.COMPLETED_QUALIFICATIONS:
-
-                            break;
-                        case Constants.IN_COMPLETE_QUALIFICATIONS:
-
-                            break;
-                        case Constants.PAST_DUE_QUALIFICATIONS:
-
-                            break;
-                        case Constants.QUALIFICATIONS_IN_DUE:
-
-                            break;
-                        case Constants.TOTAL_EMPLOYEES:
-
-                            break;
-                    }
-                }
+                //getting column List
+                query = string.Join("", (from column in columnList
+                                         where employeeRequest.ColumnList.Any(x => x == column.Key)
+                                         select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
-                query += " FROM dbo.[User] u WHERE ";
+                query += " FROM dbo.[User] u  ";
+                
+                //get table joins
+                fieldList = employeeRequest.ColumnList.ToList();
+                fieldList.AddRange(employeeRequest.Fields.Select(x => x.Name.ToUpper()).ToArray());
+                tableJoin = string.Join("", from joins in tableJoins
+                                            where fieldList.Any(x => joins.Value.Any(y => y == x))
+                                            select joins.Key);
+
                 query += tableJoin;
-                foreach (EmployeeModel field in employeeRequest.Fields)
-                {
-                    switch (field.Field.ToUpper())
-                    {
-                        case Constants.ID:
-                            query += "ID=" + field.Value;
-                            break;
-                        case Constants.USERNAME:
-                            query += "UserName='" + field.Value + "'";
-                            break;
-                        case Constants.USERNAME2:
-                            query += "UserName2='" + field.Value + "'";
-                            break;
-                    }
-                }
+
+                //getting where conditions
+                whereQuery = string.Join("", from emplyoee in employeeRequest.Fields
+                                             select conditions.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'") + (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty));
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE " + whereQuery) : string.Empty;
+
+                query += whereQuery;
+
                 ReadEmployeeDetails(query);
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
             }
@@ -226,7 +227,6 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         public void Dispose()
         {
-
             try
             {
 

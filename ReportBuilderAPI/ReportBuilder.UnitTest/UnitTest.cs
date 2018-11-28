@@ -180,18 +180,27 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             EmployeeRequest employeeRequest = new EmployeeRequest
             {
-                ColumnList = "Employee_Name",
+                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES" , "EMAIL"},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Field = "UserName",
+                Name = "UserName",
                 Value = "Shoba",
                 Operator = "=",
-                Condition = null
+                Bitwise="AND"
+            };
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = "UserName2",
+                Value = "Shoba",
+                Operator = "=",
+                Bitwise = null
             };
             employeeList.Add(employeeModel);
+            employeeList.Add(employeeModel2);
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest)
