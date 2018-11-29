@@ -278,22 +278,91 @@ img {
 }
 
 .grid-container-query-selection{
-  margin-left: 2%;
+ // margin-left: 2%;
 }
 
 .query-action-btn{
   width: 20px;
   padding: 0 !important;
-  margin: 0px 10px 0px 20px !important;
+ // margin: 4px -9px 0px 23px !important;
   background-color: #f9f9f900 !important;
-  font-size: 18px !important;
+  margin-bottom: 20px !important;
+  font-size: 16px !important;
   border: none;
 }
 .query-action-btn.add{
   cursor: pointer;
   color: #04720dab !important;
+  margin: 0px 0px 0px 20px;
 }
 .query-action-btn.delete{  
   cursor: pointer;
   color: #bc0202 !important;
 }
+
+.clauseAction {
+  width: 5%;
+}
+
+.query-action-btn {
+  margin-right: 3px !important; 
+}
+
+.btn.btn-secondary:before {
+  background-color: none;
+}
+
+.query-action-btn:before {
+  background-color: none ;
+  
+}
+
+.query-action-btn:hover {
+ // color: red;
+}
+
+.btn:hover:before, .btn:focus:before, .btn:active:before, .btn:active:focus:before{
+  background: none !important;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn:active:focus{
+  background: none !important;
+}
+
+.selectCombinator {
+  // width:50%;
+}
+.Select-multi-value-wrapper{
+  height: 22px !important;
+}
+
+.Select-control {
+  height: 22px !important;
+  border-radius: 2px;
+}
+
+.Select--single>.Select-control .Select-value, .Select-placeholder {
+  line-height: 23px !important;
+  padding-left: 5px !important;
+ }
+
+ .inputQueryInput{
+  height: 24px;
+  border-radius: 2px;
+ }
+
+ .tableWidth-10 {
+    width:10%;
+  }
+
+.tableWidth-7 {
+    width:7%;
+  }
+
+.tableWidth-30 {
+    width:30%;
+  }
+
+.tableWidth-20 {
+    width:20%;
+  }

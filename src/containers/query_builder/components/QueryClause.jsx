@@ -182,11 +182,11 @@ class QueryClause extends PureComponent {
                     formattedData.map(function (field, index) {
                         return (                           
                            <tr key={index} className={"query-clause-row-"+index}>
-                                <td scope="row">
+                                <td scope="row" className={"tableWidth-7"}>
                                     <button ref={(input) => { _self.buttonRef[index] = input; }} onClick={_self.handleAddClause.bind(_self, index)} title="Insert new filter line" className="query-action-btn add"><i className="fa fa-plus"></i></button>
                                     <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
                                 </td>
-                                <td>
+                                <td className={"tableWidth-10"}> 
                                     { 
                                         index != 0 && <Select
                                             clearable={false}
@@ -199,10 +199,11 @@ class QueryClause extends PureComponent {
                                             options={field.combinators}
                                             onChange={_self.handleChange.bind("", index, "combinatorsSelected")}
                                             placeholder={""}
+                                            
                                         /> 
                                     }
                                 </td>
-                                <td> 
+                                <td className={"tableWidth-20"}> 
                                     <Select
                                         clearable={false}
                                         autosize={false}
@@ -214,9 +215,10 @@ class QueryClause extends PureComponent {
                                         options={field.fields}
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
                                         placeholder={""}
+                                        // className={"tableWidth-10"}
                                     /> 
                                 </td>
-                                <td> 
+                                <td className={"tableWidth-20"}> 
                                     <Select
                                         clearable={false}
                                         autosize={false}
@@ -237,6 +239,7 @@ class QueryClause extends PureComponent {
                                         id={field.value}
                                         value={field.valueSelected}
                                         onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
+                                        className="inputQueryInput"
                                     />
                                 </td>
                             </tr>
