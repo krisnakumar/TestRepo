@@ -42,73 +42,85 @@
                 "value": "id",
 				"type": "int",
 				"label": "Employee Id",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "USERID"
 			},
 			{
                 "value": "userName",
 				"type": "text",
 				"label": "User Name",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "USERNAME"
 			},
 			{
                 "value": "userName2",
 				"type": "text",
 				"label": "User Name 2",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "USERNAME2"
 			},
 			{
                 "value": "dateCreated",
 				"type": "date",
 				"label": "Date Created",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "USER_CREATED_DATE"
 			},
 			{
                 "value": "firstName",
 				"type": "text",
 				"label": "First Name",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "FIRSTNAME"
 			},
 			{
                 "value": "middleName",
 				"type": "text",
 				"label": "Middle Name",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "MIDDLENAME"
 			},
 			{
                 "value": "lastName",
 				"type": "text",
 				"label": "Last Name",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "LASTNAME"
 			},
 			{
                 "value": "email",
 				"type": "text",
 				"label": "Email",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "EMAIL"
 			},
 			{
                 "value": "city",
 				"type": "text",
 				"label": "City",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "CITY"
 			},
 			{
                 "value": "state",
 				"type": "text",
 				"label": "State",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "STATE"
 			},
 			{
                 "value": "zip",
 				"type": "int",
 				"label": "Zip",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "ZIP"
 			},
 			{
                 "value": "phone",
 				"type": "int",
 				"label": "Phone",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "PHONE"
 			},
 			{
                 "value": "supervisorId",
@@ -116,13 +128,14 @@
 				"label": "Supervisor Id",
 				"validation": "isEmpty"
 			},
-			 {
+			{
                 "value": "role",
 				"type": "text",
 				"label": "Role",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "ROLE"
 			},
-		 {
+		 	{
                 "value": "isDirectReport",
 				"type": "bool",
 				"label": "IsDirectReport",
@@ -170,7 +183,7 @@
 				"label": "Contract Date",
 				"validation": "isEmpty"
 			},
-		{
+			{
                 "value": "datePaid",
 				"type": "date",
 				"label": "Date Paid",
