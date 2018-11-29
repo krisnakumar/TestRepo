@@ -22,7 +22,7 @@ import { Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
 import QueryPane  from './QueryPane';
-
+import EmployeeResultSet from './EmployeeResultSet';
 
 
 const options = [
@@ -41,10 +41,12 @@ class QuerySection extends PureComponent {
     super(props);
 
     this.queryPane = React.createRef();
+    this.employeeResultSet = React.createRef();
 
     this.state = {    
       selectedOption: options[0], 
-      isClearable: false
+      isClearable: false,
+      employees: {}
     };
     
   }
@@ -73,6 +75,9 @@ class QuerySection extends PureComponent {
     this.queryPane.current.runQuery();
   };
 
+  passEmployeesResults= (employees) => {
+    this.setState({ employees: employees });
+  }
 
   render() {
     const { selectedOption, isClearable } = this.state;
@@ -115,8 +120,8 @@ class QuerySection extends PureComponent {
       
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={200} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane ref={this.queryPane} />
-                <div></div>
+                <QueryPane ref={this.queryPane} passEmployeesResultsToQuerySection={this.passEmployeesResults}/>
+                <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>
               </SplitterLayout>
             </div>
           </CardBody>

@@ -15,6 +15,8 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { Input, Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
+import 'whatwg-fetch'
+import * as API from '../../../shared/utils/APIUtils';
 import FieldData from './../data';
 import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
@@ -204,6 +206,24 @@ class QueryClause extends PureComponent {
         const validation = this.validator.validate(this.state.formattedData);
         this.setState({ validation });
         this.submitted = true;
+
+        if (validation.isValid) {
+            // handle actual form submission here
+            let arr = [],
+                _self = this;
+                
+            this.state.formattedData.forEach(function(element, index){
+                let queryObj = {};
+                queryObj.Value = _self.state.formattedData[index].valueSelected;
+                queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
+                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;                
+                queryObj.Bitwise = _self.state.formattedData[index+1] ? _self.state.formattedData[index+1].combinatorsSelected.value : "";
+
+                arr.push(queryObj)
+            })
+
+            this.getEmployeesResults(arr);
+        }
     };
 
     getClassName(index){
@@ -213,7 +233,7 @@ class QueryClause extends PureComponent {
         this.state.validation;
 
         return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
-    }
+    };
 
     getMessage(index){
         const { formattedData } = this.state;
@@ -222,7 +242,31 @@ class QueryClause extends PureComponent {
         this.state.validation;
 
         return  validation[index] ? validation[index].message : "";
-    }
+    };
+
+    /**
+   * @method
+   * @name - getEmployeesResults
+   * This method will used to get Employees Results
+   * @param userId
+   * @param workBookId
+   * @param taskId
+   * @returns none
+   */
+    async getEmployeesResults(requestData){
+        const { cookies } = this.props;
+
+        let payLoad = {"Fields":requestData,
+                    "ColumnList":["EMPLOYEE_NAME","ROLE","USERNAME","ALTERNATE_USERNAME","TOTAL_EMPLOYEES","EMAIL"]};
+
+
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/employees  ",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+        this.props.passEmployeesResults(response);
+    };
     
     render() {
         const { formattedData } = this.state;

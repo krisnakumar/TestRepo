@@ -31,14 +31,31 @@ import 'whatwg-fetch'
 export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) {
     document.getElementById("loader-layer").classList.remove("loader-hide");
     document.getElementById("loader-layer").classList.add("loader-show");
-   return fetch(url, {
-    method: type,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        "Authorization": token
-      }
-    }).then(function(response) {
+
+    let obj = {};
+
+    if(type == "POST"){
+        obj = {
+            method: type,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": token
+              },          
+            body: JSON.stringify(requestPayload)
+            };
+    } else {
+        obj = {
+            method: type,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": token
+              }  
+            };
+    }
+
+   return fetch(url, obj ).then(function(response) {
         if(response.status == 401){
             window.location =window.location.origin;
         } else {     

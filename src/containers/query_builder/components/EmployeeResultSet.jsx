@@ -78,17 +78,8 @@ class EmployeeResultSet extends React.Component {
         cellClass: "text-left"
         },
         {
-        key: 'phone',
-        name: 'Phone',
-        sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
-        cellClass: "text-center"
-        },
-        {
-        key: 'userCreatedDate',
-        name: 'User Created Date',
+        key: 'alternateName',
+        name: 'Alternate Name',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -106,8 +97,7 @@ class EmployeeResultSet extends React.Component {
         }
       ];
     
-    this.state = {
-      modal: this.props.modal,      
+    this.state = {    
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
       isInitial: false
@@ -147,21 +137,20 @@ class EmployeeResultSet extends React.Component {
    * @name - createRows
    * This method will format the input data
    * for Data Grid
-   * @param workbooks
+   * @param employees
    * @returns rows
    */
-  createRows = (workbooks) => {
+  createRows = (employees) => {
     const rows = [], 
-          length = workbooks ? workbooks.length : 0;
+          length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        userId:  workbooks[i].UserId,
-        attempt: workbooks[i].Attempt || 0,
-        status: workbooks[i].Status,
-        dateTime: workbooks[i].DateTime,
-        location: workbooks[i].Location,
-        evaluator: workbooks[i].Evaluator,
-        comments: workbooks[i].Comments
+        alternateName:  employees[i].AlternateName,
+        email: employees[i].Email,
+        employeeName: employees[i].EmployeeName,
+        role: employees[i].Role,
+        totalEmployees: employees[i].TotalEmployees,
+        userName: employees[i].UserName
       });
     }
 
@@ -177,13 +166,12 @@ class EmployeeResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksRepetition),
-          isArray = Array.isArray(newProps.workBooksRepetition),
+      let rows = this.createRows(newProps.employees),
+          isArray = Array.isArray(newProps.employees),
           isInitial = isArray;
       this.setState({
         rows: rows,
-        isInitial: isInitial,
-        selectedWorkbook: newProps.selectedWorkbook
+        isInitial: isInitial
       });
   }
 
@@ -249,7 +237,7 @@ class EmployeeResultSet extends React.Component {
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     rowHeight={35}
                     minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
+                    emptyRowsView={this.state.isInitial && EmployeeResultSetEmptyRowsView} 
                 />
             </div>
         </div>
@@ -257,4 +245,4 @@ class EmployeeResultSet extends React.Component {
   }
 }
 
-export default withCookies(EmployeeResultSetEmptyRowsView);
+export default withCookies(EmployeeResultSet);

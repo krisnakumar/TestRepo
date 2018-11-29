@@ -32,6 +32,7 @@ class QueryPane extends PureComponent {
       entity: "employees",
       fieldData: FieldData.field["employees"].slice(0, 2),     
     };  
+    this.passEmployeesResults = this.passEmployeesResults.bind(this);
   }
 
   /**
@@ -53,6 +54,10 @@ class QueryPane extends PureComponent {
     this.queryClause.current.buildQuery();
   };
 
+  passEmployeesResults(employees){
+   this.props.passEmployeesResultsToQuerySection(employees);
+  }
+
   render() {
     return (         
         <div className="query-builder-section">
@@ -69,6 +74,7 @@ class QueryPane extends PureComponent {
             <QueryClause 
               ref={this.queryClause}
               fieldData={this.state.fieldData}
+              passEmployeesResults={this.passEmployeesResults}
             />          
         </Table> 
       </div>
