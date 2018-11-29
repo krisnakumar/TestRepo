@@ -290,8 +290,10 @@ img {
   border: none;
 }
 .query-action-btn.add{
+  cursor: pointer;
   color: #04720dab !important;
 }
-.query-action-btn.delete{
+.query-action-btn.delete{  
+  cursor: pointer;
   color: #bc0202 !important;
 }

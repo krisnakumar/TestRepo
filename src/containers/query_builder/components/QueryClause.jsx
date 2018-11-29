@@ -36,7 +36,6 @@ class QueryClause extends PureComponent {
         this.handleInputChange = this.handleInputChange.bind(this); 
         this.handleAddClause = this.handleAddClause.bind(this);        
         this.handleDeleteClause = this.handleDeleteClause.bind(this);
-        this.unBlurElement = this.unBlurElement.bind(this);
     }
 
     /**
@@ -84,6 +83,15 @@ class QueryClause extends PureComponent {
     handleChange(index, key, selectedOption){
         let formattedData = this.state.formattedData;
         formattedData[index][key] = selectedOption;
+        switch(key) {
+            case "fieldsSelected":
+                // code block
+                let type = selectedOption.type != "int" ? "others" : "int";
+                formattedData[index].operators =  FieldData.operator[type];
+                break;
+            default:
+                //return;
+        }
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }
@@ -163,13 +171,6 @@ class QueryClause extends PureComponent {
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
       };
-
-      unBlurElement = (event, e, a, data) => {
-            // access to e.target here
-            // event.currentTarget.preventDefault();
-           
-            console.log(event, e, a, data);
-        }
 
     render() {
         const { formattedData } = this.state;
