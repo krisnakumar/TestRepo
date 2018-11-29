@@ -16,6 +16,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Input, Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
 import FieldData from './../data';
+import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
 
 
@@ -199,18 +200,34 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
       };
 
-      buildQuery() {
+    buildQuery() {
         const validation = this.validator.validate(this.state.formattedData);
         this.setState({ validation });
         this.submitted = true;
-      };
+    };
+
+    getClassName(index){
+        const { formattedData } = this.state;
+        let validation = this.submitted ?                                    // if the form has been submitted at least once
+        this.validator.validate(formattedData) :   // then check validity every time we render
+        this.state.validation;
+
+        return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
+    }
+
+    getMessage(index){
+        const { formattedData } = this.state;
+        let validation = this.submitted ?                                    // if the form has been submitted at least once
+        this.validator.validate(formattedData) :   // then check validity every time we render
+        this.state.validation;
+
+        return  validation[index] ? validation[index].message : "";
+    }
     
     render() {
         const { formattedData } = this.state;
-        let _self = this,
-            validation = this.submitted ?                                    // if the form has been submitted at least once
-                      this.validator.validate(formattedData) :   // then check validity every time we render
-                      this.state.validation;
+        let _self = this;
+        
         return (
             <tbody>
                 {
@@ -269,7 +286,7 @@ class QueryClause extends PureComponent {
                                     /> 
                                 </td>
                                 <td>
-                                    <div className={(validation[index].isInvalid ? 'has-error' : "")}>
+                                    <div className={_self.getClassName(index)}>
                                         <Input 
                                             type="text" 
                                             name={field.label} 
@@ -278,7 +295,7 @@ class QueryClause extends PureComponent {
                                             onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
                                             className="inputQueryInput"
                                         />
-                                        <span className="help-block">{validation[index].message}</span>
+                                        <span className="help-block">{_self.getMessage(index)}</span>
                                     </div>
                                 </td>
                             </tr>
