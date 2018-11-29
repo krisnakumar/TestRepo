@@ -218,7 +218,7 @@ class QueryClause extends PureComponent {
                     formattedData.map(function (field, index) {
                         return (                           
                            <tr key={index} className={"query-clause-row-"+index}>
-                                <td scope="row" className={"tableWidth-7"}>
+                                <td scope="row" className={"query-clause-firstrow tableWidth-5"}>
                                     <button ref={(input) => { _self.buttonRef[index] = input; }} onClick={_self.handleAddClause.bind(_self, index)} title="Insert new filter line" className="query-action-btn add"><i className="fa fa-plus"></i></button>
                                     <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
                                 </td>
