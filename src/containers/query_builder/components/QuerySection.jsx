@@ -40,6 +40,8 @@ class QuerySection extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.queryPane = React.createRef();
+
     this.state = {    
       selectedOption: options[0], 
       isClearable: false
@@ -66,6 +68,11 @@ class QuerySection extends PureComponent {
     // You can also log the error to an error reporting service
     console.log(error, info);
   }
+
+  onRunQueryClick = () => {
+    this.queryPane.current.runQuery();
+  };
+
 
   render() {
     const { selectedOption, isClearable } = this.state;
@@ -94,7 +101,7 @@ class QuerySection extends PureComponent {
                   />
                 </Col>                
                 <Col xs="auto">
-                  <button className="query-section-button" size="sm" aria-label="Run Query">
+                  <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" aria-label="Run Query">
                     <span aria-hidden><i className="fa fa-angle-right"></i></span> Run Query
                   </button>
                 </Col>
@@ -108,7 +115,7 @@ class QuerySection extends PureComponent {
       
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={200} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane />
+                <QueryPane ref={this.queryPane} />
                 <div></div>
               </SplitterLayout>
             </div>

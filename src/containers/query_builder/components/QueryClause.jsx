@@ -16,6 +16,8 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Input, Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import Select from 'react-select';
 import FieldData from './../data';
+import FormValidator from '../../../shared/utils/FormValidator';
+
 
 class QueryClause extends PureComponent {
 
@@ -27,11 +29,17 @@ class QueryClause extends PureComponent {
         super(props);
         // create a ref to store the textInput DOM element
         this.buttonRef = [];
+
+        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(this.props.fieldData)));
+
         this.state = {
             fieldData: this.props.fieldData,
-            formattedData: this.formatRowData(this.props.fieldData)
-            
+            formattedData: this.formatRowData(this.props.fieldData),
+            validation: this.validator.valid()        
         };
+        
+        this.submitted = false;
+
         this.handleChange = this.handleChange.bind(this); 
         this.handleInputChange = this.handleInputChange.bind(this); 
         this.handleAddClause = this.handleAddClause.bind(this);        
@@ -53,13 +61,31 @@ class QueryClause extends PureComponent {
         console.log(error, info);
     }
 
+    formatValidationData(formattedData){
+        let validationData = [];
+
+		formattedData.forEach(function(element, index) {
+			let obj = { 
+						field: index + "+" + element.value,
+						method: element.validation, 
+						validWhen: false, 
+						message: element.errormessage || 'This field is required.' 
+					};
+					
+			validationData.push(obj);
+        });
+        
+        return validationData;
+    }
+
 
     formatRowData(unFormattedData){
         let formattedData = [];
 
         unFormattedData.map(function (field, index) {
 
-            let obj = {};
+            let obj = {},
+                type = field.type != "int" ? "others" : "int";
 
             obj.label = field.label;
             obj.type = field.type;
@@ -67,12 +93,12 @@ class QueryClause extends PureComponent {
             obj.value = field.value;
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field.employees;
-            obj.operators = FieldData.operator.int;
+            obj.operators = FieldData.operator[type];
             obj.valueSelected = "";
             obj.isFocus = false;
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field.employees[index];
-            obj.operatorsSelected = FieldData.operator.int[0];
+            obj.operatorsSelected = FieldData.operator[type][0];
 
             formattedData.push(obj);
         });
@@ -118,7 +144,7 @@ class QueryClause extends PureComponent {
         let obj = {};
             obj.label = "";
             obj.type = "int";
-            obj.validation = "NONE";
+            obj.validation = "isEmpty";
             obj.value = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field.employees;
@@ -135,6 +161,7 @@ class QueryClause extends PureComponent {
             formattedData.splice(index, 0, obj);
             // inserts at 1st index position
         }
+        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(formattedData)));
         
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
@@ -154,7 +181,7 @@ class QueryClause extends PureComponent {
 
             obj.label = "";
             obj.type = "int";
-            obj.validation = "NONE";
+            obj.validation = "isEmpty";
             obj.value = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field.employees;
@@ -167,14 +194,23 @@ class QueryClause extends PureComponent {
 
             formattedData.push(obj);
         }
-
+        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(formattedData)));
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
       };
 
+      buildQuery() {
+        const validation = this.validator.validate(this.state.formattedData);
+        this.setState({ validation });
+        this.submitted = true;
+      };
+    
     render() {
         const { formattedData } = this.state;
-        let _self = this;
+        let _self = this,
+            validation = this.submitted ?                                    // if the form has been submitted at least once
+                      this.validator.validate(formattedData) :   // then check validity every time we render
+                      this.state.validation;
         return (
             <tbody>
                 {
@@ -233,14 +269,17 @@ class QueryClause extends PureComponent {
                                     /> 
                                 </td>
                                 <td>
-                                    <Input 
-                                        type="text" 
-                                        name={field.label} 
-                                        id={field.value}
-                                        value={field.valueSelected}
-                                        onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
-                                        className="inputQueryInput"
-                                    />
+                                    <div className={(validation[index].isInvalid ? 'has-error' : "")}>
+                                        <Input 
+                                            type="text" 
+                                            name={field.label} 
+                                            id={field.value}
+                                            value={field.valueSelected}
+                                            onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
+                                            className="inputQueryInput"
+                                        />
+                                        <span className="help-block">{validation[index].message}</span>
+                                    </div>
                                 </td>
                             </tr>
                         )

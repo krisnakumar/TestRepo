@@ -26,11 +26,12 @@ class QueryPane extends PureComponent {
 
   constructor(props) {
     super(props);
+    this.queryClause = React.createRef();
+
     this.state = {    
       entity: "employees",
       fieldData: FieldData.field["employees"].slice(0, 2),     
     };  
-    this.handleAddClause = this.handleAddClause.bind(this);
   }
 
   /**
@@ -48,11 +49,8 @@ class QueryPane extends PureComponent {
     console.log(error, info);
   };
 
-  handleAddClause(index){
-    // console.log("index", index);
-    if(index == "n"){
-
-    }
+  runQuery = () => {
+    this.queryClause.current.buildQuery();
   };
 
   render() {
@@ -69,8 +67,9 @@ class QueryPane extends PureComponent {
               </tr>
             </thead>
             <QueryClause 
-              handleAddClause={this.handleAddClause}
-              fieldData={this.state.fieldData}/>          
+              ref={this.queryClause}
+              fieldData={this.state.fieldData}
+            />          
         </Table> 
       </div>
     );

@@ -42,139 +42,139 @@
                 "value": "id",
 				"type": "int",
 				"label": "Employee Id",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "userName",
 				"type": "text",
 				"label": "User Name",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "userName2",
 				"type": "text",
 				"label": "User Name 2",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "dateCreated",
 				"type": "date",
 				"label": "Date Created",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "firstName",
 				"type": "text",
 				"label": "First Name",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "middleName",
 				"type": "text",
 				"label": "Middle Name",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "lastName",
 				"type": "text",
 				"label": "Last Name",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "email",
 				"type": "text",
 				"label": "Email",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "city",
 				"type": "text",
 				"label": "City",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "state",
 				"type": "text",
 				"label": "State",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "zip",
 				"type": "int",
 				"label": "Zip",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "phone",
 				"type": "int",
 				"label": "Phone",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "supervisorId",
 				"type": "text",
 				"label": "Supervisor Id",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			 {
                 "value": "role",
 				"type": "text",
 				"label": "Role",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 		 {
                 "value": "isDirectReport",
 				"type": "bool",
 				"label": "IsDirectReport",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "isEnabled",
 				"type": "bool",
 				"label": "IsEnabled",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "photo",
 				"type": "other",
 				"label": "Photo",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "isNetworldId",
 				"type": "int",
 				"label": "IsNetworldId",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "company",
 				"type": "text",
 				"label": "Company",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "companyId",
 				"type": "int",
 				"label": "CompanyId",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			{
                 "value": "licence",
 				"type": "text",
 				"label": "Licence",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 			 {
                 "value": "contractDate",
 				"type": "date",
 				"label": "Contract Date",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			},
 		{
                 "value": "datePaid",
 				"type": "date",
 				"label": "Date Paid",
-				"validation": "NONE"
+				"validation": "isEmpty"
 			}
         ]
 	}
