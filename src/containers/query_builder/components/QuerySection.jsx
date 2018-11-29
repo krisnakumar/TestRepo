@@ -90,17 +90,18 @@ class QuerySection extends PureComponent {
                     onChange={this.handleChange}
                     options={options}
                     placeholder={""}
+                    className={"select-entity"}
                   />
                 </Col>                
                 <Col xs="auto">
-                  <Button className="query-section-button" size="sm" aria-label="Run Query">
-                    <span aria-hidden>&ndash;</span> Run Query
-                  </Button>
+                  <button className="query-section-button" size="sm" aria-label="Run Query">
+                    <span aria-hidden><i className="fa fa-angle-right"></i></span> Run Query
+                  </button>
                 </Col>
                 <Col xs="auto">
-                  <Button className="query-section-button" size="sm" aria-label="Reset">
-                    <span aria-hidden>&ndash;</span> Reset
-                  </Button>
+                  <button className="query-section-button" size="sm" aria-label="Reset">
+                    <span aria-hidden><i className="fa fa-refresh" aria-hidden="true"></i></span> Reset
+                  </button>
                 </Col>                
               </Row>
             </div>

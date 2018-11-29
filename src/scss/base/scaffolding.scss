@@ -278,6 +278,12 @@ img {
 }
 
 .grid-container-query-selection{
+  .row {
+    padding: 0 0 5px 0px;
+  }
+  .col-auto{
+      padding-right: 0 !important; 
+  }
  // margin-left: 2%;
 }
 
@@ -333,21 +339,21 @@ img {
   // width:50%;
 }
 .Select-multi-value-wrapper{
-  height: 22px !important;
+  height: 25px !important;
 }
 
 .Select-control {
-  height: 22px !important;
+  height: 25px !important;
   border-radius: 2px;
 }
 
 .Select--single>.Select-control .Select-value, .Select-placeholder {
-  line-height: 23px !important;
+  line-height: 31px !important;
   padding-left: 5px !important;
  }
 
  .inputQueryInput{
-  height: 24px;
+  height: 27px;
   border-radius: 2px;
  }
 
@@ -366,3 +372,33 @@ img {
 .tableWidth-20 {
     width:20%;
   }
+
+.Select-multi-value-wrapper {
+  .Select-input {
+    height: 60px;
+    width: 100%;
+  }
+}
+.select-entity {
+  .Select-input {
+    height: 60px;
+    width: 100%;
+  }
+  .Select-value-label {
+    line-height: 31px;
+    padding-left: 6px !important;
+  }
+}
+
+.query-section-button {
+  height: 32px;
+  padding: 0 8px;
+  line-height: 32px;
+  margin: auto;
+}
+
+.fa-angle-right ,  .fa-refresh{
+  
+  font-size: 16px;
+  padding: 0 2px 0 0;
+}
