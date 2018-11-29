@@ -186,21 +186,24 @@ namespace ReportBuilder.UnitTest
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = "UserName",
-                Value = "Shoba",
+                Name = "UserId",
+                Value = "10",
                 Operator = "=",
-                Bitwise="AND"
+                Bitwise="OR"
             };
 
             EmployeeModel employeeModel2 = new EmployeeModel
             {
-                Name = "UserName2",
-                Value = "Shoba",
+                Name = "UserId",
+                Value = "11",
                 Operator = "=",
                 Bitwise = null
             };
             employeeList.Add(employeeModel);
             employeeList.Add(employeeModel2);
+
+
+
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest)

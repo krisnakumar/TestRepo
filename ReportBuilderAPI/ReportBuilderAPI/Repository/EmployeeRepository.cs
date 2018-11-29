@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Repository
     /// <summary>
     /// Repository that helps to read the data from the table
     /// </summary>
-    public class EmployeeRepository : IEmployee, IDisposable
+    public class EmployeeRepository : IEmployee
     {
 
         /// <summary>
@@ -92,28 +92,30 @@ namespace ReportBuilderAPI.Repository
                 { Constants.ROLE, ", r.Name AS Role "},
                 { Constants.USERNAME, ", u.UserName" },
                 { Constants.ALTERNATE_USERNAME, ", u.UserName2" },
-                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.id)" },
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.id) as employeeCount" },
                 { Constants.EMAIL, ", u.Email" },
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
                 { Constants.SUPERVISOR_NAME, ", (SELECT CONCAT(usr.LName, ',', usr.Fname ) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
-                { Constants.USER_CREATED_DATE, ", u. DateCreated" },
+                { Constants.USER_CREATED_DATE, ", u.DateCreated" },
                 { Constants.USER_PERMS, ", u.UserPerms" },
                 { Constants.SETTINGS_PERMS, ", u.settingsperms" },
                 { Constants.COURSE_PERMS, ", u.courseperms" },
                 { Constants.TRANSCRIPT_PERMS, ", u.Transcriptperms" },
                 { Constants.COMPANY_PERMS, ", u.companyperms" },
+                { Constants.FORUM_PERMS, ", u.forumperms" },
+                { Constants.COM_PERMS, ", u.comperms" },
                 { Constants.REPORTS_PERMS, ", u.reportsperms" },
                 { Constants.ANNOUNCEMENT_PERMS, ", u.announcementperms" },
                 { Constants.SYSTEM_PERMS, ",u.systemperms" },
-                { Constants.USER_ID, ", u. Id as userId" },
-                { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM Supervisor s WHERE userId=7) as supervisorId" },
+                { Constants.USERID, ", u. Id as userId" },
+                { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM Supervisor s WHERE userId=u.Id) as supervisorId" }
 
         };
 
         private readonly Dictionary<string, string> conditions = new Dictionary<string, string>()
         {
-            {Constants.ID, "u.ID" },
+            {Constants.USERID, "u.ID" },
             {Constants.USERNAME, "u.UserName" },
             {Constants.USERNAME2, "u.UserName2" },
             {Constants.USER_CREATED_DATE, "u.DateCreated" },
@@ -142,7 +144,7 @@ namespace ReportBuilderAPI.Repository
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
-            EmployeeResponse employeeResponse = new EmployeeResponse();
+            List<EmployeeResponse> employeeResponse;
             List<string> fieldList = new List<string>();
             try
             {
@@ -156,7 +158,7 @@ namespace ReportBuilderAPI.Repository
                 query = query.TrimStart(',');
                 query = selectQuery + query;
                 query += " FROM dbo.[User] u  ";
-                
+
                 //get table joins
                 fieldList = employeeRequest.ColumnList.ToList();
                 fieldList.AddRange(employeeRequest.Fields.Select(x => x.Name.ToUpper()).ToArray());
@@ -166,6 +168,7 @@ namespace ReportBuilderAPI.Repository
 
                 query += tableJoin;
 
+
                 //getting where conditions
                 whereQuery = string.Join("", from emplyoee in employeeRequest.Fields
                                              select conditions.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'") + (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty));
@@ -173,7 +176,7 @@ namespace ReportBuilderAPI.Repository
 
                 query += whereQuery;
 
-                ReadEmployeeDetails(query);
+                employeeResponse=ReadEmployeeDetails(query);
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
             }
             catch (Exception getEmployeeDetails)
@@ -192,10 +195,11 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="query"></param>
 
-        private EmployeeResponse ReadEmployeeDetails(string query)
+        private List<EmployeeResponse> ReadEmployeeDetails(string query)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            EmployeeResponse employeeResponse = new EmployeeResponse();
+            EmployeeResponse employeeResponse;
+            List<EmployeeResponse> employeeList = new List<EmployeeResponse>();
             try
             {
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
@@ -205,39 +209,46 @@ namespace ReportBuilderAPI.Repository
                     {
                         employeeResponse = new EmployeeResponse
                         {
+                            UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
+                            SupervisorId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'supervisorId'").Count() == 1) ? (int?)sqlDataReader["supervisorId"] : null,
+                            TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeCount'").Count() == 1) ? (int?)sqlDataReader["employeeCount"] : null,
 
+                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastName'").Count() == 1) ? Convert.ToString(sqlDataReader["LastName"]) : null,
+                            Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : null,
+                            UserName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : null,
+
+                            AlternateName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
+                            Email = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'email'").Count() == 1) ? Convert.ToString(sqlDataReader["email"]) : null,
+
+                            Address = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
+                            Phone = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
+                            SupervisorName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'SupervisorName'").Count() == 1) ? Convert.ToString(sqlDataReader["SupervisorName"]) : null,
+                            UserCreatedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateCreated'").Count() == 1) ? Convert.ToString(sqlDataReader["DateCreated"]) : null,
+
+                            Userpermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserPerms'").Count() == 1) ? (bool?)(sqlDataReader["UserPerms"]) : null,
+                            SettingsPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'settingsperms'").Count() == 1) ? (bool?)sqlDataReader["settingsperms"] : null,
+                            CoursePermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'courseperms'").Count() == 1) ? (bool?)sqlDataReader["courseperms"] : null,
+                            TranscriptPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Transcriptperms'").Count() == 1) ? (bool?)sqlDataReader["Transcriptperms"] : null,
+                            CompanyPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'companyperms'").Count() == 1) ? (bool?)sqlDataReader["companyperms"] : null,
+                            ForumPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'forumperms'").Count() == 1) ? (bool?)sqlDataReader["forumperms"] : null,
+                            ComPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'comperms'").Count() == 1) ? (bool?)sqlDataReader["comperms"] : null,
+                            ReportsPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'reportsperms'").Count() == 1) ? (bool?)sqlDataReader["reportsperms"] : null,
+                            AnnouncementPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'announcementperms'").Count() == 1) ? (bool?)sqlDataReader["announcementperms"] : null,
+                            SystemPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'systemperms'").Count() == 1) ? (bool?)sqlDataReader["systemperms"] : null
                         };
+                        employeeList.Add(employeeResponse);
                     }
                 }
-                return employeeResponse;
+                return employeeList;
             }
             catch (Exception readEmployeeDetailsException)
             {
                 LambdaLogger.Log(readEmployeeDetailsException.ToString());
-                return employeeResponse;
+                return employeeList;
             }
             finally
             {
                 databaseWrapper.CloseConnection();
-            }
-        }
-
-        /// <summary>
-        /// Disposing object once the process is completed
-        /// </summary>
-        public void Dispose()
-        {
-            try
-            {
-
-            }
-            catch (Exception disposeException)
-            {
-                LambdaLogger.Log(disposeException.ToString());
-            }
-            finally
-            {
-
             }
         }
     }

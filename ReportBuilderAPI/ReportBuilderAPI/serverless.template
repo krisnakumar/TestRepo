@@ -7,9 +7,9 @@
    "ReportBuilderAPI" : {
 		"Type" : "AWS::Serverless::Api",
 		"Properties" : {
-			"Name":"ReportBuilder-Level4",
+			"Name":"ReportBuilder-Query",
 			"StageName":"dev",
-			"DefinitionUri": "s3://reportbuilder-sandbox/ReportBuilder-auth.json"			 
+			"DefinitionUri": "s3://reportbuilder-sandbox/swagger-query-builder.json"			 
 	  }
 	},	
 
@@ -17,7 +17,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-		"FunctionName":"Login-Level4",
+		"FunctionName":"Login-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",		
         "MemorySize": 256,				
@@ -43,7 +43,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployees",
-		"FunctionName":"Employees-Level4",
+		"FunctionName":"Employees-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -63,11 +63,38 @@
         }
       }
     },
+
+	
+	"GetEmployeesDetails" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQuerBuilder",
+		"FunctionName":"Employees-Query-details",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 		 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/company/{companyId}/employees",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+
 	"GetWorkbookDetails" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookDetails",
-		"FunctionName":"Workbooks-Level4",
+		"FunctionName":"Workbooks-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -91,7 +118,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetPastDueWorkbookDetails",
-		"FunctionName":"PastDueWorkbooks-Level4",
+		"FunctionName":"PastDueWorkbooks-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -115,7 +142,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetInDueWorkbookDetails",
-		"FunctionName":"ComingDueWorkbooks-Level4",
+		"FunctionName":"ComingDueWorkbooks-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -139,7 +166,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompletedWorkbookDetails",
-		"FunctionName":"CompletedWorkbooks-Level4",
+		"FunctionName":"CompletedWorkbooks-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -163,7 +190,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-		"FunctionName":"SilentAuth-Level4",
+		"FunctionName":"SilentAuth-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -188,7 +215,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskList",
-		"FunctionName":"GetTaskList-Level4",
+		"FunctionName":"GetTaskList-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -213,7 +240,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskAttemptsDetails",
-		"FunctionName":"GetAttemptsDetails-Level4",
+		"FunctionName":"GetAttemptsDetails-Query",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
