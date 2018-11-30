@@ -20,6 +20,8 @@ import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "reac
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import Menus from '../../../_layout/Menus.json';
+import {version} from '../../../../../package.json';
+
 
 class LogInForm extends PureComponent {
   static propTypes = {
@@ -152,7 +154,7 @@ class LogInForm extends PureComponent {
             </button>
         </div>
         <div className="version-number">
-          <p>V0.9.181122.003</p>
+          <p>{version}</p>
         </div>
       </form>
     );
