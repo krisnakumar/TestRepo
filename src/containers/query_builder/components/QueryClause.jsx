@@ -64,6 +64,25 @@ class QueryClause extends PureComponent {
         console.log(error, info);
     }
 
+
+    /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+   */
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            fieldData: newProps.fieldData,
+            formattedData: this.formatRowData(newProps.fieldData),
+            validation: this.validator.valid()
+        });
+
+        this.submitted = false;
+    }
+
     formatValidationData(formattedData){
         let validationData = [];
 
@@ -155,8 +174,8 @@ class QueryClause extends PureComponent {
             obj.valueSelected = "";
             obj.isFocus = true;
             obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = null;
-            obj.operatorsSelected = null;
+            obj.fieldsSelected = FieldData.field.employees[0];
+            obj.operatorsSelected = FieldData.operator.int[0];
 
         if(index == "n"){
             formattedData.push(obj);
@@ -192,8 +211,8 @@ class QueryClause extends PureComponent {
             obj.valueSelected = "";
             obj.isFocus = true;
             obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = null;
-            obj.operatorsSelected = null;
+            obj.fieldsSelected = FieldData.field.employees[0];
+            obj.operatorsSelected = FieldData.operator.int[0];
 
             formattedData.push(obj);
         }

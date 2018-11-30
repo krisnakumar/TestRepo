@@ -20,7 +20,7 @@ class FormValidator {
       if (!validation[position].isInvalid) {
         // determine the field value, the method to invoke and optional args from 
         // the rule definition
-        const field_value = state[position].valueSelected.toString();
+        const field_value = state[position] ? state[position].valueSelected.toString() : "";
         const args = rule.args || [];
         const validation_method = 
               typeof rule.method === 'string' ?

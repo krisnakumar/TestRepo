@@ -18,6 +18,11 @@ import { Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import FieldData from './../data';
 import QueryClause from './QueryClause';
 
+const initialState = {
+  entity: "employees",
+  fieldData: FieldData.field["employees"].slice(0, 2)   
+};
+
 class QueryPane extends PureComponent {
 
   static propTypes = {
@@ -28,10 +33,8 @@ class QueryPane extends PureComponent {
     super(props);
     this.queryClause = React.createRef();
 
-    this.state = {    
-      entity: "employees",
-      fieldData: FieldData.field["employees"].slice(0, 2),     
-    };  
+    this.state = initialState;
+
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
   }
 
@@ -52,6 +55,12 @@ class QueryPane extends PureComponent {
 
   runQuery = () => {
     this.queryClause.current.buildQuery();
+  };
+
+  resetQuery = () => {
+    let fieldData = initialState.fieldData;
+    this.setState(fieldData);
+    this.forceUpdate();
   };
 
   passEmployeesResults(employees){

@@ -75,6 +75,10 @@ class QuerySection extends PureComponent {
     this.queryPane.current.runQuery();
   };
 
+  onResetQueryClick = () => {
+    this.queryPane.current.resetQuery();
+  };
+
   passEmployeesResults= (employees) => {
     this.setState({ employees: employees });
   }
@@ -111,7 +115,7 @@ class QuerySection extends PureComponent {
                   </button>
                 </Col>
                 <Col xs="auto">
-                  <button className="query-section-button" size="sm" aria-label="Reset">
+                  <button onClick={this.onResetQueryClick} className="query-section-button" size="sm" aria-label="Reset">
                     <span aria-hidden><i className="fa fa-refresh" aria-hidden="true"></i></span> Reset
                   </button>
                 </Col>                
