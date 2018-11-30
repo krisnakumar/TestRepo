@@ -38,7 +38,7 @@ class QueryClause extends PureComponent {
         this.state = {
             fieldData: this.props.fieldData,
             formattedData: this.formatRowData(this.props.fieldData),
-            validation: this.validator.valid()        
+            validation: this.validator.valid()
         };
         
         this.submitted = false;
@@ -65,22 +65,25 @@ class QueryClause extends PureComponent {
     }
 
 
-    /**
-   * @method
-   * @name - componentWillReceiveProps
-   * This method will invoked whenever the props or state
-   *  is update to this component class
-   * @param newProps
-   * @returns none
-   */
-    componentWillReceiveProps(newProps) {
+    resetQueryClause(){        
+        const initialState = {
+            entity: "employees",
+            fieldData: FieldData.field["employees"].slice(0, 2)
+        };
+
+        let fieldData = initialState.fieldData,
+            formattedData = this.formatRowData(fieldData),
+            formValidatorData = this.formatValidationData(formattedData);
+
+        this.validator = new FormValidator(formValidatorData);
+        this.submitted = false;
+
         this.setState({
-            fieldData: newProps.fieldData,
-            formattedData: this.formatRowData(newProps.fieldData),
+            fieldData: fieldData,
+            formattedData: formattedData,
             validation: this.validator.valid()
         });
-
-        this.submitted = false;
+        this.forceUpdate();
     }
 
     formatValidationData(formattedData){
@@ -133,7 +136,6 @@ class QueryClause extends PureComponent {
         formattedData[index][key] = selectedOption;
         switch(key) {
             case "fieldsSelected":
-                // code block
                 let type = selectedOption.type != "int" ? "others" : "int";
                 formattedData[index].operators =  FieldData.operator[type];
                 break;

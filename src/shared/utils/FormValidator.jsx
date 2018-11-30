@@ -44,7 +44,6 @@ class FormValidator {
 
   valid() {
     const validation = {}
-
     this.validations.map(rule => (
       validation[ rule.field.split("+")[0]] = { isInvalid: false, message: '' }
     ));

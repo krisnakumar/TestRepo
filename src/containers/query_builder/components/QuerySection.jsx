@@ -76,11 +76,12 @@ class QuerySection extends PureComponent {
   };
 
   onResetQueryClick = () => {
+    this.setState({ employees: {} });
     this.queryPane.current.resetQuery();
   };
 
   passEmployeesResults= (employees) => {
-    this.setState({ employees: employees });
+    this.setState({ employees: employees});
   }
 
   render() {
@@ -124,7 +125,7 @@ class QuerySection extends PureComponent {
       
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={200} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane ref={this.queryPane} passEmployeesResultsToQuerySection={this.passEmployeesResults}/>
+                <QueryPane ref={this.queryPane} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
                 <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>
               </SplitterLayout>
             </div>

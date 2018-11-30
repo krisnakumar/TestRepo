@@ -20,7 +20,7 @@ import QueryClause from './QueryClause';
 
 const initialState = {
   entity: "employees",
-  fieldData: FieldData.field["employees"].slice(0, 2)   
+  fieldData: FieldData.field["employees"].slice(0, 2)
 };
 
 class QueryPane extends PureComponent {
@@ -33,7 +33,12 @@ class QueryPane extends PureComponent {
     super(props);
     this.queryClause = React.createRef();
 
-    this.state = initialState;
+    this.initialState = {
+      entity: "employees",
+      fieldData: FieldData.field["employees"].slice(0, 2)
+    };
+
+    this.state = this.initialState;
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
   }
@@ -58,9 +63,7 @@ class QueryPane extends PureComponent {
   };
 
   resetQuery = () => {
-    let fieldData = initialState.fieldData;
-    this.setState(fieldData);
-    this.forceUpdate();
+    this.queryClause.current.resetQueryClause();
   };
 
   passEmployeesResults(employees){
