@@ -136,7 +136,7 @@ class QueryClause extends PureComponent {
         formattedData[index][key] = selectedOption;
         switch(key) {
             case "fieldsSelected":
-                let type = selectedOption.type != "int" ? "others" : "int";
+                let type = selectedOption ? (selectedOption.type != "int" ? "others" : "int") : "int";
                 formattedData[index].operators =  FieldData.operator[type];
                 break;
             default:

@@ -281,13 +281,11 @@ img {
   .col-auto{
       padding-right: 0 !important; 
   }
- // margin-left: 2%;
 }
 
 .query-action-btn{
   width: 20px;
   padding: 0 !important;
- // margin: 4px -9px 0px 23px !important;
   background-color: #f9f9f900 !important;
   margin-bottom: 20px !important;
   font-size: 16px !important;
@@ -320,10 +318,6 @@ img {
   
 }
 
-.query-action-btn:hover {
- // color: red;
-}
-
 .btn:hover:before, .btn:focus:before, .btn:active:before, .btn:active:focus:before{
   background: none !important;
 }
@@ -332,9 +326,7 @@ img {
   background: none !important;
 }
 
-.selectCombinator {
-  // width:50%;
-}
+
 .Select-multi-value-wrapper{
   height: 25px !important;
 }
@@ -348,6 +340,12 @@ img {
   line-height: 31px !important;
   padding-left: 5px !important;
  }
+
+
+.Select-menu-outer .Select-menu{
+    line-height: 0.5 !important;
+}
+
 
  .inputQueryInput{
   height: 28px;
@@ -429,12 +427,38 @@ img {
     -webkit-box-shadow: none;
     box-shadow: none;
   }
-
-// .query-clause-firstrow {
-//     padding : 28px 5px 5px 5px !important;
-// }
-
  .query-section-table tbody td{
-   // text-align: center !important; tbody td
   padding: 5px 0px 5px 2px !important;
  }
+
+  .splitter-layout .layout-pane {
+    overflow: hidden !important;
+
+  }
+  .splitter-layout .layout-pane-primary{
+    overflow: auto !important;
+  }
+.employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport {
+  overflow: auto !important;
+  position: absolute !important;
+  top: 25px !important;
+}
+
+.employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
+  height: 100% !important;
+}
+
+.grid-container.employees-result, .employees-result-set{
+  height: 100% !important;
+
+  .react-grid-Container{
+    height: 100% !important;
+      .react-grid-Main{
+        height: 100% !important;
+        .react-grid-Grid{
+          min-height: calc(100%) !important;
+        }
+      }
+  }
+}
+

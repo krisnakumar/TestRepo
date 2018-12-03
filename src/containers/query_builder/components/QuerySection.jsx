@@ -124,7 +124,7 @@ class QuerySection extends PureComponent {
             </div>
       
             <div className="wrapper">
-              <SplitterLayout primaryIndex={0} primaryMinSize={200} secondaryMinSize={150} customClassName={"query-builder-section"} vertical={true}>
+              <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
                 <QueryPane ref={this.queryPane} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
                 <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>
               </SplitterLayout>

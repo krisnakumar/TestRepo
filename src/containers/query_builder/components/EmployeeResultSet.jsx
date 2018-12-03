@@ -19,6 +19,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
+import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -191,7 +192,6 @@ class EmployeeResultSet extends React.Component {
       const rowToUpdate = rows[i];
       rows[i] = update(rowToUpdate, { $merge: updated });
     }
-
     this.setState({ rows });
   };
 
@@ -213,7 +213,7 @@ class EmployeeResultSet extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0);
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, this.state.rows.length) : sortRows.sort(comparer).slice(0, this.state.rows.length);
 
     this.setState({ rows });
   };
@@ -224,8 +224,8 @@ class EmployeeResultSet extends React.Component {
   render() {
     const { rows } = this.state;
     return (
-        <div className="grid-container">
-            <div className="table">
+        <div className="grid-container employees-result">
+            <div className="table employees-result-set">
                 <ReactDataGrid
                     ref={'employeeResultSetEmptyRowsView'}
                     onGridSort={this.handleGridSort}
@@ -235,7 +235,7 @@ class EmployeeResultSet extends React.Component {
                     rowGetter={this.rowGetter}
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
-                    rowHeight={35}
+                    rowHeight={25}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial && EmployeeResultSetEmptyRowsView} 
                 />
