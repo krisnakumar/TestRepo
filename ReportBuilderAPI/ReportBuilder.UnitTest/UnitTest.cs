@@ -178,7 +178,7 @@ namespace ReportBuilder.UnitTest
             List<EmployeeModel> employeeList = new List<EmployeeModel>();
 
             Function function = new Function();
-            EmployeeRequest employeeRequest = new EmployeeRequest
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
                 ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES" , "EMAIL"},
                 Fields = employeeList

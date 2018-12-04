@@ -86,6 +86,9 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+        /// <summary>
+        /// Column list for the employee 
+        /// </summary>
         private readonly Dictionary<string, string> columnList = new Dictionary<string, string>()
         {
                 { Constants.EMPLOYEE_NAME, ", u.FName AS FirstName, u.LName AS LastName  " },
@@ -113,7 +116,10 @@ namespace ReportBuilderAPI.Repository
 
         };
 
-        private readonly Dictionary<string, string> conditions = new Dictionary<string, string>()
+        /// <summary>
+        /// Fields that requried for the employee entity
+        /// </summary>
+        private readonly Dictionary<string, string> employeeFields = new Dictionary<string, string>()
         {
             {Constants.USERID, "u.ID" },
             {Constants.USERNAME, "u.UserName" },
@@ -127,19 +133,25 @@ namespace ReportBuilderAPI.Repository
             {Constants.STATE, "u.State" },
             {Constants.ZIP, "u.Zip" },
             {Constants.PHONE, "u.phone" },
-            {Constants.ROLE, "r.Name" }
+            {Constants.ROLE, "r.Name" },
+
         };
 
 
+        /// <summary>
+        /// list of tables that requried for to get the columns
+        /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
             { "LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} }
         };
 
         /// <summary>
-        /// 
+        /// Get employee details based on the companyId
         /// </summary>
-
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetEmployeeDetails(string requestBody, int companyId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -149,7 +161,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 selectQuery = "SELECT  ";
-                EmployeeRequest employeeRequest = JsonConvert.DeserializeObject<EmployeeRequest>(requestBody);
+                QueryBuilderRequest employeeRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
 
                 //getting column List
                 query = string.Join("", (from column in columnList
@@ -171,7 +183,7 @@ namespace ReportBuilderAPI.Repository
 
                 //getting where conditions
                 whereQuery = string.Join("", from emplyoee in employeeRequest.Fields
-                                             select conditions.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'") + (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty));
+                                             select employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'") + (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty));
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE " + whereQuery) : string.Empty;
 
                 query += whereQuery;
@@ -179,9 +191,9 @@ namespace ReportBuilderAPI.Repository
                 employeeResponse=ReadEmployeeDetails(query);
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
             }
-            catch (Exception getEmployeeDetails)
+            catch (Exception getEmployeeDetailsException)
             {
-                LambdaLogger.Log(getEmployeeDetails.ToString());
+                LambdaLogger.Log(getEmployeeDetailsException.ToString());
                 return ResponseBuilder.InternalError();
             }
             finally
@@ -190,10 +202,13 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+
+
         /// <summary>
-        /// Read Employee Details
+        /// /Read Employee Details
         /// </summary>
         /// <param name="query"></param>
+        /// <returns>EmployeeResponse</returns>
 
         private List<EmployeeResponse> ReadEmployeeDetails(string query)
         {

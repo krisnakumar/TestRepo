@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace ReportBuilder.Models.Models
 {
     public class EmployeeModel
@@ -14,8 +15,6 @@ namespace ReportBuilder.Models.Models
 
         public string Operator { get; set; }
 
-        public string Condition { get; set; }
-
-
+        public string Group { get; set; }
     }
 }

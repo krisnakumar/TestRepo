@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -20,7 +20,9 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.2.0" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DataInterface.Database\DataInterface.Database.csproj" />
     <ProjectReference Include="..\..\ReportBuilder.Models\ReportBuilder.Models\ReportBuilder.Models.csproj" />

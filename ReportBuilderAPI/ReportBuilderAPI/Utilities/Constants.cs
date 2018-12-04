@@ -65,6 +65,7 @@ namespace ReportBuilderAPI.Utilities
         public const string PAST_DUE_WORKBOOK = "PAST_DUE_WORKBOOK";
         public const string COMPLETED_WORKBOOK = "COMPLETED_WORKBOOK";
         public const string INCOMPLETE_WORKBOOK = "INCOMPLETE_WORKBOOK";
+        public const string TOTAL_WORKBOOK = "TOTAL_WORKBOOK";
         public const string ASSIGNED_QUALIFICATIONS = "ASSIGNED_QUALIFICATIONS";
         public const string COMPLETED_QUALIFICATIONS = "COMPLETED_QUALIFICATIONS";
         public const string IN_COMPLETE_QUALIFICATIONS = "IN_COMPLETE_QUALIFICATIONS";
@@ -78,15 +79,40 @@ namespace ReportBuilderAPI.Utilities
         public const string SETTINGS_PERMS = "SETTINGS_PERMS";
         public const string COURSE_PERMS = "COURSE_PERMS";
         public const string TRANSCRIPT_PERMS = "TRANSCRIPT_PERMS";
-        public const string COMPANY_PERMS= "COMPANY_PERMS";
+        public const string COMPANY_PERMS = "COMPANY_PERMS";
         public const string FORUM_PERMS = "FORUM_PERMS";
         public const string COM_PERMS = "COM_PERMS";
         public const string REPORTS_PERMS = "REPORTS_PERMS";
-        public const string ANNOUNCEMENT_PERMS= "ANNOUNCEMENT_PERMS";
+        public const string ANNOUNCEMENT_PERMS = "ANNOUNCEMENT_PERMS";
         public const string SYSTEM_PERMS = "SYSTEM_PERMS";
 
-        public const string USER_ID = "USER_ID";
+        public const string USERID = "USERID";
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
 
+
+
+
+        //Fields and Columns for the Employee Entity
+        public const string DESCRIPTION = "DESCRIPTION";
+        public const string WORKBOOK_CREATED = "DATECREATED";
+        public const string WORKBOOK_ISENABLED = "ISENABLED";
+        public const string WORKBOOK_CREATED_BY = "CREATED_BY";
+        public const string DAYS_TO_COMPLETE = "DAYS_TO_COMPLETE";
+        public const string WORKBOOK_ID = "WORKBOOK_ID";
+
+        public const string ENTITY_COUNT = "ENTITY_COUNT";
+        public const string USER_COUNT = "USER_COUNT";
+        public const string WORKBOOK_ASSIGNED_DATE = "WORKBOOK_ASSIGNED_DATE";
+        public const string NUMBER_COMPLETED = "NUMBER_COMPLETED";
+
+        public const string LAST_ATTEMPT_DATE = "LAST_ATTEMPT_DATE";
+
+        public const string FIRST_ATTEMPT_DATE = "FIRST_ATTEMPT_DATE";
+
+        public const string REPETITIONS = "REPETITIONS";
+        public const string LAST_SIGNOFF_BY = "LAST_SIGNOFF_BY";
+
+        public const string DUE_DATE = "DUE_DATE";
+        public const string ASSIGNED_TO = "ASSIGNED_TO";
     }
 }
