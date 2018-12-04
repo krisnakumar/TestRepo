@@ -350,6 +350,9 @@ img {
  .inputQueryInput{
   height: 28px;
   border-radius: 2px;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400;
  }
 
  .tableWidth-10 {
@@ -403,7 +406,7 @@ img {
 }
 
 .query-section-button {
-  height: 32px;
+  height: 34px;
   padding: 0 8px;
   line-height: 32px;
   margin: auto;
@@ -428,7 +431,7 @@ img {
     box-shadow: none;
   }
  .query-section-table tbody td{
-  padding: 5px 0px 5px 2px !important;
+  padding: 5px 4px 5px 2px !important;
  }
 
   .splitter-layout .layout-pane {
@@ -462,3 +465,10 @@ img {
   }
 }
 
+button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:active, button.btn.btn-primary.account__btn:hover {
+  background: #54e054 !important;
+}
+
+.padding-rt-0{
+  padding-right: 0 !important;
+}

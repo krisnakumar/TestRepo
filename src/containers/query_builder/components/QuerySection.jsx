@@ -119,7 +119,7 @@ class QuerySection extends PureComponent {
            
             <div className="grid-container-query-selection">
               <Row>
-                <Col xs="2">
+                <Col xs="2" className="padding-rt-0">
                   <Select
                     clearable={isClearable}
                     isRtl={true}
