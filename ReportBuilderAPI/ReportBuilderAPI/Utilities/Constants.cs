@@ -85,7 +85,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ANNOUNCEMENT_PERMS= "ANNOUNCEMENT_PERMS";
         public const string SYSTEM_PERMS = "SYSTEM_PERMS";
 
-        public const string USER_ID = "USER_ID";
+        public const string USERID = "USERID";
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
 
     }
