@@ -18,11 +18,6 @@ import { Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import FieldData from './../data';
 import QueryClause from './QueryClause';
 
-const initialState = {
-  entity: "employees",
-  fieldData: FieldData.field["employees"].slice(0, 2)
-};
-
 class QueryPane extends PureComponent {
 
   static propTypes = {
@@ -58,14 +53,35 @@ class QueryPane extends PureComponent {
     console.log(error, info);
   };
 
+  /**
+   * @method
+   * @name - runQuery
+   * This method triggers the parent component buildQuery function
+   * @param none
+   * @returns none
+  */
   runQuery = () => {
     this.queryClause.current.buildQuery();
   };
 
+   /**
+     * @method
+     * @name - resetQuery
+     * This method reset the query clause by trigger the parent component function
+     * @param none
+     * @returns none
+  */
   resetQuery = () => {
     this.queryClause.current.resetQueryClause();
   };
 
+  /**
+   * @method
+   * @name - passEmployeesResults
+   * This method used to pass the employees parent component
+   * @param employees
+   * @returns none
+  */
   passEmployeesResults(employees){
    this.props.passEmployeesResultsToQuerySection(employees);
   }

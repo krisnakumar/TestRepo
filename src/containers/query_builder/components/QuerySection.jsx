@@ -13,12 +13,9 @@ METHODS
 import React, { PureComponent } from 'react';
 import { CardBody} from 'reactstrap';
 import 'whatwg-fetch'
-import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import * as API from '../../../shared/utils/APIUtils';
-import { Button, Container, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
 import QueryPane  from './QueryPane';
@@ -26,9 +23,7 @@ import EmployeeResultSet from './EmployeeResultSet';
 
 
 const options = [
-  { value: 'employees', label: 'Employees' },
-  { value: 'workbooks', label: 'Workbooks' },
-  { value: 'tasks', label: 'Tasks' }
+  { value: 'employees', label: 'Employees' }
 ];
 
 class QuerySection extends PureComponent {
@@ -51,9 +46,15 @@ class QuerySection extends PureComponent {
     
   }
 
+  /**
+   * @method
+   * @name - handleChange
+   * This method used to select query clause entity selection
+   * @param selectedOption
+   * @returns none
+  */
   handleChange = (selectedOption) => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   }
 
   /**
@@ -63,7 +64,7 @@ class QuerySection extends PureComponent {
    * @param error
    * @param info
    * @returns none
-   */
+  */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -71,15 +72,36 @@ class QuerySection extends PureComponent {
     console.log(error, info);
   }
 
+   /**
+   * @method
+   * @name - onRunQueryClick
+   * This method build and make a API Request as per the query clause selection
+   * @param none
+   * @returns none
+  */
   onRunQueryClick = () => {
     this.queryPane.current.runQuery();
   };
 
+  /**
+   * @method
+   * @name - onResetQueryClick
+   * This method reset the query clause selection to initial state
+   * @param none
+   * @returns none
+  */
   onResetQueryClick = () => {
     this.setState({ employees: {} });
     this.queryPane.current.resetQuery();
   };
 
+  /**
+   * @method
+   * @name - passEmployeesResults
+   * This method used to pass the employees parent component
+   * @param employees
+   * @returns none
+  */
   passEmployeesResults= (employees) => {
     this.setState({ employees: employees});
   }

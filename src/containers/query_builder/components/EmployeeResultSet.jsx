@@ -16,7 +16,6 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React from 'react';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';

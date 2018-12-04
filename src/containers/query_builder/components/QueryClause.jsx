@@ -13,14 +13,13 @@ METHODS
 import React, { PureComponent } from 'react';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import { Input, Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
+import { Input } from 'reactstrap';
 import Select from 'react-select';
 import 'whatwg-fetch'
 import * as API from '../../../shared/utils/APIUtils';
 import FieldData from './../data';
 import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
-
 
 class QueryClause extends PureComponent {
 
@@ -64,7 +63,13 @@ class QueryClause extends PureComponent {
         console.log(error, info);
     }
 
-
+    /**
+     * @method
+     * @name - resetQueryClause
+     * This method reset the query clause selection to initial state
+     * @param none
+     * @returns none
+    */
     resetQueryClause(){        
         const initialState = {
             entity: "employees",
@@ -86,29 +91,38 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
+     /**
+     * @method
+     * @name - formatValidationData
+     * This method format the data to get Validation Data
+     * @param formattedData
+     * @returns validationData
+    */
     formatValidationData(formattedData){
         let validationData = [];
-
 		formattedData.forEach(function(element, index) {
 			let obj = { 
 						field: index + "+" + element.value,
 						method: element.validation, 
 						validWhen: false, 
 						message: element.errormessage || 'This field is required.' 
-					};
-					
+					};					
 			validationData.push(obj);
-        });
-        
+        });        
         return validationData;
     }
 
-
+    /**
+     * @method
+     * @name - formatRowData
+     * This method format the input data to get formatted data which is used by dynamic Query Clause selection 
+     * @param unFormattedData
+     * @returns formattedData
+    */
     formatRowData(unFormattedData){
         let formattedData = [];
 
         unFormattedData.map(function (field, index) {
-
             let obj = {},
                 type = field.type != "int" ? "others" : "int";
 
@@ -131,6 +145,15 @@ class QueryClause extends PureComponent {
         return formattedData;
     }
     
+    /**
+     * @method
+     * @name - handleChange
+     * This method will triggered on select option change to update the selected value in state
+     * @param index
+     * @param key
+     * @param selectedOption
+     * @returns none
+    */
     handleChange(index, key, selectedOption){
         let formattedData = this.state.formattedData;
         formattedData[index][key] = selectedOption;
@@ -140,12 +163,22 @@ class QueryClause extends PureComponent {
                 formattedData[index].operators =  FieldData.operator[type];
                 break;
             default:
-                //return;
+                // Don nothing
         }
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }
 
+    /**
+     * @method
+     * @name - handleInputChange
+     * This method will triggered on input change to update the value in state
+     * @param index
+     * @param key
+     * @param selectedOption
+     * @param ele
+     * @returns none
+    */
     handleInputChange(index, key, selectedOption, ele){
         ele.preventDefault();
         let formattedData = this.state.formattedData;
@@ -154,6 +187,13 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
+    /**
+     * @method
+     * @name - handleAddClause
+     * This method will add a query clause above the selected position
+     * @param index
+     * @returns none
+    */
     handleAddClause(index){
 
         if(index != "n")
@@ -161,9 +201,9 @@ class QueryClause extends PureComponent {
 
         let formattedData = this.state.formattedData;
 
-            formattedData.forEach(function(element, index) {
-                formattedData[index].isFocus = false;
-            });
+        formattedData.forEach(function(element, index) {
+            formattedData[index].isFocus = false;
+        });
 
         let obj = {};
             obj.label = "";
@@ -183,7 +223,7 @@ class QueryClause extends PureComponent {
             formattedData.push(obj);
         } else {
             formattedData.splice(index, 0, obj);
-            // inserts at 1st index position
+            // inserts at 1st position
         }
         this.validator = new FormValidator(this.formatValidationData(this.formatRowData(formattedData)));
         
@@ -192,6 +232,13 @@ class QueryClause extends PureComponent {
         
       };
 
+    /**
+     * @method
+     * @name - handleDeleteClause
+     * This method will delete a selected query clause
+     * @param index
+     * @returns none
+    */
       handleDeleteClause(index){
         let currentIndex = index + 1,
              formattedData = this.state.formattedData,
@@ -221,8 +268,15 @@ class QueryClause extends PureComponent {
         this.validator = new FormValidator(this.formatValidationData(this.formatRowData(formattedData)));
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
-      };
+    };
 
+    /**
+     * @method
+     * @name - buildQuery
+     * This method will create a query from selected query clause and conditions and trigger the API
+     * @param index
+     * @returns none
+    */
     buildQuery() {
         const validation = this.validator.validate(this.state.formattedData);
         this.setState({ validation });
@@ -247,18 +301,32 @@ class QueryClause extends PureComponent {
         }
     };
 
+    /**
+     * @method
+     * @name - getClassName
+     * This method will used to get Class name from validation
+     * @param index
+     * @returns Class name or ""
+    */
     getClassName(index){
         const { formattedData } = this.state;
-        let validation = this.submitted ?                                    // if the form has been submitted at least once
+        let validation = this.submitted ?           // if the form has been submitted at least once
         this.validator.validate(formattedData) :   // then check validity every time we render
         this.state.validation;
 
         return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
     };
 
+    /**
+     * @method
+     * @name - getMessage
+     * This method will used to get error Message from validation
+     * @param index
+     * @returns Message or ""
+    */
     getMessage(index){
         const { formattedData } = this.state;
-        let validation = this.submitted ?                                    // if the form has been submitted at least once
+        let validation = this.submitted ?           // if the form has been submitted at least once
         this.validator.validate(formattedData) :   // then check validity every time we render
         this.state.validation;
 
@@ -266,14 +334,12 @@ class QueryClause extends PureComponent {
     };
 
     /**
-   * @method
-   * @name - getEmployeesResults
-   * This method will used to get Employees Results
-   * @param userId
-   * @param workBookId
-   * @param taskId
-   * @returns none
-   */
+     * @method
+     * @name - getEmployeesResults
+     * This method will used to get Employees Results from the Query Clause
+     * @param requestData
+     * @returns none
+    */
     async getEmployeesResults(requestData){
         const { cookies } = this.props;
 
@@ -335,7 +401,6 @@ class QueryClause extends PureComponent {
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
                                         placeholder={""}
-                                        // className={"tableWidth-10"}
                                     /> 
                                 </td>
                                 <td className={"tableWidth-20"}> 
