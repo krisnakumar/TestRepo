@@ -106,6 +106,8 @@ class QuerySection extends PureComponent {
                     value={selectedOption}
                     onChange={this.handleChange}
                     options={options}
+                    backspaceRemoves={false}
+                    deleteRemoves={false}
                     placeholder={""}
                     className={"select-entity"}
                   />

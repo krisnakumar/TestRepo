@@ -277,9 +277,8 @@ class QueryClause extends PureComponent {
     async getEmployeesResults(requestData){
         const { cookies } = this.props;
 
-        let payLoad = {"Fields":requestData,
+        let payLoad = {"Fields": requestData,
                     "ColumnList":["EMPLOYEE_NAME","ROLE","USERNAME","ALTERNATE_USERNAME","TOTAL_EMPLOYEES","EMAIL"]};
-
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
@@ -316,8 +315,9 @@ class QueryClause extends PureComponent {
                                             value={field.combinatorsSelected}
                                             options={field.combinators}
                                             onChange={_self.handleChange.bind("", index, "combinatorsSelected")}
-                                            placeholder={""}
-                                            
+                                            backspaceRemoves={false}
+                                            deleteRemoves={false}
+                                            placeholder={""}                                            
                                         /> 
                                     }
                                 </td>
@@ -332,6 +332,8 @@ class QueryClause extends PureComponent {
                                         autoFocus={field.isFocus}
                                         options={field.fields}
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
+                                        backspaceRemoves={false}
+                                        deleteRemoves={false}
                                         placeholder={""}
                                         // className={"tableWidth-10"}
                                     /> 
@@ -347,6 +349,8 @@ class QueryClause extends PureComponent {
                                         autoFocus={false}
                                         options={field.operators}
                                         onChange={_self.handleChange.bind("", index, "operatorsSelected")}
+                                        backspaceRemoves={false}
+                                        deleteRemoves={false}
                                         placeholder={""}
                                     /> 
                                 </td>

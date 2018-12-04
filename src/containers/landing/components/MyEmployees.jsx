@@ -215,7 +215,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/employees",
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response;
 
@@ -238,7 +238,7 @@ class MyEmployees extends React.Component {
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/pastdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
       workBookDuePast = response;
@@ -262,7 +262,7 @@ class MyEmployees extends React.Component {
     this.setState({ isComingDueModal, workBookComingDue });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/comingdue",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
         workBookComingDue = response;
@@ -287,7 +287,7 @@ class MyEmployees extends React.Component {
     this.setState({ isCompletedModal, workBookCompleted });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId + "/workbooks/completed",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
     workBookCompleted = response;
@@ -311,7 +311,7 @@ class MyEmployees extends React.Component {
     this.setState({ isAssignedModal, assignedWorkBooks });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/workbooks/assigned",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
     assignedWorkBooks = response;

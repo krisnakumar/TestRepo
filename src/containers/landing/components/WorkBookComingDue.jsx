@@ -139,7 +139,7 @@ class WorkBookComingDue extends React.Component {
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
+        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
     workBooksProgress = response;
