@@ -60,6 +60,7 @@ export default class TopbarWithNavigation extends PureComponent {
                         nav_menus.map(function(mainMenu, index) {                         
                           let menuName = mainMenu.name;
                           let basePath = "https://dev.its-training.com";
+                      
                           return (
                             <UncontrolledDropdown key={index} 
                                       className="topbar__nav-dropdown" 
@@ -74,7 +75,7 @@ export default class TopbarWithNavigation extends PureComponent {
                               {
                                 mainMenu.subMenu.map((menu, index) => (
                                 <DropdownItem key={menu.name+index}>
-                                  <a className= "topbar__link" title={menu.name} href={basePath + menu.href}>
+                                  <a className= "topbar__link" title={menu.name} href={menu.isRedirect == false ? menu.href : basePath + menu.href}>
                                       <p className="topbar__link-title">{menu.name}</p>
                                   </a> 
                                   </DropdownItem>

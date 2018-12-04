@@ -244,6 +244,13 @@ img {
   max-height: calc(100% - 30%);
 }
 
+.query-builder-section {
+  .layout-splitter {
+   // height: 3px !important;
+  }
+}
+
+
 .splitter-layout .layout-pane {
   border: 1px solid #ccc;
   border-top: none;
@@ -264,6 +271,9 @@ img {
 
 .query-section-table thead{
   background-color: #093254;
+    th {
+      padding: 7px 0px 6px 7px;
+    }
 }
 
 .query-section-table thead th{
@@ -287,7 +297,7 @@ img {
   width: 20px;
   padding: 0 !important;
   background-color: #f9f9f900 !important;
-  margin-bottom: 20px !important;
+  margin-bottom: 0px !important;
   font-size: 16px !important;
   border: none;
 }
@@ -431,7 +441,8 @@ img {
     box-shadow: none;
   }
  .query-section-table tbody td{
-  padding: 5px 4px 5px 2px !important;
+  padding: 13px 2px 2px 0px !important;
+  vertical-align: middle;
  }
 
   .splitter-layout .layout-pane {
@@ -449,6 +460,10 @@ img {
 
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
   height: 100% !important;
+}
+
+.employees-result {
+  border: none;
 }
 
 .grid-container.employees-result, .employees-result-set{
@@ -471,4 +486,27 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
 
 .padding-rt-0{
   padding-right: 0 !important;
+}
+
+.employees-result-set {
+  .react-grid-Grid {
+    .react-grid-Header {
+      // height: 35px !important;
+      .react-grid-HeaderRow{
+       // height: 35px;
+        .react-grid-HeaderCell {
+          //height: 35px !important;
+        }
+      }
+    }
+  }
+  .react-grid-Container .react-grid-Header {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+}
+
+.help-block{
+ //2 top: 70px;
+  position: absolute;
 }

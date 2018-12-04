@@ -67,7 +67,19 @@
             {
                 "name": "Custom Reports",
                 "href": "/MyReports.aspx"
+            },
+            {
+                "name": "Employee Reports",
+                "href": "/EmployeeReports",
+                "isRedirect":false
+            },
+            {
+                "name": "Query Builder",
+                "href": "/QueryBuilder",
+                "isRedirect":false
             }
+
+
         ],
         "iconUrl": "https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2",
         "href": "/ReportsLanding.aspx"
