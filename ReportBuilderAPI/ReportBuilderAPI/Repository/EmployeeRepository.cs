@@ -43,37 +43,44 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                if (queryStringModel != null)
+                if (userId != 0)
                 {
-                    query = Employee.GetWorkBookDetails(userId, queryStringModel.CompletedWorkBooks, queryStringModel.WorkBookInDue, queryStringModel.PastDueWorkBook);
+                    if (queryStringModel != null)
+                    {
+                        query = Employee.GetWorkBookDetails(userId, queryStringModel.CompletedWorkBooks, queryStringModel.WorkBookInDue, queryStringModel.PastDueWorkBook);
+                    }
+                    else
+                    {
+                        query = Employee.ReadEmployeeDetails(userId);
+                    }
+
+                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
+                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            EmployeeResponse employeeResponse = new EmployeeResponse
+                            {
+                                FirstName = Convert.ToString(sqlDataReader["FirstName"]),
+                                LastName = Convert.ToString(sqlDataReader["LastName"]),
+                                Role = Convert.ToString(sqlDataReader["Role"]),
+                                WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
+                                AssignedWorkBooks = Convert.ToInt32(sqlDataReader["AssignedWorkbooks"]),
+                                InDueWorkBooks = Convert.ToInt32(sqlDataReader["WorkbooksinDue"]),
+                                PastDueWorkBooks = Convert.ToInt32(sqlDataReader["PastDueWorkbooks"]),
+                                CompletedWorkBooks = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
+                                EmployeeCount = Convert.ToInt32(sqlDataReader["TotalEmployees"]),
+                                UserId = Convert.ToInt32(sqlDataReader["UserId"])
+                            };
+                            employeeList.Add(employeeResponse);
+                        }
+                    }
+                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeList), 0);
                 }
                 else
                 {
-                    query = Employee.ReadEmployeeDetails(userId);
+                    return ResponseBuilder.BadRequest("userId");
                 }
-
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                if (sqlDataReader != null && sqlDataReader.HasRows)
-                {
-                    while (sqlDataReader.Read())
-                    {
-                        EmployeeResponse employeeResponse = new EmployeeResponse
-                        {
-                            FirstName = Convert.ToString(sqlDataReader["FirstName"]),
-                            LastName = Convert.ToString(sqlDataReader["LastName"]),
-                            Role = Convert.ToString(sqlDataReader["Role"]),
-                            WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                            AssignedWorkBooks = Convert.ToInt32(sqlDataReader["AssignedWorkbooks"]),
-                            InDueWorkBooks = Convert.ToInt32(sqlDataReader["WorkbooksinDue"]),
-                            PastDueWorkBooks = Convert.ToInt32(sqlDataReader["PastDueWorkbooks"]),
-                            CompletedWorkBooks = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
-                            EmployeeCount = Convert.ToInt32(sqlDataReader["TotalEmployees"]),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"])
-                        };
-                        employeeList.Add(employeeResponse);
-                    }
-                }
-                return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeList), 0);
             }
             catch (Exception getEmployeeException)
             {
