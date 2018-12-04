@@ -1,6 +1,6 @@
 {
   "name": "OnBoardLMS",
-  "version": "v0.9.181122.003",
+  "version": "0.9.181122.003",
   "private": true,
   "homepage": "http://www.its-training.com/",
   "dependencies": {
