@@ -15,7 +15,7 @@ import { CardBody} from 'reactstrap';
 import 'whatwg-fetch'
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import { Row, Col } from 'reactstrap';
+import {  Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
 import QueryPane  from './QueryPane';
@@ -23,7 +23,8 @@ import EmployeeResultSet from './EmployeeResultSet';
 
 
 const options = [
-  { value: 'employees', label: 'Employees' }
+  { value: 'employees', label: 'Employees' },
+  { value: 'workbooks', label: 'Workbooks' }
 ];
 
 class QuerySection extends PureComponent {
@@ -40,10 +41,40 @@ class QuerySection extends PureComponent {
 
     this.state = {    
       selectedOption: options[0], 
+      lastSelectedOption: options[0], 
       isClearable: false,
-      employees: {}
+      employees: {},
+      modal: false
     };
-    
+    this.toggle = this.toggle.bind(this);
+    this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
+  }
+
+  /**
+   * @method
+   * @name - toggle
+   * This method used set state of modal to open and close
+   * @param none
+   * @returns none
+  */
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
+   /**
+   * @method
+   * @name - toggle
+   * This method used set state of modal to open and close
+   * @param none
+   * @returns none
+  */
+ confirmEntitySelection() {
+    this.setState({
+      selectedOption: this.state.lastSelectedOption,
+      modal: false
+    });
   }
 
   /**
@@ -54,7 +85,12 @@ class QuerySection extends PureComponent {
    * @returns none
   */
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
+    if(this.state.selectedOption.value != selectedOption.value){
+      this.setState({
+        modal: true,
+        lastSelectedOption: selectedOption
+      });
+    } 
   }
 
   /**
@@ -108,7 +144,8 @@ class QuerySection extends PureComponent {
 
   render() {
     const { selectedOption, isClearable } = this.state;
-    return (         
+      return (
+                 
           <CardBody>
             <div className="card__title">
              <div className="pageheader">
@@ -116,7 +153,14 @@ class QuerySection extends PureComponent {
             </div>
             <p className="card__description">Customized Queries</p>
             </div>
-           
+            <Modal isOpen={this.state.modal} toggle={this.toggle} centered={true} className="custom-modal-confirm">
+              <ModalHeader toggle={this.toggle}>Entity Selection</ModalHeader>
+              <ModalBody>The following action will reset the query selections already exist. Do you want to continue?</ModalBody>
+              <ModalFooter>
+                <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
+                <button color="secondary" onClick={this.toggle}>Cancel</button>
+              </ModalFooter>
+            </Modal> 
             <div className="grid-container-query-selection">
               <Row>
                 <Col xs="2" className="padding-rt-0">
@@ -149,7 +193,7 @@ class QuerySection extends PureComponent {
       
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane ref={this.queryPane} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+                <QueryPane ref={this.queryPane} selectedOption={this.state.selectedOption} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
                 <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>
               </SplitterLayout>
             </div>
