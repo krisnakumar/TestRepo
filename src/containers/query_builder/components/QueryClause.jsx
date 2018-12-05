@@ -37,7 +37,8 @@ class QueryClause extends PureComponent {
         this.state = {
             fieldData: this.props.fieldData,
             formattedData: this.formatRowData(this.props.fieldData),
-            validation: this.validator.valid()
+            validation: this.validator.valid(),
+            entity: this.props.entity
         };
         
         this.submitted = false;
@@ -46,6 +47,21 @@ class QueryClause extends PureComponent {
         this.handleInputChange = this.handleInputChange.bind(this); 
         this.handleAddClause = this.handleAddClause.bind(this);        
         this.handleDeleteClause = this.handleDeleteClause.bind(this);
+    }
+
+    /**
+     * @method
+     * @name - componentWillReceiveProps
+     * This method will invoked whenever the props or state
+     *  is update to this component class
+     * @param newProps
+     * @returns none
+     */
+    componentWillReceiveProps(newProps) {     
+        if(this.state.entity != newProps.entity){            
+            this.state.entity = newProps.entity;      
+            this.changeQueryClause(newProps.entity);
+        }
     }
 
     /**
@@ -72,8 +88,8 @@ class QueryClause extends PureComponent {
     */
     resetQueryClause(){        
         const initialState = {
-            entity: "employees",
-            fieldData: FieldData.field["employees"].slice(0, 2)
+            entity: this.state.entity,
+            fieldData: FieldData.field[this.state.entity].slice(0, 2)
         };
 
         let fieldData = initialState.fieldData,
@@ -87,6 +103,34 @@ class QueryClause extends PureComponent {
             fieldData: fieldData,
             formattedData: formattedData,
             validation: this.validator.valid()
+        });
+        this.forceUpdate();
+    }
+
+     /**
+     * @method
+     * @name - changeQueryClause
+     * This method change the query clause selection to initial state 
+     * @param none
+     * @returns none
+    */
+    changeQueryClause(selectedEntity){      
+        const initialState = {
+            entity: selectedEntity,
+            fieldData: FieldData.field[selectedEntity].slice(0, 2)
+        };
+
+        let fieldData = initialState.fieldData,
+            formattedData = this.formatRowData(fieldData),
+            formValidatorData = this.formatValidationData(formattedData);
+
+        this.validator = new FormValidator(formValidatorData);
+        this.submitted = false;
+        this.setState({
+            fieldData: fieldData,
+            formattedData: formattedData,
+            validation: this.validator.valid(),
+            entity: selectedEntity
         });
         this.forceUpdate();
     }
@@ -120,7 +164,8 @@ class QueryClause extends PureComponent {
      * @returns formattedData
     */
     formatRowData(unFormattedData){
-        let formattedData = [];
+        let formattedData = [],
+            entity = this.state ? this.state.entity : this.props.entity;
 
         unFormattedData.map(function (field, index) {
             let obj = {},
@@ -131,12 +176,12 @@ class QueryClause extends PureComponent {
             obj.validation = field.validation;
             obj.value = field.value;
             obj.combinators = FieldData.combinators;
-            obj.fields = FieldData.field.employees;
+            obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator[type];
             obj.valueSelected = "";
             obj.isFocus = false;
             obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = FieldData.field.employees[index];
+            obj.fieldsSelected = FieldData.field[entity][index];
             obj.operatorsSelected = FieldData.operator[type][0];
 
             formattedData.push(obj);
@@ -199,7 +244,8 @@ class QueryClause extends PureComponent {
         if(index != "n")
             this.buttonRef[index].blur();
 
-        let formattedData = this.state.formattedData;
+        let formattedData = this.state.formattedData,
+            entity = this.state ? this.state.entity : this.props.entity;
 
         formattedData.forEach(function(element, index) {
             formattedData[index].isFocus = false;
@@ -211,12 +257,12 @@ class QueryClause extends PureComponent {
             obj.validation = "isEmpty";
             obj.value = "";
             obj.combinators = FieldData.combinators;
-            obj.fields = FieldData.field.employees;
+            obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator.int;
             obj.valueSelected = "";
             obj.isFocus = true;
             obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = FieldData.field.employees[0];
+            obj.fieldsSelected = FieldData.field[entity][0];
             obj.operatorsSelected = FieldData.operator.int[0];
 
         if(index == "n"){
@@ -243,7 +289,8 @@ class QueryClause extends PureComponent {
         let currentIndex = index + 1,
              formattedData = this.state.formattedData,
              formattedDataLength = formattedData.length,
-             obj = {};
+             obj = {},
+             entity = this.state ? this.state.entity : this.props.entity;
              
         // Delete by Index from Array
         formattedData = formattedData.slice(0, currentIndex-1).concat(formattedData.slice(currentIndex, formattedData.length));
@@ -255,12 +302,12 @@ class QueryClause extends PureComponent {
             obj.validation = "isEmpty";
             obj.value = "";
             obj.combinators = FieldData.combinators;
-            obj.fields = FieldData.field.employees;
+            obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator.int;
             obj.valueSelected = "";
             obj.isFocus = true;
             obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = FieldData.field.employees[0];
+            obj.fieldsSelected = FieldData.field[entity][0];
             obj.operatorsSelected = FieldData.operator.int[0];
 
             formattedData.push(obj);
@@ -361,8 +408,8 @@ class QueryClause extends PureComponent {
         return (
             <tbody>
                 {
-                    formattedData &&
-                    formattedData.map(function (field, index) {
+                    this.state.formattedData &&
+                    this.state.formattedData.map(function (field, index) {
                         return (                           
                            <tr key={index} className={"query-clause-row-"+index}>
                                 <td scope="row" className={"query-clause-firstrow tableWidth-5"}>

@@ -29,13 +29,31 @@ class QueryPane extends PureComponent {
     this.queryClause = React.createRef();
 
     this.initialState = {
-      entity: "employees",
-      fieldData: FieldData.field["employees"].slice(0, 2)
+      entity: this.props.selectedOption.value,
+      fieldData: FieldData.field[this.props.selectedOption.value].slice(0, 2)
     };
 
     this.state = this.initialState;
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
+  }
+
+  /**
+   * @method
+   * @name - componentWillReceiveProps
+   * This method will invoked whenever the props or state
+   *  is update to this component class
+   * @param newProps
+   * @returns none
+  */
+  componentWillReceiveProps(newProps) {
+    //debugger;
+    //if(newProps.selectedOption.value != this.state.entity){
+      this.setState({
+        entity: newProps.selectedOption.value,
+        fieldData: FieldData.field[newProps.selectedOption.value].slice(0, 2)
+      });
+    //} 
   }
 
   /**
@@ -86,6 +104,18 @@ class QueryPane extends PureComponent {
    this.props.passEmployeesResultsToQuerySection(employees);
   }
 
+  /**
+   * @method
+   * @name - passSelectedEntity
+   * This method used to pass the selected entity parent component
+   * @param entity
+   * @returns none
+  */
+  passSelectedEntity(entity){
+    console.log(`passSelectedEntity`+entity);
+    this.queryClause.current.changeQueryClause(entity);
+  }
+
   render() {
     return (         
         <div className="query-builder-section">
@@ -102,6 +132,7 @@ class QueryPane extends PureComponent {
             <QueryClause 
               ref={this.queryClause}
               fieldData={this.state.fieldData}
+              entity={this.state.entity}
               passEmployeesResults={this.passEmployeesResults}
             />          
         </Table> 
