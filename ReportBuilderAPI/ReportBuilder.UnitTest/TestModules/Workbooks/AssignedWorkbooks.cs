@@ -135,17 +135,17 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
             StringAssert.Contains(errorRes.Message, "Invalid input");
         }
 
-        [TestMethod]
-        public void GetWorkbookListFromGateway()
-        {
+        //[TestMethod]
+        //public void GetWorkbookListFromGateway()
+        //{
 
-            //create the constructor with post type and few data
-            WebRequestBuilder APIRequest = new WebRequestBuilder("https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/6/workbooks/assigned", "GET");
-            //show the response string on the console screen.
-            Console.WriteLine(APIRequest.GetResponse());
-            Assert.AreEqual(200, APIRequest.Status);
-            //Assert.AreNotEqual(0, empl.Count);
-            // https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/6/workbooks/assigned
-        }
+        //    //create the constructor with post type and few data
+        //    WebRequestBuilder APIRequest = new WebRequestBuilder("https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/6/workbooks/assigned", "GET");
+        //    //show the response string on the console screen.
+        //    Console.WriteLine(APIRequest.GetResponse());
+        //    Assert.AreEqual(200, APIRequest.Status);
+        //    //Assert.AreNotEqual(0, empl.Count);
+        //    // https://klrg45ssob.execute-api.us-west-2.amazonaws.com/dev/users/6/workbooks/assigned
+        //}
     }
 }

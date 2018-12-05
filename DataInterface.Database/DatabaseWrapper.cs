@@ -27,7 +27,7 @@ namespace DataInterface.Database
         public DatabaseWrapper()
         {
             connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
-            sqlConnection = new SqlConnection(string.Format(connectionString));
+            sqlConnection = new SqlConnection(String.Format(connectionString));
 
         }
 
@@ -40,9 +40,7 @@ namespace DataInterface.Database
         {
             try
             {
-                connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
                 sqlConnection = new SqlConnection(String.Format(connectionString));
-
                 int rowsaffected = 0;
                 SqlTransaction sqlTransaction = null;
 
@@ -229,10 +227,7 @@ namespace DataInterface.Database
             finally
             {
                 //dispose the database Connection
-                if (sqlConnection != null)
-                {
-                    sqlConnection.Dispose();
-                }
+                sqlConnection.Dispose();
             }
         }
     }

@@ -211,5 +211,46 @@ namespace ReportBuilder.UnitTest
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
+
+
+        /// </summary>
+        [TestMethod]
+        public void GetWorkbookDetails()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "EMAIL" },
+                Fields = employeeList
+            };
+
+            EmployeeModel employeeModel = new EmployeeModel
+            {
+                Name = "WORKBOOK_NAME",
+                Value = "Gail4",
+                Operator = "="               
+            };
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = "WORKBOOK_CREATED",
+                Value = "08/06/1975",
+                Operator = "=",
+                Bitwise = "OR"                
+            };
+            employeeList.Add(employeeModel);
+            employeeList.Add(employeeModel2);
+
+
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest)
+            };
+            APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
     }
 }

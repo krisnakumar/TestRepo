@@ -94,7 +94,7 @@ namespace ReportBuilderAPI.Utilities
 
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";
-        public const string WORKBOOK_CREATED = "DATECREATED";
+        public const string WORKBOOK_CREATED = "WORKBOOK_CREATED";
         public const string WORKBOOK_ISENABLED = "ISENABLED";
         public const string WORKBOOK_CREATED_BY = "CREATED_BY";
         public const string DAYS_TO_COMPLETE = "DAYS_TO_COMPLETE";
@@ -114,5 +114,28 @@ namespace ReportBuilderAPI.Utilities
 
         public const string DUE_DATE = "DUE_DATE";
         public const string ASSIGNED_TO = "ASSIGNED_TO";
+        public const string DATE_ADDED = "DATE_ADDED";
+
+
+        //Fields for tasks
+        public const string TASK_NAME = "TASK_NAME";
+        public const string TASK_ID = "TASK_ID";
+        public const string TASK_CREATED = "TASK_CREATED";
+        public const string ATTEMPT_DATE = "ATTEMPT_DATE";
+        public const string EVALUATOR_NAME = "EVALUATOR_NAME";
+        public const string DATE_TAKEN = "DATE_TAKEN";
+        public const string STATUS = "STATUS";
+        public const string CREATED_BY = "CREATED_BY";
+        public const string DELETED_BY = "DELETED_BY";
+        public const string REPETITIONS_COUNT = "REPETITIONS_COUNT";
+        public const string LOCATION = "LOCATION";
+        public const string IP = "IP";
+        public const string DURATION = "DURATION";
+        public const string SCORE = "SCORE";        
+        public const string COMPLETION_DATE = "COMPLETION_DATE";        
+        public const string PARENT_TASK_NAME = "PARENT_TASK_NAME";
+        public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
+        public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
+        public const string EXPIRATION_DATE = "EXPIRATION_DATE";
     }
 }
