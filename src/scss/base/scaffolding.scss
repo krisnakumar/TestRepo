@@ -150,7 +150,8 @@ img {
 }
 
 .version-number{
-  text-align: center;width: calc(100% + 10px);
+  text-align: center;
+  width: calc(100% + 10px);
 }
 
 #loader-layer{
@@ -246,7 +247,7 @@ img {
 
 .query-builder-section {
   .layout-splitter {
-   // height: 3px !important;
+    height: 3px !important;
   }
 }
 
@@ -294,7 +295,7 @@ img {
 }
 
 .query-action-btn{
-  width: 20px;
+  width: 35%;
   padding: 0 !important;
   background-color: #f9f9f900 !important;
   margin-bottom: 0px !important;
@@ -304,7 +305,7 @@ img {
 .query-action-btn.add{
   cursor: pointer;
   color: #04720dab !important;
-  margin: 0px 0px 0px 20px;
+  margin: 0px 0px 0px 3px;
 }
 .query-action-btn.delete{  
   cursor: pointer;
@@ -404,7 +405,7 @@ img {
 
 .query-section-table {
   .Select-input {
-    height: 45px;
+    height: 25px;
     width: 100%;
   }
   .Select-value-label {
@@ -450,7 +451,7 @@ img {
 
   }
   .splitter-layout .layout-pane-primary{
-    overflow: auto !important;
+  // overflow: auto !important;
   }
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport {
   overflow: auto !important;
@@ -509,4 +510,12 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
 .help-block{
  //2 top: 70px;
   position: absolute;
+}
+
+.query-section-table tbody {
+  /* height: 1000px; */
+  overflow-y: auto;
+  max-height: calc(100% - 15%);
+  position: absolute;
+  width: 100%;
 }
