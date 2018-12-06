@@ -76,7 +76,7 @@ class LogInForm extends PureComponent {
 
   authenticate(){
     let _self = this,
-        url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/login",
+        url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/login",
         postData = {
           "UserName": _self.state.username,
           "Password": _self.state.password

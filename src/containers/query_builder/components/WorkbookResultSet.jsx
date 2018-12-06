@@ -1,8 +1,8 @@
 /* eslint-disable */
 /*
-* EmployeeResultSet.jsx
+* WorkbookResultSet.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render Workbook details to list the workbooks progress details
+* This javascript file will used render Workbook details
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -16,7 +16,6 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React from 'react';
-import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
@@ -27,13 +26,13 @@ import { withCookies, Cookies } from 'react-cookie';
  * the table components empty rows message if data is empty from API request
  * extending the  react data grid module.
  */
-class EmployeeResultSetEmptyRowsView extends React.Component{
+class WorkbookResultSetEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
 };
 
-class EmployeeResultSet extends React.Component {
+class WorkbookResultSet extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -42,8 +41,17 @@ class EmployeeResultSet extends React.Component {
     super(props);
     this.heads = [
       {
-        key: 'employeeName',
-        name: 'Employee Name',
+        key: 'workbookId',
+        name: 'Workbook ID ',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+        },
+        {
+        key: 'workbookName',
+        name: 'WorkbookName',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -51,8 +59,8 @@ class EmployeeResultSet extends React.Component {
         cellClass: "text-left"
         },
         {
-        key: 'role',
-        name: 'Role',
+        key: 'description',
+        name: 'Description',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -60,8 +68,8 @@ class EmployeeResultSet extends React.Component {
         cellClass: "text-left"
         },
         {
-        key: 'userName',
-        name: 'User Name',
+        key: 'createdBy',
+        name: 'Created By',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -69,36 +77,18 @@ class EmployeeResultSet extends React.Component {
         cellClass: "text-left"
         },
         {
-        key: 'email',
-        name: 'Email',
+        key: 'daytoComplete',
+        name: 'Day to Complete',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-left"
-        },
-        {
-        key: 'alternateName',
-        name: 'Alternate Name',
-        sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
-        cellClass: "text-center"
-        },
-        {
-        key: 'totalEmployees',
-        name: 'Total Employees',
-        sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
-        cellClass: "text-center last-column"
+        cellClass: "text-right last-column"
         }
       ];
     
     this.state = {    
-      rows: this.createRows(this.props.employees),
+      rows: this.createRows(this.props.workbooks),
       pageOfItems: [],
       isInitial: false
     };
@@ -137,20 +127,19 @@ class EmployeeResultSet extends React.Component {
    * @name - createRows
    * This method will format the input data
    * for Data Grid
-   * @param employees
+   * @param workbooks
    * @returns rows
    */
-  createRows = (employees) => {
+  createRows = (workbooks) => {
     const rows = [], 
-          length = employees ? employees.length : 0;
+          length = workbooks ? workbooks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        alternateName:  employees[i].AlternateName,
-        email: employees[i].Email,
-        employeeName: employees[i].EmployeeName,
-        role: employees[i].Role,
-        totalEmployees: employees[i].TotalEmployees,
-        userName: employees[i].UserName
+        workbookId:  workbooks[i].WorkBookId || "",
+        workbookName: workbooks[i].WorkBookName || "",
+        description: workbooks[i].Description || "",
+        createdBy: workbooks[i].CreatedBy || "",
+        daytoComplete: workbooks[i].DayToComplete || ""
       });
     }
 
@@ -166,8 +155,8 @@ class EmployeeResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.employees),
-          isArray = Array.isArray(newProps.employees),
+      let rows = this.createRows(newProps.workbooks),
+          isArray = Array.isArray(newProps.workbooks),
           isInitial = isArray;
       this.setState({
         rows: rows,
@@ -226,7 +215,7 @@ class EmployeeResultSet extends React.Component {
         <div className="grid-container employees-result">
             <div className="table employees-result-set">
                 <ReactDataGrid
-                    ref={'employeeResultSet'}
+                    ref={'WorkbookResultSet'}
                     onGridSort={this.handleGridSort}
                     enableCellSelect={false}
                     enableCellAutoFocus={false}
@@ -236,7 +225,7 @@ class EmployeeResultSet extends React.Component {
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     rowHeight={25}
                     minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial && EmployeeResultSetEmptyRowsView} 
+                    emptyRowsView={this.state.isInitial && WorkbookResultSetEmptyRowsView} 
                 />
             </div>
         </div>
@@ -244,4 +233,4 @@ class EmployeeResultSet extends React.Component {
   }
 }
 
-export default withCookies(EmployeeResultSet);
+export default withCookies(WorkbookResultSet);

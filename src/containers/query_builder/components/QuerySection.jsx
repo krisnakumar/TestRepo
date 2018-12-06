@@ -20,6 +20,7 @@ import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
 import QueryPane  from './QueryPane';
 import EmployeeResultSet from './EmployeeResultSet';
+import WorkbookResultSet from './WorkbookResultSet';
 
 
 const options = [
@@ -44,7 +45,11 @@ class QuerySection extends PureComponent {
       lastSelectedOption: options[0], 
       isClearable: false,
       employees: {},
-      modal: false
+      workbooks: {},
+      modal: false,
+      isEmployee: true,
+      isWorkbook: false,
+      isTask: false
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
@@ -71,7 +76,13 @@ class QuerySection extends PureComponent {
    * @returns none
   */
  confirmEntitySelection() {
+  let isEmployee = this.state.lastSelectedOption.value == "employees",
+      isWorkbook = this.state.lastSelectedOption.value == "workbooks",
+      isTask = this.state.lastSelectedOption.value == "tasks";
     this.setState({
+      isEmployee: isEmployee,
+      isWorkbook: isWorkbook,
+      isTask: isTask,
       selectedOption: this.state.lastSelectedOption,
       modal: false
     });
@@ -134,12 +145,23 @@ class QuerySection extends PureComponent {
   /**
    * @method
    * @name - passEmployeesResults
-   * This method used to pass the employees parent component
+   * This method used to get the employees from child component
    * @param employees
    * @returns none
   */
   passEmployeesResults= (employees) => {
     this.setState({ employees: employees});
+  }
+
+  /**
+   * @method
+   * @name - passEmployeesResults
+   * This method used to get the workbooks from child component
+   * @param employees
+   * @returns none
+  */
+  passWorkbookResults= (workbooks) => {
+    this.setState({ workbooks: workbooks});
   }
 
   render() {
@@ -193,8 +215,9 @@ class QuerySection extends PureComponent {
       
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane ref={this.queryPane} selectedOption={this.state.selectedOption} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
-                <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>
+                <QueryPane ref={this.queryPane} selectedOption={this.state.selectedOption} passWorkbooksResultsToQuerySection={this.passWorkbookResults} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+                { this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>}
+                { this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks}/>}
               </SplitterLayout>
             </div>
           </CardBody>

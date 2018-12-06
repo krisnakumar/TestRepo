@@ -86,7 +86,7 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    return fetch("https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
+    return fetch("https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
      method: "POST",
      headers: {
          'Accept': 'application/json',

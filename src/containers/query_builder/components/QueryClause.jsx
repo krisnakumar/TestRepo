@@ -331,20 +331,34 @@ class QueryClause extends PureComponent {
 
         if (validation.isValid) {
             // handle actual form submission here
-            let arr = [],
+            let queryClause = [],
                 _self = this;
                 
             this.state.formattedData.forEach(function(element, index){
                 let queryObj = {};
                 queryObj.Value = _self.state.formattedData[index].valueSelected;
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
-                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;                
-                queryObj.Bitwise = _self.state.formattedData[index+1] ? _self.state.formattedData[index+1].combinatorsSelected.value : "";
+                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;    
+                if(index == 0){
+                    queryObj.Bitwise = "";
+                }else{
+                    queryObj.Bitwise = _self.state.formattedData[index] ? _self.state.formattedData[index].combinatorsSelected.value : "";
+                }            
+                
 
-                arr.push(queryObj)
+                queryClause.push(queryObj)
             })
 
-            this.getEmployeesResults(arr);
+            switch (this.state.entity) {
+                case 'employees':
+                    this.getEmployeesResults(queryClause);
+                    break;
+                case 'workbooks':
+                    this.getWorkbooksResults(queryClause);
+                    break;
+                default:
+                  console.log('Sorry, we are out of options');
+              }                       
         }
     };
 
@@ -395,10 +409,32 @@ class QueryClause extends PureComponent {
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "https://s8cm2bc9fa.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/employees  ",
+            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/employees",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passEmployeesResults(response);
+    };
+
+
+     /**
+     * @method
+     * @name - getWorkbooksResults
+     * This method will used to get Workbook Results from the Query Clause
+     * @param requestData
+     * @returns none
+    */
+    async getWorkbooksResults(requestData){
+        const { cookies } = this.props;
+
+        let payLoad = {"Fields": requestData,"ColumnList":["WORKBOOK_ID","WORKBOOK_NAME","DESCRIPTION","WORKBOOK_CREATED_BY","DAYS_TO_COMPLETE"]};
+
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/workbooks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+        
+        console.log("getWorkbooksResults",response);
+        this.props.passWorkbooksResults(response);
     };
     
     render() {

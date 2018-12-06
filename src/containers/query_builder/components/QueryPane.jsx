@@ -36,6 +36,7 @@ class QueryPane extends PureComponent {
     this.state = this.initialState;
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
+    this.passWorkbooksResults = this.passWorkbooksResults.bind(this); 
   }
 
   /**
@@ -106,14 +107,13 @@ class QueryPane extends PureComponent {
 
   /**
    * @method
-   * @name - passSelectedEntity
-   * This method used to pass the selected entity parent component
-   * @param entity
+   * @name - passWorkbooksResults
+   * This method used to pass the workbooks parent component
+   * @param workbooks
    * @returns none
   */
-  passSelectedEntity(entity){
-    console.log(`passSelectedEntity`+entity);
-    this.queryClause.current.changeQueryClause(entity);
+  passWorkbooksResults(workbooks){
+    this.props.passWorkbooksResultsToQuerySection(workbooks);
   }
 
   render() {
@@ -134,6 +134,7 @@ class QueryPane extends PureComponent {
               fieldData={this.state.fieldData}
               entity={this.state.entity}
               passEmployeesResults={this.passEmployeesResults}
+              passWorkbooksResults={this.passWorkbooksResults}
             />          
         </Table> 
       </div>
