@@ -103,7 +103,7 @@ class WorkbookResultSet extends React.Component {
    */
   cellFormatter = (props) => {
     return (
-      <span>{props.value}</span>
+      props.value
     );
   }
 
@@ -139,7 +139,7 @@ class WorkbookResultSet extends React.Component {
         workbookName: workbooks[i].WorkBookName || "",
         description: workbooks[i].Description || "",
         createdBy: workbooks[i].CreatedBy || "",
-        daytoComplete: workbooks[i].DayToComplete || ""
+        daytoComplete: workbooks[i].DaysToComplete || ""
       });
     }
 
@@ -223,7 +223,8 @@ class WorkbookResultSet extends React.Component {
                     rowGetter={this.rowGetter}
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
-                    rowHeight={25}
+                    headerRowHeight={30}
+                    minHeight={25}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial && WorkbookResultSetEmptyRowsView} 
                 />

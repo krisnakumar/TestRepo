@@ -432,8 +432,7 @@ class QueryClause extends PureComponent {
             companyId = cookies.get('CompanyId'),
             url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/workbooks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        
-        console.log("getWorkbooksResults",response);
+
         this.props.passWorkbooksResults(response);
     };
     

@@ -451,8 +451,9 @@ img {
 
   }
   .splitter-layout .layout-pane-primary{
-  // overflow: auto !important;
+    overflow: auto !important;
   }
+
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport {
   overflow: auto !important;
   position: absolute !important;
@@ -512,13 +513,7 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
   position: absolute;
 }
 
-.query-section-table tbody {
-  /* height: 1000px; */
-  overflow-y: auto;
-  max-height: calc(100% - 15%);
-  position: absolute;
-  width: 100%;
-}
+
 .custom-modal-confirm{
 
   .modal-header{
