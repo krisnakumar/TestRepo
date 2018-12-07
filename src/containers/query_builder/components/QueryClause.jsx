@@ -458,7 +458,8 @@ class QueryClause extends PureComponent {
                                             autosize={false}
                                             isRtl={true}
                                             isSearchable={false}
-                                            openOnClick={false}
+                                            searchable={false}
+                                            openOnClick={true}
                                             autoFocus={false}
                                             value={field.combinatorsSelected}
                                             options={field.combinators}
