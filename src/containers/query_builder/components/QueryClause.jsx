@@ -435,6 +435,26 @@ class QueryClause extends PureComponent {
 
         this.props.passWorkbooksResults(response);
     };
+
+     /**
+     * @method
+     * @name - getTasksResults
+     * This method will used to get Tasks Results from the Query Clause
+     * @param requestData
+     * @returns none
+    */
+   async getTasksResults(requestData){
+        const { cookies } = this.props;
+
+        let payLoad = {"Fields": requestData,"ColumnList":["WORKBOOK_ID","WORKBOOK_NAME","DESCRIPTION","WORKBOOK_CREATED_BY","DAYS_TO_COMPLETE"]};
+
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+        this.props.passTasksResults(response);
+    };
     
     render() {
         const { formattedData } = this.state;

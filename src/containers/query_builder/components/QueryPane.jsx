@@ -116,6 +116,17 @@ class QueryPane extends PureComponent {
     this.props.passWorkbooksResultsToQuerySection(workbooks);
   }
 
+   /**
+   * @method
+   * @name - passTasksResults
+   * This method used to pass the tasks parent component
+   * @param tasks
+   * @returns none
+  */
+  passTasksResults(tasks){
+    this.props.passTasksToQuerySection(tasks);
+  }
+
   render() {
     return (         
         <div className="query-builder-section">
@@ -135,6 +146,7 @@ class QueryPane extends PureComponent {
               entity={this.state.entity}
               passEmployeesResults={this.passEmployeesResults}
               passWorkbooksResults={this.passWorkbooksResults}
+              passTasksResults={this.passTasksResults}
             />          
         </Table> 
       </div>

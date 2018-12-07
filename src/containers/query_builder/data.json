@@ -346,7 +346,7 @@
 			{
 				"value": "city ",
 				"type": "text",
-				"label": "City ",
+				"label": "City",
 				"validation": "isEmpty"
 			}
 		]

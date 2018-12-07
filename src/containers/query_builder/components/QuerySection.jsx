@@ -21,11 +21,12 @@ import SplitterLayout from 'react-splitter-layout';
 import QueryPane  from './QueryPane';
 import EmployeeResultSet from './EmployeeResultSet';
 import WorkbookResultSet from './WorkbookResultSet';
-
+import TaskResultSet from './TaskResultSet';
 
 const options = [
   { value: 'employees', label: 'Employees' },
-  { value: 'workbooks', label: 'Workbooks' }
+  { value: 'workbooks', label: 'Workbooks' },
+  { value: 'tasks', label: 'Tasks' }
 ];
 
 class QuerySection extends PureComponent {
@@ -46,6 +47,7 @@ class QuerySection extends PureComponent {
       isClearable: false,
       employees: {},
       workbooks: {},
+      tasks: {},
       modal: false,
       isEmployee: true,
       isWorkbook: false,
@@ -164,6 +166,17 @@ class QuerySection extends PureComponent {
     this.setState({ workbooks: workbooks});
   }
 
+  /**
+   * @method
+   * @name - passTasksResults
+   * This method used to get the tasks from child component
+   * @param employees
+   * @returns none
+  */
+  passTasksResults= (tasks) => {
+    this.setState({ tasks: tasks});
+  }
+
   render() {
     const { selectedOption, isClearable } = this.state;
       return (
@@ -212,12 +225,20 @@ class QuerySection extends PureComponent {
                 </Col>                
               </Row>
             </div>
-      
             <div className="wrapper">
               <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
-                <QueryPane ref={this.queryPane} selectedOption={this.state.selectedOption} passWorkbooksResultsToQuerySection={this.passWorkbookResults} passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+
+                <QueryPane 
+                  ref={this.queryPane} 
+                  selectedOption={this.state.selectedOption} 
+                  passTasksToQuerySection={this.passTasksResults} 
+                  passWorkbooksResultsToQuerySection={this.passWorkbookResults} 
+                  passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+
                 { this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>}
                 { this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks}/>}
+                { this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks}/>}
+                
               </SplitterLayout>
             </div>
           </CardBody>
