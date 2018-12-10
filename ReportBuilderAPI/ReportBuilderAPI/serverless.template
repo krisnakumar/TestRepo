@@ -7,7 +7,7 @@
    "ReportBuilderAPI" : {
 		"Type" : "AWS::Serverless::Api",
 		"Properties" : {
-			"Name":"ReportBuilder-workbooks",
+			"Name":"ReportBuilder-query-stack",
 			"StageName":"dev",
 			"DefinitionUri": "s3://reportbuilder-sandbox/swagger-query-builder.json"			 
 	  }
@@ -17,7 +17,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-		"FunctionName":"Login-workbooks",
+		"FunctionName":"Login-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",		
         "MemorySize": 256,				
@@ -43,7 +43,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployees",
-		"FunctionName":"Employees-workbooks",
+		"FunctionName":"Employees-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -69,7 +69,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQuerBuilder",
-		"FunctionName":"Employees-workbooks-query",
+		"FunctionName":"Employees-query-stack-builder",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -94,7 +94,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQuerBuilder",
-		"FunctionName":"workbooks-query-workbooks",
+		"FunctionName":"workbooks-query-stack-builder",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -115,11 +115,37 @@
       }
     },
 
+
+	"GetTaskQueryDetails" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQuerBuilder",
+		"FunctionName":"tasks-query-stack-builder",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 		 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/company/{companyId}/tasks",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+
 	"GetWorkbookDetails" : {
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookDetails",
-		"FunctionName":"Workbooks-workbooks",
+		"FunctionName":"Workbooks-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -143,7 +169,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetPastDueWorkbookDetails",
-		"FunctionName":"PastDueWorkbooks-workbooks",
+		"FunctionName":"PastDueWorkbooks-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -167,7 +193,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetInDueWorkbookDetails",
-		"FunctionName":"ComingDueWorkbooks-workbooks",
+		"FunctionName":"ComingDueWorkbooks-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -191,7 +217,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompletedWorkbookDetails",
-		"FunctionName":"CompletedWorkbooks-workbooks",
+		"FunctionName":"CompletedWorkbooks-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -215,7 +241,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-		"FunctionName":"SilentAuth-workbooks",
+		"FunctionName":"SilentAuth-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -240,7 +266,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
         "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskList",
-		"FunctionName":"GetTaskList-workbooks",
+		"FunctionName":"GetTaskList-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,
@@ -265,7 +291,7 @@
       "Type" : "AWS::Serverless::Function",	  
       "Properties": {		 
        "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskAttemptsDetails",
-		"FunctionName":"GetAttemptsDetails-workbooks",
+		"FunctionName":"GetAttemptsDetails-query-stack",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "MemorySize": 256,

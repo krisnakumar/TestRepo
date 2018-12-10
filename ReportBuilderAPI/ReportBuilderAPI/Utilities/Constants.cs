@@ -42,6 +42,7 @@ namespace ReportBuilderAPI.Utilities
         public const string STATE = "STATE";
         public const string PHONE = "PHONE";
         public const string ZIP = "ZIP";
+        public const string COUNTRY = "COUNTRY";
         public const string SUPERVISORID = "SUPERVISORID";
         public const string ROLE = "ROLE";
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";
@@ -96,7 +97,7 @@ namespace ReportBuilderAPI.Utilities
         public const string DESCRIPTION = "DESCRIPTION";
         public const string WORKBOOK_CREATED = "WORKBOOK_CREATED";
         public const string WORKBOOK_ISENABLED = "ISENABLED";
-        public const string WORKBOOK_CREATED_BY = "CREATED_BY";
+        public const string WORKBOOK_CREATED_BY = "WORKBOOK_CREATED_BY";
         public const string DAYS_TO_COMPLETE = "DAYS_TO_COMPLETE";
         public const string WORKBOOK_ID = "WORKBOOK_ID";
 
@@ -124,6 +125,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ATTEMPT_DATE = "ATTEMPT_DATE";
         public const string EVALUATOR_NAME = "EVALUATOR_NAME";
         public const string DATE_TAKEN = "DATE_TAKEN";
+        public const string DATE_EXPIRED = "DATE_EXPIRED";
         public const string STATUS = "STATUS";
         public const string CREATED_BY = "CREATED_BY";
         public const string DELETED_BY = "DELETED_BY";
@@ -137,5 +139,10 @@ namespace ReportBuilderAPI.Utilities
         public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
         public const string EXPIRATION_DATE = "EXPIRATION_DATE";
+
+
+
+
+
     }
 }

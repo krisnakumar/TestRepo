@@ -176,7 +176,7 @@ namespace ReportBuilderAPI.Repository
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
-                query += " FROM dbo.[User] u  ";
+                query += " FROM dbo.[User] u  LEFT JOIN UserCompany uc on uc.UserId=u.Id ";
 
                 //get table joins
                 fieldList = employeeRequest.ColumnList.ToList();
@@ -190,13 +190,18 @@ namespace ReportBuilderAPI.Repository
 
                 //getting where conditions
                 whereQuery = string.Join("", from emplyoee in employeeRequest.Fields
-                                             select employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'") + (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty));
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE " + whereQuery) : string.Empty;
-
-                query += whereQuery;
-
-                employeeResponse=ReadEmployeeDetails(query);
-                return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
+                                             select (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'")) : string.Empty));
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
+                query += whereQuery + " )";
+                employeeResponse = ReadEmployeeDetails(query);
+                if (employeeResponse != null)
+                {
+                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
+                }
+                else
+                {
+                    return ResponseBuilder.InternalError();
+                }
             }
             catch (Exception getEmployeeDetailsException)
             {
@@ -235,7 +240,7 @@ namespace ReportBuilderAPI.Repository
                             SupervisorId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'supervisorId'").Count() == 1) ? (int?)sqlDataReader["supervisorId"] : null,
                             TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeCount'").Count() == 1) ? (int?)sqlDataReader["employeeCount"] : null,
 
-                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastName'").Count() == 1) ? Convert.ToString(sqlDataReader["LastName"]) : null,
+                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastName'").Count() == 1) && (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstName'").Count() == 1) ? (Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"])) : null,
                             Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : null,
                             UserName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : null,
 

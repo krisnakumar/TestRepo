@@ -43,5 +43,15 @@ namespace ReportBuilderAPI.DatabaseManager
         {
             return "SELECT Id FROM [USER] WHERE Email='" + email + "'";
         }
+
+        /// <summary>
+        /// Get company Id details using email 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static string GetCompanyId(string email)
+        {
+            return "SELECT uc.companyId FROM [USER] u JOIN UserCompany uc on uc.UserId=u.Id WHERE Email='" + email + "'";
+        }
     }
 }

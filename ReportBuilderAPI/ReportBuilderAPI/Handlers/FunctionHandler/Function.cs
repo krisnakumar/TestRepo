@@ -251,5 +251,27 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
+
+
+        /// <summary>
+        /// Get list of employees using userId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetTaskQuerBuilder(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            TaskRepository taskRepository = new TaskRepository();
+            try
+            {
+                return taskRepository.GetQueryTaskDetails(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception getEmployees)
+            {
+                LambdaLogger.Log(getEmployees.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
     }
 }

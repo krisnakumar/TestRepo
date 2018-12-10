@@ -49,7 +49,7 @@ namespace ReportBuilderAPI.Repository
                         AccessToken = authResponse.AuthenticationResult.AccessToken,
                         IdentityToken = authResponse.AuthenticationResult.IdToken,
                         RefreshToken = authResponse.AuthenticationResult.RefreshToken,
-                        UserId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                        UserId = Convert.ToInt32(GetUserId(userRequest.UserName)),
                         CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
                     };
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
@@ -71,7 +71,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>companyId</returns>
-        private int GetCompanyId(string userName)
+        private int GetUserId(string userName)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             int userId = 0;
@@ -90,6 +90,33 @@ namespace ReportBuilderAPI.Repository
                 databaseWrapper.CloseConnection();
             }
         }
+
+
+        /// <summary>
+        /// Get companyId from database
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>companyId</returns>
+        private int GetCompanyId(string userName)
+        {
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            int companyId = 0;
+            try
+            {
+                companyId = databaseWrapper.ExecuteScalar(Employee.GetCompanyId(userName));
+                return companyId;
+            }
+            catch (Exception exception)
+            {
+                LambdaLogger.Log(exception.ToString());
+                return companyId;
+            }
+            finally
+            {
+                databaseWrapper.CloseConnection();
+            }
+        }
+
 
         /// <summary>
         /// API to handle the silent Auth using refresh token
