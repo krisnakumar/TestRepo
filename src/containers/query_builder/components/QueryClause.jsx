@@ -458,7 +458,8 @@ class QueryClause extends PureComponent {
     
     render() {
         const { formattedData } = this.state;
-        let _self = this;
+        let _self = this,
+            formattedDataLength = formattedData.length;
         
         return (
             <tbody>
@@ -468,7 +469,13 @@ class QueryClause extends PureComponent {
                         return (                           
                            <tr key={index} className={"query-clause-row-"+index}>
                                 <td scope="row" className={"query-clause-firstrow tableWidth-5"}>
-                                    <button ref={(input) => { _self.buttonRef[index] = input; }} onClick={_self.handleAddClause.bind(_self, index)} title="Insert new filter line" className="query-action-btn add"><i className="fa fa-plus"></i></button>
+                                    { 
+                                        formattedDataLength < 7 && <button ref={(input) => { _self.buttonRef[index] = input; }} onClick={_self.handleAddClause.bind(_self, index)} title="Insert new filter line" className="query-action-btn add"><i className="fa fa-plus"></i></button>
+                                        
+                                        || 
+                                        
+                                        <button ref={(input) => { _self.buttonRef[index] = input; }} title="Insert new filter line" className="query-action-btn add" type="button" disabled><i className="fa fa-plus"></i></button> 
+                                    }
                                     <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
                                 </td>
                                 <td className={"tableWidth-10"}> 
@@ -539,15 +546,17 @@ class QueryClause extends PureComponent {
                         )
                     })
                 }
-                <tr key={"n"} className={"query-clause-row-n"}>
-                    <td scope="row">
-                        <button onClick={this.handleAddClause.bind(this, "n")} title="Add new clause" className="query-action-btn add"><i className="fa fa-plus"></i></button>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                {
+                    formattedDataLength < 7 && <tr key={"n"} className={"query-clause-row-n"}>
+                        <td scope="row">
+                            <button onClick={this.handleAddClause.bind(this, "n")} title="Add new clause" className="query-action-btn add"><i className="fa fa-plus"></i></button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
         </tbody>
         );
     }
