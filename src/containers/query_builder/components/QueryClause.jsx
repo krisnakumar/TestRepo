@@ -356,6 +356,9 @@ class QueryClause extends PureComponent {
                 case 'workbooks':
                     this.getWorkbooksResults(queryClause);
                     break;
+                case 'tasks':
+                    this.getTasksResults(queryClause);
+                    break;
                 default:
                   console.log('Sorry, we are out of options');
               }                       

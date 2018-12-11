@@ -78,15 +78,6 @@ class TaskResultSet extends React.Component {
         cellClass: "text-left"
         },
         {
-        key: 'status',
-        name: 'Status',
-        sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
-        cellClass: "text-center"
-        },
-        {
         key: 'expirationDate',
         name: 'Expiration Date',
         sortable: true,
@@ -145,11 +136,10 @@ class TaskResultSet extends React.Component {
           length = tasks ? tasks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        taskId:  tasks[i].taskId,
-        taskName: tasks[i].taskName,
+        taskId:  tasks[i].TaskId,
+        taskName: tasks[i].TaskName,
         assignedTo: tasks[i].AssignedTo,
         evaluatorName: tasks[i].EvaluatorName,
-        status: tasks[i].Status,
         expirationDate: tasks[i].ExpirationDate
       });
     }
@@ -235,6 +225,7 @@ class TaskResultSet extends React.Component {
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     rowHeight={25}
+                    headerRowHeight={30}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial && TaskResultSetEmptyRowsView} 
                 />

@@ -235,6 +235,7 @@ class EmployeeResultSet extends React.Component {
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     rowHeight={25}
+                    headerRowHeight={30}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial && EmployeeResultSetEmptyRowsView} 
                 />
