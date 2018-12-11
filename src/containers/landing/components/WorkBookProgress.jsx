@@ -190,7 +190,7 @@ class WorkBookProgress extends React.Component {
     this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
 
     let token = cookies.get('IdentityToken'),
-        url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
+        url = "/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
     workBooksRepetition = response;

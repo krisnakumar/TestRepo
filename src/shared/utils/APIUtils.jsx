@@ -15,12 +15,13 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 import React, { PureComponent } from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
 import 'whatwg-fetch'
+import * as Constants from '../constants';
 
 /**
 * @method
 * @name - ProcessAPI
 * This method will call REST API according to the input from user
-* @param url
+* @param path
 * @param requestPayload
 * @param token
 * @param isLogin
@@ -28,11 +29,12 @@ import 'whatwg-fetch'
 * @param isLoader
 * @returns json
 */
-export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLoader) {
+export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
     document.getElementById("loader-layer").classList.remove("loader-hide");
     document.getElementById("loader-layer").classList.add("loader-show");
 
-    let obj = {};
+    let obj = {},
+        url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
 
     if(type == "POST"){
         obj = {
@@ -86,7 +88,7 @@ export async function ProcessAPI(url, requestPayload, token, isLogin, type, isLo
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    return fetch("https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/login/refresh", {
+    return fetch("/login/refresh", {
      method: "POST",
      headers: {
          'Accept': 'application/json',

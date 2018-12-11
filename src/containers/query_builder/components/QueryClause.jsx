@@ -409,7 +409,7 @@ class QueryClause extends PureComponent {
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/employees",
+            url = "/company/"+companyId+"/employees",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passEmployeesResults(response);
@@ -430,7 +430,7 @@ class QueryClause extends PureComponent {
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/workbooks",
+            url = "/company/"+companyId+"/workbooks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passWorkbooksResults(response);
@@ -446,11 +446,11 @@ class QueryClause extends PureComponent {
    async getTasksResults(requestData){
         const { cookies } = this.props;
 
-        let payLoad = {"Fields": requestData,"ColumnList":["WORKBOOK_ID","WORKBOOK_NAME","DESCRIPTION","WORKBOOK_CREATED_BY","DAYS_TO_COMPLETE"]};
+        let payLoad = { "Fields": requestData ,"ColumnList": ["TASK_ID","TASK_NAME","ASSIGNED_TO","EVALUATOR_NAME","EXPIRATION_DATE"] };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/company/"+companyId+"/tasks",
+            url = "/company/"+companyId+"/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passTasksResults(response);

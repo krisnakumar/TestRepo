@@ -264,90 +264,91 @@
 				"type": "text",
 				"label": "Task Name",
 				"validation": "isEmpty",
-				"field": "USERID"
+				"field": "TASK_NAME"
 			},
 			{
 				"value": "taskId",
 				"type": "int",
 				"label": "Task Id",
 				"validation": "isEmpty",
-				"field": "USERNAME"
+				"field": "TASK_ID"
 			},
 			{
 				"value": "taskCreatedDate",
 				"type": "date",
 				"label": "Task Created Date",
 				"validation": "isEmpty",
-				"field": "USERNAME2"
+				"field": "TASK_CREATED"
 			},
 			{
 				"value": "attemptsDate ",
 				"type": "date",
 				"label": "Attempts Date",
 				"validation": "isEmpty",
-				"field": "USER_CREATED_DATE"
+				"field": "ATTEMPT_DATE"
 			},
 			{
 				"value": "assignedTo",
 				"type": "text",
 				"label": "Assigned To",
 				"validation": "isEmpty",
-				"field": "FIRSTNAME"
+				"field": "ASSIGNED_TO"
 			},
 			{
 				"value": "evaluatorName",
 				"type": "text",
 				"label": "Evaluator Name",
 				"validation": "isEmpty",
-				"field": "MIDDLENAME"
+				"field": "EVALUATOR_NAME"
 			},
 			{
 				"value": "dateTaken",
 				"type": "date",
 				"label": "Date Taken",
 				"validation": "isEmpty",
-				"field": "LASTNAME"
+				"field": "DATE_TAKEN"
 			},
 			{
 				"value": "status",
 				"type": "text",
 				"label": "Status",
 				"validation": "isEmpty",
-				"field": "EMAIL"
+				"field": "STATUS"
 			},
 			{
 				"value": "createdBy",
 				"type": "text",
 				"label": "Created By",
 				"validation": "isEmpty",
-				"field": "CITY"
+				"field": "CREATED_BY"
 			},
 			{
 				"value": "deletedBy",
 				"type": "text",
 				"label": "Deleted By",
 				"validation": "isEmpty",
-				"field": "STATE"
+				"field": "DELETED_BY"
 			},
 			{
 				"value": "byRepetitionsCount",
 				"type": "int",
 				"label": "By Repetitions Count",
 				"validation": "isEmpty",
-				"field": "ZIP"
+				"field": "REPETITIONS_COUNT"
 			},
 			{
 				"value": "location",
 				"type": "text",
 				"label": "Location",
 				"validation": "isEmpty",
-				"field": "PHONE"
+				"field": "LOCATION"
 			},
 			{
 				"value": "city ",
 				"type": "text",
 				"label": "City",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "CITY"
 			}
 		]
 	}

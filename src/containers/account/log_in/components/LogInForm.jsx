@@ -21,6 +21,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import Menus from '../../../_layout/Menus.json';
 import {version} from '../../../../../package.json';
+import * as Constants from '../../../../shared/constants';
 
 
 class LogInForm extends PureComponent {
@@ -76,7 +77,7 @@ class LogInForm extends PureComponent {
 
   authenticate(){
     let _self = this,
-        url = "https://4326ra7t2l.execute-api.us-west-2.amazonaws.com/dev/login",
+        url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login",
         postData = {
           "UserName": _self.state.username,
           "Password": _self.state.password
@@ -98,7 +99,7 @@ class LogInForm extends PureComponent {
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
           cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
           cookies.set('UserId', json.UserId, { path: '/' });
-          cookies.set('CompanyId', json.UserId, { path: '/' });
+          cookies.set('CompanyId', json.CompanyId, { path: '/' });
           // set the localstorage for menu's 
           localStorage.setItem('menus', JSON.stringify(Menus));
           _self.setState({ toDashboard: true });

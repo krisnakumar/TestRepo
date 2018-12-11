@@ -37,6 +37,7 @@ class QueryPane extends PureComponent {
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
     this.passWorkbooksResults = this.passWorkbooksResults.bind(this); 
+    this.passTasksResults = this.passTasksResults.bind(this);
   }
 
   /**
