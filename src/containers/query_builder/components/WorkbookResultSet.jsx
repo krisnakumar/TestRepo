@@ -223,7 +223,7 @@ class WorkbookResultSet extends React.Component {
                     rowGetter={this.rowGetter}
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
-                    headerRowHeight={35}
+                    headerRowHeight={32}
                     minHeight={25}
                     rowHeight={25}
                     minColumnWidth={100}

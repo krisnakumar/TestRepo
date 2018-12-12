@@ -348,6 +348,10 @@ img {
   border-radius: 2px;
 }
 
+.Select-option {
+  padding: 13px 10px !important;
+}
+
 .Select--single>.Select-control .Select-value, .Select-placeholder {
   line-height: 31px !important;
   padding-left: 5px !important;
@@ -458,7 +462,7 @@ img {
     box-shadow: none;
   }
  .query-section-table tbody td{
-  padding: 13px 2px 2px 0px !important;
+  padding: 6px 2px 0px 0px !important;;
   vertical-align: middle;
  }
 
@@ -473,7 +477,7 @@ img {
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport {
   overflow: auto !important;
   position: absolute !important;
-  top: 25px !important;
+  top: 32px !important;
 }
 
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
@@ -536,8 +540,8 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
     background-color: #133b5d;
     color: #fff;
     padding: 3px !important;
-    border-top-left-radius: none !important;
-    border-top-right-radius: none !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
     
 
     .modal-title{
@@ -549,6 +553,7 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
     font-size: 13px;
     font-weight: 600;
     text-align: justify;
+    padding: 8px 16px 20px 15px !important
   }
 
   .modal-footer {
@@ -557,13 +562,14 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
     -ms-flex-align: center;
     align-items: center;
     -ms-flex-pack: center;
-    padding: 1rem 1rem 0rem 1rem !important;
-    border-top: 1px solid #e9ecef;  
+    padding: 10px !important;
+    // padding: 1rem 1rem 0rem 1rem !important;
+    // border-top: 1px solid #e9ecef;  
 
     button{
       padding: 5px 20px !important;
-      border-radius: 25px 25px !important;
-      margin-bottom: 10px;
+      border-radius: 5px 5px !important;
+      // margin-bottom: 10px;
       background-color: #133b5d;
       color: #fff;
       cursor: pointer;
