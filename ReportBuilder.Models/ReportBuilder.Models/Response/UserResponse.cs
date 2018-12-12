@@ -1,5 +1,17 @@
 ﻿using Newtonsoft.Json;
 
+
+/*
+ <copyright file="UserResponse.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>10-10-2018</date>
+ <summary>
+    Response model for user login / refresh token
+ </summary>
+*/
+
 namespace ReportBuilder.Models.Response
 {
     public class UserResponse
@@ -24,7 +36,6 @@ namespace ReportBuilder.Models.Response
         public int UserId { get; set; }
 
         public int CompanyId { get; set; }
-        
 
     }
 }

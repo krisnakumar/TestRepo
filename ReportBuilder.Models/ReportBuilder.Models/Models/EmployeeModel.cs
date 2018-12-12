@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 
 
+/*
+ <copyright file="EmployeeModel.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>26-11-2018</date>
+ <summary>
+    Model of field object for QueryBuilder employee request 
+ </summary>
+*/
+
 namespace ReportBuilder.Models.Models
 {
     public class EmployeeModel

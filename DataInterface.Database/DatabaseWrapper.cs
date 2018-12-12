@@ -3,26 +3,32 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-// <copyright file="DatabaseWrapper.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>17-07-2018</date>
-// <summary>Class that handle the database connections</summary>
+
+/*
+ <copyright file="DatabaseWrapper.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>17-07-2018</date>
+ <summary>
+    This wrapper class handles the database connection(s) for the app
+    - Execcute the query(ies)
+    - closes the connection(s)
+ </summary>
+*/
+
 namespace DataInterface.Database
 {
     /// <summary>
-    /// Class that handle the database connections
+    ///     Class that handles the database connection(s)
     /// </summary>
     public class DatabaseWrapper
     {
-        /// <summary>
-        /// 
-        /// </summary>
         private static string connectionString = string.Empty;
         SqlConnection sqlConnection = null;
+
         /// <summary>
-        /// Contructor to get the sql connction string 
+        ///     Contructor to get the sql connection string 
         /// </summary>
         public DatabaseWrapper()
         {
@@ -32,7 +38,7 @@ namespace DataInterface.Database
         }
 
         /// <summary>
-        /// Executes a Transact-SQL statement against the connection and returns the number of rows affected.
+        ///     This function executes a Transact-SQL statement against the connection and returns the number of rows affected.
         /// </summary>
         /// <param name="command">Transact-SQL statement</param>
         /// <returns>The number of rows affected.</returns>
@@ -85,7 +91,7 @@ namespace DataInterface.Database
         }
 
         /// <summary>
-        /// Executes Multiple Transact-SQL statement against the connection and returns the number of rows affected.
+        ///     This method executes multiple Transact-SQL statement against the connection and returns the number of rows affected.
         /// </summary>
         /// <param name="commands">Multiple Array of Transact-SQL statement</param>
         /// <returns>The number of rows affected.</returns>
@@ -135,7 +141,7 @@ namespace DataInterface.Database
         }
 
         /// <summary>
-        /// Executes the Select Command
+        ///     This method executes the Select Command and returns data
         /// </summary>
         /// <param name="command">Transact-SQL statement</param>
         /// <returns>A SqlDataReader object.</returns>
@@ -174,10 +180,11 @@ namespace DataInterface.Database
 
 
         /// <summary>
-        /// Execute the Commands, and returns the first column of the first row in the result set returned by the query. Additional columns or rows are ignored.
+        ///     This method executes the Commands and returns the first column of the first row in the result set returned by the query. 
+        ///     Additional columns or rows are ignored.
         /// </summary>
         /// <param name="command"></param>
-        /// <returns></returns>
+        /// <returns>id</returns>
         public int ExecuteScalar(string command)
         {
             try
@@ -207,7 +214,7 @@ namespace DataInterface.Database
 
 
         /// <summary>
-        /// Closes the connection to the database.
+        ///     This method disposes the database connection.
         /// </summary>
         public void CloseConnection()
         {

@@ -16,25 +16,29 @@ using System.Linq;
 using System.Net;
 
 
-
-// <copyright file="EmployeeRepository.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>10-10-2018</date>
-// <summary>Repository that helps to read the data from the Table</summary>
+/* 
+<copyright file="EmployeeRepository.cs">
+    Copyright (c) 2018 All Rights Reserved
+</copyright>
+<author>Shoba Eswar</author>
+<date>10-10-2018</date>
+<summary> 
+    Repository that helps to read employee(s) details for specific user(s) from database.
+</summary>
+*/
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
-    /// Repository that helps to read the data from the table
+    ///     Class that handles to read employee(s) details under specific user(s) from database
     /// </summary>
     public class EmployeeRepository : IEmployee
     {
 
         /// <summary>
-        /// Get list of employee who currently working under the specific user
+        ///     Get list of employee(s) who currently working under the specific user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="queryStringModel"></param>
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetEmployeeList(int userId, QueryStringModel queryStringModel)
         {
@@ -94,7 +98,8 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
-        /// Column list for the employee 
+        ///     Dictionary having Column list for the employee details.
+        ///     Based on column name, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> columnList = new Dictionary<string, string>()
         {
@@ -124,7 +129,8 @@ namespace ReportBuilderAPI.Repository
         };
 
         /// <summary>
-        /// Fields that requried for the employee entity
+        ///     Dictionary having fields that requried for the employee entity.
+        ///     Based on fields, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> employeeFields = new Dictionary<string, string>()
         {
@@ -146,7 +152,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// list of tables that requried for to get the columns
+        ///     Dictionary having list of tables that requried to get the columns for employee(s) result
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
@@ -154,7 +160,7 @@ namespace ReportBuilderAPI.Repository
         };
 
         /// <summary>
-        /// Get employee details based on the companyId
+        ///     Get employee(s) details based on provided companyId [QueryBuilder]
         /// </summary>
         /// <param name="requestBody"></param>
         /// <param name="companyId"></param>
@@ -217,11 +223,10 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// /Read Employee Details
+        ///     Creating response object after reading Employee(s) details from database
         /// </summary>
         /// <param name="query"></param>
         /// <returns>EmployeeResponse</returns>
-
         private List<EmployeeResponse> ReadEmployeeDetails(string query)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -263,6 +268,7 @@ namespace ReportBuilderAPI.Repository
                             AnnouncementPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'announcementperms'").Count() == 1) ? (bool?)sqlDataReader["announcementperms"] : null,
                             SystemPermission = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'systemperms'").Count() == 1) ? (bool?)sqlDataReader["systemperms"] : null
                         };
+                        // Adding each employee details in array list
                         employeeList.Add(employeeResponse);
                     }
                 }

@@ -1,31 +1,29 @@
 ﻿
-// <copyright file="Constants.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>10-10-2018</date>
-// <summary>Class that handles the constants value</summary>
+/*
+ <copyright file="Constants.cs">
+      Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>10-10-2018</date>
+ <summary>
+    Class that handles the constants value
+ </summary>
+*/
 namespace ReportBuilderAPI.Utilities
 {
     /// <summary>
-    /// Class that handles the constants value
+    ///     Class that handles the constants value
     /// </summary>
     public class Constants
     {
         public const string COGNITO_USERPOOLID = "us-west-2_nrrZaoTAs";
         public const string COGNITO_USERPOOL_CLIENTID = "4efougb8nqj7f72ku183rudmqm";
 
-
         public const string CompletedWorkBooks = "COMPLETEDWORKBOOKS";
         public const string WorkBookInDue = "WORKBOOKINDUE";
         public const string PastDueWorkBook = "PASTDUEWORKBOOK";
 
-
-
         public const string PARAM = "PARAM";
-
-
-
 
         public const string ID = "ID";
         public const string ROLEID = "ROLEID";
@@ -55,7 +53,6 @@ namespace ReportBuilderAPI.Utilities
         public const string LICENCETYPE = "LICENCETYPE";
         public const string CONTRACTDATE = "CONTRACTDATE";
         public const string DATEPAID = "DATEPAID";
-
 
         public const string EMPLOYEE_NAME = "EMPLOYEE_NAME";
         public const string SUPERVISOR_NAME = "SUPERVISOR_NAME";
@@ -90,9 +87,6 @@ namespace ReportBuilderAPI.Utilities
         public const string USERID = "USERID";
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
 
-
-
-
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";
         public const string WORKBOOK_CREATED = "WORKBOOK_CREATED";
@@ -107,7 +101,6 @@ namespace ReportBuilderAPI.Utilities
         public const string NUMBER_COMPLETED = "NUMBER_COMPLETED";
 
         public const string LAST_ATTEMPT_DATE = "LAST_ATTEMPT_DATE";
-
         public const string FIRST_ATTEMPT_DATE = "FIRST_ATTEMPT_DATE";
 
         public const string REPETITIONS = "REPETITIONS";
@@ -116,7 +109,6 @@ namespace ReportBuilderAPI.Utilities
         public const string DUE_DATE = "DUE_DATE";
         public const string ASSIGNED_TO = "ASSIGNED_TO";
         public const string DATE_ADDED = "DATE_ADDED";
-
 
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";
@@ -139,10 +131,6 @@ namespace ReportBuilderAPI.Utilities
         public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
         public const string EXPIRATION_DATE = "EXPIRATION_DATE";
-
-
-
-
 
     }
 }

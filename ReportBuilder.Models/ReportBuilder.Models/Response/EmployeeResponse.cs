@@ -2,20 +2,21 @@
 using ReportBuilder.Models.Models;
 
 
-// <copyright file="EmployeeResponse.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>10-10-2018</date>
-// <summary>Response Model for the employee</summary>
+/*
+ <copyright file="EmployeeResponse.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>10-10-2018</date>
+ <summary>
+    Response model for employee [ReportBuilder]
+ </summary>
+*/
+
 namespace ReportBuilder.Models.Response
 {
-    /// <summary>
-    /// Resposne model to get the list of employees
-    /// </summary>
     public class EmployeeResponse
     {
-
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string WorkbookName { get; set; }

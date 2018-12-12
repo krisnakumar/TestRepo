@@ -8,21 +8,25 @@ using System.Collections.Generic;
 using System.Net;
 
 
-// <copyright file="ResponseBuilder.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>10-10-2018</date>
-// <summary>Response Builder that helps to build the default responses</summary>
+/*
+ <copyright file="ResponseBuilder.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author> Shoba Eswar </author>
+ <date>10-10-2018</date>
+ <summary>
+    Response Builder that builds the responses
+ </summary>
+*/
 namespace ReportBuilderAPI.Handlers.ResponseHandler
 {
     /// <summary>
-    /// Creates the common responses for the API gateway
+    ///     Class responsible for creating common responses for the API gateway
     /// </summary>
     public class ResponseBuilder
     {
         /// <summary>
-        /// Default response for internal error
+        ///     Creates response for internal error
         /// </summary>
         /// <returns>APIGatewayProxyResponse</returns>
         public static APIGatewayProxyResponse InternalError()
@@ -50,8 +54,9 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         }
 
         /// <summary>
-        /// Default response for internal error
+        ///     Creates response for bad / invalid requests
         /// </summary>
+        /// <param name="fieldName"></param>
         /// <returns>APIGatewayProxyResponse</returns>
         public static APIGatewayProxyResponse BadRequest(string fieldName)
         {
@@ -79,7 +84,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
 
 
         /// <summary>
-        /// Default response for internal error
+        ///     Creates response for forbidden resources
         /// </summary>
         /// <returns>APIGatewayProxyResponse</returns>
         public static APIGatewayProxyResponse Forbidden()
@@ -108,7 +113,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
 
 
         /// <summary>
-        /// Default response for internal error
+        ///     Creates response for unauthorized request
         /// </summary>
         /// <param name="message"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -137,7 +142,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         }
 
         /// <summary>
-        /// Returns success response
+        ///     Creates success response
         /// </summary>
         /// <param name="statusCode"></param>
         /// <param name="responseBody"></param>

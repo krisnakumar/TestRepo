@@ -16,22 +16,26 @@ using System.Linq;
 using System.Net;
 
 
-// <copyright file="EmployeeRepository.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>02-11-2018</date>
-// <summary>Repository that helps to read the task from the Table</summary>
+/* 
+<copyright file="TaskRepository.cs">
+    Copyright (c) 2018 All Rights Reserved
+</copyright>
+<author>Shoba Eswar</author>
+<date>02-11-2018</date>
+<summary> 
+    Repository that helps to read task(s) details for specific user and workbook from database.
+</summary>
+*/
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
-    /// Class that handles the task details
+    ///     Class that handles to read task(s) details for specific user and workbook from database
     /// </summary>
     public class TaskRepository : ITask
     {
 
         /// <summary>
-        /// Get task details
+        ///     Get task(s) details under a workbook for a user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="workbookId"></param>
@@ -79,14 +83,13 @@ namespace ReportBuilderAPI.Repository
                 return ResponseBuilder.InternalError();
             }
             finally
-
             {
                 databaseWrapper.CloseConnection();
             }
         }
 
         /// <summary>
-        /// Get list of task attempts details
+        ///     Get list of attempt(s) made over a task under a workbook for specific user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="workbookId"></param>
@@ -141,10 +144,11 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// 
+        ///     Get list of task(s) based on input field and column(s) for specific company [QueryBuilder]
         /// </summary>
-        /// <returns></returns>
-
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetQueryTaskDetails(string requestBody, int companyId)
         {
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
@@ -197,14 +201,12 @@ namespace ReportBuilderAPI.Repository
                 return ResponseBuilder.InternalError();
             }
         }
-
-
+      
         /// <summary>
-        /// /Read Task Details
+        ///     Creating response object after reading task(s) details from database
         /// </summary>
         /// <param name="query"></param>
-        /// <returns>EmployeeResponse</returns>
-
+        /// <returns>TaskResponse</returns>
         private List<TaskResponse> ReadTaskDetails(string query)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
@@ -226,6 +228,7 @@ namespace ReportBuilderAPI.Repository
                             Status = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
                             ExpirationDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateExpired'").Count() == 1) ? Convert.ToString(sqlDataReader["DateExpired"]) : null
                         };
+                        // Adding each task details in array list
                         taskList.Add(taskResponse);
                     }
                 }
@@ -243,7 +246,8 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
-        /// 
+        ///     Dictionary having Column list for the task(s) details.
+        ///     Based on column name, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> taskColumnList = new Dictionary<string, string>()
         {
@@ -267,9 +271,10 @@ namespace ReportBuilderAPI.Repository
                 { Constants.NUMBER_OF_ATTEMPTS, ", sa.Attempt"},
                 { Constants.EXPIRATION_DATE, ", sa.DateExpired"}
         };
-
+        
         /// <summary>
-        /// 
+        ///     Dictionary having fields that requried for the task entity.
+        ///     Based on fields, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> taskFields = new Dictionary<string, string>()
         {
@@ -291,7 +296,9 @@ namespace ReportBuilderAPI.Repository
             {Constants.DELETED_BY, "CONVERT(VARCHAR,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" }
         };
 
-
+        /// <summary>
+        ///     Dictionary having list of tables that requried to get the columns for task(s) result
+        /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
             { " LEFT JOIN dbo.[User] u on u.Id=uwb.UserId" , new List<string> {Constants.TASK_NAME, Constants.TASK_ID, Constants.TASK_CREATED} },

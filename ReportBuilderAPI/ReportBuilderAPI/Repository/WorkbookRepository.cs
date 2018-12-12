@@ -15,22 +15,25 @@ using System.Linq;
 using System.Net;
 
 
-
-// <copyright file="WorkbookRepository.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>23-10-2018</date>
-// <summary>Repository that helps to read the Workbook data from the Table</summary>
+/* 
+<copyright file="WorkbookRepository.cs">
+    Copyright (c) 2018 All Rights Reserved
+</copyright>
+<author>Shoba Eswar</author>
+<date>23-10-2018</date>
+<summary> 
+    Repository that helps to read workbook(s) details for specific user from database.
+</summary>
+*/
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
-    /// Class that helps to read the Workbook
+    ///     Class that handles to read workbook(s) details for specific user from database
     /// </summary>
     public class WorkbookRepository : IWorkbook
     {
         /// <summary>
-        /// APIGateway Response
+        ///      Get assigned workbook(s) details for a user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -76,7 +79,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// Get Past due workbook based on the userId
+        ///     Get past due workbook(s) details for a user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -122,7 +125,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// Get in due workbook Details based on the userId
+        ///     Get coming due workbook(s) details for a user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -169,7 +172,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// Get in due workbook Details based on the userId
+        ///     Get completed workbook(s) details for a user [ReportBuilder]
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -213,7 +216,8 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// 
+        ///     Dictionary having Column list for the workbook(s) details.
+        ///     Based on column name, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> workbookColumnList = new Dictionary<string, string>()
         {
@@ -264,7 +268,8 @@ namespace ReportBuilderAPI.Repository
         };
 
         /// <summary>
-        /// 
+        ///     Dictionary having fields that requried for the workbook entity.
+        ///     Based on fields, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
@@ -281,6 +286,9 @@ namespace ReportBuilderAPI.Repository
         };
 
 
+        /// <summary>
+        ///     Dictionary having list of tables that requried to get the columns for workbook(s) result
+        /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
             //{ " LEFT JOIN UserWorkbook uwb on uwb.WorkbookId=wb.Id", new List<string> {Constants.DUE_DATE, Constants.DATE_ADDED, Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK , Constants.PAST_DUE_WORKBOOK , Constants.INCOMPLETE_WORKBOOK,Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE } },
@@ -293,13 +301,13 @@ namespace ReportBuilderAPI.Repository
             { " LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId" , new List<string> {Constants.ROLEID, Constants.ROLE} },
         };
 
-
+        
         /// <summary>
-        /// Get employee details based on the input
+        ///     Get list of workbook(s) based on input field and column(s) for specific company [QueryBuilder]
         /// </summary>
         /// <param name="requestBody"></param>
         /// <param name="companyId"></param>
-        /// <returns></returns>
+        /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
         {
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
@@ -353,11 +361,11 @@ namespace ReportBuilderAPI.Repository
                 return ResponseBuilder.InternalError();
             }
         }
-
-
+        
         /// <summary>
-        /// Read workbook details from sql 
+        ///     Creating response object after reading workbook(s) details from database
         /// </summary>
+        /// <param name="query"></param>
         /// <returns>WorkbookResponse</returns>
         public List<WorkbookResponse> ReadWorkBookDetails(string query)
         {
@@ -400,6 +408,7 @@ namespace ReportBuilderAPI.Repository
                             Phone = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
 
                         };
+                        // Adding each workbook details in array list
                         workbookList.Add(workbookResponse);
                     }
                 }

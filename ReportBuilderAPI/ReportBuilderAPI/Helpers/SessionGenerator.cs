@@ -8,21 +8,25 @@ using ReportBuilderAPI.Utilities;
 using System;
 
 
-// <copyright file="IWorkbook.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>01-11-2018</date>
-// <summary>Repository that helps to generate token in the cognito</summary>
+/*
+ <copyright file = "SessionGenerator.cs" >
+ Copyright(c) 2018 All Rights Reserved
+ </copyright>
+ <author> Shoba Eswar </author>
+ <date>01-11-2018</date>
+ <summary>
+    Repository that helps to generate token for the cognito
+ </summary>
+*/
 namespace ReportBuilderAPI.Helpers
 {
     /// <summary>
-    /// Class that handle the token from the cognito
+    ///     Class that handles the token for the cognito
     /// </summary>
     public class SessionGenerator
     {
         /// <summary>
-        /// Get token from Cognito using username  and password
+        ///     Get token from Cognito using username  and password
         /// </summary>
         /// <param name="userRequest"></param>
         /// <returns>AuthFlowResponse</returns>
@@ -50,14 +54,13 @@ namespace ReportBuilderAPI.Helpers
 
 
         /// <summary>
-        /// Get token from Cognito using username  and password
+        ///     Get refreshed token from Cognito using for the current user
         /// </summary>
         /// <param name="userRequest"></param>
         /// <returns>AuthFlowResponse</returns>
         public AuthFlowResponse ProcessRefreshToken(UserRequest userRequest)
         {
             AuthFlowResponse authResponse;
-            
             try
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);
@@ -79,7 +82,7 @@ namespace ReportBuilderAPI.Helpers
 
 
         /// <summary>
-        ///  Check AuthenticationResult using ChallengeNameType 
+        ///     Check AuthenticationResult using ChallengeNameType 
         /// </summary>
         /// <param name="challengeNameType"></param>
         /// <returns>message</returns>

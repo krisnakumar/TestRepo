@@ -1,6 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
 
+
+/*
+ <copyright file="WorkbookResponse.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>16-10-2018</date>
+ <summary>
+    Response model for workbook [ReportBuilder]
+ </summary>
+*/
+
 namespace ReportBuilder.Models.Response
 {
     public class WorkbookResponse
