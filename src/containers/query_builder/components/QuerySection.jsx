@@ -215,7 +215,7 @@ class QuerySection extends PureComponent {
                 </Col>                
                 <Col xs="auto">
                   <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" aria-label="Run Query">
-                    <span aria-hidden class="fa-icon-size"><i class="fa fa-caret-right fa-icon-size"></i></span>  
+                    <span aria-hidden class=""><i class="fa fa-caret-right"></i></span>  
                     <span class="fa-text-align">Run Query</span>  
                   </button>
                 </Col>
