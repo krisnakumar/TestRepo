@@ -280,7 +280,8 @@ img {
 .query-section-table thead th{
   color: #fff !important;
   text-align: center !important;
-  font-weight: 400;
+  font-weight: 700;
+  font-size: 11px;
 }
 
 
@@ -364,6 +365,7 @@ img {
   font-family: inherit;
   font-size: inherit;
   font-weight: 400;
+  padding: 0 0 0 6px;
  }
 
  .tableWidth-10 {
@@ -407,10 +409,13 @@ img {
   .Select-input {
     height: 25px;
     width: 100%;
+    input {
+      padding: 6px 0 2px !important;
+    }
   }
   .Select-value-label {
     line-height: 31px;
-    padding-left: 6px !important;
+    padding-left: 5px !important;
     position: absolute;
     top: -2px;
   }
@@ -421,6 +426,17 @@ img {
   padding: 0 8px;
   line-height: 32px;
   margin: auto;
+  background-color:white;
+  border: none;
+  cursor: pointer;
+  color:#0a1631;
+}
+
+.query-section-button:hover {
+  border-color: rgba(233,233,233,1);
+  border-color: rgba(var(--palette-neutral-30,166, 166, 166),1);
+  background-color: rgba(234, 234, 234, 1);
+  border-radius: 1px;
 }
 
 .fa-angle-right ,  .fa-refresh{
@@ -558,4 +574,24 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
 
 button.query-action-btn.add:disabled {
     cursor: not-allowed;
+}
+
+.fa-icon-size{
+  font-size: 22px;
+  color:#0a1631
+}
+.fa-text-align{
+  vertical-align: top;
+  padding: 0 0 0 6px;
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
 }

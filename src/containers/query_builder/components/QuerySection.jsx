@@ -215,12 +215,14 @@ class QuerySection extends PureComponent {
                 </Col>                
                 <Col xs="auto">
                   <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" aria-label="Run Query">
-                    <span aria-hidden><i className="fa fa-angle-right"></i></span> Run Query
+                    <span aria-hidden class="fa-icon-size"><i class="fa fa-caret-right fa-icon-size"></i></span>  
+                    <span class="fa-text-align">Run Query</span>  
                   </button>
                 </Col>
                 <Col xs="auto">
                   <button onClick={this.onResetQueryClick} className="query-section-button" size="sm" aria-label="Reset">
-                    <span aria-hidden><i className="fa fa-refresh" aria-hidden="true"></i></span> Reset
+                    <span aria-hidden class="fa-icon-size" ><i class="fa fa-undo"></i></span> 
+                    <span class="fa-text-align">Reset</span>  
                   </button>
                 </Col>                
               </Row>

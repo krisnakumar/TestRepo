@@ -225,7 +225,7 @@ class TaskResultSet extends React.Component {
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     rowHeight={25}
-                    headerRowHeight={30}
+                    headerRowHeight={35}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial && TaskResultSetEmptyRowsView} 
                 />
