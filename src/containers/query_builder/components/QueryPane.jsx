@@ -49,13 +49,10 @@ class QueryPane extends PureComponent {
    * @returns none
   */
   componentWillReceiveProps(newProps) {
-    //debugger;
-    //if(newProps.selectedOption.value != this.state.entity){
       this.setState({
         entity: newProps.selectedOption.value,
         fieldData: FieldData.field[newProps.selectedOption.value].slice(0, 2)
       });
-    //} 
   }
 
   /**

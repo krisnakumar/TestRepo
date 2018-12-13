@@ -25,8 +25,8 @@ import TaskResultSet from './TaskResultSet';
 
 const options = [
   { value: 'employees', label: 'Employees' },
-  { value: 'workbooks', label: 'Workbooks' },
-  { value: 'tasks', label: 'Tasks' }
+  { value: 'workbooks', label: 'Workbook' },
+  { value: 'tasks', label: 'Task' }
 ];
 
 class QuerySection extends PureComponent {
@@ -81,6 +81,7 @@ class QuerySection extends PureComponent {
   let isEmployee = this.state.lastSelectedOption.value == "employees",
       isWorkbook = this.state.lastSelectedOption.value == "workbooks",
       isTask = this.state.lastSelectedOption.value == "tasks";
+      
     this.setState({
       isEmployee: isEmployee,
       isWorkbook: isWorkbook,
@@ -215,14 +216,14 @@ class QuerySection extends PureComponent {
                 </Col>                
                 <Col xs="auto">
                   <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" aria-label="Run Query">
-                    <span aria-hidden class=""><i class="fa fa-caret-right"></i></span>  
-                    <span class="fa-text-align">Run Query</span>  
+                    <span aria-hidden className=""><i className="fa fa-caret-right"></i></span>  
+                    <span className="fa-text-align">Run Query</span>  
                   </button>
                 </Col>
                 <Col xs="auto">
                   <button onClick={this.onResetQueryClick} className="query-section-button" size="sm" aria-label="Reset">
-                    <span aria-hidden class="fa-icon-size" ><i class="fa fa-undo"></i></span> 
-                    <span class="fa-text-align">Reset</span>  
+                    <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span> 
+                    <span className="fa-text-align">Reset</span>  
                   </button>
                 </Col>                
               </Row>

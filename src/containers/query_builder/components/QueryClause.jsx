@@ -208,7 +208,7 @@ class QueryClause extends PureComponent {
                 formattedData[index].operators =  FieldData.operator[type];
                 break;
             default:
-                // Don nothing
+                // Do nothing
         }
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
@@ -345,7 +345,6 @@ class QueryClause extends PureComponent {
                     queryObj.Bitwise = _self.state.formattedData[index] ? _self.state.formattedData[index].combinatorsSelected.value : "";
                 }            
                 
-
                 queryClause.push(queryObj)
             })
 
