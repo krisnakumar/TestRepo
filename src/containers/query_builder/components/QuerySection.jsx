@@ -66,7 +66,8 @@ class QuerySection extends PureComponent {
   */
   toggle() {
     this.setState({
-      modal: !this.state.modal
+      modal: false,
+      isResetModal: false
     });
   }
 
@@ -87,7 +88,8 @@ class QuerySection extends PureComponent {
       isWorkbook: isWorkbook,
       isTask: isTask,
       selectedOption: this.state.lastSelectedOption,
-      modal: false
+      modal: false,
+      isResetModal: false
     });
   }
 
@@ -100,10 +102,19 @@ class QuerySection extends PureComponent {
   */
   handleChange = (selectedOption) => {
     if(this.state.selectedOption.value != selectedOption.value){
-      this.setState({
-        modal: true,
-        lastSelectedOption: selectedOption
-      });
+      let isSame = this.queryPane.current.checkQuerySelections();
+      if(isSame){
+        this.setState({
+          modal: false,
+          lastSelectedOption: selectedOption
+        });        
+      this.confirmEntitySelection();
+      } else {
+        this.setState({
+          modal: true,
+          lastSelectedOption: selectedOption
+        });
+      }      
     } 
   }
 
@@ -141,7 +152,23 @@ class QuerySection extends PureComponent {
    * @returns none
   */
   onResetQueryClick = () => {
-    this.setState({ employees: {} });
+    let isSame = this.queryPane.current.checkQuerySelections();
+    if(!isSame){
+      this.setState({ isResetModal: true });
+    } else {    
+      this.resetQuery();
+    }
+  };
+
+  /**
+   * @method
+   * @name - resetQueryClick
+   * This method reset the query clause selection to initial state
+   * @param none
+   * @returns none
+  */
+  resetQuery = () => {
+    this.setState({ employees: {}, workbooks: {}, tasks: {}, isResetModal: false });
     this.queryPane.current.resetQuery();
   };
 
@@ -189,11 +216,19 @@ class QuerySection extends PureComponent {
             </div>
             <p className="card__description">Customized Queries</p>
             </div>
-            <Modal isOpen={this.state.modal} toggle={this.toggle} centered={true} className="custom-modal-confirm">
+            <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
               <ModalHeader toggle={this.toggle}>Entity Selection</ModalHeader>
               <ModalBody>The following action will reset the query selections already exist. Do you want to continue?</ModalBody>
               <ModalFooter>
                 <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
+                <button color="secondary" onClick={this.toggle}>Cancel</button>
+              </ModalFooter>
+            </Modal>
+            <Modal backdrop={"static"} isOpen={this.state.isResetModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
+              <ModalHeader toggle={this.toggle}>Reset Query</ModalHeader>
+              <ModalBody>The following action will reset the query selections already exist. Do you want to continue?</ModalBody>
+              <ModalFooter>
+                <button color="primary" onClick={this.resetQuery}>Continue</button>{' '}
                 <button color="secondary" onClick={this.toggle}>Cancel</button>
               </ModalFooter>
             </Modal> 
@@ -204,6 +239,7 @@ class QuerySection extends PureComponent {
                     clearable={isClearable}
                     isRtl={true}
                     isSearchable={false}
+                    searchable={false}
                     openOnClick={false}
                     value={selectedOption}
                     onChange={this.handleChange}

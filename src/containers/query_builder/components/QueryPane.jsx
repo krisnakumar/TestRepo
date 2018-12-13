@@ -37,7 +37,8 @@ class QueryPane extends PureComponent {
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
     this.passWorkbooksResults = this.passWorkbooksResults.bind(this); 
-    this.passTasksResults = this.passTasksResults.bind(this);
+    this.passTasksResults = this.passTasksResults.bind(this); 
+    this.checkQuerySelections = this.checkQuerySelections.bind(this);     
   }
 
   /**
@@ -123,6 +124,18 @@ class QueryPane extends PureComponent {
   */
   passTasksResults(tasks){
     this.props.passTasksToQuerySection(tasks);
+  }
+
+   /**
+   * @method
+   * @name - checkQuerySelections
+   * This method used to check query selection state is initial
+   * @param none
+   * @returns none
+  */
+  checkQuerySelections(){
+    let isSame = this.queryClause.current.checkQueryState();
+    return isSame;
   }
 
   render() {

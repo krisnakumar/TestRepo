@@ -33,11 +33,11 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     document.getElementById("loader-layer").classList.remove("loader-hide");
     document.getElementById("loader-layer").classList.add("loader-show");
 
-    let obj = {},
+    let request = {},
         url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
 
     if(type == "POST"){
-        obj = {
+        request = {
             method: type,
             headers: {
                 'Accept': 'application/json',
@@ -47,7 +47,7 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             body: JSON.stringify(requestPayload)
             };
     } else {
-        obj = {
+        request = {
             method: type,
             headers: {
                 'Accept': 'application/json',
@@ -57,7 +57,7 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             };
     }
 
-   return fetch(url, obj ).then(function(response) {
+   return fetch(url, request).then(function(response) {
         if(response.status == 401){
             window.location =window.location.origin;
         } else {     

@@ -15,11 +15,13 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { Input } from 'reactstrap';
 import Select from 'react-select';
+import _ from 'lodash'
 import 'whatwg-fetch'
 import * as API from '../../../shared/utils/APIUtils';
 import FieldData from './../data';
 import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
+import * as Constants from '../../../shared/constants';
 
 class QueryClause extends PureComponent {
 
@@ -62,6 +64,21 @@ class QueryClause extends PureComponent {
             this.state.entity = newProps.entity;      
             this.changeQueryClause(newProps.entity);
         }
+    }
+
+    /**
+     * @method
+     * @name - checkQueryState
+     * This method will check if any query is added/deleted than default
+     * @param none
+     * @returns isSame
+     */
+    checkQueryState(){
+        let initialFormattedData = this.formatRowData(this.props.fieldData),
+            currentFormattedData = this.state.formattedData,
+            isSame = _.isEqual(initialFormattedData, currentFormattedData);// returns false if different
+
+        return isSame;
     }
 
     /**
@@ -149,7 +166,7 @@ class QueryClause extends PureComponent {
 						field: index + "+" + element.value,
 						method: element.validation, 
 						validWhen: false, 
-						message: element.errormessage || 'This field is required.' 
+						message: element.errormessage || Constants.FIELD_ERROR_MESSAGE
 					};					
 			validationData.push(obj);
         });        
@@ -260,7 +277,7 @@ class QueryClause extends PureComponent {
             obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator.int;
             obj.valueSelected = "";
-            obj.isFocus = true;
+            obj.isFocus = false;
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field[entity][0];
             obj.operatorsSelected = FieldData.operator.int[0];
