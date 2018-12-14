@@ -305,6 +305,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
             List<WorkbookResponse> workbookDetails;
             List<string> fieldList = new List<string>();
+            EmployeeRepository employeeRepository = new EmployeeRepository();
             try
             {
                 selectQuery = "SELECT  ";
@@ -331,9 +332,9 @@ namespace ReportBuilderAPI.Repository
 
 
                 //getting where conditions
-                whereQuery = string.Join("", from emplyoee in queryRequest.Fields
-                                             select (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'")) : string.Empty));
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE  uc.CompanyId=" + companyId + " and (" + whereQuery) : string.Empty;
+                whereQuery = string.Join("", from employee in queryRequest.Fields
+                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator,employee.Value.Trim())) : string.Empty));
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE  wb.CompanyId=" + companyId + " and (" + whereQuery) : string.Empty;
 
                 query += whereQuery + ")";
 

@@ -13,6 +13,7 @@ namespace ReportBuilderAPI.Utilities
     public class Constants
     {
         public const string COGNITO_USERPOOLID = "us-west-2_nrrZaoTAs";
+
         public const string COGNITO_USERPOOL_CLIENTID = "4efougb8nqj7f72ku183rudmqm";
 
 
@@ -20,12 +21,14 @@ namespace ReportBuilderAPI.Utilities
         public const string WorkBookInDue = "WORKBOOKINDUE";
         public const string PastDueWorkBook = "PASTDUEWORKBOOK";
 
-
-
         public const string PARAM = "PARAM";
 
 
+        public const string CONTAINS = "CONTAINS";
+        public const string DOES_NOT_CONTAINS  = "DOES NOT CONTAIN";
 
+        public const string START_WITH = "STARTS WITH";
+        public const string END_WITH = "ENDS WITH";
 
         public const string ID = "ID";
         public const string ROLEID = "ROLEID";
@@ -127,6 +130,7 @@ namespace ReportBuilderAPI.Utilities
         public const string DATE_TAKEN = "DATE_TAKEN";
         public const string DATE_EXPIRED = "DATE_EXPIRED";
         public const string STATUS = "STATUS";
+        public const string REPORTING = "REPORTING";
         public const string CREATED_BY = "CREATED_BY";
         public const string DELETED_BY = "DELETED_BY";
         public const string REPETITIONS_COUNT = "REPETITIONS_COUNT";

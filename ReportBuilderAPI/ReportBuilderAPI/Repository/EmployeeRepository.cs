@@ -139,9 +139,12 @@ namespace ReportBuilderAPI.Repository
             {Constants.CITY, "u.City" },
             {Constants.STATE, "u.State" },
             {Constants.ZIP, "u.Zip" },
+            {Constants.ROLE, "r.Name " },
             {Constants.PHONE, "u.phone" },
-            {Constants.ROLE, "r.Name" },
-
+            {Constants.STATUS, "u.IsEnabled " },
+            {Constants.REPORTING, "s.IsDirectReport " },
+            {Constants.PHOTO, "u.Photo " },
+            {Constants.SUPERVISORID, "s.SupervisorId " }
         };
 
 
@@ -150,7 +153,8 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            { "LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} }
+            { "LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { "LEFT JOIN Supervisor s on s.SupervisorId=u.Id", new List<string> {Constants.SUPERVISORID, Constants.REPORTING} }
         };
 
         /// <summary>
@@ -189,8 +193,9 @@ namespace ReportBuilderAPI.Repository
 
 
                 //getting where conditions
-                whereQuery = string.Join("", from emplyoee in employeeRequest.Fields
-                                             select (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'")) : string.Empty));
+                whereQuery = string.Join("", from employee in employeeRequest.Fields
+                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
+                            CheckOperator(employee.Operator, employee.Value.Trim())) : string.Empty));
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
                 employeeResponse = ReadEmployeeDetails(query);
@@ -215,6 +220,42 @@ namespace ReportBuilderAPI.Repository
         }
 
 
+        /// <summary>
+        /// form he query based on the operator Name
+        /// </summary>
+        /// <param name="operatorName"></param>
+        /// <returns></returns>
+        public string CheckOperator(string operatorName, string value)
+        {
+            string queryString = string.Empty;
+            try
+            {
+                switch (operatorName.ToUpper())
+                {
+                    case Constants.CONTAINS:
+                        queryString = " like '%" + value + "%'";
+                        break;
+                    case Constants.DOES_NOT_CONTAINS:
+                        queryString = " not like '%" + value + "%'";
+                        break;
+                    case Constants.START_WITH:
+                        queryString = " like '" + value + "%'";
+                        break;
+                    case Constants.END_WITH:
+                        queryString = " like '%" + value + "'";
+                        break;
+                    default:
+                        queryString = operatorName + ("'" + value + "'");
+                        break;
+                }
+                return queryString;
+            }
+            catch (Exception exception)
+            {
+                LambdaLogger.Log(exception.ToString());
+                return queryString;
+            }
+        }
 
         /// <summary>
         /// /Read Employee Details

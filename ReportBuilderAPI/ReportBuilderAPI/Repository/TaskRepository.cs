@@ -150,6 +150,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
             List<TaskResponse> workbookDetails;
             List<string> fieldList = new List<string>();
+            EmployeeRepository employeeRepository = new EmployeeRepository();
             try
             {
                 selectQuery = "SELECT  ";
@@ -161,7 +162,7 @@ namespace ReportBuilderAPI.Repository
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
-                query += "  FROM Workbook wb  LEFT JOIN UserWorkBook uwb ON uwb.workbookId=wb.Id LEFT JOIN UserCompany uc on uc.UserId=uwb.UserId LEFT JOIN WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId ";
+                query += "  FROM Task t LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id ";
 
                 //get table joins
                 fieldList = queryRequest.ColumnList.ToList();
@@ -175,12 +176,10 @@ namespace ReportBuilderAPI.Repository
                 query += tableJoin;
 
                 //getting where conditions
-                whereQuery = string.Join("", from emplyoee in queryRequest.Fields
-                                             select (!string.IsNullOrEmpty(emplyoee.Bitwise) ? (" " + emplyoee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(taskFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (taskFields.Where(x => x.Key == emplyoee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + emplyoee.Operator + ("'" + emplyoee.Value + "'")) : string.Empty));
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
-
+                whereQuery = string.Join("", from employee in queryRequest.Fields
+                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator, employee.Value.Trim())) : string.Empty));
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE tv.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
-
                 workbookDetails = ReadTaskDetails(query);
                 if (workbookDetails != null)
                 {
@@ -277,26 +276,27 @@ namespace ReportBuilderAPI.Repository
             {Constants.TASK_ID, "t.Id " },
             {Constants.TASK_CREATED, "CONVERT(VARCHAR,t.DateCreated,101)" },
             {Constants.ATTEMPT_DATE, "CONVERT(VARCHAR,sa.dateTaken,101)" },
-            {Constants.DATE_TAKEN, "wb.dateTaken" },
+            {Constants.DATE_TAKEN, "sa.dateTaken" },
             {Constants.STATUS, "ss.desc as status" },
+            {Constants.EVALUATOR_NAME, "u.Fname" },
             {Constants.CITY, "sam.City" },
             {Constants.STATE, "sam.State" },
             {Constants.ZIP, "sam.Zip" },
             {Constants.COUNTRY, "sam.Country"  },
-            {Constants.IP, "sam.IP" },
-            {Constants.REPETITIONS_COUNT, "uwb.DateAdded" },
-            {Constants.ASSIGNED_TO, "wb.isenabled" },
-            {Constants.EVALUATOR_NAME, "wb.createdby" },
+            {Constants.IP, "sam.IP" },            
+            {Constants.DATECREATED, "CONVERT(VARCHAR,t.DateCreated,101)" },
+            {Constants.ISENABLED, "t.isenabled" },
+
             {Constants.CREATED_BY, "u.FName" },
-            {Constants.DELETED_BY, "CONVERT(VARCHAR,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" }
+            {Constants.DELETED_BY, "" },
+            {Constants.ASSIGNED_TO, "" },
+            {Constants.REPETITIONS_COUNT, "" },
         };
 
 
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            { " LEFT JOIN dbo.[User] u on u.Id=uwb.UserId" , new List<string> {Constants.TASK_NAME, Constants.TASK_ID, Constants.TASK_CREATED} },
-            { " LEFT JOIN  dbo.Task t ON t.Id=wbc.EntityId" , new List<string> {Constants.TASK_NAME, Constants.TASK_ID, Constants.TASK_CREATED, Constants.PARENT_TASK_NAME, Constants.CHILD_TASK_NAME, Constants.CREATED_BY, Constants.DELETED_BY} },
-            { " LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id" , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE,} },
+            { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id  LEFT JOIN dbo.[User] u on u.Id=sa.evaluator " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME } },
             { " JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} }
         };
     }

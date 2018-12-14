@@ -199,9 +199,18 @@ namespace ReportBuilder.UnitTest
                 Operator = "=",
                 Bitwise = "OR"
             };
+
+            EmployeeModel employeeModel3 = new EmployeeModel
+            {
+                Name = "UserName",
+                Value = "s",
+                Operator = "start with",
+                Bitwise = "AND"
+            };
+
             employeeList.Add(employeeModel);
             employeeList.Add(employeeModel2);
-
+            employeeList.Add(employeeModel3);
 
 
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
@@ -273,9 +282,9 @@ namespace ReportBuilder.UnitTest
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.TASK_ID,
-                Value = "296",
-                Operator = "="
+                Name = Constants.TASK_NAME,
+                Value = "e",
+                Operator = "contains"
             };
 
             employeeList.Add(employeeModel);
