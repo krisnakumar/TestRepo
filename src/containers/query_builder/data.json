@@ -129,7 +129,8 @@
 				"value": "supervisorId",
 				"type": "text",
 				"label": "Supervisor Id",
-				"validation": "isEmpty"
+				"validation": "isEmpty",
+				"field": "SUPERVISOR_ID"
 			},
 			{
 				"value": "role",
@@ -137,60 +138,6 @@
 				"label": "Role",
 				"validation": "isEmpty",
 				"field": "ROLE"
-			},
-			{
-				"value": "isDirectReport",
-				"type": "bool",
-				"label": "IsDirectReport",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "isEnabled",
-				"type": "bool",
-				"label": "IsEnabled",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "photo",
-				"type": "other",
-				"label": "Photo",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "isNetworldId",
-				"type": "int",
-				"label": "IsNetworldId",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "company",
-				"type": "text",
-				"label": "Company",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "companyId",
-				"type": "int",
-				"label": "CompanyId",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "licence",
-				"type": "text",
-				"label": "Licence",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "contractDate",
-				"type": "date",
-				"label": "Contract Date",
-				"validation": "isEmpty"
-			},
-			{
-				"value": "datePaid",
-				"type": "date",
-				"label": "Date Paid",
-				"validation": "isEmpty"
 			}
 		],
 		"workbooks": [
@@ -200,6 +147,13 @@
 				"label": "Workbook Name",
 				"validation": "isEmpty",
 				"field": "WORKBOOK_NAME"
+			},
+			{
+				"value": "workbookId",
+				"type": "int",
+				"label": "Workbook Id",
+				"validation": "isEmpty",
+				"field": "WORKBOOK_ID"
 			},
 			{
 				"value": "description",
@@ -223,13 +177,6 @@
 				"field": "WORKBOOK_ISENABLED"
 			},
 			{
-				"value": "createdBy",
-				"type": "text",
-				"label": "Created By",
-				"validation": "isEmpty",
-				"field": "WORKBOOK_CREATED_BY"
-			},
-			{
 				"value": "daystoComplete",
 				"type": "int",
 				"label": "Days to complete",
@@ -237,18 +184,18 @@
 				"field": "DAYS_TO_COMPLETE"
 			},
 			{
-				"value": "workbookId",
-				"type": "int",
-				"label": "Workbook Id",
-				"validation": "isEmpty",
-				"field": "WORKBOOK_ID"
-			},
-			{
 				"value": "assignedTo",
 				"type": "text",
 				"label": "Assigned To",
 				"validation": "isEmpty",
 				"field": "ASSIGNED_TO"
+			},
+			{
+				"value": "createdBy",
+				"type": "text",
+				"label": "Created By",
+				"validation": "isEmpty",
+				"field": "WORKBOOK_CREATED_BY"
 			},
 			{
 				"value": "dueDate ",
