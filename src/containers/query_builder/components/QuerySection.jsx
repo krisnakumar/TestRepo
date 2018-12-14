@@ -8,7 +8,12 @@
 
 METHODS
 --------
-
+createRows(employees)
+toggle()
+handleGridRowsUpdated(fromRow, toRow, updated)
+handleGridSort(sortColumn, sortDirection)
+updateModalState(modelName)
+handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
 import { CardBody} from 'reactstrap';
@@ -214,7 +219,7 @@ class QuerySection extends PureComponent {
              <div className="pageheader">
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Query Builder
             </div>
-            <p className="card__description">Custom built reports of employee workbook</p>
+            <p className="card__description">Choose an entity from the available list. Create a query with the attributes available for the corresponding entity. Run the query to see corresponding search result.</p>
             </div>
             <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
               <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>

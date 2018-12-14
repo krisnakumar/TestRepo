@@ -8,7 +8,12 @@
 
 METHODS
 --------
-
+createRows(employees)
+toggle()
+handleGridRowsUpdated(fromRow, toRow, updated)
+handleGridSort(sortColumn, sortDirection)
+updateModalState(modelName)
+handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
 import { instanceOf, PropTypes } from 'prop-types';
