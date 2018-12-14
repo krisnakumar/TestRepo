@@ -243,8 +243,9 @@ class QueryClause extends PureComponent {
     */
     handleInputChange(index, key, selectedOption, ele){
         ele.preventDefault();
-        let formattedData = this.state.formattedData;
-        formattedData[index][key] = ele.target.value || "";
+        let formattedData = this.state.formattedData,
+            value = ele.target.value || "";
+        formattedData[index][key] = value;
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }

@@ -145,12 +145,26 @@ class WorkBookDashboard extends PureComponent {
 
   }
 
+   /**
+   * @method
+   * @name - cellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
   cellFormatter = (props) => {
     return (
       <span>{props.value}</span>
     );
   }
 
+  /**
+   * @method
+   * @name - employeeFormatter
+   * This method will format the employee name column Data Grid
+   * @param props
+   * @returns none
+   */
   employeeFormatter = (props) => {
     if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
       return (
@@ -161,8 +175,12 @@ class WorkBookDashboard extends PureComponent {
        <span onClick={e => { 
           e.preventDefault(); 
           let isMyEmployeeModal = true, 
-          myEmployeesArray = [];
-          this.setState({ isMyEmployeeModal, myEmployeesArray });
+              myEmployeesArray = [],
+              supervisorNames = this.state.supervisorNames;
+
+          supervisorNames = [];
+          supervisorNames.push({ 'name': props.dependentValues.employee,'coloum': "NONE",'order': "NONE"  });
+          this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
           this.getMyEmployees(props.dependentValues.userId); }} 
         className={"text-clickable"}>    
         {props.value}
@@ -171,6 +189,14 @@ class WorkBookDashboard extends PureComponent {
     }
   }
 
+  /**
+   * @method
+   * @name - workbookFormatter
+   * This method will catch all the exceptions in this class
+   * @param error
+   * @param info
+   * @returns none
+  */
   workbookFormatter = (type, props) => {
     if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
       return (
@@ -226,15 +252,17 @@ class WorkBookDashboard extends PureComponent {
    * @name - updateMyEmployeesArray
    * This method will update MyEmployees Array of state of this component
    * @param employees
+   * @param supervisior
    * @returns none
    */
-  updateMyEmployeesArray= (employees) => {
+  updateMyEmployeesArray= (employees, supervisior) => {
     let myEmployeesArray = this.state.myEmployeesArray,
         level = this.state.level + 1,
-        supervisorNames = this.state.supervisorNames;
+        supervisorNames = this.state.supervisorNames,
+        employeesLength = employees.length;
 
-    if(employees.length > 0)
-      supervisorNames.push(employees[0].FirstName + " " + employees[0].LastName);
+    if(employeesLength > 0)
+      supervisorNames.push({ 'name': supervisior.employee,'coloum': "NONE",'order': "NONE"  });
 
     myEmployeesArray.push(employees);
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames });

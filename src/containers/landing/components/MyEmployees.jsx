@@ -207,11 +207,12 @@ class MyEmployees extends React.Component {
   /**
    * @method
    * @name - getMyEmployees
-   * This method will used to get My Employees details
+   * This method will used to get My Employees details supervisior
    * @param userId
+   * @param supervisior
    * @returns none
    */
-  async getMyEmployees(userId){
+  async getMyEmployees(userId, supervisior){
     const { cookies } = this.props;
 
     let token = cookies.get('IdentityToken'),
@@ -219,7 +220,7 @@ class MyEmployees extends React.Component {
         response = await API.ProcessAPI(url, "", token, false, "GET", true),
         myEmployees = response;
 
-      this.props.updateMyEmployeesArray(myEmployees);
+      this.props.updateMyEmployeesArray(myEmployees, supervisior);
   };
 
   /**
@@ -451,7 +452,7 @@ class MyEmployees extends React.Component {
       return (
        <span onClick={e => { 
           e.preventDefault(); 
-          this.getMyEmployees(props.dependentValues.userId); }} 
+          this.getMyEmployees(props.dependentValues.userId, props.dependentValues); }} 
         className={"text-clickable"}>    
         {props.value}
       </span>
@@ -541,8 +542,8 @@ class MyEmployees extends React.Component {
 
   render() {
     const { rows, supervisorNames } = this.state;
-    let supervisorNamesLength = supervisorNames.length == 1 ? supervisorNames.length - 1 : supervisorNames.length - 2;
-    let supervisorName = supervisorNames[supervisorNamesLength];
+    let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
+    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength]. name : "";
     return (     
       <div>
           <AssignedWorkBook
@@ -570,7 +571,7 @@ class MyEmployees extends React.Component {
               assignedWorkBooks={this.state.workBookCompleted}
           />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"}  isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>My Employees</ModalHeader>
+          <ModalHeader toggle={this.toggle}>My Employees{supervisorName}</ModalHeader>
           <ModalBody>
           <div className="grid-container">
               <div className="table has-total-row">
