@@ -7,22 +7,25 @@ using ReportBuilderAPI.Utilities;
 using System;
 
 
-
-// <copyright file="RequestReader.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>10-10-2018</date>
-// <summary>Read values from Gatewayrequest</summary>
+/*
+<copyright file="RequestReader.cs">
+    Copyright (c) 2018 All Rights Reserved
+</copyright>
+<author> Shoba Eswar </author>
+<date>10-10-2018</date>
+<summary>
+    Repository that reads values from Gateway request
+</summary>
+*/
 namespace ReportBuilderAPI.Handlers.RequestHandler
 {
     /// <summary>
-    /// Read requested values from the gatewayrequest
+    ///     Class responsible to read requested values from the gateway request
     /// </summary>
     public class RequestReader
     {
         /// <summary>
-        /// Read the path parameters from the request
+        ///     This method reads the 'userId' parameter from the request path
         /// </summary>
         /// <param name="request"></param>
         /// <returns>userId</returns>
@@ -43,7 +46,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         }
 
         /// <summary>
-        /// Read the path parameters from the request
+        ///     This method reads the 'workbookId' parameter from the request path
         /// </summary>
         /// <param name="request"></param>
         /// <returns>workbookId</returns>
@@ -65,10 +68,10 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
 
 
         /// <summary>
-        /// Read the path parameters from the request
+        ///     This method reads the 'companyId' parameter from the request path
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>workbookId</returns>
+        /// <returns>companyId</returns>
         public static int GetCompanyId(APIGatewayProxyRequest request)
         {
             int workbookId = 0;
@@ -87,7 +90,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
 
 
         /// <summary>
-        /// Read the path parameters from the request
+        ///     This method reads the 'taskId' parameter from the request path
         /// </summary>
         /// <param name="request"></param>
         /// <returns>taskId</returns>
@@ -109,7 +112,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
 
 
         /// <summary>
-        /// Read the path parameters from the request
+        ///     This method reads the path parameter from the request and creating object
         /// </summary>
         /// <param name="request"></param>
         /// <returns>QueryStringModel</returns>
@@ -150,7 +153,7 @@ namespace ReportBuilderAPI.Handlers.RequestHandler
         }
 
         /// <summary>
-        /// Read the request body from the request
+        ///     This method reads the request body
         /// </summary>
         /// <param name="request"></param>
         /// <returns>UserRequest</returns>

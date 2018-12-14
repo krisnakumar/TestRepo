@@ -1,16 +1,20 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
 
 
-// <copyright file="IEmployee.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>01-11-2018</date>
-// <summary>Interfaces for the tasks</summary>
+/*
+ <copyright file = "ITask.cs" >
+    Copyright(c) 2018 All Rights Reserved
+ </copyright>
+ <author> Shoba Eswar </author>
+ <date>01-11-2018</date>
+ <summary>
+    Interface for tasks
+ </summary>
+*/
 namespace ReportBuilderAPI.IRepository
 {
     /// <summary>
-    /// Interfaces for the tasks api
+    ///     Interface that handles Tasks crud operations
     /// </summary>
     public interface ITask
     {

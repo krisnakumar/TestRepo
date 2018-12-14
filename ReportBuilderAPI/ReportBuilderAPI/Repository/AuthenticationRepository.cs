@@ -11,21 +11,26 @@ using ReportBuilderAPI.Helpers;
 using System;
 using System.Net;
 
-// <copyright file="AuthenticationRepository.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>10-10-2018</date>
-// <summary>Repository that helps to handle the session</summary>
+/* 
+ <copyright file="AuthenticationRepository.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>10-10-2018</date>
+ <summary> 
+    Repository that helps to authenticate the user(s), login the user(s) into the app 
+    and handle the session(s).
+ </summary>
+*/
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
-    /// Repository that helps to handle the session
+    ///     Class that authenticates the user(s), login the user(s) into the app and handle the session(s)
     /// </summary>
     public class AuthenticationRepository
     {
         /// <summary>
-        /// Login API to create session in cognito for valid users
+        ///     Login API to create session in cognito for valid user(s)
         /// </summary>
         /// <param name="request"></param>
         /// <returns>APIGatewayProxyResponse</returns>
@@ -67,7 +72,7 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
-        /// Get companyId from database
+        ///     Get companyId from database
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>companyId</returns>
@@ -93,7 +98,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// Get companyId from database
+        ///     Get companyId from database
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>companyId</returns>
@@ -119,8 +124,9 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// API to handle the silent Auth using refresh token
+        ///     API to handle the silent Auth using refresh token
         /// </summary>
+        /// <param name="request"></param>
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request)
         {

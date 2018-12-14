@@ -6,24 +6,31 @@ using ReportBuilderAPI.Repository;
 using System;
 
 
+/*
+ <copyright file="Function.cs">
+    Copyright (c) 2018 All Rights Reserved
+ </copyright>
+ <author>Shoba Eswar</author>
+ <date>10-10-2018</date>
+ <summary>
+    - Repository to handle Lambda operations.
+    - Entry point for APIGateway requests
+ </summary>
+*/
 
-// <copyright file="EmployeeQueries.cs">
-// Copyright (c) 2018 All Rights Reserved
-// </copyright>
-// <author>Shoba Eswar</author>
-// <date>10-10-2018</date>
-// <summary>Handles Lambda operations</summary>
+// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+
 namespace ReportBuilderAPI.Handlers.FunctionHandler
 {
     /// <summary>
-    /// Handles list of lambda fucntions
+    ///     This class contains list of lambda fucntions
     /// </summary>
     public class Function
     {
 
         /// <summary>
-        /// Login Function to generate token
+        ///     Function that takes user credentials as request and responsible for login the user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -41,11 +48,9 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 return ResponseBuilder.InternalError();
             }
         }
-
-
-
+        
         /// <summary>
-        /// Refresh Token once the token is expired
+        ///     This function generaes new token once previous token is expired
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -64,9 +69,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of employees using userId
+        ///     [ReportBuilder] Function to get list of employee(s) under a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -85,9 +89,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of employees using userId
+        ///     [ReportBuilder] Function to get list of assigned workbook(s) for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -106,9 +109,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of past due workbooks
+        ///     [ReportBuilder] Function to get list of past due workbook(s) for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -128,7 +130,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         }
 
         /// <summary>
-        /// Get list of past due workbooks
+        ///     [ReportBuilder] Function to get list of coming due workbook(s) for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -147,9 +149,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of past due workbooks
+        ///     [ReportBuilder] Function to get list of completed workbook(s) for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -168,9 +169,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of past due workbooks
+        ///     [ReportBuilder] Function to get list of task(s) under a workbook for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -190,7 +190,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         }
 
         /// <summary>
-        /// Get list of past due workbooks
+        ///     [ReportBuilder] Function to get attempt(s) made over a task under a workbook for a user
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -209,9 +209,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of employees using userId
+        ///     [QueryBuilder] Function to get list of employee(s) filtered with some condition(s)
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -230,9 +229,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
         /// <summary>
-        /// Get list of employees using userId
+        ///     [QueryBuilder] Function to get list of workbook(s) filtered with some condition(s)
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
@@ -251,10 +249,8 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
-
-
         /// <summary>
-        /// Get list of employees using userId
+        ///     [QueryBuilder] Function to get list of task(s) filtered with some condition(s)
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
