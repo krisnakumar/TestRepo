@@ -214,19 +214,19 @@ class QuerySection extends PureComponent {
              <div className="pageheader">
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Query Builder
             </div>
-            <p className="card__description">Customized Queries</p>
+            <p className="card__description">Custom built reports of employee workbook</p>
             </div>
             <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
-              <ModalHeader toggle={this.toggle}>Entity Selection</ModalHeader>
-              <ModalBody>The following action will reset the query selections already exist. Do you want to continue?</ModalBody>
+              <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
+              <ModalBody>Your query and results will be lost. Do you wish to proceed?</ModalBody>
               <ModalFooter>
                 <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
                 <button color="secondary" onClick={this.toggle}>Cancel</button>
               </ModalFooter>
             </Modal>
             <Modal backdrop={"static"} isOpen={this.state.isResetModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
-              <ModalHeader toggle={this.toggle}>Reset Query</ModalHeader>
-              <ModalBody>The following action will reset the query selections already exist. Do you want to continue?</ModalBody>
+              <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
+              <ModalBody>Your query will be lost. Do you wish to proceed?</ModalBody>
               <ModalFooter>
                 <button color="primary" onClick={this.resetQuery}>Continue</button>{' '}
                 <button color="secondary" onClick={this.toggle}>Cancel</button>

@@ -638,6 +638,7 @@ class WorkBookDashboard extends PureComponent {
              <div className="pageheader">
               <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Workbook Dashboard
             </div>
+            <p className="card__description">View list of workbooks assigned, completed and due for employees</p>
             </div>
             <div className="grid-container">
               <div className="table has-total-row">
