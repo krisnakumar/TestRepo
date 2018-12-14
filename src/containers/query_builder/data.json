@@ -13,29 +13,81 @@
 		"others": [
 			{
 				"value": "=",
-				"label": "="
+				"label": "Equal To"
 			},
 			{
 				"value": "!=",
-				"label": "!="
+				"label": "Not Equal To"
 			}
 		],
 		"int": [
 			{
 				"value": "=",
-				"label": "="
+				"label": "Equal To"
 			},
 			{
 				"value": "!=",
-				"label": "!="
+				"label": "Not Equal To"
 			},
 			{
 				"value": "<=",
-				"label": "<="
+				"label": "Smaller Than or Equal To"
 			},
 			{
 				"value": ">=",
-				"label": ">="
+				"label": "Greater Than or Equal To"
+			}
+		],	
+		"text": [
+			{
+				"value": "=",
+				"label": "Equal To"
+			},
+			{
+				"value": "!=",
+				"label": "Not Equal To"
+			},
+			{
+				"value": "contains",
+				"label": "Contains"
+			},
+			{
+				"value": "does not contain",
+				"label": "Does Not Contain"
+			},
+			{
+				"value": "starts with",
+				"label": "Starts With"
+			},
+			{
+				"value": "ends with",
+				"label": "Ends With"
+			}
+		],
+		"date": [
+			{
+				"value": "=",
+				"label": "Equal To"
+			},
+			{
+				"value": "!=",
+				"label": "Not Equal To"
+			},
+			{
+				"value": "<=",
+				"label": "Smaller Than or Equal To"
+			},
+			{
+				"value": ">=",
+				"label": "Greater Than or Equal To"
+			},
+			{
+				"value": "<",
+				"label": "Smaller Than"
+			},
+			{
+				"value": ">",
+				"label": "Greater Than"
 			}
 		]
 	},

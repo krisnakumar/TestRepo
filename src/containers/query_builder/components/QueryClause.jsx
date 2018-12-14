@@ -186,8 +186,7 @@ class QueryClause extends PureComponent {
 
         unFormattedData.map(function (field, index) {
             let obj = {},
-                type = field.type != "int" ? "others" : "int";
-
+            type = field.type;
             obj.label = field.label;
             obj.type = field.type;
             obj.validation = field.validation;
@@ -221,7 +220,7 @@ class QueryClause extends PureComponent {
         formattedData[index][key] = selectedOption;
         switch(key) {
             case "fieldsSelected":
-                let type = selectedOption ? (selectedOption.type != "int" ? "others" : "int") : "int";
+                let type = selectedOption ? selectedOption.type : "others";
                 formattedData[index].operators =  FieldData.operator[type];
                 break;
             default:
