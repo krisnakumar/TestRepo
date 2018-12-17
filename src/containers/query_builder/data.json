@@ -179,7 +179,7 @@
 			},
 			{
 				"value": "supervisorId",
-				"type": "text",
+				"type": "int",
 				"label": "Supervisor Id",
 				"validation": "isEmpty",
 				"field": "SUPERVISOR_ID"
@@ -251,7 +251,7 @@
 			},
 			{
 				"value": "dueDate ",
-				"type": "text",
+				"type": "date",
 				"label": "Due Date ",
 				"validation": "isEmpty",
 				"field": "DUE_DATE"
