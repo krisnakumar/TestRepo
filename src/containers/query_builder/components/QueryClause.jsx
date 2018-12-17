@@ -248,7 +248,7 @@ class QueryClause extends PureComponent {
     handleInputChange(index, key, selectedOption, ele){
         ele.preventDefault();
         let formattedData = this.state.formattedData,
-            value = ele.target.value || "";
+            value = ele.target.value.replace(/^\s+/g, '') || "";
         formattedData[index][key] = value;
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();

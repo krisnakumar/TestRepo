@@ -25,8 +25,8 @@ class FormValidator {
         const validation_method = 
               typeof rule.method === 'string' ?
               validator[rule.method] : 
-              rule.method
-              
+              rule.method      
+
         // call the validation_method with the current field value as the first
         // argument, any additional arguments, and the whole state as a final
         // argument.  If the result doesn't match the rule.validWhen property,
@@ -36,6 +36,12 @@ class FormValidator {
           validation[position] = { isInvalid: true, message: rule.message }
           validation.isValid = false;
         }
+
+        if(this.isEmptyOrSpaces(field_value)) {
+          validation[position] = { isInvalid: true, message: rule.message }
+          validation.isValid = false;
+        }
+
       }
     });
 
@@ -49,6 +55,11 @@ class FormValidator {
     ));
 
     return { isValid: true, ...validation };
+  }
+
+  isEmptyOrSpaces(str){
+    let value = str || "";
+    return value === null || value.match(/^ *$/) !== null;
   }
 }
 
