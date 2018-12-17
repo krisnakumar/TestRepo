@@ -79,12 +79,12 @@ class EmployeeResultSet extends React.Component {
         },
         {
         key: 'alternateName',
-        name: 'Alternate Name',
+        name: 'Alternative Name',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-center"
+        cellClass: "text-left"
         },
         {
         key: 'totalEmployees',
@@ -93,7 +93,7 @@ class EmployeeResultSet extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-center last-column"
+        cellClass: "text-right last-column"
         }
       ];
     
@@ -107,7 +107,7 @@ class EmployeeResultSet extends React.Component {
   /**
    * @method
    * @name - cellFormatter
-   * This method will format the cell column other than workbooks Data Grid
+   * This method will format the cell column other than workbooks Data Grid 
    * @param props
    * @returns none
    */

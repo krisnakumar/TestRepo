@@ -123,6 +123,27 @@ class TaskResultSet extends React.Component {
     console.log(error, info);
   }
 
+  /**
+   * @method
+   * @name - formatDate
+   * This method will format the input date
+   * @param data
+   * @returns dateString
+  */
+  formatDate(date){
+    let dateString = "";
+    if(date){
+      let tempDate = new Date(date); // MM/DD/YYY
+      let day = tempDate.getDate();
+      let month = tempDate.getMonth() + 1;
+      let year = tempDate.getFullYear();
+      dateString = (day <= 9 ? '0' + day : day) + '/' + (month <= 9 ? '0' + month : month) + '/' + year;
+      return dateString;
+    } else {
+      return dateString;
+    }
+  }
+
    /**
    * @method
    * @name - createRows
@@ -134,13 +155,14 @@ class TaskResultSet extends React.Component {
   createRows = (tasks) => {
     const rows = [], 
           length = tasks ? tasks.length : 0;
-    for (let i = 0; i < length; i++) { 
+    for (let i = 0; i < length; i++) {
+      let expirationDate = tasks[i].ExpirationDate.split(" ")[0];
       rows.push({
         taskId:  tasks[i].TaskId,
         taskName: tasks[i].TaskName,
         assignedTo: tasks[i].AssignedTo,
         evaluatorName: tasks[i].EvaluatorName,
-        expirationDate: tasks[i].ExpirationDate
+        expirationDate: this.formatDate(expirationDate)
       });
     }
 

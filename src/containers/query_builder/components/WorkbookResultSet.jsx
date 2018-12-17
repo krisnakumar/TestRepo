@@ -51,7 +51,7 @@ class WorkbookResultSet extends React.Component {
         },
         {
         key: 'workbookName',
-        name: 'WorkbookName',
+        name: 'Workbook Name',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
