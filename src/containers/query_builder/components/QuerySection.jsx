@@ -106,13 +106,12 @@ class QuerySection extends PureComponent {
    * @returns none
   */
   handleChange = (selectedOption) => {
+    
     if(this.state.selectedOption.value != selectedOption.value){
       let isSame = this.queryPane.current.checkQuerySelections();
-      if(isSame){
-        this.setState({
-          modal: false,
-          lastSelectedOption: selectedOption
-        });        
+      if(isSame){      
+      this.state.modal = false;
+      this.state.lastSelectedOption = selectedOption;       
       this.confirmEntitySelection();
       } else {
         this.setState({
