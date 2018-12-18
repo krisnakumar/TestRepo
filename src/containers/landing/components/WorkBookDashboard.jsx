@@ -298,10 +298,10 @@ class WorkBookDashboard extends PureComponent {
    *  is update to this component class
    * @param none
    * @returns none
-   */
+  */
    componentDidMount() {
     const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId')   
+    let companyId = cookies.get('CompanyId'); 
     this.getEmployees(companyId);
   };
 

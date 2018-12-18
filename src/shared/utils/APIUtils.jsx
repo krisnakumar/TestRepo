@@ -59,6 +59,7 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
    return fetch(url, request).then(function(response) {
         if(response.status == 401){
+            deleteAllCookies();
             window.location =window.location.origin;
         } else {     
             document.getElementById("loader-layer").classList.remove("loader-show");
@@ -75,6 +76,24 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
         // Handle API Exception here       
         console.log('parsing failed', ex);
     });
+}
+
+/**
+* @method
+* @name - deleteAllCookies
+* This method will used to clear all available domain cookie if session is expired 
+* @param none
+* @returns none
+*/
+function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
 }
 
 // WIP ::::::::

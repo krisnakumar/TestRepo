@@ -1,9 +1,10 @@
+/* eslint-disable */
 import React, { Component } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { hot } from 'react-hot-loader';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
 import Router from './Router';
+import { withCookies, Cookies } from 'react-cookie';
 
 /**
  * App Class defines the React component to render
@@ -16,9 +17,18 @@ class App extends Component {
     this.state = {
       loading: true,
       loaded: false,
+      isValid: false
     };
   }
 
+  /**
+   * @method
+   * @name - componentDidMount
+   * This method will invoked whenever the component is mounted
+   *  is update to this component class
+   * @param none
+   * @returns none
+  */
   componentDidMount() {
     window.addEventListener('load', () => {
       this.setState({ loading: false });
@@ -26,8 +36,31 @@ class App extends Component {
     });
   }
 
+  /**
+   * @method
+   * @name - componentWillMount
+   * This method will invoked whenever the component is to be mounted
+   * @param none
+   * @returns none
+  */
+  componentWillMount() {
+    const { cookies } = this.props;
+    let token = cookies.get('IdentityToken'),                         // Get Identity token from browser cookie
+        isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
+        isBasePath = window.location.pathname == '/' ? true : false;  // Checking it is base path or not
+    
+    // Checkin that the Identity token is available and it is not app base path
+    if(!isTokenAvailable && !isBasePath){
+      // If there is no Identity token from browser cookie on loading app other than base domain setting state 'isValid' to false and doing re-direct
+      this.setState({ isValid: false });
+      window.location = window.location.origin;
+    } else {
+      this.setState({ isValid: true });
+    }
+  }
+
   render() {
-    const { loaded, loading } = this.state;
+    const { loaded, loading, isValid } = this.state;
     return (
       <div>
         {!loaded &&
@@ -40,11 +73,11 @@ class App extends Component {
           </div>
         }
         <div>
-          <Router />
+          { isValid && <Router /> }
         </div>
       </div>
     );
   }
 }
 
-export default hot(module)(App);
+export default hot(module)(withCookies(App));
