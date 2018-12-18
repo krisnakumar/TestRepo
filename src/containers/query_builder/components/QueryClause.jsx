@@ -395,9 +395,9 @@ class QueryClause extends PureComponent {
     */
     getClassName(index){
         const { formattedData } = this.state;
-        let validation = this.submitted ?           // if the form has been submitted at least once
-        this.validator.validate(formattedData) :   // then check validity every time we render
-        this.state.validation;
+        let validation = this.submitted ?               // if the form has been submitted at least once
+            this.validator.validate(formattedData) :   // then check validity every time we render
+            this.state.validation;
 
         return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
     };
@@ -411,9 +411,9 @@ class QueryClause extends PureComponent {
     */
     getMessage(index){
         const { formattedData } = this.state;
-        let validation = this.submitted ?           // if the form has been submitted at least once
-        this.validator.validate(formattedData) :   // then check validity every time we render
-        this.state.validation;
+        let validation = this.submitted ?               // if the form has been submitted at least once
+            this.validator.validate(formattedData) :   // then check validity every time we render
+            this.state.validation;
 
         return  validation[index] ? validation[index].message : "";
     };
@@ -500,7 +500,13 @@ class QueryClause extends PureComponent {
                                         
                                         <button ref={(input) => { _self.buttonRef[index] = input; }} title="Insert new filter line" className="query-action-btn add" type="button" disabled><i className="fa fa-plus"></i></button> 
                                     }
-                                    <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
+                                    {
+                                        formattedDataLength > 1 && <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
+                                                                            
+                                        || 
+                                                                                                                
+                                        <button title="Remove this filter line" className="query-action-btn delete" disabled><i className="fa fa-times"></i></button>
+                                    }                                    
                                 </td>
                                 <td className={"tableWidth-10"}> 
                                     { 
@@ -530,7 +536,7 @@ class QueryClause extends PureComponent {
                                         openOnClick={false}
                                         value={field.fieldsSelected}
                                         autoFocus={field.isFocus}
-                                        options={field.fields}
+                                        options={field.fields}                                        
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
