@@ -31,7 +31,7 @@
 			},
 			{
 				"value": "<=",
-				"label": "Smaller Than or Equal To"
+				"label": "Lesser Than or Equal To"
 			},
 			{
 				"value": ">=",
@@ -75,7 +75,7 @@
 			},
 			{
 				"value": "<=",
-				"label": "Smaller Than or Equal To"
+				"label": "Lesser Than or Equal To"
 			},
 			{
 				"value": ">=",
@@ -83,7 +83,7 @@
 			},
 			{
 				"value": "<",
-				"label": "Smaller Than"
+				"label": "Lesser Than"
 			},
 			{
 				"value": ">",
