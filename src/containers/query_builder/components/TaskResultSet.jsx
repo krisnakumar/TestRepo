@@ -21,17 +21,8 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-
-/**
- * TaskResultSetEmptyRowsView Class defines the React component to render
- * the table components empty rows message if data is empty from API request
- * extending the  react data grid module.
- */
-class TaskResultSetEmptyRowsView extends React.Component{
-  render() {
-    return (<div className="no-records-found-result-set">Sorry, no records</div>)
-  }
-};
+import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
+import ResultSetEmptyMessage from './ResultSetEmptyMessage';
 
 class TaskResultSet extends React.Component {
   static propTypes = {
@@ -249,7 +240,7 @@ class TaskResultSet extends React.Component {
                     rowHeight={25}
                     headerRowHeight={32}
                     minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial && TaskResultSetEmptyRowsView} 
+                    emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
                 />
             </div>
         </div>

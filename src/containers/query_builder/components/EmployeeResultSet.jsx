@@ -21,19 +21,10 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
+import ResultSetEmptyMessage from './ResultSetEmptyMessage';
 
-/**
- * WorkBookProgressEmptyRowsView Class defines the React component to render
- * the table components empty rows message if data is empty from API request
- * extending the  react data grid module.
- */
-class EmployeeResultSetEmptyRowsView extends React.Component{
-  render() {
-    return (<div className="no-records-found-result-set">Sorry, no records</div>)
-  }
-};
-
-class EmployeeResultSet extends React.Component {
+class EmployeeResultSet extends React.Component { 
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -237,7 +228,7 @@ class EmployeeResultSet extends React.Component {
                     rowHeight={25}
                     headerRowHeight={32}
                     minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial && EmployeeResultSetEmptyRowsView} 
+                    emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage} 
                 />
             </div>
         </div>
