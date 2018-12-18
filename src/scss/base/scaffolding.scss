@@ -113,6 +113,14 @@ img {
   font-weight: 600;
 }
 
+.no-records-found-result-set {
+  margin: 7% 0% 10% 0%;
+  color: #888;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+}
+
 .login-label{
   float: left;
 }
@@ -242,7 +250,7 @@ img {
   height: 100%;
   overflow: hidden;
   padding: 0 25px;
-  max-height: calc(100% - 22%);
+  max-height: calc(100% - 30%);
 }
 
 .query-builder-section {

@@ -29,7 +29,7 @@ import { withCookies, Cookies } from 'react-cookie';
  */
 class EmployeeResultSetEmptyRowsView extends React.Component{
   render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
+    return (<div className="no-records-found-result-set">Sorry, no records</div>)
   }
 };
 
