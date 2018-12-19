@@ -43,7 +43,11 @@ namespace ReportBuilder.Models.Response
 
         public int? AssignedWorkBook { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? PastDuedWorkBook { get; set; }
+        public int? PastDueWorkBook { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InDueWorkBook { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? InCompleteWorkbook { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -91,6 +95,9 @@ namespace ReportBuilder.Models.Response
         public string Zip { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Phone { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TotalEmployees { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? EntityCount { get; set; }

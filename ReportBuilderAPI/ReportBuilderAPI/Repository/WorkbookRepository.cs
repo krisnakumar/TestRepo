@@ -221,13 +221,13 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, string> workbookColumnList = new Dictionary<string, string>()
         {
-                { Constants.EMPLOYEE_NAME, ", u.FName AS FirstName, u.LName AS LastName  " },
+                { Constants.EMPLOYEE_NAME, ", (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName" },
                 { Constants.WORKBOOK_NAME, ",  wb.name as workbookName" },
                 { Constants.DESCRIPTION, ", wb.Description"},
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (Select CONCAT(us.Fname, ' ' ,us.Lname) from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (Select (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname) from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                  { Constants.USERNAME, ", u.UserName"},
                 { Constants.USERNAME2, ", u.UserName2"},
@@ -240,15 +240,23 @@ namespace ReportBuilderAPI.Repository
                 { Constants.STATE, ", u.State"},
                 { Constants.ZIP, ", u.Zip"},
                 { Constants.PHONE, ", u.phone"},
+
                 { Constants.ENTITY_COUNT, ", (SELECT COUNT(DISTINCT EntityId) FROM WorkbookProgress WHERE WorkbookId=wb.Id) as entityCount"},
+
                 { Constants.USER_COUNT, ", (SELECT COUNT(DISTINCT UserId) FROM UserWorkbook WHERE WorkbookId=wb.Id) as userCount"},
+
                 { Constants.ASSIGNED_WORKBOOK, ", (SELECT COUNT(DISTINCT uwt.WorkBookId)  FROM dbo.UserWorkBook uwt WHERE uwt.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwt.IsEnabled=1) AS AssignedWorkbooks"},
 
                 { Constants.PAST_DUE_WORKBOOK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwb.IsEnabled=1 AND wb.DaysToComplete <= DATEDIFF(DAY, DateAdded, GETDATE()) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre  WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS PastDueWorkbooks"},
 
-                { Constants.INCOMPLETE_WORKBOOK, ""},
+                { Constants.WORKBOOK_DUE, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwb.IsEnabled=1 AND wb.DaysToComplete >= DATEDIFF(DAY, DateAdded, GETDATE())AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre  WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS InDueWorkbooks"},
+
+                { Constants.INCOMPLETE_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  WorkBookProgress wbs JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND wbs.WorkBookId=wb.id GROUP BY wbt.WorkBookId HAVING (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId )),0)) AS InCompletedWorkbooks"},
 
                 { Constants.TOTAL_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  WorkBookProgress wbs JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND wbs.WorkBookId=wb.id ),0)) AS TotalTasks"},
+
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.id) AS TotalEmployees"},
+
 
                 { Constants.COMPLETED_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  WorkBookProgress wbs JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND wbs.WorkBookId=wb.id GROUP BY wbt.WorkBookId HAVING (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) = (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId )),0)) AS CompletedWorkbooks"},
 
@@ -274,6 +282,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
             {Constants.WORKBOOK_ID, "wb.ID " },
+            {Constants.USERID, "s.SupervisorId " },
             {Constants.WORKBOOK_NAME, "wb.Name " },
             {Constants.DESCRIPTION, "wb.Description" },
             {Constants.WORKBOOK_CREATED, "CONVERT(VARCHAR,wb.DateCreated,101)" },
@@ -291,17 +300,21 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            //{ " LEFT JOIN UserWorkbook uwb on uwb.WorkbookId=wb.Id", new List<string> {Constants.DUE_DATE, Constants.DATE_ADDED, Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK , Constants.PAST_DUE_WORKBOOK , Constants.INCOMPLETE_WORKBOOK,Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE } },
-            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE } },
+
+            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID } },
+
+            { " JOIN Supervisor s ON s.UserId=u.Id", new List<string> {Constants.USERID} },
 
             { " LEFT JOIN WorkbookProgress wbp on wbp.WorkbookId=wb.Id", new List<string> {Constants.NUMBER_COMPLETED, Constants.LAST_ATTEMPT_DATE, Constants.FIRST_ATTEMPT_DATE, Constants.LAST_SIGNOFF_BY, Constants.DATE_ADDED} },
 
             { " LEFT JOIN WorkbookContent wbc on wbc.WorkbookId=wb.Id", new List<string> {Constants.REPETITIONS} },
 
             { " LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId" , new List<string> {Constants.ROLEID, Constants.ROLE} },
+
+            {" LEFT JOIN UserCompany uc on uc.UserId = uwb.UserId ", new List<string> { Constants.USERID} }
         };
 
-        
+
         /// <summary>
         ///     Get list of workbook(s) based on input field and column(s) for specific company [QueryBuilder]
         /// </summary>
@@ -310,7 +323,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery=string.Empty;
             List<WorkbookResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -325,7 +338,7 @@ namespace ReportBuilderAPI.Repository
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
-                query += "  FROM Workbook wb LEFT JOIN UserWorkBook uwb ON uwb.workbookId=wb.Id  LEFT JOIN UserCompany uc on uc.UserId = uwb.UserId ";
+                query += "  FROM Workbook wb LEFT JOIN UserWorkBook uwb ON uwb.workbookId=wb.Id  ";
 
                 //get table joins
                 fieldList = queryRequest.ColumnList.ToList();
@@ -341,10 +354,11 @@ namespace ReportBuilderAPI.Repository
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryRequest.Fields
-                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator,employee.Value.Trim())) : string.Empty));
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE  wb.CompanyId=" + companyId + " and (" + whereQuery) : string.Empty;
+                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator, employee.Value.Trim())) : string.Empty));
+                companyQuery = queryRequest.Fields.Exists(x => x.Name.ToUpper() != Constants.USERID) ? (" WHERE  wb.CompanyId=" + companyId) : (" WHERE  uc.CompanyId=" + companyId);
+                query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery+ " and (" + whereQuery) + ")" : string.Empty;
 
-                query += whereQuery + ")";
+                
 
                 workbookDetails = ReadWorkBookDetails(query);
                 if (workbookDetails != null)
@@ -362,7 +376,7 @@ namespace ReportBuilderAPI.Repository
                 return ResponseBuilder.InternalError();
             }
         }
-        
+
         /// <summary>
         ///     Creating response object after reading workbook(s) details from database
         /// </summary>
@@ -396,7 +410,8 @@ namespace ReportBuilderAPI.Repository
                             Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString((sqlDataReader["Role"])) : null,
                             CompletedWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["CompletedWorkbooks"]) : null,
                             TotalWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)(sqlDataReader["TotalTasks"]) : null,
-                            PastDuedWorkBook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'PastDueWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["PastDueWorkbooks"]) : null,
+                            PastDueWorkBook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'PastDueWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["PastDueWorkbooks"]) : null,
+                            InDueWorkBook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InDueWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InDueWorkbooks"]) : null,
                             AssignedWorkBook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'AssignedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["AssignedWorkbooks"]) : null,
                             UserCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userCount'").Count() == 1) ? (int?)(sqlDataReader["userCount"]) : null,
                             EntityCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'entityCount'").Count() == 1) ? (int?)(sqlDataReader["entityCount"]) : null,
@@ -407,6 +422,8 @@ namespace ReportBuilderAPI.Repository
                             CreatedBy = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CreatedBy'").Count() == 1) ? Convert.ToString(sqlDataReader["CreatedBy"]) : null,
                             Address = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
                             Phone = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
+                            TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalEmployees'").Count() == 1) ? Convert.ToString(sqlDataReader["TotalEmployees"]) : null,
+                            InCompleteWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
 
                         };
                         // Adding each workbook details in array list

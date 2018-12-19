@@ -4,8 +4,8 @@ using Newtonsoft.Json;
 using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Handlers.FunctionHandler;
-using System.Collections.Generic;
 using ReportBuilderAPI.Utilities;
+using System.Collections.Generic;
 namespace ReportBuilder.UnitTest
 {
     [TestClass]
@@ -180,7 +180,7 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES" , "EMAIL"},
+                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL" },
                 Fields = employeeList
             };
 
@@ -217,7 +217,10 @@ namespace ReportBuilder.UnitTest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
+
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"18\",\"Operator\":\"=\",\"Name\":\"USERID\",\"Bitwise\":\"\"},{\"Value\":\"20\",\"Operator\":\"=\",\"Name\":\"USERID\",\"Bitwise\":\"or\"},{\"Value\":\"18\",\"Operator\":\"=\",\"Name\":\"ZIP\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
+
             Assert.AreEqual(200, userResponse.StatusCode);
         }
 
@@ -231,35 +234,41 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { "FIRSTNAME", "ROLE", "USERNAME", "USERNAME2", "EMAIL" },
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = "WORKBOOK_NAME",
-                Value = "Gail4",
-                Operator = "="               
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
             };
 
-            EmployeeModel employeeModel2 = new EmployeeModel
-            {
-                Name = "WORKBOOK_CREATED",
-                Value = "08/06/1975",
-                Operator = "=",
-                Bitwise = "OR"                
-            };
+            //EmployeeModel employeeModel2 = new EmployeeModel
+            //{
+            //    Name = "WORKBOOK_CREATED",
+            //    Value = "08/06/1975",
+            //    Operator = "=",
+            //    Bitwise = "OR"
+            //};
             employeeList.Add(employeeModel);
-            employeeList.Add(employeeModel2);
+            //employeeList.Add(employeeModel2);
 
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
 
 
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
-                Body = JsonConvert.SerializeObject(employeeRequest)
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters=pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"Cody66\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"},{\"Value\":\"Jim420\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
+            //aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"a\",\"Operator\":\"contains\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"},{\"Value\":\"Gail4\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -273,8 +282,8 @@ namespace ReportBuilder.UnitTest
             List<EmployeeModel> employeeList = new List<EmployeeModel>();
 
             Function function = new Function();
-            
-           QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
                 ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_NAME, Constants.ASSIGNED_TO, Constants.EVALUATOR_NAME, Constants.EXPIRATION_DATE },
                 Fields = employeeList
@@ -298,7 +307,7 @@ namespace ReportBuilder.UnitTest
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters=pathValues
+                PathParameters = pathValues
             };
 
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);

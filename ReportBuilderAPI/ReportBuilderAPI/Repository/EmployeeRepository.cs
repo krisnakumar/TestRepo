@@ -103,7 +103,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, string> columnList = new Dictionary<string, string>()
         {
-                { Constants.EMPLOYEE_NAME, ", u.FName AS FirstName, u.LName AS LastName  " },
+                { Constants.EMPLOYEE_NAME, ", (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName " },
                 { Constants.ROLE, ", r.Name AS Role "},
                 { Constants.USERNAME, ", u.UserName" },
                 { Constants.ALTERNATE_USERNAME, ", u.UserName2" },
@@ -111,7 +111,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.EMAIL, ", u.Email" },
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
-                { Constants.SUPERVISOR_NAME, ", (SELECT CONCAT(usr.LName, ',', usr.Fname ) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
+                { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
                 { Constants.USER_CREATED_DATE, ", u.DateCreated" },
                 { Constants.USER_PERMS, ", u.UserPerms" },
                 { Constants.SETTINGS_PERMS, ", u.settingsperms" },
@@ -286,8 +286,10 @@ namespace ReportBuilderAPI.Repository
                             SupervisorId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'supervisorId'").Count() == 1) ? (int?)sqlDataReader["supervisorId"] : null,
                             TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeCount'").Count() == 1) ? (int?)sqlDataReader["employeeCount"] : null,
 
-                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastName'").Count() == 1) && (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstName'").Count() == 1) ? (Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"])) : null,
+                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
+
                             Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : null,
+
                             UserName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : null,
 
                             AlternateName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
