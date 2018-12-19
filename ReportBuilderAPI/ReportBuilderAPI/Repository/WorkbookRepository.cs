@@ -228,7 +228,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (Select (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname) from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (Select (ISNULL(NULLIF(us.LName, '') + ', ', '') + us.Fname) from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                  { Constants.USERNAME, ", u.UserName"},
                 { Constants.USERNAME2, ", u.UserName2"},
@@ -299,7 +299,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
 
-            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID } },
+            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME } },
 
             { " JOIN Supervisor s ON s.UserId=u.Id", new List<string> {Constants.USERID} },
 

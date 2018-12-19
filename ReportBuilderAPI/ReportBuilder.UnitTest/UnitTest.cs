@@ -268,7 +268,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters=pathValues
             };
 
-            //aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"a\",\"Operator\":\"contains\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"},{\"Value\":\"Gail4\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"a\",\"Operator\":\"contains\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"},{\"Value\":\"Gail4\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
