@@ -240,11 +240,8 @@ namespace ReportBuilderAPI.Repository
                 { Constants.STATE, ", u.State"},
                 { Constants.ZIP, ", u.Zip"},
                 { Constants.PHONE, ", u.phone"},
-
                 { Constants.ENTITY_COUNT, ", (SELECT COUNT(DISTINCT EntityId) FROM WorkbookProgress WHERE WorkbookId=wb.Id) as entityCount"},
-
                 { Constants.USER_COUNT, ", (SELECT COUNT(DISTINCT UserId) FROM UserWorkbook WHERE WorkbookId=wb.Id) as userCount"},
-
                 { Constants.ASSIGNED_WORKBOOK, ", (SELECT COUNT(DISTINCT uwt.WorkBookId)  FROM dbo.UserWorkBook uwt WHERE uwt.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwt.IsEnabled=1) AS AssignedWorkbooks"},
 
                 { Constants.PAST_DUE_WORKBOOK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwb.IsEnabled=1 AND wb.DaysToComplete <= DATEDIFF(DAY, DateAdded, GETDATE()) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre  WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS PastDueWorkbooks"},
@@ -272,7 +269,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.WORKBOOK_ASSIGNED_DATE, ", uwb.DateAdded"},
 
-                { Constants.LAST_SIGNOFF_BY, ", (Select CONCAT(us.Fname, ' ' ,us.Lname) from dbo.[User] us WHERE us.Id=wbp.LastSignOffBy) as LastSignOffBy"}
+                { Constants.LAST_SIGNOFF_BY, ", (Select  (ISNULL(NULLIF(us.LName, '') + ', ', '') + us.Fname) from dbo.[User] us WHERE us.Id=wbp.LastSignOffBy) as LastSignOffBy"}
         };
 
         /// <summary>
