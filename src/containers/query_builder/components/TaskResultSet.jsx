@@ -82,7 +82,9 @@ class TaskResultSet extends React.Component {
     this.state = {    
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
-      isInitial: false
+      isInitial: false,
+      sortColumn: "",
+      sortDirection: "NONE",
     };
   }
 
@@ -172,10 +174,19 @@ class TaskResultSet extends React.Component {
       let rows = this.createRows(newProps.tasks),
           isArray = Array.isArray(newProps.tasks),
           isInitial = isArray;
-      this.setState({
-        rows: rows,
-        isInitial: isInitial
-      });
+
+      const {sortColumn , sortDirection } = this.state;
+
+      if(sortColumn != "" && sortDirection != "NONE"){
+        this.state.rows = rows;
+        this.state.isInitial = isInitial;
+        this.handleGridSort(sortColumn, sortDirection);
+      } else {
+        this.setState({
+          rows: rows,
+          isInitial: isInitial      
+        });
+      }
   }
 
   /**
@@ -206,6 +217,9 @@ class TaskResultSet extends React.Component {
    * @returns none
    */
   handleGridSort = (sortColumn, sortDirection) => {
+    this.state.sortColumn = sortColumn;
+    this.state.sortDirection = sortDirection;
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;

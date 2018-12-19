@@ -81,7 +81,9 @@ class WorkbookResultSet extends React.Component {
     this.state = {    
       rows: this.createRows(this.props.workbooks),
       pageOfItems: [],
-      isInitial: false
+      isInitial: false,
+      sortColumn: "",
+      sortDirection: "NONE",
     };
   }
 
@@ -149,10 +151,18 @@ class WorkbookResultSet extends React.Component {
       let rows = this.createRows(newProps.workbooks),
           isArray = Array.isArray(newProps.workbooks),
           isInitial = isArray;
-      this.setState({
-        rows: rows,
-        isInitial: isInitial
-      });
+          
+      const {sortColumn , sortDirection } = this.state
+      if(sortColumn != "" && sortDirection != "NONE"){
+        this.state.rows = rows;
+        this.state.isInitial = isInitial;
+        this.handleGridSort(sortColumn, sortDirection);
+      } else {
+        this.setState({
+          rows: rows,
+          isInitial: isInitial      
+        });
+      }
   }
 
   /**
@@ -183,6 +193,9 @@ class WorkbookResultSet extends React.Component {
    * @returns none
    */
   handleGridSort = (sortColumn, sortDirection) => {
+    this.state.sortColumn = sortColumn;
+    this.state.sortDirection = sortDirection;
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
