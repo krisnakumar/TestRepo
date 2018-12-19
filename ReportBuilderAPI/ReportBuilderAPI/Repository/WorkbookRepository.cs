@@ -10,6 +10,7 @@ using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -320,7 +321,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery=string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty;
             List<WorkbookResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -353,11 +354,12 @@ namespace ReportBuilderAPI.Repository
                 whereQuery = string.Join("", from employee in queryRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator, employee.Value.Trim())) : string.Empty));
                 companyQuery = queryRequest.Fields.Exists(x => x.Name.ToUpper() != Constants.USERID) ? (" WHERE  wb.CompanyId=" + companyId) : (" WHERE  uc.CompanyId=" + companyId);
-                query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery+ " and (" + whereQuery) + ")" : string.Empty;
+                query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
 
-                
+
 
                 workbookDetails = ReadWorkBookDetails(query);
+
                 if (workbookDetails != null)
                 {
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookDetails), 0);
@@ -383,16 +385,27 @@ namespace ReportBuilderAPI.Repository
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<WorkbookResponse> workbookList = new List<WorkbookResponse>();
+            //DataSet dataSet = new DataSet();
             try
             {
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
+                //dataSet = databaseWrapper.ExecuteAdapter(query);
+                //foreach (DataRow rows in dataSet.Tables[0].Rows)
+                //{
+
+                //    WorkbookResponse workbookResponse = new WorkbookResponse
+                //    {
+                //        EmployeeName = Convert.ToString(rows["employeeName"]),
+                //        LastSignoffBy = dataSet.Tables[0].Columns.Contains("LastSignOffBy") ? Convert.ToString(rows["LastSignOffBy"]) : null
+                //    };
+                //}
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())
                     {
                         WorkbookResponse workbookResponse = new WorkbookResponse
                         {
-                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastName'").Count() == 1) && (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstName'").Count() == 1) ? (Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"])) : null,
+                            EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
                             WorkBookName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(sqlDataReader["workbookName"]) : null,
                             Description = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Description'").Count() == 1) ? Convert.ToString(sqlDataReader["Description"]) : null,
                             WorkbookCreated = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'datecreated'").Count() == 1) ? Convert.ToString(sqlDataReader["datecreated"]) : null,

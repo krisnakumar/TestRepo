@@ -180,6 +180,38 @@ namespace DataInterface.Database
 
 
         /// <summary>
+        ///     This method executes the Select Command and returns data
+        /// </summary>
+        /// <param name="command">Transact-SQL statement</param>
+        /// <returns>A SqlDataReader object.</returns>
+        public DataSet ExecuteAdapter(string command)
+        {
+            DataSet dataSet = new DataSet();
+            try
+            {
+                if (sqlConnection != null && sqlConnection.State == ConnectionState.Closed)
+                    sqlConnection.Open();
+                 
+                if (sqlConnection != null)
+                {
+                    using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(command, sqlConnection))
+                    {
+                        sqlDataAdapter.Fill(dataSet);
+                    }
+                    return dataSet;
+
+                }
+                return null;
+            }
+            catch (Exception executeReaderException)
+            {
+                LambdaLogger.Log(executeReaderException.ToString());
+                return null;
+            }
+        }
+
+
+        /// <summary>
         ///     This method executes the Commands and returns the first column of the first row in the result set returned by the query. 
         ///     Additional columns or rows are ignored.
         /// </summary>
