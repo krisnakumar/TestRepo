@@ -220,7 +220,7 @@ class QueryClause extends PureComponent {
      * @param selectedOption
      * @returns none
     */
-    handleChange(index, key, selectedOption){
+    handleChange(index, key, selectedOption){                           
         let formattedData = this.state.formattedData;
         formattedData[index][key] = selectedOption;
         switch(key) {
@@ -228,6 +228,10 @@ class QueryClause extends PureComponent {
                 let type = selectedOption ? selectedOption.type : "others";
                 formattedData[index].operators =  FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
+                formattedData[index].operatorsSelected = formattedData[index].type == type ? formattedData[index].operatorsSelected : FieldData.operator[type][0];
+                formattedData[index].value= selectedOption.value || "";
+                formattedData[index].type = selectedOption.type || "";
+                formattedData[index].label = selectedOption.label || "";
                 break;
             default:
                 // Do nothing
