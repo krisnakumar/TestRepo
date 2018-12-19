@@ -119,6 +119,7 @@
 				"type": "date",
 				"label": "Date Created",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "USER_CREATED_DATE"
 			},
 			{
@@ -219,6 +220,7 @@
 				"type": "date",
 				"label": "Date Created",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "WORKBOOK_CREATED"
 			},
 			{
@@ -254,6 +256,7 @@
 				"type": "date",
 				"label": "Due Date ",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "DUE_DATE"
 			}
 		],
@@ -277,6 +280,7 @@
 				"type": "date",
 				"label": "Task Created Date",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "TASK_CREATED"
 			},
 			{
@@ -284,6 +288,7 @@
 				"type": "date",
 				"label": "Attempts Date",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "ATTEMPT_DATE"
 			},
 			{
@@ -305,6 +310,7 @@
 				"type": "date",
 				"label": "Date Taken",
 				"validation": "isEmpty",
+				"placeholder": "MM/DD/YYYY",
 				"field": "DATE_TAKEN"
 			},
 			{

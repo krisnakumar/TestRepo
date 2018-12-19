@@ -194,6 +194,7 @@ class QueryClause extends PureComponent {
             type = field.type;
             obj.label = field.label;
             obj.type = field.type;
+            obj.placeholder = field.placeholder || "";
             obj.validation = field.validation;
             obj.value = field.value;
             obj.combinators = FieldData.combinators;
@@ -207,7 +208,6 @@ class QueryClause extends PureComponent {
 
             formattedData.push(obj);
         });
-
         return formattedData;
     }
     
@@ -227,6 +227,7 @@ class QueryClause extends PureComponent {
             case "fieldsSelected":
                 let type = selectedOption ? selectedOption.type : "others";
                 formattedData[index].operators =  FieldData.operator[type];
+                formattedData[index].placeholder = selectedOption.placeholder || "";
                 break;
             default:
                 // Do nothing
@@ -278,6 +279,7 @@ class QueryClause extends PureComponent {
             obj.type = "int";
             obj.validation = "isEmpty";
             obj.value = "";
+            obj.placeholder = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator.int;
@@ -323,6 +325,7 @@ class QueryClause extends PureComponent {
             obj.type = "int";
             obj.validation = "isEmpty";
             obj.value = "";
+            obj.placeholder = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator.int;
@@ -563,7 +566,8 @@ class QueryClause extends PureComponent {
                                     <div className={_self.getClassName(index)}>
                                         <Input 
                                             type="text" 
-                                            name={field.label} 
+                                            name={field.label}
+                                            placeholder={field.placeholder || ""} 
                                             id={field.value}
                                             value={field.valueSelected}
                                             onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
