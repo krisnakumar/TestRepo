@@ -159,8 +159,8 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            { "LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
-            { "LEFT JOIN Supervisor s on s.SupervisorId=u.Id", new List<string> {Constants.SUPERVISORID, Constants.REPORTING} }
+            { " LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { " LEFT JOIN Supervisor s on s.userId=u.Id", new List<string> {Constants.SUPERVISORID, Constants.REPORTING} }
         };
 
         /// <summary>

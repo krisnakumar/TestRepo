@@ -218,7 +218,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"18\",\"Operator\":\"=\",\"Name\":\"USERID\",\"Bitwise\":\"\"},{\"Value\":\"20\",\"Operator\":\"=\",\"Name\":\"USERID\",\"Bitwise\":\"or\"},{\"Value\":\"18\",\"Operator\":\"=\",\"Name\":\"ZIP\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"SUPERVISOR_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -268,7 +268,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters=pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"a\",\"Operator\":\"contains\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"},{\"Value\":\"Gail4\",\"Operator\":\"=\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"Ray Preston\",\"Operator\":\"contains\",\"Name\":\"ASSIGNED_TO\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_ID\",\"TASK_NAME\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"EXPIRATION_DATE\"]}";
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -309,6 +309,8 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest),
                 PathParameters = pathValues
             };
+
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"Ray Preston\",\"Operator\":\"contains\",\"Name\":\"ASSIGNED_TO\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_ID\",\"TASK_NAME\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"EXPIRATION_DATE\"]}";
 
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);

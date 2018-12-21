@@ -49,7 +49,7 @@ namespace ReportBuilderAPI.Utilities
         public const string PHONE = "PHONE";
         public const string ZIP = "ZIP";
         public const string COUNTRY = "COUNTRY";
-        public const string SUPERVISORID = "SUPERVISORID";
+        public const string SUPERVISORID = "SUPERVISOR_ID";
         public const string ROLE = "ROLE";
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";
         public const string ISENABLED = "ISENABLED";
