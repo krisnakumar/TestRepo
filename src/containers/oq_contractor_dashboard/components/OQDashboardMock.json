@@ -60,5 +60,97 @@
             "comingDue": 0,
             "total": 6
         }
+    ],
+    "employeeView": [
+        {
+            "contractors": "Rebekka, Tyler",
+            "assignedQualification": 6,
+            "completedQualification": 1,
+            "inCompletedQualification": 1,
+            "pastDue": 4,
+            "comingDue": 1,
+            "total": 2
+        },
+        {
+            "contractors": "Marcel, David",
+            "assignedQualification": 4,
+            "completedQualification": 3,
+            "inCompletedQualification": 1,
+            "pastDue": 2,
+            "comingDue": 2,
+            "total": 2
+        },
+        {
+            "contractors": "Davina, Charles",
+            "assignedQualification": 3,
+            "completedQualification": 1,
+            "inCompletedQualification": 1,
+            "pastDue": 3,
+            "comingDue": 0,
+            "total": 3
+        },
+        {
+            "contractors": "Cami, Reynolds",
+            "assignedQualification": 2,
+            "completedQualification": 0,
+            "inCompletedQualification": 1,
+            "pastDue": 2,
+            "comingDue": 2,
+            "total": 1
+        }
+    ],
+    "assignedQualification": [
+        {
+            "taskCode": "COQ-100",
+            "oQTask": "Rectifier Reads",
+            "employee": "Freya, Marshal",
+            "assignedDate": "11/15/2018"
+        },
+        {
+            "taskCode": "COQ-120",
+            "oQTask": "Cathodic Protection Maint",
+            "employee": "Josh, David",
+            "assignedDate": "11/30/2018"
+        },
+        {
+            "taskCode": "COQ-210",
+            "oQTask": "Pipe Sqeezing steel 2' thru 8'",
+            "employee": "Jackson, Kenner",
+            "assignedDate": "12/31/2018"
+        },
+        {
+            "taskCode": "COQ-019",
+            "oQTask": "Cathodic Protection Maint",
+            "employee": "Daniel, Sharman",
+            "assignedDate": "12/31/2018"
+        }
+    ],
+    "completedQualifications": [
+        {
+            "taskCode": "COQ-100",
+            "oQTask": "Pipe Sqeezing - Steel",
+            "employee": "Shane, Williamson",
+            "assignedDate": "10/05/2019"
+        },
+        {
+            "taskCode": "COQ-120",
+            "oQTask": "Pipe Sqeezing - Steel",
+            "employee": "Wahab, Riazhussain",
+            "assignedDate": "08/14/2019"
+        }
+    ],
+    "inCompletedQualifications": [
+        {
+            "taskCode": "COQ-100",
+            "oQTask": "Pipe Sqeezing - Steel",
+            "employee": "Shane, Williamson",
+            "assignedDate": "10/11/2019"
+        },
+        {
+            "taskCode": "COQ-120",
+            "oQTask": "Pipe Sqeezing - Steel",
+            "employee": "Wahab, Riazhussain",
+            "assignedDate": "08/30/2019"
+        }
     ]
 }
