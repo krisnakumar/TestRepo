@@ -4,6 +4,7 @@ import MainWrapper from './MainWrapper';
 import Landing from '../landing/index';
 import Login from '../account/log_in/index';
 import QueryBuilder from '../query_builder/index';
+import OQDashboard from '../oq_contractor_dashboard/index';
 
 /**
  * @method
@@ -29,6 +30,7 @@ const Router = () => (
         <Route exact path="/" component={Login} />
         <Route exact path="/EmployeeReports" component={Landing} />
         <Route exact path="/QueryBuilder" component={QueryBuilder} />
+        <Route exact path="/OQDashboard" component={OQDashboard} />
       </Switch>
     </main>
   </MainWrapper>

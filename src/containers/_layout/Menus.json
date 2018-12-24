@@ -77,9 +77,12 @@
                 "name": "Query Builder",
                 "href": "/QueryBuilder",
                 "isRedirect":false
+            },
+            {
+                "name": "OQ Dashboard",
+                "href": "/OQDashboard",
+                "isRedirect":false
             }
-
-
         ],
         "iconUrl": "https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2",
         "href": "/ReportsLanding.aspx"

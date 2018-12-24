@@ -1,0 +1,64 @@
+{
+    "contractorOQView": [
+        {
+            "contractors": "Miller, Pipeline",
+            "role": "Contractor",
+            "assignedQualification": 4,
+            "completedQualification": 2,
+            "inCompletedQualification": 1,
+            "pastDue": 1,
+            "comingDue": 0,
+            "total": 4
+        },
+        {
+            "contractors": "Fereance, Stephen",
+            "role": "Contractor",
+            "assignedQualification": 4,
+            "completedQualification": 2,
+            "inCompletedQualification": 2,
+            "pastDue": 2,
+            "comingDue": 1,
+            "total": 4
+        },
+        {
+            "contractors": "Marchidonne, Ed",
+            "role": "Contractor",
+            "assignedQualification": 16,
+            "completedQualification": 1,
+            "inCompletedQualification": 2,
+            "pastDue": 6,
+            "comingDue": 0,
+            "total": 16
+        },
+        {
+            "contractors": "Maltbie, George",
+            "role": "Contractor",
+            "assignedQualification": 10,
+            "completedQualification": 0,
+            "inCompletedQualification": 4,
+            "pastDue": 3,
+            "comingDue": 0,
+            "total": 5
+        },
+        {
+            "contractors": "DiLeonardo",
+            "role": "Contractor",
+            "assignedQualification": 10,
+            "completedQualification": 2,
+            "inCompletedQualification": 5,
+            "pastDue": 3,
+            "comingDue": 0,
+            "total": 10
+        },
+        {
+            "contractors": "McGrath, Robert",
+            "role": "Contractor",
+            "assignedQualification": 6,
+            "completedQualification": 2,
+            "inCompletedQualification": 3,
+            "pastDue": 3,
+            "comingDue": 0,
+            "total": 6
+        }
+    ]
+}
