@@ -46,24 +46,21 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 query = Workbook.ReadWorkbookDetails(userId);
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                if (sqlDataReader != null && sqlDataReader.HasRows)
+                DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                foreach (DataRow rows in dataSet.Tables[0].Rows)
                 {
-                    while (sqlDataReader.Read())
+                    WorkbookResponse workbookResponse = new WorkbookResponse
                     {
-                        WorkbookResponse workbookResponse = new WorkbookResponse
-                        {
-                            EmployeeName = Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"]),
-                            WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                            Role = Convert.ToString(sqlDataReader["Role"]),
-                            CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
-                            WorkBookId = Convert.ToInt32(sqlDataReader["workbookId"])
-                        };
-                        workbookList.Add(workbookResponse);
-                    }
+                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),                        
+                        WorkbookName = Convert.ToString(rows["WorkbookName"]),
+                        Role = Convert.ToString(rows["Role"]),
+                        CompletedTasks = Convert.ToString(rows["CompletedWorkbooks"]) + "/" + Convert.ToString(rows["totalTasks"]),
+                        PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(rows["CompletedWorkbooks"]))) / (Convert.ToInt32(rows["TotalTasks"]))),
+                        DueDate = Convert.ToDateTime(rows["DueDate"]).ToString("MM/dd/yyyy"),
+                        UserId = Convert.ToInt32(rows["UserId"]),
+                        WorkBookId = Convert.ToInt32(rows["workbookId"])
+                    };
+                    workbookList.Add(workbookResponse);
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
@@ -92,24 +89,21 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 query = Workbook.ReadPastDueWorkbookDetails(userId);
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                if (sqlDataReader != null && sqlDataReader.HasRows)
+                DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                foreach (DataRow rows in dataSet.Tables[0].Rows)
                 {
-                    while (sqlDataReader.Read())
+                    WorkbookResponse workbookResponse = new WorkbookResponse
                     {
-                        WorkbookResponse workbookResponse = new WorkbookResponse
-                        {
-                            EmployeeName = Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"]),
-                            WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                            Role = Convert.ToString(sqlDataReader["Role"]),
-                            CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
-                            WorkBookId = Convert.ToInt32(sqlDataReader["workbookId"])
-                        };
-                        workbookList.Add(workbookResponse);
-                    }
+                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),
+                        WorkbookName = Convert.ToString(rows["WorkbookName"]),
+                        Role = Convert.ToString(rows["Role"]),
+                        CompletedTasks = Convert.ToString(rows["CompletedWorkbooks"]) + "/" + Convert.ToString(rows["totalTasks"]),
+                        PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(rows["CompletedWorkbooks"]))) / (Convert.ToInt32(rows["TotalTasks"]))),
+                        DueDate = Convert.ToDateTime(rows["DueDate"]).ToString("MM/dd/yyyy"),
+                        UserId = Convert.ToInt32(rows["UserId"]),
+                        WorkBookId = Convert.ToInt32(rows["workbookId"])
+                    };
+                    workbookList.Add(workbookResponse);
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
@@ -138,25 +132,21 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 query = Workbook.ReadInDueWorkbookDetails(userId);
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                if (sqlDataReader != null && sqlDataReader.HasRows)
+                DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                foreach (DataRow rows in dataSet.Tables[0].Rows)
                 {
-                    while (sqlDataReader.Read())
+                    WorkbookResponse workbookResponse = new WorkbookResponse
                     {
-                        WorkbookResponse workbookResponse = new WorkbookResponse
-                        {
-                            EmployeeName = Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"]),
-                            WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                            Role = Convert.ToString(sqlDataReader["Role"]),
-                            CompletedTasks = Convert.ToString(sqlDataReader["CompletedWorkbooks"]) + "/" + Convert.ToString(sqlDataReader["totalTasks"]),
-                            PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
-                            DueDate = Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy"),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
-                            WorkBookId = Convert.ToInt32(sqlDataReader["workbookId"])
-
-                        };
-                        workbookList.Add(workbookResponse);
-                    }
+                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),
+                        WorkbookName = Convert.ToString(rows["WorkbookName"]),
+                        Role = Convert.ToString(rows["Role"]),
+                        CompletedTasks = Convert.ToString(rows["CompletedWorkbooks"]) + "/" + Convert.ToString(rows["totalTasks"]),
+                        PercentageCompleted = (int)Math.Round((double)(100 * (Convert.ToInt32(rows["CompletedWorkbooks"]))) / (Convert.ToInt32(rows["TotalTasks"]))),
+                        DueDate = Convert.ToDateTime(rows["DueDate"]).ToString("MM/dd/yyyy"),
+                        UserId = Convert.ToInt32(rows["UserId"]),
+                        WorkBookId = Convert.ToInt32(rows["workbookId"])
+                    };
+                    workbookList.Add(workbookResponse);
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
@@ -185,22 +175,19 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 query = Workbook.CompletedWorkbookDetails(userId);
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                if (sqlDataReader != null && sqlDataReader.HasRows)
+                DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                foreach (DataRow rows in dataSet.Tables[0].Rows)
                 {
-                    while (sqlDataReader.Read())
+                    WorkbookResponse workbookResponse = new WorkbookResponse
                     {
-                        WorkbookResponse workbookResponse = new WorkbookResponse
-                        {
-                            EmployeeName = Convert.ToString(sqlDataReader["FirstName"]) + " " + Convert.ToString(sqlDataReader["LastName"]),
-                            WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                            Role = Convert.ToString(sqlDataReader["Role"]),
-                            CompletionDate = Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy"),
-                            UserId = Convert.ToInt32(sqlDataReader["UserId"]),
-                            WorkBookId = Convert.ToInt32(sqlDataReader["workbookId"])
-                        };
-                        workbookList.Add(workbookResponse);
-                    }
+                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),
+                        WorkbookName = Convert.ToString(rows["WorkbookName"]),
+                        Role = Convert.ToString(rows["Role"]),
+                        CompletionDate = Convert.ToDateTime(rows["LastAttemptDate"]).ToString("MM/dd/yyyy"),
+                        UserId = Convert.ToInt32(rows["UserId"]),
+                        WorkBookId = Convert.ToInt32(rows["workbookId"])
+                    };
+                    workbookList.Add(workbookResponse);
                 }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }

@@ -11,6 +11,7 @@ using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -50,25 +51,22 @@ namespace ReportBuilderAPI.Repository
                 if (userId != 0 && workbookId != 0)
                 {
                     query = Task.GetTaskList(userId, workbookId);
-                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                    foreach (DataRow rows in dataSet.Tables[0].Rows)
                     {
-                        while (sqlDataReader.Read())
+                        TaskResponse employeeResponse = new TaskResponse
                         {
-                            TaskResponse employeeResponse = new TaskResponse
-                            {
-                                TaskId = Convert.ToInt32(sqlDataReader["TaskId"]),
-                                UserId = userId,
-                                WorkbookId = workbookId,
-                                TaskCode = Convert.ToString(sqlDataReader["TaskCode"]),
-                                TaskName = Convert.ToString(sqlDataReader["TaskName"]),
-                                CompletedTasksCount = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
-                                IncompletedTasksCount = Convert.ToInt32(sqlDataReader["InCompletedWorkbooks"]),
-                                TotalTasks = Convert.ToInt32(sqlDataReader["TotalTasks"]),
-                                CompletionPrecentage = (int)Math.Round((double)(100 * (Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]))) / (Convert.ToInt32(sqlDataReader["TotalTasks"]))),
-                            };
-                            taskList.Add(employeeResponse);
-                        }
+                            TaskId = Convert.ToInt32(rows["TaskId"]),
+                            UserId = userId,
+                            WorkbookId = workbookId,
+                            TaskCode = Convert.ToString(rows["TaskCode"]),
+                            TaskName = Convert.ToString(rows["TaskName"]),
+                            CompletedTasksCount = Convert.ToInt32(rows["CompletedWorkbooks"]),
+                            IncompletedTasksCount = Convert.ToInt32(rows["InCompletedWorkbooks"]),
+                            TotalTasks = Convert.ToInt32(rows["TotalTasks"]),
+                            CompletionPrecentage = (int)Math.Round((double)(100 * (Convert.ToInt32(rows["CompletedWorkbooks"]))) / (Convert.ToInt32(rows["TotalTasks"]))),
+                        };
+                        taskList.Add(employeeResponse);
                     }
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(taskList), 0);
                 }
@@ -105,23 +103,20 @@ namespace ReportBuilderAPI.Repository
                 if (userId != 0 && workbookId != 0 && taskId != 0)
                 {
                     query = Task.GetTaskAttemptsDetails(userId, workbookId, taskId);
-                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
-                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                    foreach (DataRow rows in dataSet.Tables[0].Rows)
                     {
-                        while (sqlDataReader.Read())
+                        TaskModel taskModel = JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(rows["Comments"]));
+                        AttemptsResponse employeeResponse = new AttemptsResponse
                         {
-                            TaskModel taskModel = JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"]));
-                            AttemptsResponse employeeResponse = new AttemptsResponse
-                            {
-                                Attempt = Convert.ToString(sqlDataReader["Attempt"]),
-                                Status = Convert.ToString(sqlDataReader["Status"]),
-                                DateTime = Convert.ToDateTime(sqlDataReader["DateTaken"]).ToString("MM/dd/yyyy"),
-                                Location = Convert.ToString(sqlDataReader["Street1"]) + "," + Convert.ToString(sqlDataReader["Street2"]) + "," + Convert.ToString(sqlDataReader["City"]) + "," + Convert.ToString(sqlDataReader["State"]) + "," + Convert.ToString(sqlDataReader["Zip"]),
-                                Evaluator = Convert.ToString(sqlDataReader["EvaluatorName"]),
-                                Comments = taskModel.Comment
-                            };
-                            attemptsList.Add(employeeResponse);
-                        }
+                            Attempt = Convert.ToString(rows["Attempt"]),
+                            Status = Convert.ToString(rows["Status"]),
+                            DateTime = Convert.ToDateTime(rows["DateTaken"]).ToString("MM/dd/yyyy"),
+                            Location = Convert.ToString(rows["Street1"]) + "," + Convert.ToString(rows["Street2"]) + "," + Convert.ToString(rows["City"]) + "," + Convert.ToString(rows["State"]) + "," + Convert.ToString(rows["Zip"]),
+                            Evaluator = Convert.ToString(rows["EvaluatorName"]),
+                            Comments = taskModel.Comment
+                        };
+                        attemptsList.Add(employeeResponse);
                     }
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(attemptsList), 0);
                 }
