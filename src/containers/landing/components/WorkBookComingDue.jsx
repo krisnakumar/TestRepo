@@ -159,14 +159,14 @@ class WorkBookComingDue extends React.Component {
     const rows = [], 
           length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) { 
-        let dueDate = employees[i].DueDate.split("T")[0];
+        let dueDate = employees[i].DueDate ? employees[i].DueDate.split("T")[0] : "";
       rows.push({
         userId: employees[i].UserId,
         workBookId: employees[i].WorkBookId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        workbookName: employees[i].WorkbookName,
-        percentageCompleted: employees[i].PercentageCompleted + "%",
+        workbookName: employees[i].WorkBookName,
+        percentageCompleted: (employees[i].CompletedWorkbook / employees[i].TotalWorkbook  * 100) + "%",
         dueDate: dueDate
       });
     }

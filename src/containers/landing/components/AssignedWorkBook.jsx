@@ -133,6 +133,10 @@ class AssignedWorkBook extends React.Component {
    */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=" }],
+      "ColumnList": ["USERID", "WORKBOOK_ID", "TASK_ID", "TASK_CODE", "TASK_NAME", "TOTAL_TASK",  "INCOMPLETE_TASK", "COMPLETED_TASK"]
+    };
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
     workBooksProgress = {};
@@ -140,8 +144,10 @@ class AssignedWorkBook extends React.Component {
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = cookies.get('IdentityToken'),
-        url = `/users/${userId}/assigned-workbooks/${workBookId}/tasks`,
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        //url = `/users/${userId}/assigned-workbooks/${workBookId}/tasks`,
+        companyId = cookies.get('CompanyId'),
+        url = "/company/"+companyId+"/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBooksProgress = response;        
     isWorkBookProgressModal = true;
@@ -160,15 +166,14 @@ class AssignedWorkBook extends React.Component {
     const rows = [], 
           length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) { 
-        let dueDate = employees[i].DueDate.split("T")[0];
+        let dueDate = employees[i].DueDate ? employees[i].DueDate.split("T")[0] : "";
       rows.push({
-        userId:  employees[i].UserId,
+        userId:  employees[i].UserId || 0,
         workBookId: employees[i].WorkBookId,
-        workbookName: employees[i].WorkbookName,
+        workbookName: employees[i].WorkBookName,
         employee: employees[i].EmployeeName,
-        role: employees[i].Role,
-        completedTasks: employees[i].CompletedTasks,
-        percentageCompleted: employees[i].PercentageCompleted + "%",
+        completedTasks: employees[i].CompletedWorkbook +"/"+ employees[i].TotalWorkbook,
+        percentageCompleted: (employees[i].CompletedWorkbook / employees[i].TotalWorkbook  * 100) + "%",
         dueDate: dueDate
       });
     }

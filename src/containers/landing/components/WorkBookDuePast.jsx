@@ -155,6 +155,16 @@ class WorkBookDuePast extends React.Component {
    * for Data Grid
    * @param workbooks
    * @returns rows
+   * CompletedWorkbook: 0
+     DueDate: "11/28/18 7:35:34 AM"
+     EmployeeName: "Tasha Marks, Tasha Huang"
+     Role: "Supervisor"
+     TotalWorkbook: 1
+     UserId: 33
+     WorkBookId: 33
+     WorkBookName: "Alfred9"
+   * 
+   * 
    */
   createRows = (employees) => {
     const rows = [], 
@@ -166,8 +176,8 @@ class WorkBookDuePast extends React.Component {
         workBookId: employees[i].WorkBookId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        workbookName: employees[i].WorkbookName,
-        percentageCompleted: employees[i].PercentageCompleted + "%",
+        workbookName: employees[i].WorkBookName,
+        percentageCompleted: (employees[i].CompletedWorkbook / employees[i].TotalWorkbook  * 100) + "%",
         dueDate: dueDate
       });
     }

@@ -130,8 +130,8 @@ class WorkBookCompleted extends React.Component {
         userId: employees[i].UserId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        workbookName: employees[i].WorkbookName,
-        completionDate: employees[i].CompletionDate.split("T")[0]
+        workbookName: employees[i].WorkBookName,
+        completionDate: employees[i].LastAttemptDate.split("T")[0] || ""
       });
     }
 
