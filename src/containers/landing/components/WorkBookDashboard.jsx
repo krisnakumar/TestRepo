@@ -301,8 +301,9 @@ class WorkBookDashboard extends PureComponent {
   */
    componentDidMount() {
     const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId'); 
-    this.getEmployees(companyId);
+    let companyId = cookies.get('CompanyId'),
+        userId = cookies.get('UserId');
+    this.getEmployees(companyId, userId);
   };
 
   /**
@@ -312,11 +313,14 @@ class WorkBookDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getEmployees(userId){
+  async getEmployees(companyId, userId){
     const { cookies } = this.props;
+    const postData = {"Fields":[{"Name":"SUPERVISOR_ID","Value": userId,"Operator":"=",}],
+          "ColumnList":["USERID", "SUPERVISOR_ID", "EMPLOYEE_NAME", "ROLE", "ASSIGNED_WORKBOOK", "INCOMPLETE_WORKBOOK", "PAST_DUE_WORKBOOK", "COMPLETED_WORKBOOK", "TOTAL_EMPLOYEES"]};
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/employees",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        // url = "/users/"+ userId +"/employees",
+        url = "/company/"+companyId+"/workbooks",
+        response = await API.ProcessAPI(url, postData, token, false, "POST", true),
         rows = this.createRows(response),
         isInitial = true;
     this.setState({ rows: rows, isInitial: isInitial});
@@ -368,7 +372,6 @@ class WorkBookDashboard extends PureComponent {
         url = "/users/"+ userId +"/workbooks/assigned",
         response = await API.ProcessAPI(url, "", token, false, "GET", true);
 
-        
     assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
@@ -475,20 +478,20 @@ class WorkBookDashboard extends PureComponent {
     const rows = [], 
           length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
-      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBooks);
-      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBooks);
-      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBooks);
-      completedWorkBooksCount += parseInt(employees[i].CompletedWorkBooks);
-      totalEmpCount += parseInt(employees[i].EmployeeCount)
+      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook);
+      inDueWorkBooksCount += parseInt(employees[i].InCompleteWorkbook);
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook);
+      completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook);
+      totalEmpCount += parseInt(employees[i].TotalEmployees)
       rows.push({
-        userId: employees[i].UserId,
-        employee: employees[i].FirstName + ' ' + employees[i].LastName,
+        userId: employees[i].UserId || 0,
+        employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        assignedWorkBooks: employees[i].AssignedWorkBooks,
-        inDueWorkBooks: employees[i].InDueWorkBooks,
-        pastDueWorkBooks: employees[i].PastDueWorkBooks,
-        completedWorkBooks: employees[i].CompletedWorkBooks,
-        total: employees[i].EmployeeCount,
+        assignedWorkBooks: employees[i].AssignedWorkBook,
+        inDueWorkBooks: employees[i].InCompleteWorkbook,
+        pastDueWorkBooks: employees[i].PastDueWorkBook,
+        completedWorkBooks: employees[i].CompletedWorkbook,
+        total: employees[i].TotalEmployees
       });
     }
 
