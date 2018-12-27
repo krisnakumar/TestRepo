@@ -11,6 +11,7 @@ using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -58,26 +59,23 @@ namespace ReportBuilderAPI.Repository
                         query = Employee.ReadEmployeeDetails(userId);
                     }
 
-                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, new Dictionary<string, string>() { });
-                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    DataSet dataSet = databaseWrapper.ExecuteAdapter(query);
+                    foreach (DataRow rows in dataSet.Tables[0].Rows)
                     {
-                        while (sqlDataReader.Read())
+                        EmployeeResponse employeeResponse = new EmployeeResponse
                         {
-                            EmployeeResponse employeeResponse = new EmployeeResponse
-                            {
-                                FirstName = Convert.ToString(sqlDataReader["FirstName"]),
-                                LastName = Convert.ToString(sqlDataReader["LastName"]),
-                                Role = Convert.ToString(sqlDataReader["Role"]),
-                                WorkbookName = Convert.ToString(sqlDataReader["WorkbookName"]),
-                                AssignedWorkBooks = Convert.ToInt32(sqlDataReader["AssignedWorkbooks"]),
-                                InDueWorkBooks = Convert.ToInt32(sqlDataReader["WorkbooksinDue"]),
-                                PastDueWorkBooks = Convert.ToInt32(sqlDataReader["PastDueWorkbooks"]),
-                                CompletedWorkBooks = Convert.ToInt32(sqlDataReader["CompletedWorkbooks"]),
-                                EmployeeCount = Convert.ToInt32(sqlDataReader["TotalEmployees"]),
-                                UserId = Convert.ToInt32(sqlDataReader["UserId"])
-                            };
-                            employeeList.Add(employeeResponse);
-                        }
+                            FirstName = Convert.ToString(rows["FirstName"]),
+                            LastName = Convert.ToString(rows["LastName"]),
+                            Role = Convert.ToString(rows["Role"]),
+                            WorkbookName = Convert.ToString(rows["WorkbookName"]),
+                            AssignedWorkBooks = Convert.ToInt32(rows["AssignedWorkbooks"]),
+                            InDueWorkBooks = Convert.ToInt32(rows["WorkbooksinDue"]),
+                            PastDueWorkBooks = Convert.ToInt32(rows["PastDueWorkbooks"]),
+                            CompletedWorkBooks = Convert.ToInt32(rows["CompletedWorkbooks"]),
+                            EmployeeCount = Convert.ToInt32(rows["TotalEmployees"]),
+                            UserId = Convert.ToInt32(rows["UserId"])
+                        };
+                        employeeList.Add(employeeResponse);
                     }
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeList), 0);
                 }
