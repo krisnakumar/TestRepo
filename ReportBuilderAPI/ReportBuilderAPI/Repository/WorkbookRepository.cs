@@ -10,6 +10,7 @@ using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -146,8 +147,7 @@ namespace ReportBuilderAPI.Repository
                         WorkBookId = Convert.ToInt32(rows["workbookId"])
                     };
                     workbookList.Add(workbookResponse);
-                }
-            }
+                }            
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
             catch (Exception getInDueWorkbooksException)
@@ -189,7 +189,7 @@ namespace ReportBuilderAPI.Repository
                     };
                     workbookList.Add(workbookResponse);
                 }
-            }
+            
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
             catch (Exception exception)
