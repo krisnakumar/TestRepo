@@ -27,7 +27,7 @@ import { withCookies, Cookies } from 'react-cookie';
  * the table components empty rows message if data is empty from API request
  * extending the  react data grid module.
  */
-class WorkBookRepetitionEmptyRowsView extends React.Component{
+class WorkBookRepetitionEmptyRowsView extends React.Component {
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
@@ -49,8 +49,8 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'status',
         name: 'Complete/Incomplete',
         sortable: true,
@@ -58,8 +58,8 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'dateTime',
         name: 'Last Attempted Date',
         sortable: true,
@@ -67,8 +67,8 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center"
-        },
-        {
+      },
+      {
         key: 'location',
         name: 'Location',
         sortable: true,
@@ -76,8 +76,8 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center"
-        },
-        {
+      },
+      {
         key: 'evaluator',
         name: 'Evaluator',
         sortable: true,
@@ -85,8 +85,8 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center"
-        },
-        {
+      },
+      {
         key: 'comments',
         name: 'Comments',
         sortable: true,
@@ -94,11 +94,11 @@ class WorkBookRepetition extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center last-column"
-        }
-      ];
-    
+      }
+    ];
+
     this.state = {
-      modal: this.props.modal,      
+      modal: this.props.modal,
       rows: this.createRows(this.props.workBooksProgress),
       pageOfItems: [],
       isInitial: false,
@@ -135,20 +135,20 @@ class WorkBookRepetition extends React.Component {
     console.log(error, info);
   }
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param workbooks
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param workbooks
+  * @returns rows
+  */
   createRows = (workbooks) => {
-    const rows = [], 
-          length = workbooks ? workbooks.length : 0;
-    for (let i = 0; i < length; i++) { 
+    const rows = [],
+      length = workbooks ? workbooks.length : 0;
+    for (let i = 0; i < length; i++) {
       rows.push({
-        userId:  workbooks[i].UserId || 0,
+        userId: workbooks[i].UserId || 0,
         attempt: workbooks[i].NumberofAttempts || 0,
         status: workbooks[i].Status,
         dateTime: workbooks[i].LastAttemptDate,
@@ -170,15 +170,15 @@ class WorkBookRepetition extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workBooksRepetition),
-          isArray = Array.isArray(newProps.workBooksRepetition),
-          isInitial = isArray;
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        isInitial: isInitial,
-        selectedWorkbook: newProps.selectedWorkbook
-      });
+    let rows = this.createRows(newProps.workBooksRepetition),
+      isArray = Array.isArray(newProps.workBooksRepetition),
+      isInitial = isArray;
+    this.setState({
+      modal: newProps.modal,
+      rows: rows,
+      isInitial: isInitial,
+      selectedWorkbook: newProps.selectedWorkbook
+    });
   }
 
   /**
@@ -245,29 +245,29 @@ class WorkBookRepetition extends React.Component {
     const { rows } = this.state;
     return (
       <div>
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
           <ModalBody>
-          <div className="grid-description"> 
-            <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
-            <h6 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.taskCode : ""} {this.state.selectedWorkbook ? this.state.selectedWorkbook.taskName : ""}</h6>
-            <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
-          </div>           
-          <div className="grid-container">
+            <div className="grid-description">
+              <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
+              <h6 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.taskCode : ""} {this.state.selectedWorkbook ? this.state.selectedWorkbook.taskName : ""}</h6>
+              <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
+            </div>
+            <div className="grid-container">
               <div className="table">
-                  <ReactDataGrid
-                      ref={'reactDataGrid'}
-                      onGridSort={this.handleGridSort}
-                      enableCellSelect={false}
-                      enableCellAutoFocus={false}
-                      columns={this.heads}
-                      rowGetter={this.rowGetter}
-                      rowsCount={rows.length}
-                      onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={35}
-                      minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
-                  />
+                <ReactDataGrid
+                  ref={'reactDataGrid'}
+                  onGridSort={this.handleGridSort}
+                  enableCellSelect={false}
+                  enableCellAutoFocus={false}
+                  columns={this.heads}
+                  rowGetter={this.rowGetter}
+                  rowsCount={rows.length}
+                  onGridRowsUpdated={this.handleGridRowsUpdated}
+                  rowHeight={35}
+                  minColumnWidth={100}
+                  emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView}
+                />
               </div>
             </div>
           </ModalBody>
