@@ -144,7 +144,6 @@ class WorkBookRepetition extends React.Component {
    * @returns rows
    */
   createRows = (workbooks) => {
-    debugger;
     const rows = [], 
           length = workbooks ? workbooks.length : 0;
     for (let i = 0; i < length; i++) { 
