@@ -30,6 +30,7 @@ import AssignedWorkBook from './AssignedWorkBook';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
+import * as Constants from '../../../shared/constants';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -208,18 +209,23 @@ class MyEmployees extends React.Component {
    * @name - getMyEmployees
    * This method will used to get My Employees details supervisior
    * @param userId
-   * @param supervisior
+   * @param supervisor
    * @returns none
    */
-  async getMyEmployees(userId, supervisior){
+  async getMyEmployees(userId, supervisor){
     const { cookies } = this.props;
+    const postData = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }],
+      "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
+    };
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/employees",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true),
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/workbooks",
+        response = await API.ProcessAPI(url, postData, token, false, "POST", true),
         myEmployees = response;
 
-      this.props.updateMyEmployeesArray(myEmployees, supervisior);
+      this.props.updateMyEmployeesArray(myEmployees, supervisor);
   };
 
   /**
@@ -231,6 +237,10 @@ class MyEmployees extends React.Component {
    */
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "PAST_DUE", "Value": "true", "Operator": "=" }],
+      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+    };
 
     let isPastDueModal = this.state.isPastDueModal,
         workBookDuePast = {};
@@ -238,8 +248,9 @@ class MyEmployees extends React.Component {
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/workbooks/pastdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/workbooks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
       workBookDuePast = response;
       isPastDueModal = true;
@@ -255,6 +266,10 @@ class MyEmployees extends React.Component {
    */
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_IN_DUE", "Value": "true", "Operator": "=" }],
+      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+    };
 
     let isComingDueModal = this.state.isComingDueModal,
         workBookComingDue = {};
@@ -262,8 +277,9 @@ class MyEmployees extends React.Component {
     this.setState({ isComingDueModal, workBookComingDue });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/workbooks/comingdue",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/workbooks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         workBookComingDue = response;
 
@@ -280,6 +296,10 @@ class MyEmployees extends React.Component {
    */
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=" }],
+      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE", "LAST_ATTEMPT_DATE"]
+    };
 
     let isCompletedModal = this.state.isCompletedModal,
         workBookCompleted = {};
@@ -287,8 +307,9 @@ class MyEmployees extends React.Component {
     this.setState({ isCompletedModal, workBookCompleted });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId + "/workbooks/completed",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/workbooks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBookCompleted = response;
     isCompletedModal = true;
@@ -304,6 +325,10 @@ class MyEmployees extends React.Component {
    */
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "ASSIGNED", "Value": "true", "Operator": "=" }],
+      "ColumnList": ["USERID", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+    };
 
     let isAssignedModal = this.state.isAssignedModal,
         assignedWorkBooks = {};
@@ -311,8 +336,9 @@ class MyEmployees extends React.Component {
     this.setState({ isAssignedModal, assignedWorkBooks });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/workbooks/assigned",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/workbooks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     assignedWorkBooks = response;
     isAssignedModal = true;

@@ -133,6 +133,10 @@ class WorkBookDuePast extends React.Component {
    */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=" }],
+      "ColumnList": ["USERID", "WORKBOOK_ID", "TASK_ID", "TASK_CODE", "TASK_NAME", "TOTAL_TASK",  "INCOMPLETE_TASK", "COMPLETED_TASK"]
+    };
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
         workBooksProgress = {};
@@ -140,8 +144,9 @@ class WorkBookDuePast extends React.Component {
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
+        companyId = cookies.get('CompanyId'),
+        url = "/company/"+companyId+"/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         
     workBooksProgress = response;
     isWorkBookProgressModal = true;
@@ -155,15 +160,6 @@ class WorkBookDuePast extends React.Component {
    * for Data Grid
    * @param workbooks
    * @returns rows
-   * CompletedWorkbook: 0
-     DueDate: "11/28/18 7:35:34 AM"
-     EmployeeName: "Tasha Marks, Tasha Huang"
-     Role: "Supervisor"
-     TotalWorkbook: 1
-     UserId: 33
-     WorkBookId: 33
-     WorkBookName: "Alfred9"
-   * 
    * 
    */
   createRows = (employees) => {

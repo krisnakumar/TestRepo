@@ -320,7 +320,6 @@ class WorkBookDashboard extends PureComponent {
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
     let token = cookies.get('IdentityToken'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
@@ -345,7 +344,6 @@ class WorkBookDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response,
@@ -382,7 +380,6 @@ class WorkBookDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -412,7 +409,6 @@ class WorkBookDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -442,7 +438,6 @@ class WorkBookDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -472,7 +467,6 @@ class WorkBookDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      // url = "/users/"+ userId +"/employees",
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

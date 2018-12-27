@@ -144,7 +144,6 @@ class AssignedWorkBook extends React.Component {
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = cookies.get('IdentityToken'),
-        //url = `/users/${userId}/assigned-workbooks/${workBookId}/tasks`,
         companyId = cookies.get('CompanyId'),
         url = "/company/"+companyId+"/tasks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);

@@ -140,11 +140,11 @@ class WorkBookProgress extends React.Component {
         taskName: workbooks[i].TaskName,
         completedTasksCount: workbooks[i].CompletedTasksCount + "/" + workbooks[i].TotalTasks,
         incompletedTasksCount: workbooks[i].IncompletedTasksCount,
-        completionPrecentage: workbooks[i].CompletionPrecentage + "%"
+        completionPrecentage: parseInt((workbooks[i].CompletedTasksCount / workbooks[i].TotalTasks * 100)) + "%"
       });
-      averageCompletionPrecentage = averageCompletionPrecentage + workbooks[i].CompletionPrecentage;
+      averageCompletionPrecentage = parseInt(averageCompletionPrecentage + (workbooks[i].CompletedTasksCount / workbooks[i].TotalTasks * 100));
     }
-    averageCompletionPrecentage = averageCompletionPrecentage / length;
+    averageCompletionPrecentage = parseInt(averageCompletionPrecentage / length);
     
     if(length > 0)
       rows.push({taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount:"", incompletedTasksCount: "" , completionPrecentage:averageCompletionPrecentage + "%" });
