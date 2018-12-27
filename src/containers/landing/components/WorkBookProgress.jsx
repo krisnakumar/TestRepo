@@ -23,7 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import WorkBookRepetition from './WorkBookRepetition';
 import * as API from '../../../shared/utils/APIUtils';
-
+import * as Constants from '../../../shared/constants';
 
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
@@ -183,6 +183,10 @@ class WorkBookProgress extends React.Component {
    */
   async getWorkbookRepetitions(userId, workBookId, taskId){
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=" }],
+      "ColumnList": Constants.GET_WORKBOOKS_REPETITION_COLUMNS
+    };
 
     let isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal,
         workBooksRepetition = {};
@@ -190,9 +194,10 @@ class WorkBookProgress extends React.Component {
     this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
 
     let token = cookies.get('IdentityToken'),
-        url = "/users/"+ userId +"/assigned-workbooks/"+ workBookId +"/tasks/" + taskId + "/attempts",
-        response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
+        companyId = cookies.get('CompanyId'),
+        url = "/company/"+companyId+"/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+    
     workBooksRepetition = response;
     isWorkBookRepetitionModal = true;
     this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });

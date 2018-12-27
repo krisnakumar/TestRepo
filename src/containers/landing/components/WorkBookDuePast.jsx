@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import WorkBookProgress from './WorkBookProgress';
 import * as API from '../../../shared/utils/APIUtils';
+import * as Constants from '../../../shared/constants';
 
 /**
  * WorkBookDuePastEmptyRowsView Class defines the React component to render
@@ -135,7 +136,7 @@ class WorkBookDuePast extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=" }],
-      "ColumnList": ["USERID", "WORKBOOK_ID", "TASK_ID", "TASK_CODE", "TASK_NAME", "TOTAL_TASK",  "INCOMPLETE_TASK", "COMPLETED_TASK"]
+      "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
     };
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,

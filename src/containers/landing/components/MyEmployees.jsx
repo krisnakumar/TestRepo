@@ -239,7 +239,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "PAST_DUE", "Value": "true", "Operator": "=" }],
-      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+      "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
     let isPastDueModal = this.state.isPastDueModal,
@@ -268,7 +268,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_IN_DUE", "Value": "true", "Operator": "=" }],
-      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+      "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
     let isComingDueModal = this.state.isComingDueModal,
@@ -298,7 +298,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=" }],
-      "ColumnList": ["USERID", "ROLE", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE", "LAST_ATTEMPT_DATE"]
+      "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
     let isCompletedModal = this.state.isCompletedModal,
@@ -327,7 +327,7 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "ASSIGNED", "Value": "true", "Operator": "=" }],
-      "ColumnList": ["USERID", "WORKBOOK_ID", "EMPLOYEE_NAME", "WORKBOOK_NAME", "COMPLETED_WORKBOOK", "TOTAL_WORKBOOK", "DUE_DATE"]
+      "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
     let isAssignedModal = this.state.isAssignedModal,

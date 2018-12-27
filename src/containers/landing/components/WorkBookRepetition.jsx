@@ -144,16 +144,17 @@ class WorkBookRepetition extends React.Component {
    * @returns rows
    */
   createRows = (workbooks) => {
+    debugger;
     const rows = [], 
           length = workbooks ? workbooks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        userId:  workbooks[i].UserId,
-        attempt: workbooks[i].Attempt || 0,
+        userId:  workbooks[i].UserId || 0,
+        attempt: workbooks[i].NumberofAttempts || 0,
         status: workbooks[i].Status,
-        dateTime: workbooks[i].DateTime,
+        dateTime: workbooks[i].LastAttemptDate,
         location: workbooks[i].Location,
-        evaluator: workbooks[i].Evaluator,
+        evaluator: workbooks[i].EvaluatorName,
         comments: workbooks[i].Comments
       });
     }
