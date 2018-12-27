@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Utilities
 
 
         public const string CONTAINS = "CONTAINS";
-        public const string DOES_NOT_CONTAINS  = "DOES NOT CONTAIN";
+        public const string DOES_NOT_CONTAINS = "DOES NOT CONTAIN";
 
         public const string START_WITH = "STARTS WITH";
         public const string END_WITH = "ENDS WITH";
@@ -71,6 +71,8 @@ namespace ReportBuilderAPI.Utilities
         public const string PAST_DUE_WORKBOOK = "PAST_DUE_WORKBOOK";
         public const string COMPLETED_WORKBOOK = "COMPLETED_WORKBOOK";
         public const string INCOMPLETE_WORKBOOK = "INCOMPLETE_WORKBOOK";
+        public const string INCOMPLETE_TASK = "INCOMPLETE_TASK";
+        public const string TOTAL_TASK = "TOTAL_TASK";
         public const string TOTAL_WORKBOOK = "TOTAL_WORKBOOK";
         public const string ASSIGNED_QUALIFICATIONS = "ASSIGNED_QUALIFICATIONS";
         public const string COMPLETED_QUALIFICATIONS = "COMPLETED_QUALIFICATIONS";
@@ -113,13 +115,20 @@ namespace ReportBuilderAPI.Utilities
 
         public const string REPETITIONS = "REPETITIONS";
         public const string LAST_SIGNOFF_BY = "LAST_SIGNOFF_BY";
+        public const string COMPLETED_TASK = "COMPLETED_TASK";
 
         public const string DUE_DATE = "DUE_DATE";
         public const string ASSIGNED_TO = "ASSIGNED_TO";
         public const string DATE_ADDED = "DATE_ADDED";
 
+        public const string ASSIGNED = "ASSIGNED";
+        public const string COMPLETED = "COMPLETED";
+        public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
+        public const string PAST_DUE = "PAST_DUE";
+
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";
+        public const string TASK_CODE = "TASK_CODE";
         public const string TASK_ID = "TASK_ID";
         public const string TASK_CREATED = "TASK_CREATED";
         public const string ATTEMPT_DATE = "ATTEMPT_DATE";
@@ -134,8 +143,8 @@ namespace ReportBuilderAPI.Utilities
         public const string LOCATION = "LOCATION";
         public const string IP = "IP";
         public const string DURATION = "DURATION";
-        public const string SCORE = "SCORE";        
-        public const string COMPLETION_DATE = "COMPLETION_DATE";        
+        public const string SCORE = "SCORE";
+        public const string COMPLETION_DATE = "COMPLETION_DATE";
         public const string PARENT_TASK_NAME = "PARENT_TASK_NAME";
         public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";

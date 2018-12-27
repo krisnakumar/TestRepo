@@ -58,7 +58,7 @@ namespace ReportBuilderAPI.Repository
                         query = Employee.ReadEmployeeDetails(userId);
                     }
 
-                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
+                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, new Dictionary<string, string>() { });
                     if (sqlDataReader != null && sqlDataReader.HasRows)
                     {
                         while (sqlDataReader.Read())
@@ -198,10 +198,16 @@ namespace ReportBuilderAPI.Repository
                 query += tableJoin;
 
 
-                //getting where conditions
-                whereQuery = string.Join("", from employee in employeeRequest.Fields
-                                             select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
-                            CheckOperator(employee.Operator, employee.Value.Trim())) : string.Empty));
+                bool isExist = employeeRequest.Fields.Any(x => workbookFieldList.Contains(x.Name.ToUpper()));
+
+                if (!isExist)
+                {
+                    //getting where conditions
+                    whereQuery = string.Join("", from employee in employeeRequest.Fields
+                                                 select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
+                            CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
+                }
+
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
                 employeeResponse = ReadEmployeeDetails(query);
@@ -226,33 +232,45 @@ namespace ReportBuilderAPI.Repository
         }
 
 
+        private readonly List<string> workbookFieldList = new List<string>
+        {
+            Constants.ASSIGNED,
+            Constants.COMPLETED,
+            Constants.WORKBOOK_IN_DUE,
+            Constants.PAST_DUE,
+            Constants.WORKBOOK_ID
+        };
+
         /// <summary>
         /// form he query based on the operator Name
         /// </summary>
         /// <param name="operatorName"></param>
         /// <returns></returns>
-        public string CheckOperator(string operatorName, string value)
+        public string CheckOperator(string operatorName, string value, string field)
         {
             string queryString = string.Empty;
             try
             {
-                switch (operatorName.ToUpper())
+                if (!workbookFieldList.Contains(field.ToUpper()))
                 {
-                    case Constants.CONTAINS:
-                        queryString = " like '%" + value + "%'";
-                        break;
-                    case Constants.DOES_NOT_CONTAINS:
-                        queryString = " not like '%" + value + "%'";
-                        break;
-                    case Constants.START_WITH:
-                        queryString = " like '" + value + "%'";
-                        break;
-                    case Constants.END_WITH:
-                        queryString = " like '%" + value + "'";
-                        break;
-                    default:
-                        queryString = operatorName + ("'" + value + "'");
-                        break;
+                    switch (operatorName.ToUpper())
+                    {
+                        case Constants.CONTAINS:
+                            queryString = " like '%" + value + "%'";
+                            break;
+                        case Constants.DOES_NOT_CONTAINS:
+                            queryString = " not like '%" + value + "%'";
+                            break;
+                        case Constants.START_WITH:
+                            queryString = " like '" + value + "%'";
+                            break;
+                        case Constants.END_WITH:
+                            queryString = " like '%" + value + "'";
+                            break;
+                        default:
+                            queryString = operatorName + ("'" + value + "'");
+                            break;
+                    }
                 }
                 return queryString;
             }
@@ -275,7 +293,7 @@ namespace ReportBuilderAPI.Repository
             List<EmployeeResponse> employeeList = new List<EmployeeResponse>();
             try
             {
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query);
+                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, new Dictionary<string, string>() { });
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())

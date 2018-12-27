@@ -1,5 +1,6 @@
 ﻿using Amazon.Lambda.Core;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -25,7 +26,7 @@ namespace DataInterface.Database
     public class DatabaseWrapper
     {
         private static string connectionString = string.Empty;
-        SqlConnection sqlConnection = null;
+        private SqlConnection sqlConnection = null;
 
         /// <summary>
         ///     Contructor to get the sql connection string 
@@ -33,7 +34,7 @@ namespace DataInterface.Database
         public DatabaseWrapper()
         {
             connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
-            sqlConnection = new SqlConnection(String.Format(connectionString));
+            sqlConnection = new SqlConnection(string.Format(connectionString));
 
         }
 
@@ -46,7 +47,7 @@ namespace DataInterface.Database
         {
             try
             {
-                sqlConnection = new SqlConnection(String.Format(connectionString));
+                sqlConnection = new SqlConnection(string.Format(connectionString));
                 int rowsaffected = 0;
                 SqlTransaction sqlTransaction = null;
 
@@ -66,7 +67,7 @@ namespace DataInterface.Database
                 }
                 try
                 {
-                    if (!String.IsNullOrEmpty(command))
+                    if (!string.IsNullOrEmpty(command))
                     {
                         sqlCommand.CommandText = command;
 
@@ -75,7 +76,9 @@ namespace DataInterface.Database
 
                         //Commits the database transaction.
                         if (sqlTransaction != null)
+                        {
                             sqlTransaction.Commit();
+                        }
                     }
                 }
                 catch (Exception executeQueryException)
@@ -121,7 +124,7 @@ namespace DataInterface.Database
                 //iterate through the collection Transact-SQL statement
                 foreach (string Command in Commands)
                 {
-                    if (!String.IsNullOrEmpty(Command))
+                    if (!string.IsNullOrEmpty(Command))
                     {
                         sqlCommand.CommandText = Command;
 
@@ -131,7 +134,9 @@ namespace DataInterface.Database
                 }
                 //Commits the database transaction.
                 if (sqlTransaction != null)
+                {
                     sqlTransaction.Commit();
+                }
             }
             catch (Exception executeQueryException)
             {
@@ -145,13 +150,16 @@ namespace DataInterface.Database
         /// </summary>
         /// <param name="command">Transact-SQL statement</param>
         /// <returns>A SqlDataReader object.</returns>
-        public SqlDataReader ExecuteReader(string command)
+        public SqlDataReader ExecuteReader(string command, Dictionary<string, string> parameters)
         {
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty;
             try
             {
                 SqlDataReader sqlDataReader;
                 if (sqlConnection != null && sqlConnection.State == ConnectionState.Closed)
+                {
                     sqlConnection.Open();
+                }
 
                 if (sqlConnection != null)
                 {
@@ -161,7 +169,26 @@ namespace DataInterface.Database
 
                     //Gets or sets the Transact-SQL statement, table name or stored procedure to execute at the data source.
                     sqlCommand.CommandText = command;
+                    if (parameters.Count > 0)
+                    {
+                        parameters.TryGetValue("userId", out userId);
+                        parameters.TryGetValue("companyId", out companyId);
+                        parameters.TryGetValue("workbookId", out workbookId);
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            sqlCommand.Parameters.AddWithValue("@userId", userId);
+                        }
 
+                        if (!string.IsNullOrEmpty(companyId))
+                        {
+                            sqlCommand.Parameters.AddWithValue("@companyId", companyId);
+                        }
+
+                        if (!string.IsNullOrEmpty(workbookId))
+                        {
+                            sqlCommand.Parameters.AddWithValue("@workbookId", workbookId);
+                        }
+                    }
                     //Gets or sets the wait time before terminating the attempt to execute a command and generating an error.
                     sqlCommand.CommandTimeout = 60;
 
@@ -190,8 +217,10 @@ namespace DataInterface.Database
             try
             {
                 if (sqlConnection != null && sqlConnection.State == ConnectionState.Closed)
+                {
                     sqlConnection.Open();
-                 
+                }
+
                 if (sqlConnection != null)
                 {
                     using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(command, sqlConnection))

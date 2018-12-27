@@ -180,45 +180,29 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL" },
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = "UserId",
-                Value = "10",
+                Name = "SUPERVISOR_ID",
+                Value = "6",
                 Operator = "=",
                 Bitwise = null
             };
 
-            EmployeeModel employeeModel2 = new EmployeeModel
-            {
-                Name = "UserId",
-                Value = "11",
-                Operator = "=",
-                Bitwise = "OR"
-            };
-
-            EmployeeModel employeeModel3 = new EmployeeModel
-            {
-                Name = "UserName",
-                Value = "s",
-                Operator = "start with",
-                Bitwise = "AND"
-            };
+            ;
 
             employeeList.Add(employeeModel);
-            employeeList.Add(employeeModel2);
-            employeeList.Add(employeeModel3);
-
+            
 
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"SUPERVISOR_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"8\",\"Operator\":\"=\",\"Name\":\"SUPERVISOR_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -234,24 +218,18 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.USERID,
-                Value = "6",
+                Name = Constants.SUPERVISORID,
+                Value = "9",
                 Operator = "="
             };
 
-            //EmployeeModel employeeModel2 = new EmployeeModel
-            //{
-            //    Name = "WORKBOOK_CREATED",
-            //    Value = "08/06/1975",
-            //    Operator = "=",
-            //    Bitwise = "OR"
-            //};
+        
             employeeList.Add(employeeModel);
             //employeeList.Add(employeeModel2);
 
@@ -265,10 +243,11 @@ namespace ReportBuilder.UnitTest
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters=pathValues
+                PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"Ray Preston\",\"Operator\":\"contains\",\"Name\":\"ASSIGNED_TO\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_ID\",\"TASK_NAME\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"EXPIRATION_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "\r\n{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":14,\"Operator\":\"=\"},{\"Name\":\"COMPLETED\",\"Value\":\"true\",\"Operator\":\"=\"}],\"ColumnList\":[\"USERID\",\"ROLE\",\"WORKBOOK_ID\",\"EMPLOYEE_NAME\",\"WORKBOOK_NAME\",\"COMPLETED_WORKBOOK\",\"TOTAL_WORKBOOK\",\"DUE_DATE\"]}";
+
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -285,19 +264,26 @@ namespace ReportBuilder.UnitTest
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_NAME, Constants.ASSIGNED_TO, Constants.EVALUATOR_NAME, Constants.EXPIRATION_DATE },
+                ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.COMPLETED_TASK, Constants.TOTAL_TASK, Constants.INCOMPLETE_TASK },
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.TASK_NAME,
-                Value = "e",
-                Operator = "contains"
+                Name = Constants.WORKBOOK_ID,
+                Value = "18",
+                Operator = "="
+            };
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.SUPERVISOR_ID,
+                Value = "18",
+                Operator = "="
             };
 
             employeeList.Add(employeeModel);
-
+            employeeList.Add(employeeModel2);
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
                 { "companyId", "6" }
@@ -310,7 +296,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"Ray Preston\",\"Operator\":\"contains\",\"Name\":\"ASSIGNED_TO\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_ID\",\"TASK_NAME\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"EXPIRATION_DATE\"]}";
+
 
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
