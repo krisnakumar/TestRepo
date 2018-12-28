@@ -252,7 +252,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.NUMBER_COMPLETED, ", wbp.NumberCompleted"},
 
-                { Constants.LAST_ATTEMPT_DATE, ", wbp.LastAttemptDate"},
+                { Constants.LAST_ATTEMPT_DATE, ", (SELECT  MAX(LastAttemptDate) FROM dbo.WorkBookProgress WHERE WorkBookId=wbp.WorkBookId) AS LastAttemptDate"},
 
                 { Constants.FIRST_ATTEMPT_DATE, ", wbp.FirstAttemptDate"},
 
@@ -270,7 +270,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
             {Constants.WORKBOOK_ID, "wb.ID " },
-            {Constants.SUPERVISORID, "s.SupervisorId " },
+            {Constants.SUPERVISORID, " u.Id IN (SELECT * FROM getChildUsers (@userId)) " },
             {Constants.WORKBOOK_NAME, "wb.Name " },
             {Constants.DESCRIPTION, "wb.Description" },
             {Constants.WORKBOOK_CREATED, "CONVERT(VARCHAR,wb.DateCreated,101)" },
@@ -280,10 +280,12 @@ namespace ReportBuilderAPI.Repository
             {Constants.DATE_ADDED, "uwb.DateAdded" },
             { Constants.WORKBOOK_CREATED_BY, "wb.createdby" },
             {Constants.ASSIGNED_TO, "u.FName" },
-            {Constants.ASSIGNED, " u.Id IN (SELECT * FROM getChildUsers (@userId)) AND uwb.IsEnabled=1" },
-            {Constants.WORKBOOK_IN_DUE, "  u.Id IN (SELECT * FROM getChildUsers (@userId))  AND uwb.IsEnabled=1 AND wb.DaysToComplete >= DATEDIFF(DAY, DateAdded, GETDATE()) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
-            {Constants.PAST_DUE, "  u.Id IN (SELECT * FROM getChildUsers (@userId))  AND uwb.IsEnabled=1 AND wb.DaysToComplete <= DATEDIFF(DAY, DateAdded, GETDATE()) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
-            {Constants.COMPLETED, "  u.Id IN (SELECT * FROM getChildUsers (@userId))  AND uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
+            {Constants.ASSIGNED, " u.Id IN (SELECT * FROM getChildUsers (@userId)) " },
+            {Constants.WORKBOOK_IN_DUE, "   uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,GETDATE())  and CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
+
+            {Constants.PAST_DUE, "   uwb.IsEnabled=1AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) and CONVERT(date,GETDATE())  and  (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
+
+            {Constants.COMPLETED, "  uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
         };
 
 
@@ -323,7 +325,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty, dueDays=string.Empty;
             List<WorkbookResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -352,14 +354,10 @@ namespace ReportBuilderAPI.Repository
 
                 query += tableJoin;
 
-                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISORID).Select(x => x.Value).FirstOrDefault();
-                ReportBuilder.Models.Models.EmployeeModel isExist = queryRequest.Fields.Where(x => workbookFieldList.Contains(x.Name.ToUpper())).FirstOrDefault();
+                supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISORID).Select(x => x.Value).FirstOrDefault());
+                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
 
-                if (isExist != null)
-                {
-                    isExist = queryRequest.Fields.Where(x => x.Name == Constants.SUPERVISORID).FirstOrDefault();
-                    bool r = queryRequest.Fields.Remove(isExist);
-                }
+
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryRequest.Fields
@@ -370,7 +368,7 @@ namespace ReportBuilderAPI.Repository
 
                 query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
 
-                parameterList = new Dictionary<string, string>() { { "userId", supervisorId.ToString() }, { "companyId", companyId.ToString() } };
+                parameterList = new Dictionary<string, string>() { { "userId", supervisorId.ToString() }, { "companyId", companyId.ToString() }, { "duedays", dueDays.ToString() } };
 
                 workbookDetails = ReadWorkBookDetails(query, parameterList);
 
@@ -438,7 +436,7 @@ namespace ReportBuilderAPI.Repository
                             TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalEmployees'").Count() == 1) ? Convert.ToString(sqlDataReader["TotalEmployees"]) : null,
                             InCompleteWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
                             UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserId'").Count() == 1) ? (int?)(sqlDataReader["UserId"]) : null,
-                            DueDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DueDate'").Count() == 1) ? Convert.ToString((sqlDataReader["DueDate"])) : null,
+                            DueDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DueDate'").Count() == 1) ? Convert.ToString((sqlDataReader["DueDate"])) : null
 
                         };
                         // Adding each workbook details in array list

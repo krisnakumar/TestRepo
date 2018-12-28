@@ -149,6 +149,6 @@ namespace ReportBuilderAPI.Utilities
         public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
         public const string EXPIRATION_DATE = "EXPIRATION_DATE";
-
+        public const string COMMENTS = "COMMENTS";
     }
 }

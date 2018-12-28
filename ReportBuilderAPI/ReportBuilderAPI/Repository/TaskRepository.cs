@@ -146,14 +146,14 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetQueryTaskDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, workbookId = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty;
             List<TaskResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
             Dictionary<string, string> parameterList;
             try
             {
-                selectQuery = "SELECT  ";
+                selectQuery = "SELECT  DISTINCT";
                 QueryBuilderRequest queryRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
 
                 //getting column List
@@ -174,6 +174,7 @@ namespace ReportBuilderAPI.Repository
                                             select joins.Key);
                 supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISORID).Select(x => x.Value).FirstOrDefault();
                 workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
+                taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
                 query += tableJoin;
 
                 //getting where conditions
@@ -182,7 +183,7 @@ namespace ReportBuilderAPI.Repository
 
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE tv.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
-                parameterList = new Dictionary<string, string>() { { "userId", supervisorId.ToString() }, { "companyId", companyId.ToString() }, { "workbookId", workbookId.ToString() } };
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) } };
                 workbookDetails = ReadTaskDetails(query, parameterList);
                 if (workbookDetails != null)
                 {
@@ -217,6 +218,7 @@ namespace ReportBuilderAPI.Repository
                 {
                     while (sqlDataReader.Read())
                     {
+                        TaskModel taskModel = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
                         taskResponse = new TaskResponse
                         {
                             TaskId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'taskId'").Count() == 1) ? (int?)sqlDataReader["taskId"] : null,
@@ -229,6 +231,12 @@ namespace ReportBuilderAPI.Repository
                             CompletedTasksCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (int?)sqlDataReader["CompletedTasks"] : null,
                             TotalTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)sqlDataReader["TotalTasks"] : null,
                             IncompletedTasksCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (int?)sqlDataReader["InCompleteTask"] : null,
+                            UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
+                            WorkbookId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'workbookId'").Count() == 1) ? (int?)sqlDataReader["workbookId"] : null,
+                            NumberofAttempts = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
+                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? Convert.ToString(sqlDataReader["lastAttemptDate"]) : null,
+                            Location = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
+                            Comments = taskModel?.Comment
                         };
                         // Adding each task details in array list
                         taskList.Add(taskResponse);
@@ -255,23 +263,26 @@ namespace ReportBuilderAPI.Repository
         {
                 { Constants.TASK_NAME, ",  t.Name as taskName" },
                 { Constants.TASK_ID, ", t.Id as taskId"},
-                { Constants.STATUS, ", ss.desc"},
+                { Constants.STATUS, ", ss.[desc] as status"},
                 { Constants.DATE_EXPIRED, ", sa.DateExpired"},
                 { Constants.EVALUATOR_NAME, ", (SELECT (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname) as evaluatorName FROM dbo.[User] usr WHERE usr.Id=sa.Evaluator) as evaluatorName"},
                 { Constants.ASSIGNED_TO, ",  (SELECT (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname) FROM dbo.[User] usr WHERE usr.Id=sa.UserId) as assignee"},
                 { Constants.IP, ", sam.IP"},
-                { Constants.LOCATION, ", w.datecreated"},
+                { Constants.LOCATION, ", concat(sam.street, ',', sam.city,',', sam.state, ',', sam.zip, ',', sam.country) as location"},
                 { Constants.DURATION, ", sam.duration"},
                 { Constants.SCORE, ", sam.score"},
-                { Constants.DATE_TAKEN, ", wb.dateTaken"},
+                { Constants.DATE_TAKEN, ", sa.DateTaken"},
+                { Constants.USERID, ", u.Id as userId"},
+                { Constants.WORKBOOK_ID, ", wbc.workbookId"},
                 { Constants.COMPLETION_DATE, ", u.DateCreated"},
-                { Constants.LAST_ATTEMPT_DATE, ", u.FName"},
+                { Constants.LAST_ATTEMPT_DATE, ", sa.DateTaken as lastAttemptDate"},
                 { Constants.CREATED_BY, ", u.MName"},
                 { Constants.DELETED_BY, ", u.LName"},
                 { Constants.PARENT_TASK_NAME, ", u.Email"},
                 { Constants.CHILD_TASK_NAME, ", u.City"},
                 { Constants.NUMBER_OF_ATTEMPTS, ", sa.Attempt"},
                 { Constants.EXPIRATION_DATE, ", sa.DateExpired"},
+                { Constants.COMMENTS, ", sam.Payload AS Comments"},
                 { Constants.TASK_CODE, ", t.Code"},
                 { Constants.COMPLETED_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM [user] us LEFT JOIN UserWorkBook uwb ON uwb.UserId=us.Id LEFT JOIN WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  us.Id IN ((SELECT u.id UNION SELECT * FROM getChildUsers (u.id)))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id AND ss.[desc]='COMPLETED'),0)) AS CompletedTasks"},
                 { Constants.INCOMPLETE_TASK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT tk.Id) FROM [user] us LEFT JOIN UserWorkBook uwb ON uwb.UserId=us.Id LEFT JOIN WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  u.Id IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id)))  AND uwb.IsEnabled=1 AND tk.Id=t.Id AND wbc.WorkBookId=@workbookId AND ss.[desc]='FAILED'),0))  AS InCompleteTask"},
@@ -289,7 +300,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.TASK_CREATED, "CONVERT(VARCHAR,t.DateCreated,101)" },
             {Constants.ATTEMPT_DATE, "CONVERT(VARCHAR,sa.dateTaken,101)" },
             {Constants.DATE_TAKEN, "sa.dateTaken" },
-            {Constants.STATUS, "ss.desc as status" },
+            {Constants.STATUS, "ss.[desc] " },
             {Constants.EVALUATOR_NAME, "u.Fname" },
             {Constants.CITY, "sam.City" },
             {Constants.STATE, "sam.State" },
@@ -311,12 +322,10 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id  LEFT JOIN dbo.[User] u on u.Id=sa.evaluator " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY} },
-             { " JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} },
+             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id   " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY} },
+             { " LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} },
 
-             { "  LEFT JOIN dbo.[User] u on u.Id=sa.evaluator " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY} },
-
-            { " LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId " , new List<string> {Constants.WORKBOOK_ID} }
+            { " LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId " , new List<string> {Constants.WORKBOOK_ID, Constants.USERID, Constants.EVALUATOR_NAME } }
         };
     }
 }

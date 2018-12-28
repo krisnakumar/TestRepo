@@ -236,7 +236,8 @@ namespace ReportBuilderAPI.Repository
             Constants.COMPLETED,
             Constants.WORKBOOK_IN_DUE,
             Constants.PAST_DUE,
-            Constants.WORKBOOK_ID
+            Constants.WORKBOOK_ID,
+            Constants.SUPERVISOR_ID
         };
 
         /// <summary>

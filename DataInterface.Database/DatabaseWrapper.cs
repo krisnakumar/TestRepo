@@ -152,7 +152,7 @@ namespace DataInterface.Database
         /// <returns>A SqlDataReader object.</returns>
         public SqlDataReader ExecuteReader(string command, Dictionary<string, string> parameters)
         {
-            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty;
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays=string.Empty;
             try
             {
                 SqlDataReader sqlDataReader;
@@ -174,6 +174,7 @@ namespace DataInterface.Database
                         parameters.TryGetValue("userId", out userId);
                         parameters.TryGetValue("companyId", out companyId);
                         parameters.TryGetValue("workbookId", out workbookId);
+                        parameters.TryGetValue("duedays", out dueDays);
                         if (!string.IsNullOrEmpty(userId))
                         {
                             sqlCommand.Parameters.AddWithValue("@userId", userId);
@@ -187,6 +188,11 @@ namespace DataInterface.Database
                         if (!string.IsNullOrEmpty(workbookId))
                         {
                             sqlCommand.Parameters.AddWithValue("@workbookId", workbookId);
+                        }
+
+                        if (!string.IsNullOrEmpty(dueDays))
+                        {
+                            sqlCommand.Parameters.AddWithValue("@duedays", dueDays);
                         }
                     }
                     //Gets or sets the wait time before terminating the attempt to execute a command and generating an error.

@@ -162,6 +162,10 @@ namespace ReportBuilder.UnitTest
 
             };
 
+
+
+
+
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 PathParameters = pathValues
@@ -195,7 +199,7 @@ namespace ReportBuilder.UnitTest
             ;
 
             employeeList.Add(employeeModel);
-            
+
 
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
@@ -218,20 +222,27 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES},
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.WORKBOOK_NAME, Constants.DUE_DATE},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
                 Name = Constants.SUPERVISORID,
-                Value = "9",
+                Value = "14",
                 Operator = "="
             };
 
-        
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.PAST_DUE,
+                Value = "60",
+                Operator = "=",
+                Bitwise="and"
+            };
+
             employeeList.Add(employeeModel);
-            //employeeList.Add(employeeModel2);
+            employeeList.Add(employeeModel2);
 
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
@@ -246,7 +257,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "\r\n{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":14,\"Operator\":\"=\"},{\"Name\":\"COMPLETED\",\"Value\":\"true\",\"Operator\":\"=\"}],\"ColumnList\":[\"USERID\",\"ROLE\",\"WORKBOOK_ID\",\"EMPLOYEE_NAME\",\"WORKBOOK_NAME\",\"COMPLETED_WORKBOOK\",\"TOTAL_WORKBOOK\",\"DUE_DATE\"]}";
+
 
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -264,26 +275,36 @@ namespace ReportBuilder.UnitTest
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.COMPLETED_TASK, Constants.TOTAL_TASK, Constants.INCOMPLETE_TASK },
+                ColumnList = new string[] { Constants.NUMBER_OF_ATTEMPTS, Constants.STATUS, Constants.LAST_ATTEMPT_DATE, Constants.LOCATION, Constants.EVALUATOR_NAME, Constants.COMMENTS },
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.WORKBOOK_ID,
+                Name = Constants.SUPERVISORID,
                 Value = "18",
                 Operator = "="
             };
 
             EmployeeModel employeeModel2 = new EmployeeModel
             {
-                Name = Constants.SUPERVISOR_ID,
+                Name = Constants.WORKBOOK_ID,
                 Value = "18",
                 Operator = "="
             };
 
+
+            EmployeeModel employeeModel3 = new EmployeeModel
+            {
+                Name = Constants.TASK_ID,
+                Value = "860",
+                Operator = "=",
+                Bitwise = "and"
+            };
+
             employeeList.Add(employeeModel);
             employeeList.Add(employeeModel2);
+            employeeList.Add(employeeModel3);
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
                 { "companyId", "6" }

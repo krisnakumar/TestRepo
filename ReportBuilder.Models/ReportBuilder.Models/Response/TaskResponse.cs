@@ -30,6 +30,10 @@ namespace ReportBuilder.Models.Response
         public string TaskCode { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string TaskName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Comments { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? CompletedTasksCount { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
