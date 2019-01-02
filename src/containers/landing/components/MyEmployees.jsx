@@ -238,7 +238,7 @@ class MyEmployees extends React.Component {
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "PAST_DUE", "Value": "60", "Operator": "=", "Bitwise":"and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
