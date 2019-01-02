@@ -228,8 +228,9 @@ class TaskResultSet extends React.Component {
       }
     };
 
-    const sortRows = this.state.rows.slice(0);
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, this.state.rows.length) : sortRows.sort(comparer).slice(0, this.state.rows.length);
+    const sortRows = this.state.rows.slice(0),
+          rowsLength = this.state.rows.length || 0;
+    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
   };

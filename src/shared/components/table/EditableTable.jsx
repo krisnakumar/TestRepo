@@ -42,8 +42,9 @@ export default class EditableTable extends PureComponent {
       }
     };
 
-    const sortRows = this.state.originalRows.slice(0);
-    const rows = sortDirection === 'NONE' ? this.state.originalRows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    const sortRows = this.state.originalRows.slice(0),
+          rowsLength = this.state.rows.length || 0;
+    const rows = sortDirection === 'NONE' ? this.state.originalRows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
   };

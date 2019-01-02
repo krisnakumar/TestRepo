@@ -258,8 +258,9 @@ class OQDashboard extends PureComponent {
       totalRow = beforePopRows.pop();
     }
 
-    const sortRows = beforePopRows.slice(0);
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    const sortRows = beforePopRows.slice(0),
+          rowsLength = this.state.rows.length || 0;
+    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     if (beforePopRows.length > 0)
       rows.push(totalRow);

@@ -517,7 +517,7 @@ class WorkBookDashboard extends PureComponent {
         inDueWorkBooks: employees[i].InDueWorkBook,
         pastDueWorkBooks: employees[i].PastDueWorkBook,
         completedWorkBooks: employees[i].CompletedWorkbook,
-        total: employees[i].TotalEmployees
+        total: parseInt(employees[i].TotalEmployees)
       });
     }
 
@@ -564,14 +564,15 @@ class WorkBookDashboard extends PureComponent {
       }
     };
 
-    const beforePopRows = this.state.rows;
+    const beforePopRows = this.state.rows,
+          rowsLength = this.state.rows.length || 0;
     let totalRow = "";
     if (beforePopRows.length > 0) {
       totalRow = beforePopRows.pop();
     }
 
     const sortRows = beforePopRows.slice(0);
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, 10) : sortRows.sort(comparer).slice(0, 10);
+    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     if (beforePopRows.length > 0)
       rows.push(totalRow);
