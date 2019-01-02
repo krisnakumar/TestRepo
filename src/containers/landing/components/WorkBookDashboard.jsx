@@ -316,7 +316,7 @@ class WorkBookDashboard extends PureComponent {
   async getEmployees(companyId, userId) {
     const { cookies } = this.props;
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
     let token = cookies.get('IdentityToken'),
@@ -338,7 +338,7 @@ class WorkBookDashboard extends PureComponent {
   async getMyEmployees(userId) {
     const { cookies } = this.props;
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
