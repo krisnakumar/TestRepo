@@ -51,7 +51,7 @@ namespace ReportBuilderAPI.Repository
                 {
                     WorkbookResponse workbookResponse = new WorkbookResponse
                     {
-                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),                        
+                        EmployeeName = Convert.ToString(rows["FirstName"]) + " " + Convert.ToString(rows["LastName"]),
                         WorkbookName = Convert.ToString(rows["WorkbookName"]),
                         Role = Convert.ToString(rows["Role"]),
                         CompletedTasks = Convert.ToString(rows["CompletedWorkbooks"]) + "/" + Convert.ToString(rows["totalTasks"]),
@@ -147,7 +147,7 @@ namespace ReportBuilderAPI.Repository
                         WorkBookId = Convert.ToInt32(rows["workbookId"])
                     };
                     workbookList.Add(workbookResponse);
-                }            
+                }
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
             catch (Exception getInDueWorkbooksException)
@@ -189,7 +189,7 @@ namespace ReportBuilderAPI.Repository
                     };
                     workbookList.Add(workbookResponse);
                 }
-            
+
                 return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookList), 0);
             }
             catch (Exception exception)
@@ -216,11 +216,12 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (Select (ISNULL(NULLIF(us.LName, '') + ', ', '') + us.Fname) from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (Select us.UserName from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                 { Constants.DUE_DATE, ", DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded) AS DueDate"},
                  { Constants.USERNAME, ", u.UserName"},
                 { Constants.USERNAME2, ", u.UserName2"},
+
                 { Constants.USER_CREATED_DATE, ", u.DateCreated"},
                 { Constants.FIRSTNAME, ", u.FName"},
                 { Constants.MIDDLENAME, ", u.MName"},
@@ -260,7 +261,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.WORKBOOK_ASSIGNED_DATE, ", uwb.DateAdded"},
 
-                { Constants.LAST_SIGNOFF_BY, ", (Select  (ISNULL(NULLIF(us.LName, '') + ', ', '') + us.Fname) from dbo.[User] us WHERE us.Id=wbp.LastSignOffBy) as LastSignOffBy"}
+                { Constants.LAST_SIGNOFF_BY, ", (Select us.UserName from dbo.[User] us WHERE us.Id=wbp.LastSignOffBy) as LastSignOffBy"}
         };
 
         /// <summary>
@@ -270,22 +271,27 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
             {Constants.WORKBOOK_ID, "wb.ID " },
-            {Constants.SUPERVISORID, " u.Id IN (SELECT * FROM getChildUsers (@userId)) " },
+            {Constants.SUPERVISORID, " u.Id IN (SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.NOT_SUPERVISORID, " u.Id NOT IN (SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.SUPERVISOR_USER, " u.Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.SUPERVISOR_SUB, " s.supervisorId " },
+            {Constants.USERID, " u.Id " },
             {Constants.WORKBOOK_NAME, "wb.Name " },
             {Constants.DESCRIPTION, "wb.Description" },
-            {Constants.WORKBOOK_CREATED, "CONVERT(VARCHAR,wb.DateCreated,101)" },
+            {Constants.WORKBOOK_CREATED, "CONVERT(DATE,wb.DateCreated,101)" },
             {Constants.WORKBOOK_ISENABLED, "wb.isenabled" },
             {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete" },
-            {Constants.DUE_DATE, "CONVERT(VARCHAR,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" },
+            {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" },
             {Constants.DATE_ADDED, "uwb.DateAdded" },
-            { Constants.WORKBOOK_CREATED_BY, "wb.createdby" },
-            {Constants.ASSIGNED_TO, "u.FName" },
+            { Constants.WORKBOOK_CREATED_BY, "(Select us.UserName from dbo.[User] us WHERE us.Id=wb.createdby) " },
+            {Constants.ASSIGNED_TO, "uwb.UserId" },
             {Constants.ASSIGNED, " u.Id IN (SELECT * FROM getChildUsers (@userId)) " },
-            {Constants.WORKBOOK_IN_DUE, "   uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,GETDATE())  and CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
 
-            {Constants.PAST_DUE, "   uwb.IsEnabled=1AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) and CONVERT(date,GETDATE())  and  (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
+            {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,GETDATE())  and CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
 
-            {Constants.COMPLETED, "  uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
+            {Constants.PAST_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  Between CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) and CONVERT(date,GETDATE())  and  (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
+
+            {Constants.COMPLETED, " uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
         };
 
 
@@ -295,7 +301,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
 
-            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISORID } },
+            { " LEFT JOIN dbo.[user] u on u.Id=uwb.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISORID, Constants.CREATED_BY } },
 
             { " JOIN Supervisor s ON s.UserId=u.Id ", new List<string> {Constants.SUPERVISORID} },
 
@@ -325,7 +331,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty, dueDays=string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty, dueDays = string.Empty;
             List<WorkbookResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -357,7 +363,26 @@ namespace ReportBuilderAPI.Repository
                 supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISORID).Select(x => x.Value).FirstOrDefault());
                 dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
 
+                if (queryRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
+                {
+                    queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_SUB : x.Name).ToList();
+                }
+                else
+                {
+                    if(!string.IsNullOrEmpty(supervisorId))
+                    {
+                        queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID && x.Operator=="!=" ? x.Name = Constants.NOT_SUPERVISORID: x.Name).ToList();
+                    }
+                }
 
+
+                if (queryRequest.Fields.Where(x => x.Name == Constants.SUPERVISORID).ToList().Count > 0 && queryRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
+                {
+                    ReportBuilder.Models.Models.EmployeeModel userDetails = queryRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
+                    queryRequest.Fields.Remove(userDetails);
+                    queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
+                }
+                
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryRequest.Fields
@@ -368,7 +393,7 @@ namespace ReportBuilderAPI.Repository
 
                 query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
 
-                parameterList = new Dictionary<string, string>() { { "userId", supervisorId.ToString() }, { "companyId", companyId.ToString() }, { "duedays", dueDays.ToString() } };
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "duedays", Convert.ToString(dueDays) } };
 
                 workbookDetails = ReadWorkBookDetails(query, parameterList);
 

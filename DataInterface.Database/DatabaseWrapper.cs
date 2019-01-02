@@ -23,7 +23,7 @@ namespace DataInterface.Database
     /// <summary>
     ///     Class that handles the database connection(s)
     /// </summary>
-    public class DatabaseWrapper
+    public class DatabaseWrapper : IDatabaseWrapper
     {
         private static string connectionString = string.Empty;
         private SqlConnection sqlConnection = null;

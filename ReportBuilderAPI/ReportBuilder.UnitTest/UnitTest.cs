@@ -222,27 +222,35 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.WORKBOOK_NAME, Constants.DUE_DATE},
+                ColumnList = new string[] { Constants.WORKBOOK_ID, Constants.WORKBOOK_NAME, Constants.DESCRIPTION, Constants.WORKBOOK_CREATED_BY, Constants.DAYS_TO_COMPLETE},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.SUPERVISORID,
-                Value = "14",
+                Name = Constants.EVALUATOR_NAME,
+                Value = "Carlton Kim, Jeanine Cameron",
                 Operator = "="
             };
 
-            EmployeeModel employeeModel2 = new EmployeeModel
-            {
-                Name = Constants.PAST_DUE,
-                Value = "60",
-                Operator = "=",
-                Bitwise="and"
-            };
+            //EmployeeModel employeeModel2 = new EmployeeModel
+            //{
+            //    Name = Constants.USERID,
+            //    Value = "14",
+            //    Operator = "=",
+            //    Bitwise = "and"
+            //};
+            //EmployeeModel employeeModel3 = new EmployeeModel
+            //{
+            //    Name = Constants.PAST_DUE,
+            //    Value = "60",
+            //    Operator = "=",
+            //    Bitwise="and"
+            //};
 
             employeeList.Add(employeeModel);
-            employeeList.Add(employeeModel2);
+            //employeeList.Add(employeeModel2);
+            //employeeList.Add(employeeModel3);
 
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
@@ -281,30 +289,30 @@ namespace ReportBuilder.UnitTest
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.SUPERVISORID,
-                Value = "18",
+                Name = Constants.EVALUATOR_NAME,
+                Value = "Albert212",
                 Operator = "="
             };
 
-            EmployeeModel employeeModel2 = new EmployeeModel
-            {
-                Name = Constants.WORKBOOK_ID,
-                Value = "18",
-                Operator = "="
-            };
+            //EmployeeModel employeeModel2 = new EmployeeModel
+            //{
+            //    Name = Constants.WORKBOOK_ID,
+            //    Value = "18",
+            //    Operator = "="
+            //};
 
 
-            EmployeeModel employeeModel3 = new EmployeeModel
-            {
-                Name = Constants.TASK_ID,
-                Value = "860",
-                Operator = "=",
-                Bitwise = "and"
-            };
+            //EmployeeModel employeeModel3 = new EmployeeModel
+            //{
+            //    Name = Constants.TASK_ID,
+            //    Value = "860",
+            //    Operator = "=",
+            //    Bitwise = "and"
+            //};
 
             employeeList.Add(employeeModel);
-            employeeList.Add(employeeModel2);
-            employeeList.Add(employeeModel3);
+            //employeeList.Add(employeeModel2);
+            //employeeList.Add(employeeModel3);
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
                 { "companyId", "6" }

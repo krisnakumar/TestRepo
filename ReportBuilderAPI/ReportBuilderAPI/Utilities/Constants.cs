@@ -50,6 +50,10 @@ namespace ReportBuilderAPI.Utilities
         public const string ZIP = "ZIP";
         public const string COUNTRY = "COUNTRY";
         public const string SUPERVISORID = "SUPERVISOR_ID";
+        public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
+        public const string SUPERVISOR_USER = "SUPERVISOR_USER";
+
+        public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";
         public const string ROLE = "ROLE";
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";
         public const string ISENABLED = "ISENABLED";
@@ -94,7 +98,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ANNOUNCEMENT_PERMS = "ANNOUNCEMENT_PERMS";
         public const string SYSTEM_PERMS = "SYSTEM_PERMS";
 
-        public const string USERID = "USERID";
+        public const string USERID = "USER_ID";
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
 
         //Fields and Columns for the Employee Entity
