@@ -369,7 +369,7 @@ class WorkBookDashboard extends PureComponent {
   async getAssignedWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
@@ -427,7 +427,7 @@ class WorkBookDashboard extends PureComponent {
   async getComingDueWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
@@ -456,7 +456,7 @@ class WorkBookDashboard extends PureComponent {
   async getCompletedWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
@@ -508,15 +508,15 @@ class WorkBookDashboard extends PureComponent {
       inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook);
       pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook);
       completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook);
-      totalEmpCount += parseInt(employees[i].TotalEmployees)
+      totalEmpCount += parseInt(employees[i].TotalEmployees);
       rows.push({
         userId: employees[i].UserId || 0,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        assignedWorkBooks: employees[i].AssignedWorkBook,
-        inDueWorkBooks: employees[i].InDueWorkBook,
-        pastDueWorkBooks: employees[i].PastDueWorkBook,
-        completedWorkBooks: employees[i].CompletedWorkbook,
+        assignedWorkBooks: parseInt(employees[i].AssignedWorkBook),
+        inDueWorkBooks: parseInt(employees[i].InDueWorkBook),
+        pastDueWorkBooks: parseInt(employees[i].PastDueWorkBook),
+        completedWorkBooks: parseInt(employees[i].CompletedWorkbook),
         total: parseInt(employees[i].TotalEmployees)
       });
     }
@@ -565,7 +565,7 @@ class WorkBookDashboard extends PureComponent {
     };
 
     const beforePopRows = this.state.rows,
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     let totalRow = "";
     if (beforePopRows.length > 0) {
       totalRow = beforePopRows.pop();

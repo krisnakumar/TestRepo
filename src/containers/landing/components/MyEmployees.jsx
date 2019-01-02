@@ -238,7 +238,7 @@ class MyEmployees extends React.Component {
   async getPastDueWorkbooks(userId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "PAST_DUE", "Value": "true", "Operator": "=" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
@@ -267,7 +267,7 @@ class MyEmployees extends React.Component {
   async getComingDueWorkbooks(userId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_IN_DUE", "Value": "true", "Operator": "=" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
@@ -297,7 +297,7 @@ class MyEmployees extends React.Component {
   async getCompletedWorkbooks(userId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise":"and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
@@ -326,7 +326,7 @@ class MyEmployees extends React.Component {
   async getAssignedWorkbooks(userId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "ASSIGNED", "Value": "true", "Operator": "=" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
