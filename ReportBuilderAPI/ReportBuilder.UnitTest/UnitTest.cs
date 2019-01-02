@@ -222,14 +222,14 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.WORKBOOK_ID, Constants.WORKBOOK_NAME, Constants.DESCRIPTION, Constants.WORKBOOK_CREATED_BY, Constants.DAYS_TO_COMPLETE},
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_IN_DUE, Constants.TOTAL_EMPLOYEES},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.EVALUATOR_NAME,
-                Value = "Carlton Kim, Jeanine Cameron",
+                Name = Constants.SUPERVISOR_ID,
+                Value = "8",
                 Operator = "="
             };
 
