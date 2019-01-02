@@ -98,7 +98,7 @@
 				"type": "int",
 				"label": "Employee Id",
 				"validation": "isEmpty",
-				"field": "USERID"
+				"field": "USER_ID"
 			},
 			{
 				"value": "userName",
@@ -252,12 +252,26 @@
 				"field": "WORKBOOK_CREATED_BY"
 			},
 			{
-				"value": "dueDate ",
+				"value": "dueDate",
 				"type": "date",
 				"label": "Due Date ",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
 				"field": "DUE_DATE"
+			},
+			{
+				"value": "supervisorId",
+				"type": "int",
+				"label": "Supervisor Id",
+				"validation": "isEmpty",
+				"field": "SUPERVISOR_ID"
+			},
+			{
+				"value": "id",
+				"type": "int",
+				"label": "User Id",
+				"validation": "isEmpty",
+				"field": "USER_ID"
 			}
 		],
 		"tasks": [
