@@ -147,7 +147,7 @@ class QueryPane extends PureComponent {
     return (         
         <div className="query-builder-section">
           <Table className="query-section-table">
-             <thead>
+             <thead className="query-section-table thead">
               <tr>
                 <th width="125">Add/Delete</th>
                 <th>And/Or</th>

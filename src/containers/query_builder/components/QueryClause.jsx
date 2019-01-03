@@ -493,7 +493,7 @@ class QueryClause extends PureComponent {
             formattedDataLength = formattedData.length;
         
         return (
-            <tbody>
+            <tbody className="query-section-table tbody">
                 {
                     this.state.formattedData &&
                     this.state.formattedData.map(function (field, index) {
@@ -586,7 +586,7 @@ class QueryClause extends PureComponent {
                 }
                 {
                     formattedDataLength < 7 && <tr key={"n"} className={"query-clause-row-n"}>
-                        <td scope="row">
+                        <td scope="row" className="tableWidth-5">
                             <button onClick={this.handleAddClause.bind(this, "n")} title="Add new clause" className="query-action-btn add"><i className="fa fa-plus"></i></button>
                         </td>
                         <td></td>

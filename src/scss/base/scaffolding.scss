@@ -477,9 +477,7 @@ img {
     overflow: hidden !important;
 
   }
-  .splitter-layout .layout-pane-primary{
-    overflow: auto !important;
-  }
+  
 
 .employees-result-set .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport {
   overflow: auto !important;
@@ -617,4 +615,26 @@ button.query-action-btn.delete:disabled {
 }
 .pad-bt-10{
   padding-bottom: 10px;
+}
+
+.query-section-table.tbody {
+  display:block;
+  overflow:auto;
+  height: calc( 100% - 32px );
+  position: absolute;
+}
+.query-section-table.thead, .query-section-table.tbody tr {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+.query-section-table.thead {
+  width: calc( 100% - 0em )
+}
+.query-builder-section{
+  height: 100%;
+  position: absolute;
+}
+.query-section-table table{
+  height: 100%;
 }
