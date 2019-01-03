@@ -37,7 +37,7 @@ import * as Constants from '../../../shared/constants';
  * the table components empty rows message if data is empty from API request
  * extending the react-data-grid module.
  */
-class EmptyRowsView extends React.Component{
+class EmptyRowsView extends React.Component {
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
@@ -122,23 +122,25 @@ class MyEmployees extends React.Component {
     this.employees = [];
 
     this.state = {
-      modal: this.props.modal,      
+      modal: this.props.modal,
       rows: this.createRows(this.props.myEmployees),
       pageOfItems: [],
       isMyEmployeeModal: false,
       myEmployees: {},
       myEmployeesArray: this.props.myEmployees || [],
-      level: this.props.level, 
+      level: this.props.level,
       isPastDueModal: false,
       isComingDueModal: false,
       isCompletedModal: false,
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
-      supervisorNames: this.props.supervisorNames,      
+      supervisorNames: this.props.supervisorNames,
       isAssignedModal: false,
       assignedWorkBooks: {},
-      isInitial: false
+      isInitial: false,
+      sortColumn: "",
+      sortDirection: "NONE",
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -171,18 +173,18 @@ class MyEmployees extends React.Component {
     let employeesArrayLength = employeesArray.length - 1;
     let employees = employeesArray[employeesArrayLength];
     let assignedWorkBooksCount = 0,
-        inDueWorkBooksCount = 0,
-        pastDueWorkBooksCount = 0,
-        completedWorkBooksCount = 0,
-        totalEmpCount = 0;
-    const rows = [], 
-          length = employees ? employees.length : 0;
+      inDueWorkBooksCount = 0,
+      pastDueWorkBooksCount = 0,
+      completedWorkBooksCount = 0,
+      totalEmpCount = 0;
+    const rows = [],
+      length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
       assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook);
       inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook);
-      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook); 
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook);
       completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook);
-      totalEmpCount += parseInt(employees[i].TotalEmployees);      
+      totalEmpCount += parseInt(employees[i].TotalEmployees);
       rows.push({
         userId: employees[i].UserId || 0,
         role: employees[i].Role,
@@ -195,11 +197,11 @@ class MyEmployees extends React.Component {
       });
     }
 
-    if(length > 0){      
+    if (length > 0) {
       this.state.myEmployeesArray = employeesArray;
-      rows.push({employee: "Total", role: "", assignedWorkBooks:assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount , pastDueWorkBooks:pastDueWorkBooksCount, completedWorkBooks:completedWorkBooksCount, total:totalEmpCount});
+      rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
     }
-    
+
 
     return rows;
   };
@@ -212,7 +214,7 @@ class MyEmployees extends React.Component {
    * @param supervisor
    * @returns none
    */
-  async getMyEmployees(userId, supervisor){
+  async getMyEmployees(userId, supervisor) {
     const { cookies } = this.props;
     const postData = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }],
@@ -220,12 +222,12 @@ class MyEmployees extends React.Component {
     };
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/" + companyId + "/workbooks",
-        response = await API.ProcessAPI(url, postData, token, false, "POST", true),
-        myEmployees = response;
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true),
+      myEmployees = response;
 
-      this.props.updateMyEmployeesArray(myEmployees, supervisor);
+    this.props.updateMyEmployeesArray(myEmployees, supervisor);
   };
 
   /**
@@ -235,26 +237,26 @@ class MyEmployees extends React.Component {
    * @param userId
    * @returns none
    */
-  async getPastDueWorkbooks(userId){
+  async getPastDueWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "PAST_DUE", "Value": "60", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "60", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
     let isPastDueModal = this.state.isPastDueModal,
-        workBookDuePast = {};
-        isPastDueModal = true;
+      workBookDuePast = {};
+    isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/" + companyId + "/workbooks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-      workBookDuePast = response;
-      isPastDueModal = true;
-      this.setState({ ...this.state, isPastDueModal, workBookDuePast });
+    workBookDuePast = response;
+    isPastDueModal = true;
+    this.setState({ ...this.state, isPastDueModal, workBookDuePast });
   };
 
   /**
@@ -264,52 +266,52 @@ class MyEmployees extends React.Component {
    * @param userId
    * @returns none
    */
-  async getComingDueWorkbooks(userId){
+  async getComingDueWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
     let isComingDueModal = this.state.isComingDueModal,
-        workBookComingDue = {};
-        isComingDueModal = true;
+      workBookComingDue = {};
+    isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/" + companyId + "/workbooks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        workBookComingDue = response;
+    workBookComingDue = response;
 
-        isComingDueModal = true;
+    isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
   };
 
-   /**
-   * @method
-   * @name - getCompletedWorkbooks
-   * This method will used to get Completed Workbooks details
-   * @param userId
-   * @returns none
-   */
-  async getCompletedWorkbooks(userId){
+  /**
+  * @method
+  * @name - getCompletedWorkbooks
+  * This method will used to get Completed Workbooks details
+  * @param userId
+  * @returns none
+  */
+  async getCompletedWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
     let isCompletedModal = this.state.isCompletedModal,
-        workBookCompleted = {};
+      workBookCompleted = {};
     isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/" + companyId + "/workbooks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBookCompleted = response;
     isCompletedModal = true;
@@ -323,22 +325,22 @@ class MyEmployees extends React.Component {
    * @param userId
    * @returns none
    */
-  async getAssignedWorkbooks(userId){
+  async getAssignedWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
     let isAssignedModal = this.state.isAssignedModal,
-        assignedWorkBooks = {};
+      assignedWorkBooks = {};
     isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/" + companyId + "/workbooks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     assignedWorkBooks = response;
     isAssignedModal = true;
@@ -354,23 +356,33 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.myEmployees),
-          isArray = Array.isArray(newProps.myEmployees),
-          isRows = newProps.myEmployees.length > 0 ? true : false;
+    const { sortColumn, sortDirection } = this.state;
+    let rows = this.createRows(newProps.myEmployees),
+      isArray = Array.isArray(newProps.myEmployees),
+      isRows = newProps.myEmployees.length > 0 ? true : false;
 
-      var isInitial = false;
+    let isInitial = false;
 
-      if(isArray && isRows){
-        isInitial = rows.length > 0 ? false : true;
-      } 
+    if (isArray && isRows) {
+      isInitial = rows.length > 0 ? false : true;
+    }
 
+    if(sortColumn != "" && sortDirection != "NONE"){
+      this.state.modal = newProps.modal;
+      this.state.rows = rows;
+      this.state.level = newProps.level;
+      this.state.supervisorNames = newProps.supervisorNames;
+      this.state.isInitial = isInitial;
+      this.handleGridSort(sortColumn, sortDirection);
+    } else {
       this.setState({
         modal: newProps.modal,
         rows: rows,
         level: newProps.level,
         supervisorNames: newProps.supervisorNames,
-        isInitial: isInitial
+        isInitial: isInitial      
       });
+    }
   }
 
   /**
@@ -382,16 +394,16 @@ class MyEmployees extends React.Component {
    */
   toggle() {
     let myEmployeesArray = this.state.myEmployeesArray,
-        length = myEmployeesArray.length;
+      length = myEmployeesArray.length;
 
-    if(length == 1 || length == 0 || length == undefined){
+    if (length == 1 || length == 0 || length == undefined) {
       this.setState({
         modal: !this.state.modal
       });
       this.props.updateState("isMyEmployeeModal");
-    } else if(length >= 1){
+    } else if (length >= 1) {
       this.props.popMyEmployeesArray();
-    }   
+    }
   }
 
   /**
@@ -423,6 +435,9 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   handleGridSort = (sortColumn, sortDirection) => {
+    this.state.sortColumn = sortColumn;
+    this.state.sortDirection = sortDirection;
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
@@ -433,16 +448,15 @@ class MyEmployees extends React.Component {
 
     const beforePopRows = this.state.rows;
     let totalRow = "";
-    if(beforePopRows.length > 0)
-    {
+    if (beforePopRows.length > 0) {
       totalRow = beforePopRows.pop();
     }
 
     const sortRows = beforePopRows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-    
-    if(beforePopRows.length > 0)
+
+    if (beforePopRows.length > 0)
       rows.push(totalRow);
 
     this.setState({ rows });
@@ -461,27 +475,28 @@ class MyEmployees extends React.Component {
     );
   }
 
-   /**
-   * @method
-   * @name - employeeFormatter
-   * This method will format the employee name column Data Grid
-   * @param type
-   * @param props
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - employeeFormatter
+  * This method will format the employee name column Data Grid
+  * @param type
+  * @param props
+  * @returns none
+  */
   employeeFormatter = (props) => {
-    if(props.dependentValues.total <= 0 || props.dependentValues.employee == "Total"){
+    if (props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
     } else {
       return (
-       <span onClick={e => { 
-          e.preventDefault(); 
-          this.getMyEmployees(props.dependentValues.userId, props.dependentValues); }} 
-        className={"text-clickable"}>    
-        {props.value}
-      </span>
+        <span onClick={e => {
+          e.preventDefault();
+          this.getMyEmployees(props.dependentValues.userId, props.dependentValues);
+        }}
+          className={"text-clickable"}>
+          {props.value}
+        </span>
       );
     }
   }
@@ -495,56 +510,56 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   workbookFormatter = (type, props) => {
-    if(props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total"){
+    if (props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
     } else {
       return (
-       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
-        {props.value}
-      </span>
+        <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+          {props.value}
+        </span>
       );
     }
   }
 
-   /**
-   * @method
-   * @name - handleCellClick
-   * This method will trigger the event of API's respective to cell clicked Data Grid
-   * @param type
-   * @param args
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - handleCellClick
+  * This method will trigger the event of API's respective to cell clicked Data Grid
+  * @param type
+  * @param args
+  * @returns none
+  */
   handleCellClick = (type, args) => {
     let userId = 0;
-    switch(type) {
+    switch (type) {
       case "completedWorkBooks":
-          userId = args.userId;
-          if(userId){
-            this.getCompletedWorkbooks(userId);
-          }  
-          break;
+        userId = args.userId;
+        if (userId) {
+          this.getCompletedWorkbooks(userId);
+        }
+        break;
       case "assignedWorkBooks":
-          userId = args.userId;
-          if(userId){
-            this.getAssignedWorkbooks(userId);
-          }  
-          break;          
+        userId = args.userId;
+        if (userId) {
+          this.getAssignedWorkbooks(userId);
+        }
+        break;
       case "pastDueWorkBooks":
-          userId = args.userId;
-          if(userId){
-            this.getPastDueWorkbooks(userId);
-          }  
-          break;   
+        userId = args.userId;
+        if (userId) {
+          this.getPastDueWorkbooks(userId);
+        }
+        break;
       case "inDueWorkBooks":
-          userId = args.userId;
-          if(userId){
-            this.getComingDueWorkbooks(userId);
-          }  
-          break;
+        userId = args.userId;
+        if (userId) {
+          this.getComingDueWorkbooks(userId);
+        }
+        break;
       default:
-          break;
+        break;
     }
     this.refs.reactDataGrid.deselect();
   };
@@ -569,51 +584,51 @@ class MyEmployees extends React.Component {
   render() {
     const { rows, supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
-    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength]. name : "";
-    return (     
+    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "";
+    return (
       <div>
-          <AssignedWorkBook
-             backdropClassName={"no-backdrop"}
-             updateState={this.updateModalState.bind(this)}
-             modal={this.state.isAssignedModal}
-             assignedWorkBooks={this.state.assignedWorkBooks}
-           />
-         <WorkBookComingDue
-            backdropClassName={"no-backdrop"}
-            updateState={this.updateModalState.bind(this)}
-            modal={this.state.isComingDueModal}
-            assignedWorkBooks={this.state.workBookComingDue}
-          />
-           <WorkBookDuePast
-            backdropClassName={"no-backdrop"}
-            updateState={this.updateModalState.bind(this)}
-            modal={this.state.isPastDueModal}
-            assignedWorkBooks={this.state.workBookDuePast}
-          />
-          <WorkBookCompleted
-              backdropClassName={"no-backdrop"}
-              updateState={this.updateModalState.bind(this)}
-              modal={this.state.isCompletedModal}
-              assignedWorkBooks={this.state.workBookCompleted}
-          />
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"}  isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
+        <AssignedWorkBook
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isAssignedModal}
+          assignedWorkBooks={this.state.assignedWorkBooks}
+        />
+        <WorkBookComingDue
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isComingDueModal}
+          assignedWorkBooks={this.state.workBookComingDue}
+        />
+        <WorkBookDuePast
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isPastDueModal}
+          assignedWorkBooks={this.state.workBookDuePast}
+        />
+        <WorkBookCompleted
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isCompletedModal}
+          assignedWorkBooks={this.state.workBookCompleted}
+        />
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees{supervisorName}</ModalHeader>
           <ModalBody>
-          <div className="grid-container">
+            <div className="grid-container">
               <div className="table has-total-row">
-                  <ReactDataGrid
-                      ref={'reactDataGrid'}
-                      onGridSort={this.handleGridSort}
-                      enableCellSelect={false}
-                      enableCellAutoFocus={false}
-                      columns={this.heads}
-                      rowGetter={this.rowGetter}
-                      rowsCount={rows.length}
-                      onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={35}
-                      minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && EmptyRowsView} 
-                  />
+                <ReactDataGrid
+                  ref={'reactDataGrid'}
+                  onGridSort={this.handleGridSort}
+                  enableCellSelect={false}
+                  enableCellAutoFocus={false}
+                  columns={this.heads}
+                  rowGetter={this.rowGetter}
+                  rowsCount={rows.length}
+                  onGridRowsUpdated={this.handleGridRowsUpdated}
+                  rowHeight={35}
+                  minColumnWidth={100}
+                  emptyRowsView={this.state.isInitial && EmptyRowsView}
+                />
               </div>
             </div>
           </ModalBody>
