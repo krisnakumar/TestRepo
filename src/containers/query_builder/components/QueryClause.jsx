@@ -278,20 +278,21 @@ class QueryClause extends PureComponent {
             formattedData[index].isFocus = false;
         });
 
-        let obj = {};
+        let obj = {},
+            type = FieldData.field[entity][0].type;
             obj.label = "";
-            obj.type = "int";
+            obj.type = type;
             obj.validation = "isEmpty";
             obj.value = "";
             obj.placeholder = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
-            obj.operators = FieldData.operator.int;
+            obj.operators = FieldData.operator[type];
             obj.valueSelected = "";
             obj.isFocus = false;
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field[entity][0];
-            obj.operatorsSelected = FieldData.operator.int[0];
+            obj.operatorsSelected = FieldData.operator[type][0];
 
         if(index == "n"){
             formattedData.push(obj);
@@ -324,20 +325,20 @@ class QueryClause extends PureComponent {
         formattedData = formattedData.slice(0, currentIndex-1).concat(formattedData.slice(currentIndex, formattedData.length));
 
         if(index == 0 && formattedDataLength <= 1){
-
+        let type = FieldData.field[entity][0].type;
             obj.label = "";
-            obj.type = "int";
+            obj.type = type;
             obj.validation = "isEmpty";
             obj.value = "";
             obj.placeholder = "";
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
-            obj.operators = FieldData.operator.int;
+            obj.operators = FieldData.operator[type];
             obj.valueSelected = "";
             obj.isFocus = true;
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field[entity][0];
-            obj.operatorsSelected = FieldData.operator.int[0];
+            obj.operatorsSelected = FieldData.operator[type][0];
 
             formattedData.push(obj);
         }
