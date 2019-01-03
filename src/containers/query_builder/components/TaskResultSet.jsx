@@ -130,7 +130,7 @@ class TaskResultSet extends React.Component {
       let day = tempDate.getDate();
       let month = tempDate.getMonth() + 1;
       let year = tempDate.getFullYear();
-      dateString = (day <= 9 ? '0' + day : day) + '/' + (month <= 9 ? '0' + month : month) + '/' + year;
+      dateString = (month <= 9 ? '0' + month : month) + '/' + (day <= 9 ? '0' + day : day) + '/' + year;
       return dateString;
     } else {
       return dateString;
