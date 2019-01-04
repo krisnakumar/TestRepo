@@ -169,7 +169,8 @@ class QueryClause extends PureComponent {
 		formattedData.forEach(function(element, index) {
 			let obj = { 
 						field: index + "+" + element.value,
-						method: element.validation, 
+                        method: element.validation,
+                        isSkipValidation: element.isSkipValidation || false,
 						validWhen: false, 
 						message: element.errormessage || Constants.FIELD_ERROR_MESSAGE
 					};					
@@ -195,6 +196,7 @@ class QueryClause extends PureComponent {
             obj.label = field.label;
             obj.type = field.type;
             obj.placeholder = field.placeholder || "";
+            obj.isSkipValidation = field.isSkipValidation || false;
             obj.validation = field.validation;
             obj.value = field.value;
             obj.combinators = FieldData.combinators;
@@ -285,6 +287,7 @@ class QueryClause extends PureComponent {
             obj.validation = "isEmpty";
             obj.value = "";
             obj.placeholder = "";
+            obj.isSkipValidation = true;
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator[type];
@@ -304,7 +307,7 @@ class QueryClause extends PureComponent {
         
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
-        
+      
       };
 
     /**
@@ -331,6 +334,7 @@ class QueryClause extends PureComponent {
             obj.validation = "isEmpty";
             obj.value = "";
             obj.placeholder = "";
+            obj.isSkipValidation = true;
             obj.combinators = FieldData.combinators;
             obj.fields = FieldData.field[entity];
             obj.operators = FieldData.operator[type];
@@ -355,6 +359,15 @@ class QueryClause extends PureComponent {
      * @returns none
     */
     buildQuery() {
+        let tempFormattedData = this.state.formattedData
+        tempFormattedData.forEach(function(element, index) {
+            tempFormattedData[index].isSkipValidation = false;
+        });
+
+        this.state.formattedData = tempFormattedData;
+
+        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(this.state.formattedData)));
+
         const validation = this.validator.validate(this.state.formattedData);
         this.setState({ validation });
         this.submitted = true;

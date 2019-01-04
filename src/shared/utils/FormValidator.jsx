@@ -31,15 +31,20 @@ class FormValidator {
         // argument, any additional arguments, and the whole state as a final
         // argument.  If the result doesn't match the rule.validWhen property,
         // then modify the validation object for the field and set the isValid
-        // field to false
-        if(validation_method(field_value, ...args, state) !== rule.validWhen) {
-          validation[position] = { isInvalid: true, message: rule.message }
-          validation.isValid = false;
-        }
+        // field to 
+        if(!rule.isSkipValidation) {
+          if(validation_method(field_value, ...args, state) !== rule.validWhen) {
+            validation[position] = { isInvalid: true, message: rule.message }
+            validation.isValid = false;
+          }
 
-        if(this.isEmptyOrSpaces(field_value)) {
-          validation[position] = { isInvalid: true, message: rule.message }
-          validation.isValid = false;
+          if(this.isEmptyOrSpaces(field_value)) {
+            validation[position] = { isInvalid: true, message: rule.message }
+            validation.isValid = false;
+          }
+        } else {
+          validation[position] = { isInvalid: false, message: '' }
+          validation.isValid = true;
         }
 
       }
