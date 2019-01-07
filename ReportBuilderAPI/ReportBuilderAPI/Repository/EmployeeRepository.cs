@@ -148,7 +148,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.STATUS, "u.IsEnabled " },
             {Constants.REPORTING, "s.IsDirectReport " },
             {Constants.PHOTO, "u.Photo " },
-            {Constants.SUPERVISORID, "s.SupervisorId " }
+            {Constants.SUPERVISOR_ID, "s.SupervisorId " }
         };
 
 
@@ -158,7 +158,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
             { " LEFT JOIN UserRole ur on ur.UserId=u.Id LEFT JOIN Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
-            { " LEFT JOIN Supervisor s on s.userId=u.Id", new List<string> {Constants.SUPERVISORID, Constants.REPORTING} }
+            { " LEFT JOIN Supervisor s on s.userId=u.Id", new List<string> {Constants.SUPERVISOR_ID, Constants.REPORTING} }
         };
 
         /// <summary>

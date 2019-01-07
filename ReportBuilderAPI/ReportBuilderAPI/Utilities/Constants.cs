@@ -49,7 +49,7 @@ namespace ReportBuilderAPI.Utilities
         public const string PHONE = "PHONE";
         public const string ZIP = "ZIP";
         public const string COUNTRY = "COUNTRY";
-        public const string SUPERVISORID = "SUPERVISOR_ID";
+        public const string SUPERVISOR_ID = "SUPERVISOR_ID";
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
 
@@ -99,7 +99,7 @@ namespace ReportBuilderAPI.Utilities
         public const string SYSTEM_PERMS = "SYSTEM_PERMS";
 
         public const string USERID = "USER_ID";
-        public const string SUPERVISOR_ID = "SUPERVISOR_ID";
+        
 
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";
@@ -129,6 +129,7 @@ namespace ReportBuilderAPI.Utilities
         public const string COMPLETED = "COMPLETED";
         public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
         public const string PAST_DUE = "PAST_DUE";
+        public const string DUE_DAYS = "DUE_DAYS";
 
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";

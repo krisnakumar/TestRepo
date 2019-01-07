@@ -172,7 +172,7 @@ namespace ReportBuilderAPI.Repository
                 tableJoin = string.Join("", from joins in tableJoins
                                             where fieldList.Any(x => joins.Value.Any(y => y == x))
                                             select joins.Key);
-                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISORID).Select(x => x.Value).FirstOrDefault();
+                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault();
                 workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
                 taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
                 query += tableJoin;
@@ -313,8 +313,8 @@ namespace ReportBuilderAPI.Repository
             {Constants.DELETED_BY, " (Select us.UserName from dbo.[User] us WHERE us.Id=sa.Deletedby) " },
             {Constants.ASSIGNED_TO, " sa.userId" },
             {Constants.REPETITIONS_COUNT, "" },
-
-            {Constants.WORKBOOK_ID, " u.Id IN ((SELECT @userId UNION SELECT * FROM getChildUsers (@userId)))  AND uwb.IsEnabled=1 and wbc.WorkbookId= @workbookId" },
+            {Constants.SUPERVISOR_ID, " u.Id IN ((SELECT @userId UNION SELECT * FROM getChildUsers (@userId))) " },
+            {Constants.WORKBOOK_ID, " uwb.IsEnabled=1 and wbc.WorkbookId" },
         };
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace ReportBuilderAPI.Repository
              { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id   " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY} },
              { " LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} },
 
-            { " LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId " , new List<string> {Constants.WORKBOOK_ID, Constants.USERID, Constants.EVALUATOR_NAME } }
+            { " LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId " , new List<string> {Constants.WORKBOOK_ID, Constants.USERID, Constants.EVALUATOR_NAME, Constants.SUPERVISOR_ID } }
         };
     }
 }
