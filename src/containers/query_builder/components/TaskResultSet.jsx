@@ -19,6 +19,7 @@ import React from 'react';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
+import * as moment from 'moment';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
@@ -220,6 +221,8 @@ class TaskResultSet extends React.Component {
     this.state.sortColumn = sortColumn;
     this.state.sortDirection = sortDirection;
 
+    let isDate = sortColumn.includes('Date');
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
@@ -228,9 +231,23 @@ class TaskResultSet extends React.Component {
       }
     };
 
+    const comparerDate = (a, b) => {
+      const momentA = moment(a[sortColumn])
+      const momentB = moment(b[sortColumn])
+      if (sortDirection === 'ASC') {
+        return momentA.isAfter(momentB) ? 1 : -1;
+      } else if (sortDirection === 'DESC') {
+        return momentA.isBefore(momentB) ? 1 : -1;
+      }
+    };    
+
     const sortRows = this.state.rows.slice(0),
           rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    let rows = rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    if(isDate)
+      rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparerDate).slice(0, rowsLength);
 
     this.setState({ rows });
   };
