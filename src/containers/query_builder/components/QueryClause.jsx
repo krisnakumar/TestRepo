@@ -554,7 +554,7 @@ class QueryClause extends PureComponent {
                                         autosize={false}
                                         isRtl={true}
                                         isSearchable={false}
-                                        openOnClick={false}
+                                        openOnClick={true}
                                         value={field.fieldsSelected}
                                         autoFocus={field.isFocus}
                                         options={field.fields}                                        
@@ -570,7 +570,7 @@ class QueryClause extends PureComponent {
                                         autosize={false}
                                         isRtl={true}
                                         isSearchable={false}
-                                        openOnClick={false}
+                                        openOnClick={true}
                                         value={field.operatorsSelected}
                                         autoFocus={false}
                                         options={field.operators}
