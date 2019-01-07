@@ -225,9 +225,11 @@ class QueryClause extends PureComponent {
     handleChange(index, key, selectedOption){                           
         let formattedData = this.state.formattedData;
         formattedData[index][key] = selectedOption;
+        let isSameType = formattedData[index].type == selectedOption.type ? true : false;
         switch(key) {
             case "fieldsSelected":
                 let type = selectedOption ? selectedOption.type : "others";
+                formattedData[index].valueSelected =  isSameType ? formattedData[index].valueSelected : "";
                 formattedData[index].operators =  FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
                 formattedData[index].operatorsSelected = formattedData[index].type == type ? formattedData[index].operatorsSelected : FieldData.operator[type][0];
