@@ -249,11 +249,21 @@ class WorkBookProgress extends React.Component {
   * @returns none
   */
   handleGridSort = (sortColumn, sortDirection) => {
+    let isPercentage = sortColumn.includes('Precentage');
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
         return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
+      }
+    };
+
+    const percentageComparer = (a, b) => { 
+      if (sortDirection === 'ASC') {
+        return (parseInt(a[sortColumn]) > parseInt(b[sortColumn])) ? 1 : -1;
+      } else if (sortDirection === 'DESC') {
+        return (parseInt(a[sortColumn]) < parseInt(b[sortColumn])) ? 1 : -1;
       }
     };
 
@@ -265,7 +275,11 @@ class WorkBookProgress extends React.Component {
 
     const sortRows = beforePopRows.slice(0),
           rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    if(isPercentage)
+      rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
 
     if (beforePopRows.length > 0)
       rows.push(totalRow);

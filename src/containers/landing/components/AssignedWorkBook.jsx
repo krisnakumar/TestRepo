@@ -175,7 +175,7 @@ class AssignedWorkBook extends React.Component {
         completedTasks: employees[i].CompletedWorkbook +"/"+ employees[i].TotalWorkbook,
         percentageCompleted: (employees[i].CompletedWorkbook / employees[i].TotalWorkbook  * 100) + "%",
         dueDate: dueDate
-      });
+      });      
     }
 
     return rows;
@@ -257,6 +257,8 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   handleGridSort = (sortColumn, sortDirection) => {
+    let isPercentage = sortColumn.includes('percentage');
+
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
@@ -265,9 +267,21 @@ class AssignedWorkBook extends React.Component {
       }
     };
 
+    const percentageComparer = (a, b) => { 
+      if (sortDirection === 'ASC') {
+        return (parseInt(a[sortColumn]) > parseInt(b[sortColumn])) ? 1 : -1;
+      } else if (sortDirection === 'DESC') {
+        return (parseInt(a[sortColumn]) < parseInt(b[sortColumn])) ? 1 : -1;
+      }
+    };
+
     const sortRows = this.state.rows.slice(0),
           rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
+
+    if(isPercentage)
+      rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
 
     this.setState({ rows });
   };
