@@ -185,7 +185,7 @@ class WorkBookProgress extends React.Component {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-      { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=" },
+      { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "AND"},
       { "Name": "TASK_ID", "Value": taskId, "Operator": "=", "Bitwise": "AND" }
       ],
       "ColumnList": Constants.GET_WORKBOOKS_REPETITION_COLUMNS
