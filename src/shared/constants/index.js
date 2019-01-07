@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const API_DOMAIN = 'https://hvm7nq8v50.execute-api.us-west-2.amazonaws.com/';
+export const API_DOMAIN = 'https://lsfc596b1e.execute-api.us-west-2.amazonaws.com/';
 export const API_STAGE_NAME = 'dev';
 export const FIELD_ERROR_MESSAGE = 'This field is required';
 export const QUERY_BULIDER_GUIDANCE_MESSAGE = 'Please customize and run your query in the above window. The search result(s) will be displayed here.';
