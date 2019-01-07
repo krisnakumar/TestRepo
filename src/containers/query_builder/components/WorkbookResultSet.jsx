@@ -55,7 +55,7 @@ class WorkbookResultSet extends React.Component {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: this.descCellFormatter,
         cellClass: "text-left"
         },
         {
@@ -97,6 +97,19 @@ class WorkbookResultSet extends React.Component {
   cellFormatter = (props) => {
     return (
       props.value
+    );
+  }
+
+   /**
+   * @method
+   * @name - descCellFormatter
+   * This method will format the cell column other than workbooks Data Grid
+   * @param props
+   * @returns none
+   */
+  descCellFormatter = (props) => {
+    return (
+      <p className="word-wrap" title={props.value}>{props.value}</p>
     );
   }
 
@@ -230,7 +243,7 @@ class WorkbookResultSet extends React.Component {
                     onGridRowsUpdated={this.handleGridRowsUpdated}
                     headerRowHeight={32}
                     minHeight={25}
-                    rowHeight={25}
+                    rowHeight={55}
                     minColumnWidth={100}
                     emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage} 
                 />
