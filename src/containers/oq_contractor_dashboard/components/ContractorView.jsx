@@ -18,7 +18,13 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import OQDashboardMock from '../components/OQDashboardMock.json'
+import OQDashboardMock from '../components/OQDashboardMock.json';
+import EmployeeView from '../components/EmployeeView';
+import AssignedQualification from '../components/AssignedQualification';
+import CompletedQualification from '../components/CompletedQualification';
+import InCompletedQualification from '../components/InCompletedQualification';
+import PastDueQualification from '../components/PastDueQualification';
+import ComingDueQualification from '../components/ComingDueQualification';
 
 
 /**
@@ -83,7 +89,7 @@ class ContractorView extends PureComponent {
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,
-                formatter: this.cellFormatter,
+                formatter: (props) => this.qualificationsFormatter("pastDue", props),
                 cellClass: "text-right"
             },
             {
@@ -92,7 +98,7 @@ class ContractorView extends PureComponent {
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,
-                formatter: this.cellFormatter,
+                formatter: (props) => this.qualificationsFormatter("comingDue", props),
                 cellClass: "text-right"
             },
             {
@@ -110,6 +116,18 @@ class ContractorView extends PureComponent {
             rows: this.createRows(this.props.contractorQualifications),
             modal: this.props.modal,
             isInitial: false,
+            isEmployeeView: false,
+            isAssignedQualificationView: false,
+            isCompletedQualificationView: false,
+            isInCompletedQualificationView: false,
+            isPastDueQualificationView: false,
+            isComingDueQualificationView: false,
+            employeeQualifications: {},
+            assignedQualifications: {},
+            completedQualifications: {},
+            inCompletedQualifications: {},
+            pastDueQualifications: {},
+            comingDueQualifications: {}
         };
 
         this.toggle = this.toggle.bind(this);
@@ -239,7 +257,7 @@ class ContractorView extends PureComponent {
         };
 
         const sortRows = this.state.rows.slice(0),
-              rowsLength = this.state.rows.length || 0;
+            rowsLength = this.state.rows.length || 0;
         const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
         this.setState({ rows });
@@ -268,7 +286,21 @@ class ContractorView extends PureComponent {
                 </span>
             );
         }
-    }
+    };
+
+    /**
+     * @method
+     * @name - updateModalState
+     * This method will update the modal window state of parent
+     * @param modelName
+     * @returns none
+    */
+    updateModalState = (modelName) => {
+        let value = !this.state[modelName];
+        this.setState({
+        [modelName]: value
+        });
+    };
 
     /**
     * @method
@@ -283,20 +315,22 @@ class ContractorView extends PureComponent {
         switch (type) {
             case "contractors":
             case "total":
-                alert("Work in progress!");
-                console.log("contractors-", type, args);
+                this.getEmployeeQualifications(userId);
                 break;
             case "assignedQualification":
-                alert("Work in progress!");
-                console.log("assignedQualification-", type, args);
+                this.getAssignedQualifications(userId);
                 break;
             case "completedQualification":
-                alert("Work in progress!");
-                console.log("completedQualification-", type, args);
+                this.getCompletedQualifications(userId);
                 break;
             case "inCompletedQualification":
-                alert("Work in progress!");
-                console.log("inCompletedQualification-", type, args);
+                this.getInCompletedQualifications(userId);
+                break;
+            case "pastDue":
+                this.getPastDueQualifications(userId);
+                break;
+            case "comingDue":
+                this.getComingDueQualifications(userId);
                 break;
             default:
                 console.log("default-", type, args);
@@ -305,10 +339,214 @@ class ContractorView extends PureComponent {
         this.refs.contractorViewReactDataGrid.deselect();
     };
 
+    /**
+   * @method
+   * @name - getContractorQualifications
+   * This method will used to get Contractor Qualifications
+   * @param userId
+   * @returns none
+   */
+    async getEmployeeQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isEmployeeView = this.state.isEmployeeView,
+            employeeQualifications = {};
+        isEmployeeView = true;
+        this.setState({ isEmployeeView, employeeQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.employeeView;
+
+        employeeQualifications = response;
+        isEmployeeView = true;
+        this.setState({ ...this.state, isEmployeeView, employeeQualifications });
+    };
+
+    /**
+     * @method
+     * @name - getAssignedQualifications
+     * This method will used to get Assigned Qualifications
+     * @param userId
+     * @returns none
+     */
+    async getAssignedQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isAssignedQualificationView = this.state.isAssignedQualificationView,
+            assignedQualifications = {};
+        isAssignedQualificationView = true;
+        this.setState({ isAssignedQualificationView, assignedQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.assignedQualification;
+
+        assignedQualifications = response;
+        isAssignedQualificationView = true;
+        this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
+    };
+
+    /**
+    * @method
+    * @name - getCompletedQualifications
+    * This method will used to get Completed Qualifications
+    * @param userId
+    * @returns none
+    */
+    async getCompletedQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isCompletedQualificationView = this.state.isCompletedQualificationView,
+            completedQualifications = {};
+        isCompletedQualificationView = true;
+        this.setState({ isCompletedQualificationView, completedQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.completedQualifications;
+
+        completedQualifications = response;
+        isCompletedQualificationView = true;
+        this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
+    };
+
+    /**
+    * @method
+    * @name - getInCompletedQualifications
+    * This method will used to get InCompleted Qualifications
+    * @param userId
+    * @returns none
+    */
+    async getInCompletedQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isInCompletedQualificationView = this.state.isInCompletedQualificationView,
+            inCompletedQualifications = {};
+        isInCompletedQualificationView = true;
+        this.setState({ isInCompletedQualificationView, inCompletedQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.inCompletedQualifications;
+
+        inCompletedQualifications = response;
+        isInCompletedQualificationView = true;
+        this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
+    };
+
+    /**
+    * @method
+    * @name - getPastDueQualifications
+    * This method will used to get Past Due Qualifications
+    * @param userId
+    * @returns none
+    */
+    async getPastDueQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isPastDueQualificationView = this.state.isPastDueQualificationView,
+            pastDueQualifications = {};
+        isPastDueQualificationView = true;
+        this.setState({ isPastDueQualificationView, pastDueQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.inCompletedQualifications;
+
+        pastDueQualifications = response;
+        isPastDueQualificationView = true;
+        this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
+    };
+
+    /**
+    * @method
+    * @name - getComingDueQualifications
+    * This method will used to get Coming due qualifications
+    * @param userId
+    * @returns none
+    */
+    async getComingDueQualifications(userId) {
+        const { cookies } = this.props;
+
+        let isComingDueQualificationView = this.state.isComingDueQualificationView,
+            comingDueQualifications = {};
+        isComingDueQualificationView = true;
+        this.setState({ isComingDueQualificationView, comingDueQualifications });
+
+        // Commented due to using mock JSON
+
+        // let token = cookies.get('IdentityToken'),
+        //     url = "Need to update url",
+        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+        let response = OQDashboardMock.inCompletedQualifications;
+
+        comingDueQualifications = response;
+        isComingDueQualificationView = true;
+        this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
+    };
+
     render() {
         const { rows } = this.state;
         return (
             <div>
+                <EmployeeView
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isEmployeeView}
+                    employeeQualifications={this.state.employeeQualifications}
+                />
+                <AssignedQualification
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isAssignedQualificationView}
+                    assignedQualifications={this.state.assignedQualifications}
+                />
+                <CompletedQualification
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isCompletedQualificationView}
+                    completedQualifications={this.state.completedQualifications}
+                />
+                <InCompletedQualification
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isInCompletedQualificationView}
+                    inCompletedQualifications={this.state.inCompletedQualifications}
+                />
+                <PastDueQualification
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isPastDueQualificationView}
+                    pastDueQualifications={this.state.pastDueQualifications}
+                />
+                <ComingDueQualification
+                    backdropClassName={"no-backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isComingDueQualificationView}
+                    comingDueQualifications={this.state.comingDueQualifications}
+                />
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
                     <ModalHeader toggle={this.toggle}>Contractor View</ModalHeader>
                     <ModalBody>

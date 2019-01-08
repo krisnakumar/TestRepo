@@ -490,7 +490,6 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
   };
 
-
   /**
   * @method
   * @name - getComingDueQualifications
