@@ -23,6 +23,8 @@ import ContractorView from '../components/ContractorView';
 import AssignedQualification from '../components/AssignedQualification';
 import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
+import PastDueQualification from '../components/PastDueQualification';
+import ComingDueQualification from '../components/ComingDueQualification';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -95,7 +97,7 @@ class OQDashboard extends PureComponent {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: (props) => this.qualificationsFormatter("pastDue", props),
         cellClass: "text-right"
       },
       {
@@ -104,7 +106,7 @@ class OQDashboard extends PureComponent {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: (props) => this.qualificationsFormatter("comingDue", props),
         cellClass: "text-right"
       },
       {
@@ -124,10 +126,14 @@ class OQDashboard extends PureComponent {
       isAssignedQualificationView: false,
       isCompletedQualificationView: false,
       isInCompletedQualificationView: false,
+      isPastDueQualificationView: false,
+      isComingDueQualificationView: false,
       contractorQualifications: {},
       assignedQualifications: {},
       completedQualifications: {},
-      inCompletedQualifications: {}
+      inCompletedQualifications: {},
+      pastDueQualifications: {},
+      comingDueQualifications: {}
     };
   }
 
@@ -331,6 +337,12 @@ class OQDashboard extends PureComponent {
       case "inCompletedQualification":
         this.getInCompletedQualifications(userId);
         break;
+      case "pastDue":
+        this.getPastDueQualifications(userId);
+        break;
+      case "comingDue":
+        this.getComingDueQualifications(userId);
+        break;
       default:
         console.log("default", type, args);
         break;
@@ -450,6 +462,63 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
   };
 
+  /**
+  * @method
+  * @name - getPastDueQualifications
+  * This method will used to get Past Due Qualifications
+  * @param userId
+  * @returns none
+  */
+  async getPastDueQualifications(userId) {
+    const { cookies } = this.props;
+
+    let isPastDueQualificationView = this.state.isPastDueQualificationView,
+      pastDueQualifications = {};
+      isPastDueQualificationView = true;
+    this.setState({ isPastDueQualificationView, pastDueQualifications });
+
+    // Commented due to using mock JSON
+
+    // let token = cookies.get('IdentityToken'),
+    //     url = "Need to update url",
+    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+    let response = OQDashboardMock.inCompletedQualifications;
+
+    pastDueQualifications = response;
+    isPastDueQualificationView = true;
+    this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
+  };
+
+
+  /**
+  * @method
+  * @name - getComingDueQualifications
+  * This method will used to get Coming due qualifications
+  * @param userId
+  * @returns none
+  */
+  async getComingDueQualifications(userId) {
+    const { cookies } = this.props;
+
+    let isComingDueQualificationView = this.state.isComingDueQualificationView,
+      comingDueQualifications = {};
+      isComingDueQualificationView = true;
+    this.setState({ isComingDueQualificationView, comingDueQualifications });
+
+    // Commented due to using mock JSON
+
+    // let token = cookies.get('IdentityToken'),
+    //     url = "Need to update url",
+    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
+    let response = OQDashboardMock.inCompletedQualifications;
+
+    comingDueQualifications = response;
+    isComingDueQualificationView = true;
+    this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
+  };
+
   render() {
     const { rows } = this.state;
     return (
@@ -477,6 +546,18 @@ class OQDashboard extends PureComponent {
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isInCompletedQualificationView}
           inCompletedQualifications={this.state.inCompletedQualifications}
+        />
+        <PastDueQualification
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isPastDueQualificationView}
+          pastDueQualifications={this.state.pastDueQualifications}
+        />
+        <ComingDueQualification
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isComingDueQualificationView}
+          comingDueQualifications={this.state.comingDueQualifications}
         />
         <div className="card__title">
           <div className="pageheader">
