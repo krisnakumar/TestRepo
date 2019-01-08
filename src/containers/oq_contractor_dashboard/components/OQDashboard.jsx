@@ -497,7 +497,8 @@ class OQDashboard extends PureComponent {
               onGridRowsUpdated={this.handleGridRowsUpdated}
               rowHeight={35}
               minColumnWidth={100}
-            // emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
+              // rowRenderer={RowRenderer}
+              // emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
             />
           </div>
         </div>
@@ -507,3 +508,10 @@ class OQDashboard extends PureComponent {
 }
 
 export default withCookies(OQDashboard);
+
+const RowRenderer = ({ row, idx }) => {
+  debugger;
+  return (
+      {row}
+  );
+};
