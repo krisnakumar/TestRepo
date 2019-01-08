@@ -259,7 +259,7 @@ class OQDashboard extends PureComponent {
     }
 
     const sortRows = beforePopRows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     if (beforePopRows.length > 0)
@@ -394,19 +394,19 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
   };
 
-   /**
-   * @method
-   * @name - getCompletedQualifications
-   * This method will used to get Completed Qualifications
-   * @param userId
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - getCompletedQualifications
+  * This method will used to get Completed Qualifications
+  * @param userId
+  * @returns none
+  */
   async getCompletedQualifications(userId) {
     const { cookies } = this.props;
 
     let isCompletedQualificationView = this.state.isCompletedQualificationView,
-        completedQualifications = {};
-        isCompletedQualificationView = true;
+      completedQualifications = {};
+    isCompletedQualificationView = true;
     this.setState({ isCompletedQualificationView, completedQualifications });
 
     // Commented due to using mock JSON
@@ -422,19 +422,19 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
   };
 
-   /**
-   * @method
-   * @name - getInCompletedQualifications
-   * This method will used to get InCompleted Qualifications
-   * @param userId
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - getInCompletedQualifications
+  * This method will used to get InCompleted Qualifications
+  * @param userId
+  * @returns none
+  */
   async getInCompletedQualifications(userId) {
     const { cookies } = this.props;
 
     let isInCompletedQualificationView = this.state.isInCompletedQualificationView,
-        inCompletedQualifications = {};
-        isInCompletedQualificationView = true;
+      inCompletedQualifications = {};
+    isInCompletedQualificationView = true;
     this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
     // Commented due to using mock JSON
@@ -453,7 +453,7 @@ class OQDashboard extends PureComponent {
   render() {
     const { rows } = this.state;
     return (
-      <div>
+      <CardBody>
         <ContractorView
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -478,32 +478,30 @@ class OQDashboard extends PureComponent {
           modal={this.state.isInCompletedQualificationView}
           inCompletedQualifications={this.state.inCompletedQualifications}
         />
-        <CardBody>
-          <div className="card__title">
-            <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
+        <div className="card__title">
+          <div className="pageheader">
+            <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
             </div>
-            <p className="card__description">Add workbook widgets here</p>
+          <p className="card__description">Add workbook widgets here</p>
+        </div>
+        <div className="grid-container">
+          <div className="table has-total-row">
+            <ReactDataGrid
+              ref={'oQDashboardReactDataGrid'}
+              onGridSort={this.handleGridSort}
+              enableCellSelect={false}
+              enableCellAutoFocus={false}
+              columns={this.heads}
+              rowGetter={this.rowGetter}
+              rowsCount={rows.length}
+              onGridRowsUpdated={this.handleGridRowsUpdated}
+              rowHeight={35}
+              minColumnWidth={100}
+            // emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
+            />
           </div>
-          <div className="grid-container">
-            <div className="table has-total-row">
-              <ReactDataGrid
-                ref={'oQDashboardReactDataGrid'}
-                onGridSort={this.handleGridSort}
-                enableCellSelect={false}
-                enableCellAutoFocus={false}
-                columns={this.heads}
-                rowGetter={this.rowGetter}
-                rowsCount={rows.length}
-                onGridRowsUpdated={this.handleGridRowsUpdated}
-                rowHeight={35}
-                minColumnWidth={100}
-              // emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
-              />
-            </div>
-          </div>
-        </CardBody>
-      </div>
+        </div>
+      </CardBody>
     );
   }
 }
