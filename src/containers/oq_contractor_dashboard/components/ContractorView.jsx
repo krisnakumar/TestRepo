@@ -340,12 +340,12 @@ class ContractorView extends PureComponent {
     };
 
     /**
-   * @method
-   * @name - getContractorQualifications
-   * This method will used to get Contractor Qualifications
-   * @param userId
-   * @returns none
-   */
+     * @method
+     * @name - getContractorQualifications
+     * This method will used to get Contractor Qualifications
+     * @param userId
+     * @returns none
+    */
     async getEmployeeQualifications(userId) {
         const { cookies } = this.props;
 
@@ -373,7 +373,7 @@ class ContractorView extends PureComponent {
      * This method will used to get Assigned Qualifications
      * @param userId
      * @returns none
-     */
+    */
     async getAssignedQualifications(userId) {
         const { cookies } = this.props;
 
@@ -563,7 +563,7 @@ class ContractorView extends PureComponent {
                                     onGridRowsUpdated={this.handleGridRowsUpdated}
                                     rowHeight={35}
                                     minColumnWidth={100}
-                                // emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
+                                    emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
                                 />
                             </div>
                         </div>
