@@ -55,6 +55,8 @@ namespace ReportBuilderAPI.Utilities
 
         public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";
         public const string ROLE = "ROLE";
+        public const string CAN_CERTIFY = "CAN_CERTIFY";
+        
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";
         public const string ISENABLED = "ISENABLED";
         public const string PHOTO = "PHOTO";
@@ -78,11 +80,6 @@ namespace ReportBuilderAPI.Utilities
         public const string INCOMPLETE_TASK = "INCOMPLETE_TASK";
         public const string TOTAL_TASK = "TOTAL_TASK";
         public const string TOTAL_WORKBOOK = "TOTAL_WORKBOOK";
-        public const string ASSIGNED_QUALIFICATIONS = "ASSIGNED_QUALIFICATIONS";
-        public const string COMPLETED_QUALIFICATIONS = "COMPLETED_QUALIFICATIONS";
-        public const string IN_COMPLETE_QUALIFICATIONS = "IN_COMPLETE_QUALIFICATIONS";
-        public const string PAST_DUE_QUALIFICATIONS = "PAST_DUE_QUALIFICATIONS";
-        public const string QUALIFICATIONS_IN_DUE = "QUALIFICATIONS_IN_DUE";
 
         public const string TOTAL_EMPLOYEES = "TOTAL_EMPLOYEES";
         public const string USER_CREATED_DATE = "USER_CREATED_DATE";
@@ -155,5 +152,14 @@ namespace ReportBuilderAPI.Utilities
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
         public const string EXPIRATION_DATE = "EXPIRATION_DATE";
         public const string COMMENTS = "COMMENTS";
+
+        //Tasks for Qualification
+        public const string ASSIGNED_QUALIFICATION = "ASSIGNED_QUALIFICATION";
+        public const string COMPLETED_QUALIFICATION = "COMPLETED_QUALIFICATION";
+        public const string IN_COMPLETE_QUALIFICATION = "IN_COMPLETE_QUALIFICATION";
+        public const string PAST_DUE_QUALIFICATION = "PAST_DUE_QUALIFICATION";
+        public const string IN_DUE_QUALIFICATION = "IN_DUE_QUALIFICATION";
+        public const string ASSIGNED_DATE = "ASSIGNED_DATE";
+
     }
 }

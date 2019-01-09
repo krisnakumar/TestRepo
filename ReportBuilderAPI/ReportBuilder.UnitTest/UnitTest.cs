@@ -222,7 +222,7 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.TOTAL_EMPLOYEES},
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.TOTAL_EMPLOYEES, Constants.COMPLETED_WORKBOOK},
                 Fields = employeeList
             };
 
@@ -265,7 +265,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"SUPERVISOR_ID\",\"EMPLOYEE_NAME\",\"ROLE\",\"ASSIGNED_WORKBOOK\",\"WORKBOOK_DUE\",\"PAST_DUE_WORKBOOK\",\"COMPLETED_WORKBOOK\",\"TOTAL_EMPLOYEES\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":9,\"Operator\":\"=\"},{\"Name\":\"USER_ID\",\"Value\":9,\"Operator\":\"=\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"USER_ID\",\"WORKBOOK_ID\",\"ROLE\",\"EMPLOYEE_NAME\",\"WORKBOOK_NAME\",\"COMPLETED_WORKBOOK\",\"TOTAL_WORKBOOK\",\"DUE_DATE\"]}";
 
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -283,46 +283,39 @@ namespace ReportBuilder.UnitTest
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.USERID, Constants.WORKBOOK_ID, Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.TOTAL_TASK, Constants.INCOMPLETE_TASK},
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.TASK_CODE, Constants.TASK_NAME, Constants.ASSIGNED_DATE},
                 Fields = employeeList
             };
 
             EmployeeModel employeeModel = new EmployeeModel
             {
                 Name = Constants.SUPERVISOR_ID,
-                Value = "100",
+                Value = "6",
                 Operator = "="
             };
 
 
+
             EmployeeModel employeeModel2 = new EmployeeModel
             {
-                Name = Constants.WORKBOOK_ID,
-                Value = "100",
+                Name = Constants.ROLE,
+                Value = "CONTRACTOR",
                 Operator = "=",
-                Bitwise="and"
+                Bitwise = "and"
             };
 
 
-            //EmployeeModel employeeModel2 = new EmployeeModel
-            //{
-            //    Name = Constants.WORKBOOK_ID,
-            //    Value = "18",
-            //    Operator = "="
-            //};
-
-
-            //EmployeeModel employeeModel3 = new EmployeeModel
-            //{
-            //    Name = Constants.TASK_ID,
-            //    Value = "860",
-            //    Operator = "=",
-            //    Bitwise = "and"
-            //};
+            EmployeeModel employeeModel3 = new EmployeeModel
+            {
+                Name = Constants.CAN_CERTIFY,
+                Value = "1",
+                Operator = "=",
+                Bitwise = "and"
+            };
 
             employeeList.Add(employeeModel);
             employeeList.Add(employeeModel2);
-            //employeeList.Add(employeeModel3);
+          employeeList.Add(employeeModel3);
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
                 { "companyId", "6" }
@@ -334,8 +327,6 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest),
                 PathParameters = pathValues
             };
-
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":35,\"Operator\":\"=\"},{\"Name\":\"WORKBOOK_ID\",\"Value\":35,\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"WORKBOOK_ID\",\"TASK_ID\",\"TASK_CODE\",\"TASK_NAME\",\"TOTAL_TASK\",\"INCOMPLETE_TASK\",\"COMPLETED_TASK\"]}";
 
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);

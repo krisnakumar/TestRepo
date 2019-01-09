@@ -94,5 +94,33 @@ namespace ReportBuilder.Models.Response
         public string ExpirationDate { get; set; }
 
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string EmployeeName { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Role { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? AssignedQualification { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompletedQualification { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InDueQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? PastDueQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? IncompleteQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TotalEmployees { get; set; }
+
     }
 }

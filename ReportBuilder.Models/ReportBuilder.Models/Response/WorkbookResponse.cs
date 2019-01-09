@@ -52,6 +52,11 @@ namespace ReportBuilder.Models.Response
         public int? InCompleteWorkbook { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? TotalWorkbook { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TotalTasks { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? CompletedWorkbook { get; set; }
 
