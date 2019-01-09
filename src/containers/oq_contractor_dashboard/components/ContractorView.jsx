@@ -563,7 +563,7 @@ class ContractorView extends PureComponent {
                                     onGridRowsUpdated={this.handleGridRowsUpdated}
                                     rowHeight={35}
                                     minColumnWidth={100}
-                                    emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView} 
+                                    emptyRowsView={this.state.isInitial && ContractorViewEmptyRowsView} 
                                 />
                             </div>
                         </div>

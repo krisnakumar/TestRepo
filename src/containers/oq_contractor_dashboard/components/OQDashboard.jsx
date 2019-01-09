@@ -25,6 +25,8 @@ import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
+import * as API from '../../../shared/utils/APIUtils';
+import * as Constants from '../../../shared/constants';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -120,8 +122,10 @@ class OQDashboard extends PureComponent {
       },
     ];
 
+    this.tasks = [];
+
     this.state = {
-      rows: this.createRows(OQDashboardMock.contractorOQView),
+      rows: this.createRows(this.tasks),
       isContractorView: false,
       isAssignedQualificationView: false,
       isCompletedQualificationView: false,
@@ -175,6 +179,9 @@ class OQDashboard extends PureComponent {
   */
   componentDidMount() {
     // Do API call for loading initial table view
+    const { cookies } = this.props;
+    let userId = cookies.get('UserId');
+    this.getQualifications(userId);
   };
 
 
@@ -197,21 +204,22 @@ class OQDashboard extends PureComponent {
     const rows = [],
       length = qualifications ? qualifications.length : 0;
     for (let i = 0; i < length; i++) {
-      assignedQualificationCount += parseInt(qualifications[i].assignedQualification);
-      completedQualificationCount += parseInt(qualifications[i].completedQualification);
-      inCompletedQualificationCount += parseInt(qualifications[i].inCompletedQualification);
-      pastDueCount += parseInt(qualifications[i].pastDue);
-      comingDueCount += parseInt(qualifications[i].comingDue);
-      totalQualificationCount += parseInt(qualifications[i].total);
+      assignedQualificationCount += parseInt(qualifications[i].AssignedQualification);
+      completedQualificationCount += parseInt(qualifications[i].CompletedQualification);
+      inCompletedQualificationCount += parseInt(qualifications[i].IncompleteQualification);
+      pastDueCount += parseInt(qualifications[i].PastDueQualification);
+      comingDueCount += parseInt(qualifications[i].InDueQualification);
+      totalQualificationCount += parseInt(qualifications[i].TotalEmployees || 0);
       rows.push({
-        contractors: qualifications[i].contractors,
-        role: qualifications[i].role,
-        assignedQualification: qualifications[i].assignedQualification,
-        completedQualification: qualifications[i].completedQualification,
-        inCompletedQualification: qualifications[i].inCompletedQualification,
-        pastDue: qualifications[i].pastDue,
-        comingDue: qualifications[i].comingDue,
-        total: qualifications[i].total,
+        userId: qualifications[i].UserId,
+        contractors: qualifications[i].EmployeeName,
+        role: qualifications[i].Role || "",
+        assignedQualification: qualifications[i].AssignedQualification,
+        completedQualification: qualifications[i].CompletedQualification,
+        inCompletedQualification: qualifications[i].IncompleteQualification,
+        pastDue: qualifications[i].PastDueQualification,
+        comingDue: qualifications[i].InDueQualification,
+        total: qualifications[i].TotalEmployees,
       });
     }
 
@@ -348,6 +356,33 @@ class OQDashboard extends PureComponent {
         break;
     }
     this.refs.oQDashboardReactDataGrid.deselect();
+  };
+
+  /**
+   * @method
+   * @name - getQualifications
+   * This method will used to get Qualifications details
+   * @param userId
+   * @returns none
+   */
+  async getQualifications(userId) {
+    const { cookies } = this.props;
+    const payLoad = {
+      "Fields":[
+        {"Name":"SUPERVISOR_ID","Bitwise":null,"Value": userId,"Operator":"=","Group":null},
+        {"Name":"ROLE","Bitwise":"and","Value":"CONTRACTOR","Operator":"=","Group":null},
+        {"Name":"CAN_CERTIFY","Bitwise":"and","Value":"1","Operator":"=","Group":null}],
+      "ColumnList": Constants.GET_QUALIFICATION_COLUMNS
+    };
+
+    let token = cookies.get('IdentityToken'),
+        companyId = cookies.get('CompanyId'),
+        url = "/company/"+companyId+"/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
+        rows = this.createRows(response),
+        isInitial = true;
+
+    this.setState({ rows: rows, isInitial: isInitial });
   };
 
   /**
@@ -577,8 +612,7 @@ class OQDashboard extends PureComponent {
               onGridRowsUpdated={this.handleGridRowsUpdated}
               rowHeight={35}
               minColumnWidth={100}
-              // rowRenderer={RowRenderer}
-              // emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
+              emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
             />
           </div>
         </div>

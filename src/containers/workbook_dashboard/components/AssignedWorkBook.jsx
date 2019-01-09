@@ -172,8 +172,8 @@ class AssignedWorkBook extends React.Component {
         workbookName: employees[i].WorkBookName,
         role: employees[i].Role,
         employee: employees[i].EmployeeName,
-        completedTasks: employees[i].CompletedWorkbook +"/"+ employees[i].TotalWorkbook,
-        percentageCompleted: (employees[i].CompletedWorkbook / employees[i].TotalWorkbook  * 100) + "%",
+        completedTasks: employees[i].CompletedTasks +"/"+ employees[i].TotalTasks,
+        percentageCompleted: (employees[i].CompletedTasks / employees[i].TotalTasks  * 100) + "%",
         dueDate: dueDate
       });      
     }
