@@ -113,9 +113,10 @@ class EmployeeView extends PureComponent {
         ];
 
         this.state = {
-            rows: this.createRows(this.props.employeeQualifications),
+            rows: this.createRows(this.props.employeesQualificationsArray),
             modal: this.props.modal,
             isInitial: false,
+            employeesQualificationsArray: this.props.employeesQualificationsArray || [],
             isAssignedQualificationView: false,
             isCompletedQualificationView: false,
             isInCompletedQualificationView: false,
@@ -167,7 +168,9 @@ class EmployeeView extends PureComponent {
     * @param qualifications
     * @returns rows
     */
-    createRows = (qualifications) => {
+    createRows = (qualificationsArray) => {
+        let qualificationsArrayLength = qualificationsArray.length - 1;
+        let qualifications = qualificationsArray[qualificationsArrayLength];
         const rows = [],
             length = qualifications ? qualifications.length : 0;
         for (let i = 0; i < length; i++) {
@@ -182,6 +185,10 @@ class EmployeeView extends PureComponent {
                 comingDue: qualifications[i].InDueQualification,
                 total: qualifications[i].TotalEmployees,
             });
+        }
+        
+        if (length > 0) {
+            this.state.employeesQualificationsArray = qualificationsArray;
         }
 
         return rows;
@@ -210,15 +217,22 @@ class EmployeeView extends PureComponent {
      * @returns none
     */
     componentWillReceiveProps(newProps) {
-        let rows = this.createRows(newProps.employeeQualifications),
-            isArray = Array.isArray(newProps.employeeQualifications),
-            isInitial = isArray;
+        let rows = this.createRows(newProps.employeesQualificationsArray),
+            isArray = Array.isArray(newProps.employeesQualificationsArray),
+            isRows = newProps.employeesQualificationsArray.length > 0 ? true : false;
+
+        let isInitial = false;
+
+        if (isArray && isRows) {
+            isInitial = rows.length > 0 ? false : true;
+        }
+
         this.setState({
             modal: newProps.modal,
             rows: rows,
             isInitial: isInitial
         });
-    }
+    };
 
     /**
      * @method
@@ -228,11 +242,18 @@ class EmployeeView extends PureComponent {
      * @returns none
      */
     toggle() {
-        this.setState({
-            modal: !this.state.modal
-        });
-        this.props.updateState("isEmployeeView");
-    }
+        let employeesQualificationsArray = this.state.employeesQualificationsArray,
+            length = employeesQualificationsArray.length;
+
+        if (length == 1 || length == 0 || length == undefined) {
+            this.setState({
+                modal: !this.state.modal
+            });
+            this.props.updateState("isEmployeeView");
+        } else if (length >= 1) {
+            this.props.popMyEmployeesArray();
+        }
+    };
 
     /**
      * @method
@@ -313,7 +334,7 @@ class EmployeeView extends PureComponent {
         switch (type) {
             case "contractors":
             case "total":
-                alert("Work in progress!");
+                this.getMyEmployees(userId);
                 break;
             case "assignedQualification":
                 this.getAssignedQualifications(userId);
@@ -337,6 +358,33 @@ class EmployeeView extends PureComponent {
         this.refs.employeeViewReactDataGrid.deselect();
     };
 
+     /**
+     * @method
+     * @name - getMyEmployees
+     * This method will used to get My Employees details supervisior
+     * @param userId
+     * @param supervisor
+     * @returns none
+    */
+    async getMyEmployees(userId) {
+        const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
+        };
+
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+        myEmployees = response;
+
+        this.props.updateEmployeesQualificationsArray(myEmployees);
+    };
+
     /**
      * @method
      * @name - getAssignedQualifications
@@ -348,8 +396,7 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "ASSIGNED", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
         };
@@ -379,8 +426,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "COMPLETED", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -410,8 +457,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -441,8 +488,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "PAST_DUE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
         };
@@ -472,8 +519,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "IN_DUE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
         };

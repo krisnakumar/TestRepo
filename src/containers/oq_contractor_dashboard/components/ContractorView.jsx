@@ -124,6 +124,7 @@ class ContractorView extends PureComponent {
             isPastDueQualificationView: false,
             isComingDueQualificationView: false,
             employeeQualifications: {},
+            employeesQualificationsArray: {},
             assignedQualifications: {},
             completedQualifications: {},
             inCompletedQualifications: {},
@@ -135,11 +136,42 @@ class ContractorView extends PureComponent {
     }
 
     /**
-    * @method
-    * @name - cellFormatter
-    * This method will format the cell column other than workbooks Data Grid
-    * @param props
-    * @returns none
+     * @method
+     * @name - updateEmployeesQualificationsArray
+     * This method will update employeesQualificationsArray Array of state of this component
+     * @param qualifications
+     * @returns none
+     */
+    updateEmployeesQualificationsArray = (qualifications) => {
+        let employeesQualificationsArray = this.state.employeesQualificationsArray;
+
+        employeesQualificationsArray.push(qualifications);
+
+        this.setState({ ...this.state, employeesQualificationsArray });
+    };
+
+    /**
+     * @method
+     * @name - popEmployeesQualificationsArray
+     * This method will delete last element of employeesQualificationsArray of state of this component
+     * @param none
+     * @returns none
+    */
+    popEmployeesQualificationsArray = () => {
+        let employeesQualificationsArray = this.state.employeesQualificationsArray;
+
+        if (employeesQualificationsArray.length > 0) {
+            let totalRow = employeesQualificationsArray.pop();
+        }
+        this.setState({ ...this.state, employeesQualificationsArray });
+    };
+
+    /**
+     * @method
+     * @name - cellFormatter
+     * This method will format the cell column other than workbooks Data Grid
+     * @param props
+     * @returns none
     */
     cellFormatter = (props) => {
         return (
@@ -352,23 +384,27 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
         };
 
         let isEmployeeView = this.state.isEmployeeView,
-            employeeQualifications = {};
+            employeeQualifications = {},
+            employeesQualificationsArray = [];
+
         isEmployeeView = true;
-        this.setState({ isEmployeeView, employeeQualifications });
+        this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray });
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
         employeeQualifications = response;
+        employeesQualificationsArray.push(employeeQualifications);
         isEmployeeView = true;
-        this.setState({ ...this.state, isEmployeeView, employeeQualifications });
+        this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
     };
 
     /**
@@ -382,8 +418,7 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "ASSIGNED", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
         };
@@ -413,8 +448,8 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "COMPLETED", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -444,8 +479,8 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -475,8 +510,8 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "PAST_DUE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
         };
@@ -506,8 +541,8 @@ class ContractorView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
-                { "Name": "IN_DUE", "Bitwise": "and", "Value": true, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+                { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
                 { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
         };
@@ -534,6 +569,9 @@ class ContractorView extends PureComponent {
                     backdropClassName={"no-backdrop"}
                     updateState={this.updateModalState.bind(this)}
                     modal={this.state.isEmployeeView}
+                    updateEmployeesQualificationsArray={this.updateEmployeesQualificationsArray.bind(this)}
+                    popEmployeesQualificationsArray={this.popEmployeesQualificationsArray.bind(this)}
+                    employeesQualificationsArray={this.state.employeesQualificationsArray}
                     employeeQualifications={this.state.employeeQualifications}
                 />
                 <AssignedQualification

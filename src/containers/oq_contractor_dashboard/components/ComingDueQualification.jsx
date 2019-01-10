@@ -130,7 +130,7 @@ class ComingDueQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 oQTask: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
-                dueDate: qualifications[i].DueDate
+                dueDate: qualifications[i].ExpirationDate
             });
         }
 

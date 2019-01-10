@@ -640,4 +640,8 @@ button.query-action-btn.delete:disabled {
 }
 .word-wrap{ 
   white-space: pre-wrap;
-  }
+}
+
+.react-grid-Container .react-grid-Canvas{
+  height: auto !important;
+}
