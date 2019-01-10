@@ -127,10 +127,10 @@ class CompletedQualification extends PureComponent {
             length = qualifications ? qualifications.length : 0;
         for (let i = 0; i < length; i++) {
             rows.push({
-                taskCode: qualifications[i].taskCode,
-                oQTask: qualifications[i].oQTask,
-                employee: qualifications[i].employee,
-                assignedDate: qualifications[i].assignedDate
+                taskCode: qualifications[i].TaskCode,
+                oQTask: qualifications[i].TaskName,
+                employee: qualifications[i].EmployeeName,
+                assignedDate: qualifications[i].AssignedDate
             });
         }
 
