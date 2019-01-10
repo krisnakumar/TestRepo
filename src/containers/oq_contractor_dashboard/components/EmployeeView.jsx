@@ -308,7 +308,7 @@ class EmployeeView extends PureComponent {
     * @returns none
     */
     handleCellClick = (type, args) => {
-        let userId = 0;
+        let userId = args.userId || 0;
         switch (type) {
             case "contractors":
             case "total":
@@ -347,8 +347,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
         };
 
@@ -377,8 +377,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
         };
 
@@ -407,8 +407,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
         };
 
@@ -437,8 +437,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
         };
 
@@ -467,8 +467,8 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=" },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
         };
 
