@@ -29,7 +29,7 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 
 /**
- * EmptyRowsView Class defines the React component to render
+ * OQDashboardEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react-data-grid module.
  */
@@ -368,19 +368,19 @@ class OQDashboard extends PureComponent {
   async getQualifications(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields":[
-        {"Name":"SUPERVISOR_ID","Bitwise":null,"Value": userId,"Operator":"=","Group":null},
-        {"Name":"ROLE","Bitwise":"and","Value":"CONTRACTOR","Operator":"=","Group":null},
-        {"Name":"CAN_CERTIFY","Bitwise":"and","Value":"1","Operator":"=","Group":null}],
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
       "ColumnList": Constants.GET_QUALIFICATION_COLUMNS
     };
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/"+companyId+"/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
-        rows = this.createRows(response),
-        isInitial = true;
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
+      rows = this.createRows(response),
+      isInitial = true;
 
     this.setState({ rows: rows, isInitial: isInitial });
   };
@@ -394,20 +394,23 @@ class OQDashboard extends PureComponent {
    */
   async getContractorQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_CONTRACTOR_QUALIFICATION_COLUMNS
+    };
 
     let isContractorView = this.state.isContractorView,
       contractorQualifications = {};
     isContractorView = true;
     this.setState({ isContractorView, contractorQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.employeeView;
-
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     contractorQualifications = response;
     isContractorView = true;
     this.setState({ ...this.state, isContractorView, contractorQualifications });
@@ -422,20 +425,23 @@ class OQDashboard extends PureComponent {
    */
   async getAssignedQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
+    };
 
     let isAssignedQualificationView = this.state.isAssignedQualificationView,
       assignedQualifications = {};
     isAssignedQualificationView = true;
     this.setState({ isAssignedQualificationView, assignedQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.assignedQualification;
-
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     assignedQualifications = response;
     isAssignedQualificationView = true;
     this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
@@ -450,20 +456,23 @@ class OQDashboard extends PureComponent {
   */
   async getCompletedQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
+    };
 
     let isCompletedQualificationView = this.state.isCompletedQualificationView,
       completedQualifications = {};
     isCompletedQualificationView = true;
     this.setState({ isCompletedQualificationView, completedQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.completedQualifications;
-
+    let token = cookies.get('IdentityToken'),
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     completedQualifications = response;
     isCompletedQualificationView = true;
     this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
@@ -478,20 +487,23 @@ class OQDashboard extends PureComponent {
   */
   async getInCompletedQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
+    };
 
     let isInCompletedQualificationView = this.state.isInCompletedQualificationView,
       inCompletedQualifications = {};
     isInCompletedQualificationView = true;
     this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.inCompletedQualifications;
-
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     inCompletedQualifications = response;
     isInCompletedQualificationView = true;
     this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
@@ -506,20 +518,23 @@ class OQDashboard extends PureComponent {
   */
   async getPastDueQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
+    };
 
     let isPastDueQualificationView = this.state.isPastDueQualificationView,
       pastDueQualifications = {};
-      isPastDueQualificationView = true;
+    isPastDueQualificationView = true;
     this.setState({ isPastDueQualificationView, pastDueQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.inCompletedQualifications;
-
+    let token = cookies.get('IdentityToken'),
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     pastDueQualifications = response;
     isPastDueQualificationView = true;
     this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
@@ -534,19 +549,23 @@ class OQDashboard extends PureComponent {
   */
   async getComingDueQualifications(userId) {
     const { cookies } = this.props;
+    const payLoad = {
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+        { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+        { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+      "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
+    };
 
     let isComingDueQualificationView = this.state.isComingDueQualificationView,
       comingDueQualifications = {};
-      isComingDueQualificationView = true;
+    isComingDueQualificationView = true;
     this.setState({ isComingDueQualificationView, comingDueQualifications });
 
-    // Commented due to using mock JSON
-
-    // let token = cookies.get('IdentityToken'),
-    //     url = "Need to update url",
-    //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-    let response = OQDashboardMock.inCompletedQualifications;
+    let token = cookies.get('IdentityToken'),
+        companyId = cookies.get('CompanyId'),
+        url = "/company/" + companyId + "/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     comingDueQualifications = response;
     isComingDueQualificationView = true;
@@ -612,7 +631,7 @@ class OQDashboard extends PureComponent {
               onGridRowsUpdated={this.handleGridRowsUpdated}
               rowHeight={35}
               minColumnWidth={100}
-              emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView} 
+              emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
             />
           </div>
         </div>
@@ -622,10 +641,3 @@ class OQDashboard extends PureComponent {
 }
 
 export default withCookies(OQDashboard);
-
-const RowRenderer = ({ row, idx }) => {
-  debugger;
-  return (
-      {row}
-  );
-};

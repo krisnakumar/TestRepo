@@ -25,7 +25,8 @@ import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
-
+import * as API from '../../../shared/utils/APIUtils';
+import * as Constants from '../../../shared/constants';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -298,7 +299,7 @@ class ContractorView extends PureComponent {
     updateModalState = (modelName) => {
         let value = !this.state[modelName];
         this.setState({
-        [modelName]: value
+            [modelName]: value
         });
     };
 
@@ -348,20 +349,23 @@ class ContractorView extends PureComponent {
     */
     async getEmployeeQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
+        };
 
         let isEmployeeView = this.state.isEmployeeView,
             employeeQualifications = {};
         isEmployeeView = true;
         this.setState({ isEmployeeView, employeeQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.employeeView;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         employeeQualifications = response;
         isEmployeeView = true;
         this.setState({ ...this.state, isEmployeeView, employeeQualifications });
@@ -376,20 +380,23 @@ class ContractorView extends PureComponent {
     */
     async getAssignedQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
+        };
 
         let isAssignedQualificationView = this.state.isAssignedQualificationView,
             assignedQualifications = {};
         isAssignedQualificationView = true;
         this.setState({ isAssignedQualificationView, assignedQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.assignedQualification;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
         isAssignedQualificationView = true;
         this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
@@ -404,20 +411,23 @@ class ContractorView extends PureComponent {
     */
     async getCompletedQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
+        };
 
         let isCompletedQualificationView = this.state.isCompletedQualificationView,
             completedQualifications = {};
         isCompletedQualificationView = true;
         this.setState({ isCompletedQualificationView, completedQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.completedQualifications;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
         isCompletedQualificationView = true;
         this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
@@ -432,20 +442,23 @@ class ContractorView extends PureComponent {
     */
     async getInCompletedQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
+        };
 
         let isInCompletedQualificationView = this.state.isInCompletedQualificationView,
             inCompletedQualifications = {};
         isInCompletedQualificationView = true;
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.inCompletedQualifications;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
         isInCompletedQualificationView = true;
         this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
@@ -460,20 +473,23 @@ class ContractorView extends PureComponent {
     */
     async getPastDueQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
+        };
 
         let isPastDueQualificationView = this.state.isPastDueQualificationView,
             pastDueQualifications = {};
         isPastDueQualificationView = true;
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.inCompletedQualifications;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
         isPastDueQualificationView = true;
         this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
@@ -488,20 +504,23 @@ class ContractorView extends PureComponent {
     */
     async getComingDueQualifications(userId) {
         const { cookies } = this.props;
+        const payLoad = {
+            "Fields": [
+                { "Name": "SUPERVISOR_ID", "Bitwise": null, "Value": userId, "Operator": "=", "Group": null },
+                { "Name": "ROLE", "Bitwise": "and", "Value": "CONTRACTOR", "Operator": "=", "Group": null },
+                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=", "Group": null }],
+            "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
+        };
 
         let isComingDueQualificationView = this.state.isComingDueQualificationView,
             comingDueQualifications = {};
         isComingDueQualificationView = true;
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
-        // Commented due to using mock JSON
-
-        // let token = cookies.get('IdentityToken'),
-        //     url = "Need to update url",
-        //     response = await API.ProcessAPI(url, "", token, false, "GET", true);
-
-        let response = OQDashboardMock.inCompletedQualifications;
-
+        let token = cookies.get('IdentityToken'),
+            companyId = cookies.get('CompanyId'),
+            url = "/company/" + companyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;
         isComingDueQualificationView = true;
         this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
@@ -563,7 +582,7 @@ class ContractorView extends PureComponent {
                                     onGridRowsUpdated={this.handleGridRowsUpdated}
                                     rowHeight={35}
                                     minColumnWidth={100}
-                                    emptyRowsView={this.state.isInitial && ContractorViewEmptyRowsView} 
+                                    emptyRowsView={this.state.isInitial && ContractorViewEmptyRowsView}
                                 />
                             </div>
                         </div>

@@ -67,8 +67,8 @@ class ComingDueQualification extends PureComponent {
                 cellClass: "text-left"
             },
             {
-                key: 'assignedDate',
-                name: 'Assigned Date',
+                key: 'dueDate',
+                name: 'Due Date',
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,
@@ -130,7 +130,7 @@ class ComingDueQualification extends PureComponent {
                 taskCode: qualifications[i].taskCode,
                 oQTask: qualifications[i].oQTask,
                 employee: qualifications[i].employee,
-                assignedDate: qualifications[i].assignedDate
+                dueDate: qualifications[i].assignedDate
             });
         }
 
@@ -214,63 +214,6 @@ class ComingDueQualification extends PureComponent {
 
     // This method is used to setting the row data in react data grid
     rowGetter = i => this.state.rows[i];
-
-    /**
-     * @method
-     * @name - qualificationsFormatter
-     * This method will format the qualification Data Grid
-     * @param type
-     * @param props
-     * @returns none
-     */
-    qualificationsFormatter = (type, props) => {
-        if (props.dependentValues[type] <= 0 || props.dependentValues.contractors == "Total") {
-            return (
-                <span>{props.value}</span>
-            );
-        } else {
-            return (
-                <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
-                    {props.value}
-                </span>
-            );
-        }
-    }
-
-    /**
-    * @method
-    * @name - handleCellClick
-    * This method will trigger the event of API's respective to cell clicked Data Grid
-    * @param type
-    * @param args
-    * @returns none
-    */
-    handleCellClick = (type, args) => {
-        let userId = 0;
-        switch (type) {
-            case "contractors":
-            case "total":
-                alert("Work in progress!");
-                console.log("contractors-", type, args);
-                break;
-            case "assignedQualification":
-                alert("Work in progress!");
-                console.log("assignedQualification-", type, args);
-                break;
-            case "completedQualification":
-                alert("Work in progress!");
-                console.log("completedQualification-", type, args);
-                break;
-            case "inCompletedQualification":
-                alert("Work in progress!");
-                console.log("inCompletedQualification-", type, args);
-                break;
-            default:
-                console.log("default-", type, args);
-                break;
-        }
-        this.refs.comingDueQualificationReactDataGrid.deselect();
-    };
 
     render() {
         const { rows } = this.state;
