@@ -385,7 +385,8 @@ class ContractorView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+                // { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
         };
 
@@ -419,7 +420,8 @@ class ContractorView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
         };
 
@@ -450,7 +452,8 @@ class ContractorView extends PureComponent {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
         };
 
@@ -481,7 +484,8 @@ class ContractorView extends PureComponent {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
         };
 
@@ -512,7 +516,8 @@ class ContractorView extends PureComponent {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
         };
 
@@ -543,7 +548,8 @@ class ContractorView extends PureComponent {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
                 { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
-                { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }],
+            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+            ],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
         };
 
