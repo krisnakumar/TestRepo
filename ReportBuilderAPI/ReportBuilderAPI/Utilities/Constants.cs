@@ -126,8 +126,9 @@ namespace ReportBuilderAPI.Utilities
         public const string COMPLETED = "COMPLETED";
         public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
         public const string PAST_DUE = "PAST_DUE";
+        public const string IN_DUE = "IN_DUE";
         public const string DUE_DAYS = "DUE_DAYS";
-
+        
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";
         public const string TASK_CODE = "TASK_CODE";
@@ -151,12 +152,15 @@ namespace ReportBuilderAPI.Utilities
         public const string CHILD_TASK_NAME = "CHILD_TASK_NAME";
         public const string NUMBER_OF_ATTEMPTS = "NUMBER_OF_ATTEMPTS";
         public const string EXPIRATION_DATE = "EXPIRATION_DATE";
+        public const string COURSE_EXPIRATION_DATE = "COURSE_EXPIRATION_DATE";
         public const string COMMENTS = "COMMENTS";
 
         //Tasks for Qualification
         public const string ASSIGNED_QUALIFICATION = "ASSIGNED_QUALIFICATION";
         public const string COMPLETED_QUALIFICATION = "COMPLETED_QUALIFICATION";
         public const string IN_COMPLETE_QUALIFICATION = "IN_COMPLETE_QUALIFICATION";
+        public const string IN_COMPLETE = "IN_COMPLETE";
+        
         public const string PAST_DUE_QUALIFICATION = "PAST_DUE_QUALIFICATION";
         public const string IN_DUE_QUALIFICATION = "IN_DUE_QUALIFICATION";
         public const string ASSIGNED_DATE = "ASSIGNED_DATE";

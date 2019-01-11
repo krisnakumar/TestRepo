@@ -94,6 +94,11 @@ namespace ReportBuilder.Models.Response
         public string ExpirationDate { get; set; }
 
 
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AssignedDate { get; set; }
+
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string EmployeeName { get; set; }
 

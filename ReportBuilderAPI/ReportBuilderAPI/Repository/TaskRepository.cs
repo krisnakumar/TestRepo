@@ -146,7 +146,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetQueryTaskDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty, dueDays = string.Empty; ;
             List<TaskResponse> workbookDetails;
             List<string> fieldList = new List<string>();
             EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -177,17 +177,37 @@ namespace ReportBuilderAPI.Repository
                 taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
                 query += tableJoin;
 
+                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
+                if (string.IsNullOrEmpty(dueDays))
+                {
+                    dueDays = "30";
+                }
+
+                if (queryRequest.Fields.Where(x => x.Name == Constants.SUPERVISOR_ID).ToList().Count > 0 && queryRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
+                {
+                    ReportBuilder.Models.Models.EmployeeModel userDetails = queryRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
+                    queryRequest.Fields.Remove(userDetails);
+                    queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
+                }
+
                 if (queryRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
                 {
                     queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_SUB : x.Name).ToList();
                 }
+
+
+
+
+            
+
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE tv.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE ucs.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
-                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) } };
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) } };
+
                 workbookDetails = ReadTaskDetails(query, parameterList);
                 if (workbookDetails != null)
                 {
@@ -260,6 +280,11 @@ namespace ReportBuilderAPI.Repository
 
 
                             TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalEmployees'").Count() == 1) ? (int?)sqlDataReader["TotalEmployees"] : null,
+
+                            AssignedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'AssignedDate'").Count() == 1) ? Convert.ToString(sqlDataReader["AssignedDate"]) : null
+
+
+
                         };
                         // Adding each task details in array list
                         taskList.Add(taskResponse);
@@ -313,7 +338,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM [user] us LEFT JOIN UserWorkBook uwb ON  uwb.UserId=us.Id LEFT JOIN WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  us.Id IN ((SELECT u.id UNION SELECT * FROM getChildUsers (u.id)))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id),0)) AS TotalTasks"},
 
-                { Constants.ASSIGNED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM courseAssignment cs  WHERE UserId In (SELECT u.id UNION SELECT * FROM getchildUsers(u.id)) AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate > GETDATE() AND cs.CompanyId=@companyId ) ,0)) as AssignedQualification" },
+                { Constants.ASSIGNED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM courseAssignment cs  WHERE UserId In (SELECT u.id UNION SELECT * FROM getchildUsers(u.id)) AND cs.CompanyId=@companyId ) ,0)) as AssignedQualification" },
 
                 { Constants.COMPLETED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE() AND ts.User_Id In (SELECT u.Id UNION SELECT * FROM getchildUsers(u.Id)) AND ts.CompanyId=@companyId  ) ,0)) as CompletedQualification" },
 
@@ -321,9 +346,9 @@ namespace ReportBuilderAPI.Repository
                 { Constants.IN_COMPLETE_QUALIFICATION,",  (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM TranscriptSkillsDN ts WHERE Knowledge_Cert_Status IN (255,0) AND Knowledge_Status_Code = 5 AND ts.User_Id IN (SELECT u.Id UNION SELECT * FROM getchildUsers(u.Id)) AND ts.CompanyId=@companyId AND Date_Knowledge_Cert_Expired IS NULL) ,0)) as IncompleteQualification" },
 
 
-                { Constants.PAST_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND ts.User_Id In (SELECT u.Id UNION SELECT * FROM getchildUsers(u.Id)) AND ts.CompanyId=@companyId AND Date_Knowledge_Cert_Expired < GETDATE() AND Date_Knowledge_Cert_Expired < DATEADD(DAY,-30,GETDATE()) ) ,0)) as PastDueQualification" },
+                { Constants.PAST_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM courseAssignment cs  WHERE UserId In (SELECT u.id UNION SELECT * FROM getchildUsers( u.id)) AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate < GETDATE() AND  cs.ExpirationDate <  DATEADD(DAY,-30,GETDATE()) AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) as PastDueQualification" },
 
-                { Constants.IN_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5  AND ts.User_Id In (SELECT u.Id UNION SELECT * FROM getchildUsers(u.Id)) AND ts.CompanyId=@companyId AND Date_Knowledge_Cert_Expired > GETDATE() AND Date_Knowledge_Cert_Expired < DATEADD(DAY,30,GETDATE())  ) ,0)) as InDueQualification" },
+                { Constants.IN_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM courseAssignment cs  WHERE UserId In (SELECT u.id UNION SELECT * FROM getchildUsers(u.id)) AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate > GETDATE() AND  cs.ExpirationDate < DATEADD(DAY,30,GETDATE()) AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) as InDueQualification" },
 
                 { Constants.TOTAL_EMPLOYEES,", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId=u.id and uc.companyId=@companyId) AS TotalEmployees" },
 
@@ -332,6 +357,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.ROLE,", r.Name as role" },
 
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
+                { Constants.COURSE_EXPIRATION_DATE, ", ca. ExpirationDate as DateExpired"}
 
         };
 
@@ -364,23 +390,30 @@ namespace ReportBuilderAPI.Repository
             {Constants.WORKBOOK_ID, " uwb.IsEnabled=1 and wbc.WorkbookId" },
             {Constants.SUPERVISOR_SUB, " s.supervisorId " },
             {Constants.ROLE, " r.Name " },
-            {Constants.CAN_CERTIFY, "  ca.IsEnabled=1 and c.CanCertify " }
-
+            {Constants.CAN_CERTIFY, "  ca.IsEnabled=1 and c.CanCertify " },
+            {Constants.COMPLETED, "  Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE()" },
+            {Constants.PAST_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate < GETDATE() AND  ca.ExpirationDate <  DATEADD(DAY,(CONVERT(INT, @duedays) * -1),GETDATE()) AND ca.FirstAccessed IS NULL " },
+            {Constants.IN_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate > GETDATE() AND   ca.ExpirationDate < DATEADD(DAY,30,GETDATE())  AND ca.FirstAccessed IS NULL " },
+            {Constants.IN_COMPLETE, "  Knowledge_Cert_Status IN (255,0) AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired IS NULL " },
+           {Constants.SUPERVISOR_USER, " u.Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " }
         };
+
+
+        private readonly List<string> TaskDetails = new List<string> { Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME, Constants.CREATED_BY, Constants.DELETED_BY, Constants.STATUS };
 
         /// <summary>
         ///     Dictionary having list of tables that requried to get the columns for task(s) result
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id   " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY} },
-             { " LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} },
+             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=ts.SkillId   LEFT JOIN dbo.SkillActivityMetrics sam ON sam.SkillActivityId=sa.Id   LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId LEFT JOIn Usercompany ucs on ucs.userId=u.userId " , new List<string> {Constants.DATE_EXPIRED, Constants.DATE_TAKEN, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.COUNTRY, Constants.IP, Constants.SCORE, Constants.DURATION, Constants.EVALUATOR_NAME, Constants.ASSIGNED_TO, Constants.COMPLETION_DATE, Constants.LAST_ATTEMPT_DATE, Constants.NUMBER_OF_ATTEMPTS, Constants.EXPIRATION_DATE, Constants.EVALUATOR_NAME , Constants.CREATED_BY, Constants.DELETED_BY, Constants.WORKBOOK_ID, Constants.EVALUATOR_NAME } },
 
-            { " LEFT JOIN WorkBookContent wbc ON wbc.EntityId=t.Id    LEFT JOIN UserWorkBook uwb ON uwb.WorkbookId=wbc.WorkbookId   LEFT JOIN dbo.[User] u on u.Id=uwb.UserId " , new List<string> {Constants.WORKBOOK_ID, Constants.EVALUATOR_NAME} },
+            { " LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status" , new List<string> {Constants.STATUS} },
 
-             { " FULL OUTER JOIN TaskSkill ts ON ts.TaskversionId=tv.Id FULL OUTER JOIN Course c ON c.TaskId=t.Id FULL OUTER JOIN CourseAssignment ca ON ca.CourseId=c.Id FULL OUTER JOIN userCompanySeries ucs ON ucs.seriesId=c.seriesId FULL OUTER JOIN dbo.[User] u ON u.Id=ucs.UserId FULL OUTER JOIn Supervisor s ON s.userId=u.Id  " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION, Constants.EMPLOYEE_NAME , Constants.ASSIGNED_DATE} },
 
-            { "  FULL OUTER JOIN UserRole ur ON ur.userId=u.Id FULL OUTER JOIN role r ON r.Id=ur.RoleId ", new List<string> {Constants.ROLE} },
+             { " LEFT JOIN TaskSkill ts ON ts.TaskversionId=tv.Id 	 LEFT JOIN CourseAssignment ca ON ca.taskversionId=ts.taskversionId  	  LEFT JOIN COurse c on c.Id=ca.courseId LEFT JOIN transcriptSkillsDN tss on tss.taskId=t.Id       LEFT JOIN userCompanySeries ucs ON ucs.userId=ca.userId  LEFT JOIN  Usercompany uc on uc.userId=ucs.userId    FULL OUTER JOIN dbo.[User] u ON u.Id=ucs.UserId FULL OUTER JOIn Supervisor s ON s.userId=u.Id   " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION, Constants.EMPLOYEE_NAME , Constants.ASSIGNED_DATE, Constants.COURSE_EXPIRATION_DATE} },
+
+             { "  FULL OUTER JOIN UserRole ur ON ur.userId=u.Id FULL OUTER JOIN role r ON r.Id=ur.RoleId ", new List<string> {Constants.ROLE} },
         };
     }
 }

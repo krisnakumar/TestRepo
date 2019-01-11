@@ -238,7 +238,9 @@ namespace ReportBuilderAPI.Repository
             Constants.PAST_DUE,                    
             Constants.SUPERVISOR_USER,
             Constants.SUPERVISOR_ID,
-            Constants.NOT_SUPERVISORID
+            Constants.NOT_SUPERVISORID,
+            Constants.IN_DUE,
+            Constants.IN_COMPLETE,
         };
 
         /// <summary>
