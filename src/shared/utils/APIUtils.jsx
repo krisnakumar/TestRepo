@@ -59,9 +59,10 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
    return fetch(url, request).then(function(response) {
         if(response.status == 401){
-            deleteAllCookies();
-            window.location =window.location.origin;
-        } else {     
+            LoginRefresh("", token, false)
+            // deleteAllCookies();
+            // window.location =window.location.origin;
+        } else {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
             return response.json();
@@ -73,7 +74,7 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }).catch(function(ex) {
         document.getElementById("loader-layer").classList.remove("loader-show");
         document.getElementById("loader-layer").classList.add("loader-hide");
-        // Handle API Exception here       
+        // Handle API Exception here
         console.log('parsing failed', ex);
     });
 }
@@ -86,13 +87,16 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 * @returns none
 */
 function deleteAllCookies() {
-    var cookies = document.cookie.split(";");
+    let cookies = document.cookie.split(";");
 
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i];
+        let eqPos = cookie.indexOf("=");
+        let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        let expires = new Date();
+        let duration = 1;
+        expires.setTime(expires.getTime() - (duration));
+        document.cookie = name + '=;expires=' + expires.toUTCString() + ';path=/;';
     }
 }
 
@@ -107,17 +111,21 @@ function deleteAllCookies() {
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    return fetch("/login/refresh", {
+    let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh",
+        userName = decodeURIComponent(getCookie("UserName")),
+        refreshToken = getCookie("RefreshToken");
+    
+    return fetch(url, {
      method: "POST",
      headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
          "Authorization": token
        },
-    body: {
-         "RefreshToken": "",
-         "UserName": ""      
-        }
+    body: JSON.stringify({
+         "RefreshToken": refreshToken,
+         "UserName": userName     
+        })
      }).then(function(response) {
          console.log("response",response);
          return response.json();        
@@ -128,4 +136,11 @@ export async function LoginRefresh(requestPayload, token, isLoader) {
          // Handle API Exception here       
          console.log('parsing failed', ex);
      });
- }
+ };
+
+
+ function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+ };

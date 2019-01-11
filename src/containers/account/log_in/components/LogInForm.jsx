@@ -95,6 +95,7 @@ class LogInForm extends PureComponent {
     }).then(function(json) { 
         if(json.AccessToken && json.IdentityToken){
           const { cookies } = _self.props;
+          cookies.set('UserName', _self.state.username, { path: '/' });
           cookies.set('AccessToken', json.AccessToken, { path: '/' });
           cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
           cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
