@@ -86,7 +86,7 @@ class ContractorView extends PureComponent {
             },
             {
                 key: 'pastDue',
-                name: 'Expired Qualifications(30 Days)',
+                name: 'Expired Qualifications (30 Days)',
                 width: 200,
                 sortable: true,
                 editable: false,

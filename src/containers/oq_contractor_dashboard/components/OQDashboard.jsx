@@ -86,7 +86,7 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'pastDue',
-        name: 'Expired Qualifications(30 Days)',
+        name: 'Expired Qualifications (30 Days)',
         width: 200,
         sortable: true,
         editable: false,
@@ -364,8 +364,7 @@ class OQDashboard extends PureComponent {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
-        { "Name": "USER_ID", "Value": userId, "Operator": "=" },
-        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "USER_ID", "Value": userId, "Operator": "=" }        
       //  { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
       ],
       // "ColumnList": Constants.GET_QUALIFICATION_COLUMNS
@@ -395,6 +394,7 @@ class OQDashboard extends PureComponent {
     const payLoad = {
       "Fields": [
         { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        {"Name":"ROLE","BitWise":"and","Value":"CONTRACTOR","Operator":"=" },
       //  { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_CONTRACTOR_QUALIFICATION_COLUMNS
@@ -443,6 +443,7 @@ class OQDashboard extends PureComponent {
     assignedQualifications = response;
     isAssignedQualificationView = true;
     this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
+    
   };
 
   /**

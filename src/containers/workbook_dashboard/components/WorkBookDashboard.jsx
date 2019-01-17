@@ -670,7 +670,7 @@ class WorkBookDashboard extends PureComponent {
           <p className="card__description">View list of workbooks assigned, completed and due for employees</p>
         </div>
         <div className="grid-container">
-          <div className="table has-total-row">
+          <div className="table has-total-row is-table-page-view">
             <ReactDataGrid
               ref={'reactDataGrid'}
               onGridSort={this.handleGridSort}
