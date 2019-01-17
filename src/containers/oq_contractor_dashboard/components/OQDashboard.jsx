@@ -59,7 +59,7 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'assignedQualification',
-        name: 'Assigned Qualification',
+        name: 'Assigned Qualifications',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -68,7 +68,7 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'completedQualification',
-        name: 'Completed Qualification',
+        name: 'Qualifications',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -77,7 +77,7 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'inCompletedQualification',
-        name: 'Incomplete Qualification',
+        name: 'Disqualifications',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -86,7 +86,8 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'pastDue',
-        name: 'Past Due (30 Days)',
+        name: 'Expired Qualifications(30 Days)',
+        width: 200,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -95,7 +96,7 @@ class OQDashboard extends PureComponent {
       },
       {
         key: 'comingDue',
-        name: 'Due in 30 Days',
+        name: 'Expires in 30 Days',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
