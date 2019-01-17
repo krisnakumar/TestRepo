@@ -49,21 +49,12 @@ class OQDashboard extends PureComponent {
     super();
     this.heads = [
       {
-        key: 'contractors',
-        name: 'Contractors',
+        key: 'company',
+        name: 'Company',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("total", props),
-        cellClass: "text-left"
-      },
-      {
-        key: 'role',
-        name: 'Role',
-        sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: (props) => this.qualificationsFormatter("company", props),
         cellClass: "text-left"
       },
       {
@@ -213,6 +204,8 @@ class OQDashboard extends PureComponent {
       rows.push({
         userId: qualifications[i].UserId,
         contractors: qualifications[i].EmployeeName,
+        company: qualifications[i].CompanyName,
+        companyId: qualifications[i].CompanyId,
         role: qualifications[i].Role || "",
         assignedQualification: qualifications[i].AssignedQualification,
         completedQualification: qualifications[i].CompletedQualification,
@@ -330,26 +323,27 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   handleCellClick = (type, args) => {
-    let userId = args.userId || 0;
+    let userId = args.userId || 0,
+        companyId = args.companyId || 0;
     switch (type) {
-      case "contractors":
+      case "company":
       case "total":
-        this.getContractorQualifications(userId);
+        this.getContractorQualifications(userId, companyId);
         break;
       case "assignedQualification":
-        this.getAssignedQualifications(userId);
+        this.getAssignedQualifications(userId, companyId);
         break;
       case "completedQualification":
-        this.getCompletedQualifications(userId);
+        this.getCompletedQualifications(userId, companyId);
         break;
       case "inCompletedQualification":
-        this.getInCompletedQualifications(userId);
+        this.getInCompletedQualifications(userId, companyId);
         break;
       case "pastDue":
-        this.getPastDueQualifications(userId);
+        this.getPastDueQualifications(userId, companyId);
         break;
       case "comingDue":
-        this.getComingDueQualifications(userId);
+        this.getComingDueQualifications(userId, companyId);
         break;
       default:
         console.log("default", type, args);
@@ -369,10 +363,13 @@ class OQDashboard extends PureComponent {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
-        { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "USER_ID", "Value": userId, "Operator": "=" },
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
       //  { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_QUALIFICATION_COLUMNS
+      // "ColumnList": Constants.GET_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS
+      
     };
 
     let token = cookies.get('IdentityToken'),
@@ -392,7 +389,7 @@ class OQDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getContractorQualifications(userId) {
+  async getContractorQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -408,7 +405,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isContractorView, contractorQualifications });
 
     let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     contractorQualifications = response;
@@ -423,7 +420,7 @@ class OQDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getAssignedQualifications(userId) {
+  async getAssignedQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -439,7 +436,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isAssignedQualificationView, assignedQualifications });
 
     let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     assignedQualifications = response;
@@ -454,7 +451,7 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getCompletedQualifications(userId) {
+  async getCompletedQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -471,7 +468,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isCompletedQualificationView, completedQualifications });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
+        // companyId = cookies.get('CompanyId'),
         url = "/company/" + companyId + "/tasks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     completedQualifications = response;
@@ -486,7 +483,7 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getInCompletedQualifications(userId) {
+  async getInCompletedQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -503,7 +500,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
     let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     inCompletedQualifications = response;
@@ -518,7 +515,7 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getPastDueQualifications(userId) {
+  async getPastDueQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -535,7 +532,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isPastDueQualificationView, pastDueQualifications });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
+        // companyId = cookies.get('CompanyId'),
         url = "/company/" + companyId + "/tasks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     pastDueQualifications = response;
@@ -550,7 +547,7 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getComingDueQualifications(userId) {
+  async getComingDueQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
@@ -567,7 +564,7 @@ class OQDashboard extends PureComponent {
     this.setState({ isComingDueQualificationView, comingDueQualifications });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
+        // companyId = cookies.get('CompanyId'),
         url = "/company/" + companyId + "/tasks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

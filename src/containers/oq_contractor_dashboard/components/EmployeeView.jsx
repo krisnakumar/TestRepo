@@ -176,6 +176,7 @@ class EmployeeView extends PureComponent {
         for (let i = 0; i < length; i++) {
             rows.push({
                 userId: qualifications[i].UserId,
+                companyId: qualifications[i].CompanyId,
                 employee: qualifications[i].EmployeeName,
                 role: qualifications[i].role || "",
                 assignedQualification: qualifications[i].AssignedQualification,
@@ -330,26 +331,27 @@ class EmployeeView extends PureComponent {
     * @returns none
     */
     handleCellClick = (type, args) => {
-        let userId = args.userId || 0;
+        let userId = args.userId || 0,
+            companyId = args.companyId || 0;
         switch (type) {
             case "contractors":
             case "total":
-                this.getMyEmployees(userId);
+                this.getMyEmployees(userId, companyId);
                 break;
             case "assignedQualification":
-                this.getAssignedQualifications(userId);
+                this.getAssignedQualifications(userId, companyId);
                 break;
             case "completedQualification":
-                this.getComingDueQualifications(userId);
+                this.getComingDueQualifications(userId, companyId);
                 break;
             case "inCompletedQualification":
-                this.getInCompletedQualifications(userId);
+                this.getInCompletedQualifications(userId, companyId);
                 break;
             case "pastDue":
-                this.getPastDueQualifications(userId);
+                this.getPastDueQualifications(userId, companyId);
                 break;
             case "comingDue":
-                this.getComingDueQualifications(userId);
+                this.getComingDueQualifications(userId, companyId);
                 break;
             default:
                 console.log("default-", type, args);
@@ -366,7 +368,7 @@ class EmployeeView extends PureComponent {
      * @param supervisor
      * @returns none
     */
-    async getMyEmployees(userId) {
+    async getMyEmployees(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -377,7 +379,7 @@ class EmployeeView extends PureComponent {
         };
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -393,7 +395,7 @@ class EmployeeView extends PureComponent {
      * @param userId
      * @returns none
     */
-    async getAssignedQualifications(userId) {
+    async getAssignedQualifications(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -409,7 +411,7 @@ class EmployeeView extends PureComponent {
         this.setState({ isAssignedQualificationView, assignedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
@@ -424,7 +426,7 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getCompletedQualifications(userId) {
+    async getCompletedQualifications(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -441,7 +443,7 @@ class EmployeeView extends PureComponent {
         this.setState({ isCompletedQualificationView, completedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
@@ -456,7 +458,7 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getInCompletedQualifications(userId) {
+    async getInCompletedQualifications(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -473,7 +475,7 @@ class EmployeeView extends PureComponent {
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
@@ -488,7 +490,7 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getPastDueQualifications(userId) {
+    async getPastDueQualifications(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -505,7 +507,7 @@ class EmployeeView extends PureComponent {
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
@@ -520,7 +522,7 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getComingDueQualifications(userId) {
+    async getComingDueQualifications(userId, companyId) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -537,7 +539,7 @@ class EmployeeView extends PureComponent {
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
         let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;
