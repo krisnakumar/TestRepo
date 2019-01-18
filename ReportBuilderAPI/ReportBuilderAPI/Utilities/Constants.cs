@@ -53,6 +53,9 @@ namespace ReportBuilderAPI.Utilities
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
 
+
+        public const string COMPANY_NAME = "COMPANY_NAME";
+
         public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";
         public const string ROLE = "ROLE";
         public const string CAN_CERTIFY = "CAN_CERTIFY";
@@ -160,10 +163,20 @@ namespace ReportBuilderAPI.Utilities
         public const string COMPLETED_QUALIFICATION = "COMPLETED_QUALIFICATION";
         public const string IN_COMPLETE_QUALIFICATION = "IN_COMPLETE_QUALIFICATION";
         public const string IN_COMPLETE = "IN_COMPLETE";
-        
+
         public const string PAST_DUE_QUALIFICATION = "PAST_DUE_QUALIFICATION";
         public const string IN_DUE_QUALIFICATION = "IN_DUE_QUALIFICATION";
         public const string ASSIGNED_DATE = "ASSIGNED_DATE";
+
+        public const string COMPANY_ID = "COMPANY_ID";
+
+        public const string ASSIGNED_COMPANY_QUALIFICATION = "ASSIGNED_COMPANY_QUALIFICATION";
+        public const string COMPLETED_COMPANY_QUALIFICATION = "COMPLETED_COMPANY_QUALIFICATION";
+        public const string IN_COMPLETE_COMPANY_QUALIFICATION = "IN_COMPLETE_COMPANY_QUALIFICATION";
+
+        public const string PAST_DUE_COMPANY_QUALIFICATION = "PAST_DUE_COMPANY_QUALIFICATION";
+        public const string IN_DUE_COMPANY_QUALIFICATION = "IN_DUE_COMPANY_QUALIFICATION";
+        public const string TOTAL_COMPANY_EMPLOYEES = "TOTAL_COMPANY_EMPLOYEES";
 
     }
 }

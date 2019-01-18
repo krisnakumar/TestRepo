@@ -281,21 +281,16 @@ namespace ReportBuilder.UnitTest
 
             Function function = new Function();
 
-            //QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            //{
-            //    ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.TASK_CODE, Constants.TASK_NAME, Constants.ASSIGNED_DATE },
-            //    Fields = employeeList
-            //};
 
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.TOTAL_EMPLOYEES, Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION },
+                ColumnList = new string[] {Constants.COMPANY_ID,  Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.COMPANY_NAME},
                 Fields = employeeList
             };
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.SUPERVISOR_ID,
+                Name = Constants.USERID,
                 Value = "6",
                 Operator = "="
             };
@@ -322,6 +317,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":6,\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"ASSIGNED_DATE\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }

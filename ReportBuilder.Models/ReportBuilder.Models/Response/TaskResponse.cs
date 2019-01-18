@@ -22,6 +22,10 @@ namespace ReportBuilder.Models.Response
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? TaskId { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompanyId { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? UserId { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -97,6 +101,10 @@ namespace ReportBuilder.Models.Response
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AssignedDate { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CompanyName { get; set; }
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
