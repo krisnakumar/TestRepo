@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Handlers.FunctionHandler;
+using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Utilities;
 using System.Collections.Generic;
 namespace ReportBuilder.UnitTest
@@ -265,7 +266,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"SUPERVISOR_ID\",\"EMPLOYEE_NAME\",\"ROLE\",\"ASSIGNED_WORKBOOK\",\"WORKBOOK_DUE\",\"PAST_DUE_WORKBOOK\",\"COMPLETED_WORKBOOK\",\"TOTAL_EMPLOYEES\"]}";
+          
 
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -317,9 +318,56 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":6,\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"ASSIGNED_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":190,\"Operator\":\"=\"},{\"Name\":\"WORKBOOK_ID\",\"Value\":190,\"Operator\":\"=\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"USER_ID\",\"WORKBOOK_ID\",\"TASK_ID\",\"TASK_CODE\",\"TASK_NAME\",\"TOTAL_TASK\",\"INCOMPLETE_TASK\",\"COMPLETED_TASK\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetEmployeesWithMultipleFields()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+            Function function = new Function();
+
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { "EMPLOYEE_NAME", "ROLE", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL" },
+                Fields = employeeList
+            };
+
+            EmployeeModel employeeModel1 = new EmployeeModel
+            {
+                Name = "User_Id",
+                Value = "20",
+                Operator = ">"
+            };
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = "User_Id",
+                Value = "14",
+                Operator = "=",
+                Bitwise = "OR"
+            };
+            employeeList.Add(employeeModel1);
+            employeeList.Add(employeeModel2);
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters = pathValues
+            };
+            APIGatewayProxyResponse usersResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
+            List<EmployeeResponse> userResponse = JsonConvert.DeserializeObject<List<EmployeeResponse>>(usersResponse.Body);
+            Assert.AreEqual(200, usersResponse.StatusCode);
+            Assert.AreNotEqual(1, userResponse.Count);
+            Assert.AreNotEqual("", userResponse[0].Role);
+            Assert.AreNotEqual("", userResponse[0].UserName);
         }
     }
 }
