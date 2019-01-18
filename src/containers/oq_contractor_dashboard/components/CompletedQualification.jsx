@@ -68,7 +68,7 @@ class CompletedQualification extends PureComponent {
             },
             {
                 key: 'assignedDate',
-                name: 'Assigned Date',
+                name: 'Expiration Date',
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,

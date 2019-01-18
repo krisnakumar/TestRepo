@@ -394,7 +394,7 @@ class OQDashboard extends PureComponent {
     const payLoad = {
       "Fields": [
         { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-        {"Name":"ROLE","BitWise":"and","Value":"CONTRACTOR","Operator":"=" },
+        {"Name":"ROLE","BitWise":"and","Value":"SUPERVISOR","Operator":"=" },
       //  { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_CONTRACTOR_QUALIFICATION_COLUMNS
