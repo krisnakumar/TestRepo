@@ -393,9 +393,7 @@ class OQDashboard extends PureComponent {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
-        { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-        {"Name":"ROLE","BitWise":"and","Value":"SUPERVISOR","Operator":"=" },
-      //  { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+        {"Name":"ROLE", "Value":"SUPERVISOR","Operator":"=" }
       ],
       "ColumnList": Constants.GET_CONTRACTOR_QUALIFICATION_COLUMNS
     };

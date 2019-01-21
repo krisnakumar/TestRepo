@@ -59,9 +59,9 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
    return fetch(url, request).then(function(response) {
         if(response.status == 401){
-            LoginRefresh("", token, false)
-            // deleteAllCookies();
-            // window.location =window.location.origin;
+            //LoginRefresh("", token, false)
+            deleteAllCookies();
+            window.location =window.location.origin;
         } else {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
