@@ -641,11 +641,6 @@ button.query-action-btn.delete:disabled {
 .word-wrap{ 
   white-space: pre-wrap;
 }
-
-.react-grid-Container .react-grid-Canvas{
-  // height: auto !important;
-}
-
 .is-table-page-view .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
    height: auto !important;
 }
@@ -653,4 +648,8 @@ button.query-action-btn.delete:disabled {
 .react-grid-Grid {
   min-height: 350px !important;
   max-height: 500px !important;
+}
+
+.react-grid-Cell:focus {
+  outline: none !important;
 }
