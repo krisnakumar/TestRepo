@@ -356,7 +356,7 @@ class EmployeeView extends PureComponent {
                 this.getAssignedQualifications(userId, companyId);
                 break;
             case "completedQualification":
-                this.getComingDueQualifications(userId, companyId);
+                this.getCompletedQualifications(userId, companyId);
                 break;
             case "inCompletedQualification":
                 this.getInCompletedQualifications(userId, companyId);
