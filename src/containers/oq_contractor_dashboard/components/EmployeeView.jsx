@@ -117,6 +117,8 @@ class EmployeeView extends PureComponent {
             rows: this.createRows(this.props.employeesQualificationsArray),
             modal: this.props.modal,
             isInitial: false,
+            sortColumn: "",
+            sortDirection: "NONE",
             employeesQualificationsArray: this.props.employeesQualificationsArray || [],
             isAssignedQualificationView: false,
             isCompletedQualificationView: false,
@@ -219,6 +221,7 @@ class EmployeeView extends PureComponent {
      * @returns none
     */
     componentWillReceiveProps(newProps) {
+        const { sortColumn, sortDirection } = this.state;
         let rows = this.createRows(newProps.employeesQualificationsArray),
             isArray = Array.isArray(newProps.employeesQualificationsArray),
             isRows = newProps.employeesQualificationsArray.length > 0 ? true : false;
@@ -228,12 +231,19 @@ class EmployeeView extends PureComponent {
         if (isArray && isRows) {
             isInitial = rows.length > 0 ? false : true;
         }
-
-        this.setState({
-            modal: newProps.modal,
-            rows: rows,
-            isInitial: isInitial
-        });
+        
+        if(sortColumn != "" && sortDirection != "NONE"){
+            this.state.modal = newProps.modal;
+            this.state.rows = rows;
+            this.state.isInitial = isInitial;
+            this.handleGridSort(sortColumn, sortDirection);
+        } else {
+            this.setState({
+                modal: newProps.modal,
+                rows: rows,
+                isInitial: isInitial
+            });
+        }
     };
 
     /**
@@ -284,6 +294,9 @@ class EmployeeView extends PureComponent {
     * @returns none
     */
     handleGridSort = (sortColumn, sortDirection) => {
+        this.state.sortColumn = sortColumn;
+        this.state.sortDirection = sortDirection;
+
         const comparer = (a, b) => {
             if (sortDirection === 'ASC') {
                 return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
