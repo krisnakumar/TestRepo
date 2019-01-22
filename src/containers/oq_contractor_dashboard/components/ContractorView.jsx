@@ -381,8 +381,8 @@ class ContractorView extends PureComponent {
 
     /**
      * @method
-     * @name - getContractorQualifications
-     * This method will used to get Contractor Qualifications
+     * @name - getEmployeeQualifications
+     * This method will used to get Employee Qualifications
      * @param userId
      * @returns none
     */

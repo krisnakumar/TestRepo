@@ -18,8 +18,7 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import OQDashboardMock from '../components/OQDashboardMock.json';
-import ContractorView from '../components/ContractorView';
+import EmployeeView from '../components/EmployeeView';
 import AssignedQualification from '../components/AssignedQualification';
 import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
@@ -118,13 +117,15 @@ class OQDashboard extends PureComponent {
 
     this.state = {
       rows: this.createRows(this.tasks),
-      isContractorView: false,
+      level: 0,
+      isEmployeeView: false,
       isAssignedQualificationView: false,
       isCompletedQualificationView: false,
       isInCompletedQualificationView: false,
       isPastDueQualificationView: false,
       isComingDueQualificationView: false,
-      contractorQualifications: {},
+      employeeQualifications: {},
+      employeesQualificationsArray: {},
       assignedQualifications: {},
       completedQualifications: {},
       inCompletedQualifications: {},
@@ -175,8 +176,6 @@ class OQDashboard extends PureComponent {
     let userId = cookies.get('UserId');
     this.getQualifications(userId);
   };
-
-
 
   /**
   * @method
@@ -299,7 +298,7 @@ class OQDashboard extends PureComponent {
         </span>
       );
     }
-  }
+  };
 
   /**
    * @method
@@ -325,11 +324,12 @@ class OQDashboard extends PureComponent {
   */
   handleCellClick = (type, args) => {
     let userId = args.userId || 0,
-        companyId = args.companyId || 0;
+      companyId = args.companyId || 0;
     switch (type) {
       case "company":
       case "total":
-        this.getContractorQualifications(userId, companyId);
+        // this.getContractorQualifications(userId, companyId);
+        this.getEmployeeQualifications(userId, companyId);        
         break;
       case "assignedQualification":
         this.getAssignedQualifications(userId, companyId);
@@ -367,7 +367,7 @@ class OQDashboard extends PureComponent {
         { "Name": "USER_ID", "Value": userId, "Operator": "=" }
       ],
       "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS
-      
+
     };
 
     let token = cookies.get('IdentityToken'),
@@ -378,35 +378,6 @@ class OQDashboard extends PureComponent {
       isInitial = true;
 
     this.setState({ rows: rows, isInitial: isInitial });
-  };
-
-  /**
-   * @method
-   * @name - getContractorQualifications
-   * This method will used to get Contractor Qualifications
-   * @param userId
-   * @returns none
-   */
-  async getContractorQualifications(userId, companyId) {
-    const { cookies } = this.props;
-    const payLoad = {
-      "Fields": [
-        {"Name":"ROLE", "Value":"SUPERVISOR","Operator":"=" }
-      ],
-      "ColumnList": Constants.GET_CONTRACTOR_QUALIFICATION_COLUMNS
-    };
-
-    let isContractorView = this.state.isContractorView,
-      contractorQualifications = {};
-    isContractorView = true;
-    this.setState({ isContractorView, contractorQualifications });
-
-    let token = cookies.get('IdentityToken'),
-      url = "/company/" + companyId + "/tasks",
-      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    contractorQualifications = response;
-    isContractorView = true;
-    this.setState({ ...this.state, isContractorView, contractorQualifications });
   };
 
   /**
@@ -436,7 +407,7 @@ class OQDashboard extends PureComponent {
     assignedQualifications = response;
     isAssignedQualificationView = true;
     this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-    
+
   };
 
   /**
@@ -462,8 +433,8 @@ class OQDashboard extends PureComponent {
     this.setState({ isCompletedQualificationView, completedQualifications });
 
     let token = cookies.get('IdentityToken'),
-        url = "/company/" + companyId + "/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     completedQualifications = response;
     isCompletedQualificationView = true;
     this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
@@ -522,8 +493,8 @@ class OQDashboard extends PureComponent {
     this.setState({ isPastDueQualificationView, pastDueQualifications });
 
     let token = cookies.get('IdentityToken'),
-        url = "/company/" + companyId + "/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     pastDueQualifications = response;
     isPastDueQualificationView = true;
     this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
@@ -552,23 +523,93 @@ class OQDashboard extends PureComponent {
     this.setState({ isComingDueQualificationView, comingDueQualifications });
 
     let token = cookies.get('IdentityToken'),
-        url = "/company/" + companyId + "/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     comingDueQualifications = response;
     isComingDueQualificationView = true;
     this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
   };
 
+  /**
+     * @method
+     * @name - getEmployeeQualifications
+     * This method will used to get Employee Qualifications
+     * @param userId
+     * @returns none
+    */
+   async getEmployeeQualifications(userId, companyId) {
+    const { cookies } = this.props;
+    const payLoad = {
+        "Fields": [
+            { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
+        ],
+        "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
+    };
+
+    let isEmployeeView = this.state.isEmployeeView,
+        employeeQualifications = {},
+        employeesQualificationsArray = [];
+
+    isEmployeeView = true;
+    this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray });
+
+    let token = cookies.get('IdentityToken'),
+        url = "/company/" + companyId + "/tasks",
+        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+    employeeQualifications = response;
+    employeesQualificationsArray.push(employeeQualifications);
+    isEmployeeView = true;
+    this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
+};
+
+  /**
+     * @method
+     * @name - updateEmployeesQualificationsArray
+     * This method will update Array of state of this component
+     * @param qualifications
+     * @returns none
+  */
+  updateEmployeesQualificationsArray = (qualifications) => {
+    debugger;
+    let employeesQualificationsArray = this.state.employeesQualificationsArray,
+      level = this.state.level + 1;
+
+    employeesQualificationsArray.push(qualifications);
+    this.setState({ ...this.state, level, employeesQualificationsArray });
+  };
+
+  /**
+   * @method
+   * @name - popEmployeesQualificationsArray
+   * This method will delete last element of employeesQualificationsArray of state of this component
+   * @param none
+   * @returns none
+  */
+  popEmployeesQualificationsArray = () => {
+    debugger;
+    let employeesQualificationsArray = this.state.employeesQualificationsArray,
+      level = this.state.level - 1;
+
+    if (employeesQualificationsArray.length > 0) {
+      let totalRow = employeesQualificationsArray.pop();
+    }
+    this.setState({ ...this.state, level, employeesQualificationsArray });
+  };
+
   render() {
     const { rows } = this.state;
     return (
       <CardBody>
-        <ContractorView
+        <EmployeeView
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
-          modal={this.state.isContractorView}
-          contractorQualifications={this.state.contractorQualifications}
+          modal={this.state.isEmployeeView}
+          updateEmployeesQualificationsArray={this.updateEmployeesQualificationsArray.bind(this)}
+          popEmployeesQualificationsArray={this.popEmployeesQualificationsArray.bind(this)}
+          employeesQualificationsArray={this.state.employeesQualificationsArray}
+          employeeQualifications={this.state.employeeQualifications}
         />
         <AssignedQualification
           backdropClassName={"backdrop"}
