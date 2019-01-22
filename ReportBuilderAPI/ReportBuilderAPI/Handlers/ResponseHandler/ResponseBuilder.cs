@@ -42,7 +42,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     Body = JsonConvert.SerializeObject(employeeResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "https://s3-us-west-2.amazonaws.com"  } }
                 };
                 return response;
             }
@@ -69,9 +69,9 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 };
                 var response = new APIGatewayProxyResponse
                 {
-                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    StatusCode = (int)HttpStatusCode.OK,
                     Body = JsonConvert.SerializeObject(errorResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "https://s3-us-west-2.amazonaws.com" } }
                 };
                 return response;
             }

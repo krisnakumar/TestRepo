@@ -52,8 +52,8 @@ namespace ReportBuilderAPI.Utilities
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
-
-
+        
+            public const string SUPERVISOR = "SUPERVISOR";
         public const string COMPANY_NAME = "COMPANY_NAME";
 
         public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";

@@ -298,14 +298,7 @@ namespace ReportBuilder.UnitTest
 
 
 
-
-          
-
             employeeList.Add(employeeModel);
-            //employeeList.Add(employeeModel2);
-            //employeeList.Add(employeeModel3);
-         //   employeeList.Add(employeeModel4);
-         //   employeeList.Add(employeeModel5);
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
                 { "companyId", "6" }
@@ -318,7 +311,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":190,\"Operator\":\"=\"},{\"Name\":\"WORKBOOK_ID\",\"Value\":190,\"Operator\":\"=\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"USER_ID\",\"WORKBOOK_ID\",\"TASK_ID\",\"TASK_CODE\",\"TASK_NAME\",\"TOTAL_TASK\",\"INCOMPLETE_TASK\",\"COMPLETED_TASK\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"ROLE\",\"Value\":\"SUPERVISOR\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"COMPANY_ID\",\"EMPLOYEE_NAME\",\"TOTAL_EMPLOYEES\",\"ASSIGNED_QUALIFICATION\",\"COMPLETED_QUALIFICATION\",\"IN_DUE_QUALIFICATION\",\"PAST_DUE_QUALIFICATION\",\"IN_COMPLETE_QUALIFICATION\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
