@@ -68,7 +68,7 @@ class PastDueQualification extends PureComponent {
             },
             {
                 key: 'dueDate',
-                name: 'Due Date',
+                name: 'Expiration Date',
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,

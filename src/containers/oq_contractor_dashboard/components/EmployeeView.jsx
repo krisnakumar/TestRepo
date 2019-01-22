@@ -253,7 +253,7 @@ class EmployeeView extends PureComponent {
             });
             this.props.updateState("isEmployeeView");
         } else if (length >= 1) {
-            this.props.popMyEmployeesArray();
+            this.props.popEmployeesQualificationsArray();
         }
     };
 
@@ -373,18 +373,15 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
             ],
             "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
         };
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
-            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-
-        myEmployees = response;
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
+            myEmployees = response;
 
         this.props.updateEmployeesQualificationsArray(myEmployees);
     };
@@ -400,8 +397,7 @@ class EmployeeView extends PureComponent {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
             ],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
         };
@@ -412,7 +408,6 @@ class EmployeeView extends PureComponent {
         this.setState({ isAssignedQualificationView, assignedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
@@ -432,8 +427,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" }
             ],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -444,7 +438,6 @@ class EmployeeView extends PureComponent {
         this.setState({ isCompletedQualificationView, completedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
@@ -464,8 +457,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" }
             ],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
         };
@@ -476,7 +468,6 @@ class EmployeeView extends PureComponent {
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
@@ -496,8 +487,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" }
             ],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
         };
@@ -508,7 +498,6 @@ class EmployeeView extends PureComponent {
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
@@ -528,8 +517,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" },
-            //    { "Name": "CAN_CERTIFY", "Bitwise": "and", "Value": "1", "Operator": "=" }
+                { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" }
             ],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
         };
@@ -540,7 +528,6 @@ class EmployeeView extends PureComponent {
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
         let token = cookies.get('IdentityToken'),
-            // companyId = cookies.get('CompanyId'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;
