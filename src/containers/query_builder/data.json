@@ -300,7 +300,7 @@
 			{
 				"value": "attemptsDate ",
 				"type": "date",
-				"label": "Attempts Date",
+				"label": "Attempt Date",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
 				"field": "ATTEMPT_DATE"
