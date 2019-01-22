@@ -92,6 +92,9 @@ class QuerySection extends PureComponent {
       isEmployee: isEmployee,
       isWorkbook: isWorkbook,
       isTask: isTask,
+      employees: {},
+      workbooks: {},
+      tasks: {},
       selectedOption: this.state.lastSelectedOption,
       modal: false,
       isResetModal: false
