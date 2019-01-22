@@ -220,7 +220,7 @@ class AssignedQualification extends PureComponent {
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
-                    <ModalHeader toggle={this.toggle}>Assigned Qualification</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Assigned Qualifications</ModalHeader>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">

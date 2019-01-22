@@ -220,7 +220,7 @@ class PastDueQualification extends PureComponent {
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
-                    <ModalHeader toggle={this.toggle}>Past Due Qualifications</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Expired Qualifications</ModalHeader>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">

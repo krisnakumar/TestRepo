@@ -217,7 +217,7 @@ class OQDashboard extends PureComponent {
     }
 
     if (length > 0) {
-      rows.push({ contractors: "Total", role: "", assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
+      rows.push({ company: "Total", role: "", assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
     }
     return rows;
   };
@@ -287,7 +287,7 @@ class OQDashboard extends PureComponent {
    * @returns none
    */
   qualificationsFormatter = (type, props) => {
-    if (props.dependentValues[type] <= 0 || props.dependentValues.contractors == "Total") {
+    if (props.dependentValues[type] <= 0 || props.dependentValues.company == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -572,7 +572,6 @@ class OQDashboard extends PureComponent {
      * @returns none
   */
   updateEmployeesQualificationsArray = (qualifications) => {
-    debugger;
     let employeesQualificationsArray = this.state.employeesQualificationsArray,
       level = this.state.level + 1;
 
@@ -583,12 +582,11 @@ class OQDashboard extends PureComponent {
   /**
    * @method
    * @name - popEmployeesQualificationsArray
-   * This method will delete last element of employeesQualificationsArray of state of this component
+   * This method will delete last element of state of this component
    * @param none
    * @returns none
   */
   popEmployeesQualificationsArray = () => {
-    debugger;
     let employeesQualificationsArray = this.state.employeesQualificationsArray,
       level = this.state.level - 1;
 
@@ -645,7 +643,7 @@ class OQDashboard extends PureComponent {
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
             </div>
-          <p className="card__description">Add workbook widgets here</p>
+          <p className="card__description">Contractor Operator Qualifications</p>
         </div>
         <div className="grid-container">
           <div className="table has-total-row">

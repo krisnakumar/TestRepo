@@ -15,7 +15,7 @@ const Footer = () => (
     <Container>
       <Row>
         <Col md={12}>
-          <div className="copyright">© 2018 &nbsp;
+          <div className="copyright">© 2019 &nbsp;
             <a href="http://www.its-training.com" rel="noopener noreferrer" target="_blank">
               Industrial Training Services, Inc.
             </a>

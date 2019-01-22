@@ -220,7 +220,7 @@ class ComingDueQualification extends PureComponent {
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
-                    <ModalHeader toggle={this.toggle}>Coming Due Qualifications</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Expiring Qualifications (In 30 Days)</ModalHeader>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
