@@ -225,7 +225,7 @@ class QuerySection extends PureComponent {
             </div>
             <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
               <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
-              <ModalBody>Your query and results will be lost. Do you wish to proceed?</ModalBody>
+              <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
               <ModalFooter>
                 <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
                 <button color="secondary" onClick={this.toggle}>Cancel</button>
@@ -233,7 +233,7 @@ class QuerySection extends PureComponent {
             </Modal>
             <Modal backdrop={"static"} isOpen={this.state.isResetModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
               <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
-              <ModalBody>Your query will be lost. Do you wish to proceed?</ModalBody>
+              <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
               <ModalFooter>
                 <button color="primary" onClick={this.resetQuery}>Continue</button>{' '}
                 <button color="secondary" onClick={this.toggle}>Cancel</button>
