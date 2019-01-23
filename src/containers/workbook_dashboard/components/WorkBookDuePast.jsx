@@ -135,7 +135,7 @@ class WorkBookDuePast extends React.Component {
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
+      "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
     };
 

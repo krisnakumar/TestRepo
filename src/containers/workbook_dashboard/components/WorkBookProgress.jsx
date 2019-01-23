@@ -181,10 +181,11 @@ class WorkBookProgress extends React.Component {
    * @param taskId
    * @returns none
    */
-  async getWorkbookRepetitions(userId, workBookId, taskId) {
+  async getWorkbookRepetitions(userId, workBookId, taskId, status) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+      {'Name': "STATUS", "Value": status, "Operator": "=", 'Bitwise': "AND"},
       { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "AND"},
       { "Name": "TASK_ID", "Value": taskId, "Operator": "=", "Bitwise": "AND" }
       ],
@@ -313,6 +314,8 @@ class WorkBookProgress extends React.Component {
     let userId = 0,
       workBookId = 0,
       taskId = 0;
+      status = type == "incompletedTasksCount" ? "FAILED" : "COMPLETED";
+
     this.state.selectedWorkbook.taskCode = args.taskCode;
     this.state.selectedWorkbook.taskName = args.taskName;
     switch (type) {
@@ -322,7 +325,7 @@ class WorkBookProgress extends React.Component {
         workBookId = args.workBookId;
         taskId = args.taskId;
         if (userId && workBookId && taskId)
-          this.getWorkbookRepetitions(userId, workBookId, taskId);
+          this.getWorkbookRepetitions(userId, workBookId, taskId, status);
         break;
       default:
         break;

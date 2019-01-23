@@ -57,6 +57,15 @@ class EmployeeView extends PureComponent {
                 cellClass: "text-left"
             },
             {
+                key: 'role',
+                name: 'Role',
+                sortable: true,
+                editable: false,
+                getRowMetaData: row => row,
+                formatter: this.cellFormatter,
+                cellClass: "text-left"
+            },
+            {
                 key: 'assignedQualification',
                 name: 'Assigned Qualifications',
                 sortable: true,
@@ -182,7 +191,7 @@ class EmployeeView extends PureComponent {
                 userId: qualifications[i].UserId,
                 companyId: qualifications[i].CompanyId,
                 employee: qualifications[i].EmployeeName,
-                role: qualifications[i].role || "",
+                role: qualifications[i].Role || "",
                 assignedQualification: qualifications[i].AssignedQualification,
                 completedQualification: qualifications[i].CompletedQualification,
                 inCompletedQualification: qualifications[i].IncompleteQualification,
