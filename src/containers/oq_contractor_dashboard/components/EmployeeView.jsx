@@ -119,6 +119,7 @@ class EmployeeView extends PureComponent {
             isInitial: false,
             sortColumn: "",
             sortDirection: "NONE",
+            contractorsNames: this.props.contractorsNames,
             employeesQualificationsArray: this.props.employeesQualificationsArray || [],
             isAssignedQualificationView: false,
             isCompletedQualificationView: false,
@@ -236,12 +237,14 @@ class EmployeeView extends PureComponent {
             this.state.modal = newProps.modal;
             this.state.rows = rows;
             this.state.isInitial = isInitial;
+            this.state.contractorsNames = newProps.contractorsNames;
             this.handleGridSort(sortColumn, sortDirection);
         } else {
             this.setState({
                 modal: newProps.modal,
                 rows: rows,
-                isInitial: isInitial
+                isInitial: isInitial,
+                contractorsNames: newProps.contractorsNames
             });
         }
     };
@@ -350,7 +353,7 @@ class EmployeeView extends PureComponent {
         switch (type) {
             case "contractors":
             case "total":
-                this.getMyEmployees(userId, companyId);
+                this.getMyEmployees(userId, companyId, args);
                 break;
             case "assignedQualification":
                 this.getAssignedQualifications(userId, companyId);
@@ -382,7 +385,7 @@ class EmployeeView extends PureComponent {
      * @param supervisor
      * @returns none
     */
-    async getMyEmployees(userId, companyId) {
+    async getMyEmployees(userId, companyId, args) {
         const { cookies } = this.props;
         const payLoad = {
             "Fields": [
@@ -396,7 +399,7 @@ class EmployeeView extends PureComponent {
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
             myEmployees = response;
 
-        this.props.updateEmployeesQualificationsArray(myEmployees);
+        this.props.updateEmployeesQualificationsArray(myEmployees, args);
     };
 
     /**
@@ -549,7 +552,9 @@ class EmployeeView extends PureComponent {
     };
 
     render() {
-        const { rows } = this.state;
+        const { rows , contractorsNames} = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let contractorsName = contractorsNames[contractorsNamesLength] ? ' - ' + contractorsNames[contractorsNamesLength].name : "";
         return (
             <div>
                 <AssignedQualification
@@ -583,7 +588,7 @@ class EmployeeView extends PureComponent {
                     comingDueQualifications={this.state.comingDueQualifications}
                 />
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
-                    <ModalHeader toggle={this.toggle}>Employee View</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Employee View{contractorsName}</ModalHeader>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">

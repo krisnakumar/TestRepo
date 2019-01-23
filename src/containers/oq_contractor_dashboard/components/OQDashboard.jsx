@@ -130,7 +130,8 @@ class OQDashboard extends PureComponent {
       completedQualifications: {},
       inCompletedQualifications: {},
       pastDueQualifications: {},
-      comingDueQualifications: {}
+      comingDueQualifications: {},
+      contractorsNames: []
     };
   }
 
@@ -293,7 +294,8 @@ class OQDashboard extends PureComponent {
       );
     } else {
       return (
-        <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+        <span onClick={e => { 
+          e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
           {props.value}
         </span>
       );
@@ -327,8 +329,15 @@ class OQDashboard extends PureComponent {
       companyId = args.companyId || 0;
     switch (type) {
       case "company":
-      case "total":
-        // this.getContractorQualifications(userId, companyId);
+      case "total":      
+        let isEmployeeView = this.state.isEmployeeView,
+            employeeQualifications = {},
+            employeesQualificationsArray = [],
+            contractorsNames = this.state.contractorsNames;
+        isEmployeeView = true;
+        contractorsNames = [];
+        contractorsNames.push({ 'name': args.company, 'column': "NONE", 'order': "NONE" });
+        this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray, contractorsNames });
         this.getEmployeeQualifications(userId, companyId);        
         break;
       case "assignedQualification":
@@ -571,12 +580,17 @@ class OQDashboard extends PureComponent {
      * @param qualifications
      * @returns none
   */
-  updateEmployeesQualificationsArray = (qualifications) => {
+  updateEmployeesQualificationsArray = (qualifications, contractors) => {
     let employeesQualificationsArray = this.state.employeesQualificationsArray,
-      level = this.state.level + 1;
+      level = this.state.level + 1,
+      contractorsNames = this.state.contractorsNames,
+      contractorsLength = contractorsNames.length;
+
+    if (contractorsLength > 0)
+        contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE" });
 
     employeesQualificationsArray.push(qualifications);
-    this.setState({ ...this.state, level, employeesQualificationsArray });
+    this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });
   };
 
   /**
@@ -588,12 +602,16 @@ class OQDashboard extends PureComponent {
   */
   popEmployeesQualificationsArray = () => {
     let employeesQualificationsArray = this.state.employeesQualificationsArray,
-      level = this.state.level - 1;
+      level = this.state.level - 1,
+      contractorsNames = this.state.contractorsNames;
 
     if (employeesQualificationsArray.length > 0) {
       let totalRow = employeesQualificationsArray.pop();
     }
-    this.setState({ ...this.state, level, employeesQualificationsArray });
+    if (contractorsNames.length > 0) {
+      let totalRow = contractorsNames.pop();
+    }
+    this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });
   };
 
   render() {
@@ -608,6 +626,7 @@ class OQDashboard extends PureComponent {
           popEmployeesQualificationsArray={this.popEmployeesQualificationsArray.bind(this)}
           employeesQualificationsArray={this.state.employeesQualificationsArray}
           employeeQualifications={this.state.employeeQualifications}
+          contractorsNames={this.state.contractorsNames}
         />
         <AssignedQualification
           backdropClassName={"backdrop"}
