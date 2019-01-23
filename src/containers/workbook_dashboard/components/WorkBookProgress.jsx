@@ -253,17 +253,17 @@ class WorkBookProgress extends React.Component {
 
     const comparer = (a, b) => {
       if (sortDirection === 'ASC') {
-        return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
+        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
+        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
       }
     };
 
     const percentageComparer = (a, b) => { 
       if (sortDirection === 'ASC') {
-        return (parseInt(a[sortColumn]) > parseInt(b[sortColumn])) ? 1 : -1;
+        return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
-        return (parseInt(a[sortColumn]) < parseInt(b[sortColumn])) ? 1 : -1;
+        return (parseInt(a[sortColumn]) <= parseInt(b[sortColumn])) ? 1 : -1;
       }
     };
 
