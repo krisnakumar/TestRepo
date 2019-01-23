@@ -184,10 +184,11 @@ class WorkBookProgress extends React.Component {
   async getWorkbookRepetitions(userId, workBookId, taskId, status) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-      {'Name': "STATUS", "Value": status, "Operator": "=", 'Bitwise': "AND"},
-      { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "AND"},
-      { "Name": "TASK_ID", "Value": taskId, "Operator": "=", "Bitwise": "AND" }
+      "Fields": [
+        { "Name": "USER_ID", "Value": userId, "Operator": "=" },
+        { 'Name': "STATUS", "Value": status, "Operator": "=", 'Bitwise': "AND" },
+        { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "AND" },
+        { "Name": "TASK_ID", "Value": taskId, "Operator": "=", "Bitwise": "AND" }
       ],
       "ColumnList": Constants.GET_WORKBOOKS_REPETITION_COLUMNS
     };
@@ -260,7 +261,7 @@ class WorkBookProgress extends React.Component {
       }
     };
 
-    const percentageComparer = (a, b) => { 
+    const percentageComparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
@@ -275,11 +276,11 @@ class WorkBookProgress extends React.Component {
     }
 
     const sortRows = beforePopRows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
 
     let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
-    if(isPercentage)
+    if (isPercentage)
       rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
 
     if (beforePopRows.length > 0)
@@ -314,7 +315,7 @@ class WorkBookProgress extends React.Component {
     let userId = 0,
       workBookId = 0,
       taskId = 0;
-      status = type == "incompletedTasksCount" ? "FAILED" : "COMPLETED";
+    status = type == "incompletedTasksCount" ? "FAILED" : "COMPLETED";
 
     this.state.selectedWorkbook.taskCode = args.taskCode;
     this.state.selectedWorkbook.taskName = args.taskName;
