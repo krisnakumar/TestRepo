@@ -247,7 +247,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN UserCompany uc on uc.UserId= uwb.UserId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((u.Id)) AND wbs.WorkBookId=wb.id ),0)) AS TotalTasks"},
 
-                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId=u.id and uc.companyId=@companyId) AS TotalEmployees"},
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN UserCompany uc on uc.UserId=ss.UserId   WHERE ss.userId IN (select * from getchildusers(u.Id)) and uc.companyId=@companyId) AS TotalEmployees"},
 
 
                 { Constants.COMPLETED_WORKBOOK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN UserCompany uc on uc.UserId= uwb.UserId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedWorkbooks"},
@@ -441,10 +441,15 @@ namespace ReportBuilderAPI.Repository
                             WorkbookEnabled = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
                             WorkBookId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Id'").Count() == 1) ? (int?)(sqlDataReader["Id"]) : null,
                             LastSignoffBy = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
-                            WorkbookAssignedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateAdded'").Count() == 1) ? Convert.ToString((sqlDataReader["DateAdded"])) : null,
+
+                            WorkbookAssignedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+
                             Repetitions = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Repetitions'").Count() == 1) ? Convert.ToString((sqlDataReader["Repetitions"])) : null,
-                            FirstAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? Convert.ToString((sqlDataReader["FirstAttemptDate"])) : null,
-                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? Convert.ToString((sqlDataReader["LastAttemptDate"])) : null,
+
+                            FirstAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+
+                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+                                                                       
                             NumberCompleted = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'NumberCompleted'").Count() == 1) ? (int?)(sqlDataReader["NumberCompleted"]) : null,
                             Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString((sqlDataReader["Role"])) : null,
                             CompletedWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["CompletedWorkbooks"]) : null,
@@ -465,7 +470,9 @@ namespace ReportBuilderAPI.Repository
                             TotalEmployees = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalEmployees'").Count() == 1) ? Convert.ToString(sqlDataReader["TotalEmployees"]) : null,
                             InCompleteWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
                             UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserId'").Count() == 1) ? (int?)(sqlDataReader["UserId"]) : null,
-                            DueDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DueDate'").Count() == 1) ? Convert.ToString((sqlDataReader["DueDate"])) : null,
+
+                            DueDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DueDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DueDate"])) ? Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+     
                             CompletedTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? Convert.ToString((sqlDataReader["CompletedTasks"])) : null
                            
 
