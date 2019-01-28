@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import MainWrapper from './MainWrapper';
-// import Landing from '../landing/index';
 import WorkbookDashboard from '../workbook_dashboard/index';
 import Login from '../account/log_in/index';
 import QueryBuilder from '../query_builder/index';

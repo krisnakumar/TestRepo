@@ -44,8 +44,18 @@ class LogInForm extends PureComponent {
     this.loginSubmit = this.loginSubmit.bind(this);
     this.handleUserInput = this.handleUserInput.bind(this);
     this.authenticate = this.authenticate.bind(this);
+  };
+  componentWillMount() {
+    let userName = Constants.AUTH_USER_NAME;
+    let password = Constants.AUTH_PASSKEY;
+    if(userName && password){      
+      this.authenticate(userName, password);
+    }
+    console.log("componentWillMount", this.props, this.state);
   }
-
+  componentDidMount(){
+    console.log("componentDidMount", this.props, this.state);
+  }
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -75,12 +85,16 @@ class LogInForm extends PureComponent {
     }
   }
 
-  authenticate(){
+  authenticate(userName, password){
     let _self = this,
         url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login",
+        // postData = {
+        //   "UserName": _self.state.username,
+        //   "Password": _self.state.password
+        //   };
         postData = {
-          "UserName": _self.state.username,
-          "Password": _self.state.password
+          "UserName": userName,
+          "Password": password
           };
     fetch(url, 
       {
@@ -121,44 +135,51 @@ class LogInForm extends PureComponent {
     }
 
     return (
-      <form className="form" onSubmit={this.loginSubmit}>
-        <div className="form__form-group">
-          <label className="form__form-group-label  login-label" htmlFor="name">Username</label>
-          <div className="form__form-group-field">
-            <Field
-              name="username"
-              id="userName"
-              component="input"
-              type="text"
-              placeholder=""
-              onChange={event => this.handleUserInput(event)}
-            />
-          </div>
-        </div>
-        <div className="form__form-group">
-          <label className="form__form-group-label login-label" htmlFor="password">Password</label>
-          <div className="form__form-group-field">
-            <Field
-              name="password"
-              component="input"
-              id="password"
-              type={this.state.showPassword ? 'text' : 'password'}
-              placeholder=""
-              onChange={event => this.handleUserInput(event)}
-            />
-          </div>
-        </div>
-        <div className="account__btns">
-          <button
-              type="submit"
-              className="btn btn-primary account__btn">
-                Login
-            </button>
-        </div>
-        <div className="version-number">
-          <p>v{version}</p>
-        </div>
-      </form>
+      // <form className="form" onSubmit={this.loginSubmit}>
+      //   <div className="form__form-group">
+      //     <label className="form__form-group-label  login-label" htmlFor="name">Username</label>
+      //     <div className="form__form-group-field">
+      //       <Field
+      //         name="username"
+      //         id="userName"
+      //         component="input"
+      //         type="text"
+      //         placeholder=""
+      //         onChange={event => this.handleUserInput(event)}
+      //       />
+      //     </div>
+      //   </div>
+      //   <div className="form__form-group">
+      //     <label className="form__form-group-label login-label" htmlFor="password">Password</label>
+      //     <div className="form__form-group-field">
+      //       <Field
+      //         name="password"
+      //         component="input"
+      //         id="password"
+      //         type={this.state.showPassword ? 'text' : 'password'}
+      //         placeholder=""
+      //         onChange={event => this.handleUserInput(event)}
+      //       />
+      //     </div>
+      //   </div>
+      //   <div className="account__btns">
+      //     <button
+      //         type="submit"
+      //         className="btn btn-primary account__btn">
+      //           Login
+      //       </button>
+      //   </div>
+      //   <div className="version-number">
+      //     <p>v{version}</p>
+      //   </div>
+      // </form>
+    <div className={`load`}>
+      <div className="load__icon-wrap">
+        <svg className="load__icon">
+          <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+        </svg>
+      </div>
+    </div>
     );
   }
 }

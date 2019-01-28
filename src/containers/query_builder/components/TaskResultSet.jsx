@@ -150,7 +150,7 @@ class TaskResultSet extends React.Component {
     const rows = [], 
           length = tasks ? tasks.length : 0;
     for (let i = 0; i < length; i++) {
-      let expirationDate = tasks[i].ExpirationDate.split(" ")[0];
+      let expirationDate = tasks[i].ExpirationDate ? tasks[i].ExpirationDate.split(" ")[0] : "";
       rows.push({
         taskId:  tasks[i].TaskId,
         taskName: tasks[i].TaskName,
