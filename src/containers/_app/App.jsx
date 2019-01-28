@@ -6,7 +6,7 @@ import '../../scss/app.scss';
 import Router from './Router';
 import IdleTimer from 'react-idle-timer'
 import { withCookies, Cookies } from 'react-cookie';
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
 
 /**
@@ -17,6 +17,7 @@ import * as Constants from '../../shared/constants';
 class App extends Component {
   constructor() {
     super();
+    this.timer = null;
     this.idleTimer = null;
     this.onAction = this._onAction.bind(this);
     this.onActive = this._onActive.bind(this);
@@ -32,24 +33,41 @@ class App extends Component {
     };
   };
 
-  _onAction(e) {
-    console.log('user did something', e)
+  /**
+   * @method
+   * @name - _onAction
+   * This method will invoked whenever user is makes an action on site
+   * @param event
+   * @returns none
+  */
+  _onAction(event) {
+    // Write code to bind after any user interaction
   };
 
-  _onActive(e) {
-    console.log('user is active', e)
-    console.log('time remaining', this.idleTimer.getRemainingTime());
+  /**
+   * @method
+   * @name - _onActive
+   * This method will invoked whenever user is makes an activity on site
+   * @param event
+   * @returns none
+  */
+  _onActive(event) {
+    // Write code to bind after any user in active state
   };
 
-  _onIdle(e) {
-    console.log('user is idle', e)
-    console.log('last active', this.idleTimer.getLastActiveTime());
+  /**
+   * @method
+   * @name - event
+   * This method will invoked whenever user is inactive for INACTIVITY_TIME_LIMIT
+   * @param none
+   * @returns none
+  */
+  _onIdle(event) {
     this.setState({ modal: true });
-    setTimeout(() => this.autoLogout(), 5000);
+    this.timer = setTimeout(() => this.autoLogout(), 1000 * 60 * 1);
   };
 
   autoLogout() {
-    console.log('auto logout');
     window.location = window.location.origin;
   };
 
@@ -74,12 +92,11 @@ class App extends Component {
     * @returns none
   */
   cancelAutoLogout() {
-    console.log('time remaining BEFORE', this.idleTimer.getRemainingTime());
     this.idleTimer.reset();
+    clearTimeout(this.timer);
     this.setState({
       modal: false
     });
-    console.log('time remaining AFTER', this.idleTimer.getRemainingTime());
   };
 
   /**
@@ -106,7 +123,7 @@ class App extends Component {
   */
   componentWillMount() {
     const { cookies } = this.props;
-    let token = cookies.get('IdentityToken'),                         // Get Identity token from browser cookie
+    let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
       isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
       isBasePath = window.location.pathname == '/' ? true : false;  // Checking it is base path or not
 
@@ -122,11 +139,11 @@ class App extends Component {
 
   render() {
     const { loaded, loading, isValid } = this.state,
-    autoTimeout = 1000 * 60 * Constants.AUTO_LOGOUT_IDLE_TIME;
+      autoTimeout = 1000 * 60 * Constants.AUTO_LOGOUT_IDLE_TIME;
     return (
       <div>
         <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
-          <ModalHeader toggle={this.toggle}> Auto logout</ModalHeader>
+          <ModalHeader> Auto logout</ModalHeader>
           <ModalBody>{Constants.AUTO_LOGOUT_MESSAGE}</ModalBody>
           <ModalFooter>
             <button color="primary" onClick={this.cancelAutoLogout}>Cancel</button>{' '}
