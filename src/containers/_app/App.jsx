@@ -139,7 +139,8 @@ class App extends Component {
 
   render() {
     const { loaded, loading, isValid } = this.state,
-      autoTimeout = 1000 * 60 * Constants.AUTO_LOGOUT_IDLE_TIME;
+      autoTimeout = 1000 * 60 * Constants.AUTO_LOGOUT_IDLE_TIME,
+      isBasePath = window.location.pathname == '/' ? true : false;
     return (
       <div>
         <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
@@ -149,16 +150,18 @@ class App extends Component {
             <button color="primary" onClick={this.cancelAutoLogout}>Cancel</button>{' '}
           </ModalFooter>
         </Modal>
-        <IdleTimer
-          ref={ref => { this.idleTimer = ref }}
-          element={document}
-          onActive={this.onActive}
-          onIdle={this.onIdle}
-          onAction={this.onAction}
-          debounce={250}
-          timeout={autoTimeout} />
-
-        {!loaded &&
+        { 
+          !isBasePath && <IdleTimer
+            ref={ref => { this.idleTimer = ref }}
+            element={document}
+            onActive={this.onActive}
+            onIdle={this.onIdle}
+            onAction={this.onAction}
+            debounce={250}
+            timeout={autoTimeout} />
+        }
+        {
+          !loaded &&
           <div className={`load${loading ? '' : ' loaded'}`}>
             <div className="load__icon-wrap">
               <svg className="load__icon">

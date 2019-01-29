@@ -45,23 +45,21 @@ class LogInForm extends PureComponent {
     this.handleUserInput = this.handleUserInput.bind(this);
     this.authenticate = this.authenticate.bind(this);
   };
+
   componentWillMount() {
     let userName = Constants.AUTH_USER_NAME;
     let password = Constants.AUTH_PASSKEY;
-    if(userName && password){      
+    if(userName && password){
       this.authenticate(userName, password);
     }
-    console.log("componentWillMount", this.props, this.state);
-  }
-  componentDidMount(){
-    console.log("componentDidMount", this.props, this.state);
-  }
+  };
+
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
     // You can also log the error to an error reporting service
     console.log(error, info);
-  }
+  };
 
   showPassword(e) {
     e.preventDefault();
@@ -74,7 +72,7 @@ class LogInForm extends PureComponent {
     let name = event.target.name;
     let value = event.target.value;
     this.setState({ [name]: value });
-  }
+  };
 
   loginSubmit(event){
     event.preventDefault();
@@ -83,15 +81,11 @@ class LogInForm extends PureComponent {
     if(userName && password){      
       this.authenticate();
     }
-  }
+  };
 
   authenticate(userName, password){
     let _self = this,
         url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login",
-        // postData = {
-        //   "UserName": _self.state.username,
-        //   "Password": _self.state.password
-        //   };
         postData = {
           "UserName": userName,
           "Password": password
