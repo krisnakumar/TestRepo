@@ -24,7 +24,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
 import ResultSetEmptyMessage from './ResultSetEmptyMessage';
 
-class EmployeeResultSet extends React.Component { 
+class EmployeeResultSet extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -40,8 +40,8 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'role',
         name: 'Role',
         sortable: true,
@@ -49,8 +49,8 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'userName',
         name: 'User Name',
         sortable: true,
@@ -58,8 +58,8 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'email',
         name: 'Email',
         sortable: true,
@@ -67,8 +67,8 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'alternateName',
         name: 'Alternative Name',
         sortable: true,
@@ -76,8 +76,8 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'totalEmployees',
         name: 'Total Employees',
         sortable: true,
@@ -85,15 +85,16 @@ class EmployeeResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-right last-column"
-        }
-      ];
-    
-    this.state = {    
+      }
+    ];
+
+    this.state = {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
+      renderTimes: 0
     };
   }
 
@@ -125,25 +126,26 @@ class EmployeeResultSet extends React.Component {
     console.log(error, info);
   }
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param employees
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param employees
+  * @returns rows
+  */
   createRows = (employees) => {
-    const rows = [], 
-          length = employees ? employees.length : 0;
-    for (let i = 0; i < length; i++) { 
+    const rows = [],
+      length = employees ? employees.length : 0;
+    for (let i = 0; i < length; i++) {
       rows.push({
-        alternateName:  employees[i].AlternateName,
+        alternateName: employees[i].AlternateName,
         email: employees[i].Email,
         employeeName: employees[i].EmployeeName,
         role: employees[i].Role,
         totalEmployees: employees[i].TotalEmployees,
-        userName: employees[i].UserName
+        userName: employees[i].UserName,
+        testCol: employees[i].TestCol || "N/A"
       });
     }
 
@@ -159,24 +161,23 @@ class EmployeeResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.employees),
-          isArray = Array.isArray(newProps.employees),
-          isInitial = isArray;
+    let rows = this.createRows(newProps.employees),
+      isArray = Array.isArray(newProps.employees),
+      isInitial = isArray;
 
-      const {sortColumn , sortDirection } = this.state;
+    const { sortColumn, sortDirection } = this.state;
 
-      if(sortColumn != "" && sortDirection != "NONE"){
-        this.state.rows = rows;
-        this.state.isInitial = isInitial;
-        this.handleGridSort(sortColumn, sortDirection);
-      } else {
-        this.setState({
-          rows: rows,
-          isInitial: isInitial      
-        });
-      }
-     
-  }
+    if (sortColumn != "" && sortDirection != "NONE") {
+      this.state.rows = rows;
+      this.state.isInitial = isInitial;
+      this.handleGridSort(sortColumn, sortDirection);
+    } else {
+      this.setState({
+        rows: rows,
+        isInitial: isInitial
+      });
+    }
+  };
 
   /**
    * @method
@@ -217,36 +218,69 @@ class EmployeeResultSet extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
+  };
+
+   /**
+    * @method
+    * @name - handleButtonClick
+    * This method will trigger the event of API's respective to cell clicked Data Grid
+    * @param type
+    * @param args
+    * @returns none
+  */
+  handleButtonClick = () => {   
+    let tempCol = {
+      key: 'testCol',
+      name: 'Test Col',
+      sortable: true,
+      editable: false,
+      getRowMetaData: row => row,
+      formatter: this.cellFormatter,
+      cellClass: "text-right"
+    };
+
+    let heads = this.heads;
+
+    heads.push(tempCol);
+
+    this.heads = heads;
+    const { renderTimes } = this.state;
+    this.setState({ renderTimes: renderTimes + 1});
+
   };
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
-    const { rows } = this.state;
+    const { rows, renderTimes } = this.state;
+    debugger;
+    console.debug(renderTimes, "--------", this.heads);
+    console.log(renderTimes, "--------", this.heads);
     return (
-        <div className="grid-container employees-result">
-            <div className="table employees-result-set">
-                <ReactDataGrid
-                    ref={'employeeResultSet'}
-                    onGridSort={this.handleGridSort}
-                    enableCellSelect={false}
-                    enableCellAutoFocus={false}
-                    columns={this.heads}
-                    rowGetter={this.rowGetter}
-                    rowsCount={rows.length}
-                    onGridRowsUpdated={this.handleGridRowsUpdated}
-                    rowHeight={25}
-                    headerRowHeight={32}
-                    minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage} 
-                />
-            </div>
+      <div className="grid-container employees-result">
+        <button onClick={e => { e.preventDefault(); this.handleButtonClick(); }}>Test</button>
+        <div className="table employees-result-set">
+          <ReactDataGrid
+            ref={'employeeResultSet'}
+            onGridSort={this.handleGridSort}
+            enableCellSelect={false}
+            enableCellAutoFocus={false}
+            columns={this.heads}
+            rowGetter={this.rowGetter}
+            rowsCount={rows.length}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            rowHeight={25}
+            headerRowHeight={32}
+            minColumnWidth={100}
+            emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
+          />
         </div>
+      </div>
     );
   }
 }
