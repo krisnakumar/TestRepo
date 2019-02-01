@@ -39,11 +39,11 @@ class QueryClause extends PureComponent {
         // create a ref to store the textInput DOM element
         this.buttonRef = [];
 
-        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(this.props.fieldData)));
+        this.validator = new FormValidator(this.formatValidationData(this.formatRowData(this.props.fieldData || [])));
 
         this.state = {
-            fieldData: this.props.fieldData,
-            formattedData: this.formatRowData(this.props.fieldData),
+            fieldData: this.props.fieldData || [],
+            formattedData: this.formatRowData(this.props.fieldData || []),
             validation: this.validator.valid(),
             entity: this.props.entity
         };

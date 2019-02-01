@@ -123,12 +123,12 @@ class EmployeeView extends PureComponent {
         ];
 
         this.state = {
-            rows: this.createRows(this.props.employeesQualificationsArray),
+            rows: this.createRows(this.props.employeesQualificationsArray || []),
             modal: this.props.modal,
             isInitial: false,
             sortColumn: "",
             sortDirection: "NONE",
-            contractorsNames: this.props.contractorsNames,
+            contractorsNames: this.props.contractorsNames || [],
             employeesQualificationsArray: this.props.employeesQualificationsArray || [],
             isAssignedQualificationView: false,
             isCompletedQualificationView: false,
@@ -232,8 +232,8 @@ class EmployeeView extends PureComponent {
     */
     componentWillReceiveProps(newProps) {
         const { sortColumn, sortDirection } = this.state;
-        let rows = this.createRows(newProps.employeesQualificationsArray),
-            isArray = Array.isArray(newProps.employeesQualificationsArray),
+        let rows = this.createRows(newProps.employeesQualificationsArray || []),
+            isArray = Array.isArray(newProps.employeesQualificationsArray || []),
             isRows = newProps.employeesQualificationsArray.length > 0 ? true : false;
 
         let isInitial = false;
@@ -246,14 +246,14 @@ class EmployeeView extends PureComponent {
             this.state.modal = newProps.modal;
             this.state.rows = rows;
             this.state.isInitial = isInitial;
-            this.state.contractorsNames = newProps.contractorsNames;
+            this.state.contractorsNames = newProps.contractorsNames || [];
             this.handleGridSort(sortColumn, sortDirection);
         } else {
             this.setState({
                 modal: newProps.modal,
                 rows: rows,
                 isInitial: isInitial,
-                contractorsNames: newProps.contractorsNames
+                contractorsNames: newProps.contractorsNames || []
             });
         }
     };

@@ -44,6 +44,7 @@
     "react-color": "^2.14.1",
     "react-cookie": "^3.0.4",
     "react-data-grid": "^3.0.10",
+    "react-data-grid-addons": "^5.0.5",
     "react-datepicker": "^1.2.2",
     "react-dev-utils": "^5.0.2",
     "react-dnd": "^2.5.4",

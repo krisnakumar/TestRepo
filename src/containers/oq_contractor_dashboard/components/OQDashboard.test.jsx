@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import WorkBookDashboard from './WorkBookDashboard';
+import OQDashboard from './OQDashboard';
 
 /**
  * This Class defines the jest to test
- * the WorkBookDashboard components
+ * the OQDashboard components
  * extending ReactDOM module.
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<WorkBookDashboard />, div);
+  ReactDOM.render(<OQDashboard />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

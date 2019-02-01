@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Index from './index';
+import index from './index';
 
 /**
  * This Class defines the jest to test
@@ -9,6 +9,6 @@ import Index from './index';
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Index />, div);
+  ReactDOM.render(<index />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

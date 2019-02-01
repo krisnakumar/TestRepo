@@ -34,8 +34,8 @@ class QueryPane extends PureComponent {
     this.queryClause = React.createRef();
 
     this.initialState = {
-      entity: this.props.selectedOption.value,
-      fieldData: FieldData.field[this.props.selectedOption.value].slice(0, 2)
+      entity: this.props.selectedOption ? this.props.selectedOption.value : "employees",
+      fieldData: FieldData.field[ this.props.selectedOption ? this.props.selectedOption.value : "employees"].slice(0, 2)
     };
 
     this.state = this.initialState;
@@ -56,8 +56,8 @@ class QueryPane extends PureComponent {
   */
   componentWillReceiveProps(newProps) {
       this.setState({
-        entity: newProps.selectedOption.value,
-        fieldData: FieldData.field[newProps.selectedOption.value].slice(0, 2)
+        entity: newProps.selectedOption ? newProps.selectedOption.value : "employees",
+        fieldData: FieldData.field[newProps.selectedOption ? newProps.selectedOption.value :  "employees"].slice(0, 2)
       });
   }
 

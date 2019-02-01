@@ -91,6 +91,7 @@ class EmployeeResultSet extends React.Component {
     this.state = {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
+      heads: this.heads,
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
@@ -243,34 +244,31 @@ class EmployeeResultSet extends React.Component {
       cellClass: "text-right"
     };
 
-    let heads = this.heads;
+    let heads = this.state.heads;
 
     heads.push(tempCol);
 
-    this.heads = heads;
+    // this.state.heads = heads;
     const { renderTimes } = this.state;
-    this.setState({ renderTimes: renderTimes + 1});
-
+    this.setState({ renderTimes: renderTimes + 1, heads: heads});
+    this.forceUpdate();
   };
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
-    const { rows, renderTimes } = this.state;
-    debugger;
-    console.debug(renderTimes, "--------", this.heads);
-    console.log(renderTimes, "--------", this.heads);
+    const { rows, renderTimes, heads } = this.state;
     return (
       <div className="grid-container employees-result">
         <button onClick={e => { e.preventDefault(); this.handleButtonClick(); }}>Test</button>
         <div className="table employees-result-set">
           <ReactDataGrid
-            ref={'employeeResultSet'}
+            ref={'employeeResultSet'+renderTimes}
             onGridSort={this.handleGridSort}
             enableCellSelect={false}
             enableCellAutoFocus={false}
-            columns={this.heads}
+            columns={this.state.heads}
             rowGetter={this.rowGetter}
             rowsCount={rows.length}
             onGridRowsUpdated={this.handleGridRowsUpdated}

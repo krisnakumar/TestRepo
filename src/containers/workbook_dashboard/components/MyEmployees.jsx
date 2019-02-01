@@ -123,7 +123,7 @@ class MyEmployees extends React.Component {
 
     this.state = {
       modal: this.props.modal,
-      rows: this.createRows(this.props.myEmployees),
+      rows: this.createRows(this.props.myEmployees || []),
       pageOfItems: [],
       isMyEmployeeModal: false,
       myEmployees: {},
@@ -135,7 +135,7 @@ class MyEmployees extends React.Component {
       workBookDuePast: {},
       workBookComingDue: {},
       workBookCompleted: {},
-      supervisorNames: this.props.supervisorNames,
+      supervisorNames: this.props.supervisorNames || [],
       isAssignedModal: false,
       assignedWorkBooks: {},
       isInitial: false,
