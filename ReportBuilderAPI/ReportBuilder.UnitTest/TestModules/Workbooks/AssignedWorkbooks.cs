@@ -13,7 +13,7 @@ using ReportBuilder.UnitTest.Helpers;
 <copyright file="AssignedWorkbooks.cs">
     Copyright (c) 2018 All Rights Reserved
 </copyright>
-<author>Pawan Kumar</author>
+<author>Shoba Eswar</author>
 <date>23-Nov-2018</date>
 <summary>
     This class covers test cases for assigned workbooks under a user.

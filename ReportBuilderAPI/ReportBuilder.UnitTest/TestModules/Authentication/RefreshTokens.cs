@@ -14,7 +14,7 @@ using ReportBuilder.UnitTest.Helpers;
 <copyright file="RefreshTokens.cs">
     Copyright (c) 2018 All Rights Reserved
 </copyright>
-<author>Pawan Kumar</author>
+<author>Shoba Eswar</author>
 <date>29-Nov-2018</date>
 <summary>
     This class covers test cases to get refreshed token to continue the user session.

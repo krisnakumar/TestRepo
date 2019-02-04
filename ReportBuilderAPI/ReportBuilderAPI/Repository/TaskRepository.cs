@@ -111,7 +111,7 @@ namespace ReportBuilderAPI.Repository
                         {
                             Attempt = Convert.ToString(rows["Attempt"]),
                             Status = Convert.ToString(rows["Status"]),
-                            DateTime =  Convert.ToDateTime(rows["DateTaken"]).ToString("MM/dd/yyyy"),
+                            DateTime = Convert.ToDateTime(rows["DateTaken"]).ToString("MM/dd/yyyy"),
                             Location = Convert.ToString(rows["Street1"]) + "," + Convert.ToString(rows["Street2"]) + "," + Convert.ToString(rows["City"]) + "," + Convert.ToString(rows["State"]) + "," + Convert.ToString(rows["Zip"]),
                             Evaluator = Convert.ToString(rows["EvaluatorName"]),
                             Comments = taskModel.Comment
@@ -185,7 +185,7 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryRequest.Fields.Where(x => x.Name == Constants.SUPERVISOR_ID).ToList().Count > 0 && queryRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
                 {
-                    ReportBuilder.Models.Models.EmployeeModel userDetails = queryRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
+                    EmployeeModel userDetails = queryRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
                     queryRequest.Fields.Remove(userDetails);
                     queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
                 }
@@ -201,12 +201,9 @@ namespace ReportBuilderAPI.Repository
 
                 whereQuery = !queryRequest.ColumnList.Contains(Constants.COMPANY_NAME) ? ((!string.IsNullOrEmpty(whereQuery)) ? (" WHERE ucs.CompanyId=" + companyId + " and  (" + whereQuery + ")") : (" WHERE ucs.CompanyId=" + companyId)) : (" WHERE (" + whereQuery + ")");
 
-                if (queryRequest.Fields.Count == 1)
+                if (queryRequest.Fields.Count == 1 && queryRequest.Fields.Where(x => x.Value == Constants.SUPERVISOR).ToList().Count > 0)
                 {
-                    if (queryRequest.Fields.Where(x => x.Value == Constants.SUPERVISOR).ToList().Count > 0)
-                    {
-                        whereQuery += "and u.Id in (SELECT u.Id FROM dbo.[User] u join userCompany uc on uc.UserId = u.Id JOIN UserRole ur on ur.UserId = u.Id JOIN ROle r on r.Id = ur.roleId WHERE r.Name = 'SUPERVISOR' and uc.companyId = @companyId))";
-                    }
+                    whereQuery += "and u.Id in (SELECT u.Id FROM dbo.[User] u join userCompany uc on uc.UserId = u.Id JOIN UserRole ur on ur.UserId = u.Id JOIN ROle r on r.Id = ur.roleId WHERE r.Name = 'SUPERVISOR' and uc.companyId = @companyId))";
                 }
                 query += whereQuery;
 
@@ -248,16 +245,16 @@ namespace ReportBuilderAPI.Repository
                 {
                     while (sqlDataReader.Read())
                     {
-                        TaskModel taskModel = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;                     
+                        TaskModel taskModel = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
                         taskResponse = new TaskResponse
                         {
-                            
+
                             TaskId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'taskId'").Count() == 1) ? (int?)sqlDataReader["taskId"] : null,
                             TaskName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : null,
                             AssignedTo = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,
                             EvaluatorName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(sqlDataReader["evaluatorName"]) : null,
                             Status = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
-                            ExpirationDate =  (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"]))? Convert.ToDateTime (sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy hh:mm:ss tt"): default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+                            ExpirationDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
                             TaskCode = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : null,
                             CompletedTasksCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (int?)sqlDataReader["CompletedTasks"] : null,
                             TotalTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)sqlDataReader["TotalTasks"] : null,
@@ -265,8 +262,8 @@ namespace ReportBuilderAPI.Repository
                             UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
                             WorkbookId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'workbookId'").Count() == 1) ? (int?)sqlDataReader["workbookId"] : null,
                             NumberofAttempts = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
-                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,                        
-                        
+                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+
                             Location = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
                             Comments = taskModel?.Comment,
 

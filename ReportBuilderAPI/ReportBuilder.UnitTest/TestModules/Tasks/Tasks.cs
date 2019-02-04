@@ -13,7 +13,7 @@ using ReportBuilder.UnitTest.Helpers;
 <copyright file="Tasks.cs">
     Copyright (c) 2018 All Rights Reserved
 </copyright>
-<author>Pawan Kumar</author>
+<author>Shoba Eswar</author>
 <date>27-Nov-2018</date>
 <summary>
     This class covers test cases for tasks list for a user under a workbook.
