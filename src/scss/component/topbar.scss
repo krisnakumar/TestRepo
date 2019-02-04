@@ -559,7 +559,6 @@ p.topbar__avatar-name {
 }
 
 .topbar .topbar__nav-dropdown-toggle {
-  // height: 60px;
   background: transparent;
   border-radius: 0;
   border: none;
@@ -570,7 +569,7 @@ p.topbar__avatar-name {
   margin: 0;
 
   img{
-    padding: 5px;
+    padding: 5px 5px 5px 0px;
   }
   @include themify($themes) {
     color: none;
@@ -700,10 +699,11 @@ p.topbar__avatar-name {
 
 .theme-light .topbar .topbar__nav-dropdown-toggle {
   color: white;
-  width: 127px;
+  width: auto;
   font-size: 16px;
   font-weight: 500;
   font-family: 'Segoe UI',Arial !important;
+  padding: 10px 10px 10px 10px !important;
 }
 
 .topbar__right {
