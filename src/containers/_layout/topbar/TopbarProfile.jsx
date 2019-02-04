@@ -27,7 +27,7 @@ export default class TopbarProfile extends PureComponent {
         </button>
         {this.state.collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse isOpen={this.state.collapse} className="topbar__menu-wrap">
-          <div className="topbar__menu">
+          <div className="topbar__menu user-menu">
             <TopbarMenuLink title="User Profile" icon="fa fa-user-circle-o fa-lg" path="userprofile.aspx" />
             <TopbarMenuLink title="Dashboard" icon="fa fa-tachometer fa-lg" path="DashBoard.aspx" />
             <TopbarMenuLink title="Events" icon="fa fa-calendar fa-lg" path="events.aspx" />
