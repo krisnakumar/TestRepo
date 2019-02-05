@@ -64,7 +64,7 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
         public void GetDueWorkbookForUnsubscribedUser()
         {
             Function function = new Function();
-            var APIRequest = RequestBuilder.PathParamsRequest("userId", "601");
+            var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
             var workbookResponse = function.GetPastDueWorkbookDetails(APIRequest, null);
             string responseWorkBooks = Convert.ToString(workbookResponse.Body);
             List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);

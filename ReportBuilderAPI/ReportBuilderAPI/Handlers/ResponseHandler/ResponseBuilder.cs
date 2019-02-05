@@ -69,7 +69,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 };
                 var response = new APIGatewayProxyResponse
                 {
-                    StatusCode = (int)HttpStatusCode.OK,
+                    StatusCode = (int)HttpStatusCode.BadRequest,
                     Body = JsonConvert.SerializeObject(errorResponse),
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "https://s3-us-west-2.amazonaws.com" } }
                 };

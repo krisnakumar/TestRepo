@@ -13,7 +13,7 @@ using ReportBuilderAPI.Utilities;
 namespace ReportBuilder.UnitTest
 {
     [TestClass]
-    class UnitTest
+    public class UnitTest
     {
         [TestMethod]
         public void Login()
@@ -196,11 +196,9 @@ namespace ReportBuilder.UnitTest
             {
                 Name = Constants.USER_CREATED_DATE,
                 Value = "04/02/1990 and 04/02/2019",
-                Operator = "between",
-                Bitwise = null
+                Operator = "Between"                
             };
 
-            ;
 
             employeeList.Add(employeeModel);
 
@@ -210,7 +208,6 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            //aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"8\",\"Operator\":\"=\",\"Name\":\"SUPERVISOR_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);

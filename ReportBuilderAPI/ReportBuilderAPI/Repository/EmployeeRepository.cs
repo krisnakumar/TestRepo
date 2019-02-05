@@ -96,6 +96,33 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
+        /// Separate the values if operator contains between
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="inputOperator"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string ProcessDateParameter(string field, string inputOperator, string value)
+        {
+            string dateValue = string.Empty;
+            try
+            {
+                if(inputOperator.ToUpper()==Constants.BETWEEN)
+                {
+                    var dateList = value.Split("and");
+                    dateValue += " between '" + dateList[0] + "'";
+                    dateValue += " and '" + dateList[1] + "'";
+                }
+                return dateValue;
+            }
+            catch (Exception processDateParameterException)
+            {
+                LambdaLogger.Log(processDateParameterException.ToString());
+                return dateValue;
+            }
+        }
+
+        /// <summary>
         ///     Dictionary having Column list for the employee details.
         ///     Based on column name, query is being formed/updated
         /// </summary>
@@ -148,7 +175,12 @@ namespace ReportBuilderAPI.Repository
             {Constants.STATUS, "u.IsEnabled " },
             {Constants.REPORTING, "s.IsDirectReport " },
             {Constants.PHOTO, "u.Photo " },
-            {Constants.SUPERVISOR_ID, "s.SupervisorId " }
+            {Constants.SUPERVISOR_ID, "s.SupervisorId " },
+            {Constants.ME, "u.Id in (@userId)" },
+            {Constants.ME_AND_DIRECT_SUBORDINATES, "u.Id in(select @userId Union select userId from supervisor where supervisorId=@userId) " },
+            {Constants.ME_AND_ALL_SUBORDINATES, " u.Id in (SELECT @userId UNION SELECT * FROM getchildUsers(@userId)) " },
+            {Constants.DIRECT_SUBORDINATES, "u.Id in(SELECT userId FROM supervisor WHERE supervisorId=@userId)  " },
+            {Constants.ALL_SUBORDINATES, " u.Id in (SELECT * FROM getchildUsers(@userId))  " },
         };
 
 
@@ -196,15 +228,15 @@ namespace ReportBuilderAPI.Repository
                 query += tableJoin;
 
 
-                bool isExist = employeeRequest.Fields.Any(x => workbookFieldList.Contains(x.Name.ToUpper()));
+                //bool isExist = employeeRequest.Fields.Any(x => workbookFieldList.Contains(x.Name.ToUpper()));
 
-                if (!isExist)
-                {
+                //if (!isExist)
+                //{
                     //getting where conditions
                     whereQuery = string.Join("", from employee in employeeRequest.Fields
                                                  select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
                             CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
-                }
+                //}
 
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
@@ -241,6 +273,11 @@ namespace ReportBuilderAPI.Repository
             Constants.NOT_SUPERVISORID,
             Constants.IN_DUE,
             Constants.IN_COMPLETE,
+            Constants.ME,
+            Constants.ME_AND_ALL_SUBORDINATES,
+            Constants.ME_AND_DIRECT_SUBORDINATES,
+            Constants.ALL_SUBORDINATES,
+            Constants.DIRECT_SUBORDINATES            
         };
 
         /// <summary>
@@ -268,6 +305,9 @@ namespace ReportBuilderAPI.Repository
                             break;
                         case Constants.END_WITH:
                             queryString = " like '%" + value + "'";
+                            break;
+                        case Constants.BETWEEN:
+                            queryString = ProcessDateParameter(field, operatorName, value);
                             break;
                         default:
                             queryString = operatorName + ("'" + value + "'");

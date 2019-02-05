@@ -63,12 +63,12 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
         public void GetCompletedWorkbooksForUnsubscribedUser()
         {
             Function function = new Function();
-            var APIRequest = RequestBuilder.PathParamsRequest("userId", "451");
+            var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
             var workbookResponse = function.GetCompletedWorkbookDetails(APIRequest, null);
             string responseWorkBooks = Convert.ToString(workbookResponse.Body);
             List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);
             Assert.AreEqual(200, workbookResponse.StatusCode);
-            Assert.IsFalse(wblist.Count > 0, "Empty response");
+            Assert.IsFalse(wblist.Count <= 0, "Empty response");
         }
         
         /// <summary> 
