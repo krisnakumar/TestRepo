@@ -199,9 +199,9 @@ img {
 
 .close {
   float: right;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: normal;
-  line-height: 1;
+  line-height: 0 !important;
   color: #fff;
   text-shadow: none;
   opacity: 1;
