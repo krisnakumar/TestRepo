@@ -68,6 +68,7 @@ class EmployeeView extends PureComponent {
             {
                 key: 'assignedQualification',
                 name: 'Assigned Qualifications',
+                width: 180,
                 sortable: true,
                 editable: false,
                 getRowMetaData: row => row,
