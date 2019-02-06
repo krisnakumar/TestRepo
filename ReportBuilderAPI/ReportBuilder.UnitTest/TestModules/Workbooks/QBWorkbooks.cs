@@ -413,5 +413,41 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
             Assert.AreEqual(0, workbookList.Count);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => workbookList[0]);
         }
+
+        // Test for try-catch block
+        [TestMethod]
+        public void RequestWithoutColumnList()
+        {
+            List<EmployeeModel> wbList = new List<EmployeeModel>();
+            Function function = new Function();
+
+            QueryBuilderRequest wbRequest = new QueryBuilderRequest
+            {
+                Fields = wbList
+            };
+            EmployeeModel wbFilter1 = new EmployeeModel
+            {
+                Name = Constants.DAYS_TO_COMPLETE,
+                Value = "20",
+                Operator = "<="
+            };
+            wbList.Add(wbFilter1);
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+            };
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(wbRequest),
+                PathParameters = pathValues
+            };
+            APIGatewayProxyResponse wbResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
+            ErrorResponse wbResponses = JsonConvert.DeserializeObject<ErrorResponse>(wbResponse.Body);
+            Assert.AreEqual(500, wbResponse.StatusCode);
+            Assert.IsTrue(wbResponses.Code == 33);
+            StringAssert.Matches(wbResponses.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
+        }
+
     }
 }

@@ -65,6 +65,8 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             Assert.AreEqual(90, tasksResponse[0].TaskId);
             Assert.AreNotEqual("", tasksResponse[0].TaskName);
             StringAssert.Matches(tasksResponse[0].TaskName, new Regex(@"(?i)\broberta579\b"));
+            // Newly
+            Assert.IsTrue(tasksResponse[0].EvaluatorName != "");
         }
 
         [TestMethod]
@@ -503,6 +505,85 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             Assert.AreEqual(90, tasksResponse[0].TaskId);
             Assert.AreNotEqual("", tasksResponse[0].TaskName);
             StringAssert.Matches(tasksResponse[0].TaskName, new Regex(@"(?i)\broberta579\b"));
+        }
+
+        // Conditional test
+
+        [TestMethod]
+        public void GetTasksForPast30Days()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            Function function = new Function();
+
+            QueryBuilderRequest taskRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_NAME, Constants.ASSIGNED_TO, Constants.EVALUATOR_NAME, Constants.EXPIRATION_DATE, Constants.PAST_DUE,Constants.WORKBOOK_IN_DUE },
+                Fields = tasksList
+            };
+
+            EmployeeModel task1 = new EmployeeModel
+            {
+                Name = Constants.TASK_ID,
+                Value = "90",
+                Operator = "="
+            };
+            tasksList.Add(task1);
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(taskRequest),
+                PathParameters = pathValues
+            };
+
+            APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
+            List<TaskResponse> tasksResponse = JsonConvert.DeserializeObject<List<TaskResponse>>(taskResponse.Body);
+            Assert.AreEqual(200, taskResponse.StatusCode);
+            Assert.AreNotEqual(0, tasksResponse.Count);
+            Assert.AreEqual(90, tasksResponse[0].TaskId);
+            Assert.AreNotEqual("", tasksResponse[0].TaskName);
+            StringAssert.Matches(tasksResponse[0].TaskName, new Regex(@"(?i)\broberta579\b"));
+        }
+
+        // Test for try-catch block
+
+        [TestMethod]
+        public void RequestWithoutColumnList()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            Function function = new Function();
+
+            QueryBuilderRequest taskRequest = new QueryBuilderRequest
+            {
+                Fields = tasksList
+            };
+            EmployeeModel task1 = new EmployeeModel
+            {
+                Name = Constants.TASK_ID,
+                Value = "90",
+                Operator = "="
+            };
+            tasksList.Add(task1);
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+            };
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(taskRequest),
+                PathParameters = pathValues
+            };
+
+            APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
+            ErrorResponse tasksResponse = JsonConvert.DeserializeObject<ErrorResponse>(taskResponse.Body);
+            Assert.AreEqual(500, taskResponse.StatusCode);
+            Assert.IsTrue(tasksResponse.Code == 33);
+            StringAssert.Matches(tasksResponse.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
         }
     }
 }
