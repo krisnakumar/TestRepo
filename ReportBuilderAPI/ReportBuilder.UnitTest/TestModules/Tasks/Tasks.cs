@@ -114,10 +114,10 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             };
             APIGatewayProxyResponse taskResponse = function.GetTaskList(aPIGatewayProxyRequest, null);
             string responseTasks = Convert.ToString(taskResponse.Body);
-            ErrorResponse errorRes = JsonConvert.DeserializeObject<ErrorResponse>(responseTasks);
+            ErrorResponse errorResonse = JsonConvert.DeserializeObject<ErrorResponse>(responseTasks);
             Assert.AreEqual(400, taskResponse.StatusCode);
-            Assert.AreEqual(errorRes.Code, 1);
-            StringAssert.Contains(errorRes.Message, "Invalid input");
+            Assert.AreEqual(errorResonse.Code, 1);
+            StringAssert.Contains(errorResonse.Message, "Invalid input");
         }
         
         /// <summary> 

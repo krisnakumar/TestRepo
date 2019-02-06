@@ -113,6 +113,7 @@ namespace ReportBuilderAPI.Utilities
         public const string USER_COUNT = "USER_COUNT";
         public const string WORKBOOK_ASSIGNED_DATE = "WORKBOOK_ASSIGNED_DATE";
         public const string NUMBER_COMPLETED = "NUMBER_COMPLETED";
+        public const string BETWEEN = "BETWEEN";
 
         public const string LAST_ATTEMPT_DATE = "LAST_ATTEMPT_DATE";
         public const string FIRST_ATTEMPT_DATE = "FIRST_ATTEMPT_DATE";
@@ -178,5 +179,13 @@ namespace ReportBuilderAPI.Utilities
         public const string IN_DUE_COMPANY_QUALIFICATION = "IN_DUE_COMPANY_QUALIFICATION";
         public const string TOTAL_COMPANY_EMPLOYEES = "TOTAL_COMPANY_EMPLOYEES";
 
+
+        //Smart parameters for  username
+
+        public const string ME = "ME";
+        public const string ME_AND_DIRECT_SUBORDINATES = "ME_AND_DIRECT_SUBORDINATES";
+        public const string DIRECT_SUBORDINATES = "DIRECT_SUBORDINATES";
+        public const string ALL_SUBORDINATES = "ALL_SUBORDINATES";
+        public const string ME_AND_ALL_SUBORDINATES = "ME_AND_ALL_SUBORDINATES";
     }
 }
