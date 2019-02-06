@@ -29,7 +29,7 @@
             "Type": "Api",
             "Properties": {		
 			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
-              "Path": "v2/login",
+              "Path": "/login",
               "Method": "POST"
             }
           }

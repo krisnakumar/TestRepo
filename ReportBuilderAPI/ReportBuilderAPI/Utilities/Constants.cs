@@ -127,12 +127,17 @@ namespace ReportBuilderAPI.Utilities
         public const string DATE_ADDED = "DATE_ADDED";
 
         public const string ASSIGNED = "ASSIGNED";
+        public const string NULL = "NULL";
         public const string COMPLETED = "COMPLETED";
         public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
         public const string PAST_DUE = "PAST_DUE";
         public const string IN_DUE = "IN_DUE";
         public const string DUE_DAYS = "DUE_DAYS";
-        
+
+
+        public const string QR_CODE = "QR_CODE";
+
+        public const string DEPARTMENT = "DEPARTMENT";
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";
         public const string TASK_CODE = "TASK_CODE";
