@@ -16,14 +16,16 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
-import { CardBody} from 'reactstrap';
+import { CardBody } from 'reactstrap';
 import 'whatwg-fetch'
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import {  Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
-import QueryPane  from './QueryPane';
+import SplitterPane from 'react-split-pane';
+import Splitter from 'm-react-splitters';
+import QueryPane from './QueryPane';
 import EmployeeResultSet from './EmployeeResultSet';
 import WorkbookResultSet from './WorkbookResultSet';
 import TaskResultSet from './TaskResultSet';
@@ -46,9 +48,9 @@ class QuerySection extends PureComponent {
     this.queryPane = React.createRef();
     this.employeeResultSet = React.createRef();
 
-    this.state = {    
-      selectedOption: options[0], 
-      lastSelectedOption: options[0], 
+    this.state = {
+      selectedOption: options[0],
+      lastSelectedOption: options[0],
       isClearable: false,
       employees: {},
       workbooks: {},
@@ -76,18 +78,18 @@ class QuerySection extends PureComponent {
     });
   }
 
-   /**
-   * @method
-   * @name - toggle
-   * This method used set state of modal to open and close
-   * @param none
-   * @returns none
-  */
- confirmEntitySelection() {
-  let isEmployee = this.state.lastSelectedOption.value == "employees",
+  /**
+  * @method
+  * @name - toggle
+  * This method used set state of modal to open and close
+  * @param none
+  * @returns none
+ */
+  confirmEntitySelection() {
+    let isEmployee = this.state.lastSelectedOption.value == "employees",
       isWorkbook = this.state.lastSelectedOption.value == "workbooks",
       isTask = this.state.lastSelectedOption.value == "tasks";
-      
+
     this.setState({
       isEmployee: isEmployee,
       isWorkbook: isWorkbook,
@@ -109,20 +111,20 @@ class QuerySection extends PureComponent {
    * @returns none
   */
   handleChange = (selectedOption) => {
-    
-    if(this.state.selectedOption.value != selectedOption.value){
+
+    if (this.state.selectedOption.value != selectedOption.value) {
       let isSame = this.queryPane.current.checkQuerySelections();
-      if(isSame){      
-      this.state.modal = false;
-      this.state.lastSelectedOption = selectedOption;       
-      this.confirmEntitySelection();
+      if (isSame) {
+        this.state.modal = false;
+        this.state.lastSelectedOption = selectedOption;
+        this.confirmEntitySelection();
       } else {
         this.setState({
           modal: true,
           lastSelectedOption: selectedOption
         });
-      }      
-    } 
+      }
+    }
   }
 
   /**
@@ -140,13 +142,13 @@ class QuerySection extends PureComponent {
     console.log(error, info);
   }
 
-   /**
-   * @method
-   * @name - onRunQueryClick
-   * This method build and make a API Request as per the query clause selection
-   * @param none
-   * @returns none
-  */
+  /**
+  * @method
+  * @name - onRunQueryClick
+  * This method build and make a API Request as per the query clause selection
+  * @param none
+  * @returns none
+ */
   onRunQueryClick = () => {
     this.queryPane.current.runQuery();
   };
@@ -160,9 +162,9 @@ class QuerySection extends PureComponent {
   */
   onResetQueryClick = () => {
     let isSame = this.queryPane.current.checkQuerySelections();
-    if(!isSame){
+    if (!isSame) {
       this.setState({ isResetModal: true });
-    } else {    
+    } else {
       this.resetQuery();
     }
   };
@@ -186,8 +188,8 @@ class QuerySection extends PureComponent {
    * @param employees
    * @returns none
   */
-  passEmployeesResults= (employees) => {
-    this.setState({ employees: employees});
+  passEmployeesResults = (employees) => {
+    this.setState({ employees: employees });
   }
 
   /**
@@ -197,8 +199,8 @@ class QuerySection extends PureComponent {
    * @param employees
    * @returns none
   */
-  passWorkbookResults= (workbooks) => {
-    this.setState({ workbooks: workbooks});
+  passWorkbookResults = (workbooks) => {
+    this.setState({ workbooks: workbooks });
   }
 
   /**
@@ -208,71 +210,71 @@ class QuerySection extends PureComponent {
    * @param employees
    * @returns none
   */
-  passTasksResults= (tasks) => {
-    this.setState({ tasks: tasks});
+  passTasksResults = (tasks) => {
+    this.setState({ tasks: tasks });
   }
 
   render() {
     const { selectedOption, isClearable } = this.state;
-      return (
-                 
-          <CardBody>
-            <div className="card__title">
-             <div className="pageheader">
-              <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2"/> Query Builder
+    return (
+
+      <CardBody>
+        <div className="card__title">
+          <div className="pageheader">
+            <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Query Builder
             </div>
-            <p className="card__description">Choose an entity from the available list. Create a query with the attributes available for the corresponding entity. Run the query to see corresponding search result.</p>
-            </div>
-            <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
-              <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
-              <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
-              <ModalFooter>
-                <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
-                <button color="secondary" onClick={this.toggle}>Cancel</button>
-              </ModalFooter>
-            </Modal>
-            <Modal backdrop={"static"} isOpen={this.state.isResetModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
-              <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
-              <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
-              <ModalFooter>
-                <button color="primary" onClick={this.resetQuery}>Continue</button>{' '}
-                <button color="secondary" onClick={this.toggle}>Cancel</button>
-              </ModalFooter>
-            </Modal> 
-            <div className="grid-container-query-selection">
-              <Row>
-                <Col xs="2" className="padding-rt-0">
-                  <Select
-                    clearable={isClearable}
-                    isRtl={true}
-                    isSearchable={false}
-                    searchable={false}
-                    openOnClick={false}
-                    value={selectedOption}
-                    onChange={this.handleChange}
-                    options={options}
-                    backspaceRemoves={false}
-                    deleteRemoves={false}
-                    placeholder={""}
-                    className={"select-entity"}
-                  />
-                </Col>                
-                <Col xs="auto">
-                  <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" title="Run Query" aria-label="Run Query">
-                    <span aria-hidden className=""><i className="fa fa-caret-right"></i></span>  
-                    <span className="fa-text-align">Run Query</span>  
-                  </button>
-                </Col>
-                <Col xs="auto">
-                  <button onClick={this.onResetQueryClick} className="query-section-button" size="sm" title="Reset" aria-label="Reset">
-                    <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span> 
-                    <span className="fa-text-align">Reset</span>  
-                  </button>
-                </Col>                
-              </Row>
-            </div>
-            <div className="wrapper">
-              <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
+          <p className="card__description">Choose an entity from the available list. Create a query with the attributes available for the corresponding entity. Run the query to see corresponding search result.</p>
+        </div>
+        <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
+          <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
+          <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.confirmEntitySelection}>Continue</button>{' '}
+            <button color="secondary" onClick={this.toggle}>Cancel</button>
+          </ModalFooter>
+        </Modal>
+        <Modal backdrop={"static"} isOpen={this.state.isResetModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
+          <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
+          <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.resetQuery}>Continue</button>{' '}
+            <button color="secondary" onClick={this.toggle}>Cancel</button>
+          </ModalFooter>
+        </Modal>
+        <div className="grid-container-query-selection">
+          <Row>
+            <Col xs="2" className="padding-rt-0">
+              <Select
+                clearable={isClearable}
+                isRtl={true}
+                isSearchable={false}
+                searchable={false}
+                openOnClick={false}
+                value={selectedOption}
+                onChange={this.handleChange}
+                options={options}
+                backspaceRemoves={false}
+                deleteRemoves={false}
+                placeholder={""}
+                className={"select-entity"}
+              />
+            </Col>
+            <Col xs="auto">
+              <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" title="Run Query" aria-label="Run Query">
+                <span aria-hidden className=""><i className="fa fa-caret-right"></i></span>
+                <span className="fa-text-align">Run Query</span>
+              </button>
+            </Col>
+            <Col xs="auto">
+              <button onClick={this.onResetQueryClick} className="query-section-button" size="sm" title="Reset" aria-label="Reset">
+                <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span>
+                <span className="fa-text-align">Reset</span>
+              </button>
+            </Col>
+          </Row>
+        </div>
+        <div className="wrapper">
+          <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
 
                 <QueryPane 
                   ref={this.queryPane} 
@@ -286,8 +288,29 @@ class QuerySection extends PureComponent {
                 { this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks}/>}
                 
               </SplitterLayout>
-            </div>
-          </CardBody>
+              {/* <SplitterPane
+                split="horizontal"
+                primary="first"
+                minSize={150}
+                defaultSize={250}
+                customClassName={"query-builder-section"}
+                className={"query-builder-section"}
+                vertical={true}
+                allowResize={true}
+              >
+                  <QueryPane
+                    ref={this.queryPane}
+                    selectedOption={this.state.selectedOption}
+                    passTasksToQuerySection={this.passTasksResults}
+                    passWorkbooksResultsToQuerySection={this.passWorkbookResults}
+                    passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+        
+                  {this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees} />}
+                  {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
+                  {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
+              </SplitterPane> */}
+        </div>
+      </CardBody>
     );
   }
 }

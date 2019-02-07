@@ -54,6 +54,7 @@ class QueryClause extends PureComponent {
         this.handleInputChange = this.handleInputChange.bind(this); 
         this.handleAddClause = this.handleAddClause.bind(this);        
         this.handleDeleteClause = this.handleDeleteClause.bind(this);
+        this.onOpenClose = this.onOpenClose.bind(this); 
     }
 
     /**
@@ -502,6 +503,18 @@ class QueryClause extends PureComponent {
 
         this.props.passTasksResults(response);
     };
+
+    
+
+    onOpenClose() {
+        // let inputWrapper = $('.Select-control').get(0).getBoundingClientRect();
+        // $('.Select-menu-outer').css({
+        //   'top': inputWrapper.top+inputWrapper.height+'px',
+        //   'left': inputWrapper.left+'px',
+        //   'width': inputWrapper.width+'px',
+        // })
+        debugger;
+    }
     
     render() {
         const { formattedData } = this.state;
@@ -552,14 +565,22 @@ class QueryClause extends PureComponent {
                                 </td>
                                 <td className={"tableWidth-20"}> 
                                     <Select
+                                        // onMenuOpen={_self.onOpen}
+                                        // menuContainerStyle={{'position':'fixed', 'zIndex': '1500'}}
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}
+                                        className={"menu-outer-top"}
+                                        menuShouldScrollIntoView={true}
                                         isSearchable={false}
                                         openOnClick={true}
                                         value={field.fieldsSelected}
                                         autoFocus={field.isFocus}
-                                        options={field.fields}                                        
+                                        maxMenuHeight={100}
+                                        options={field.fields}
+                                        menuPortalTarget={document.body}
+                                        // onMenuOpen={console.log("onMenuOpen")}   
+                                        // onMenuClose={console.log("onMenuClose")}                                     
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
