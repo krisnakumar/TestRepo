@@ -191,6 +191,27 @@
 				"label": "Role",
 				"validation": "isEmpty",
 				"field": "ROLE"
+			},
+			{
+				"value": "photo",
+				"type": "text",
+				"label": "Photo",
+				"validation": "isEmpty",
+				"field": "PHOTO"
+			},
+			{
+				"value": "qrcode",
+				"type": "text",
+				"label": "QR Code",
+				"validation": "isEmpty",
+				"field": "QR_CODE"
+			},
+			{
+				"value": "department",
+				"type": "text",
+				"label": "Department",
+				"validation": "isEmpty",
+				"field": "DEPARTMENT"
 			}
 		],
 		"workbooks": [
@@ -306,11 +327,11 @@
 				"field": "ATTEMPT_DATE"
 			},
 			{
-				"value": "assignedTo",
-				"type": "text",
-				"label": "Assigned To",
+				"value": "id",
+				"type": "int",
+				"label": "User Id",
 				"validation": "isEmpty",
-				"field": "ASSIGNED_TO"
+				"field": "USER_ID"
 			},
 			{
 				"value": "evaluatorName",

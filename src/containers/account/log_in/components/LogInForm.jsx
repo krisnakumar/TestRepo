@@ -47,11 +47,11 @@ class LogInForm extends PureComponent {
   };
 
   componentWillMount() {
-    let userName = Constants.AUTH_USER_NAME;
-    let password = Constants.AUTH_PASSKEY;
-    if(userName && password){
-      this.authenticate(userName, password);
-    }
+    // let userName = Constants.AUTH_USER_NAME;
+    // let password = Constants.AUTH_PASSKEY;
+    // if(userName && password){
+    //   this.authenticate(userName, password);
+    // }
   };
 
   componentDidCatch(error, info) {
@@ -79,7 +79,7 @@ class LogInForm extends PureComponent {
     let userName = this.state.username;
     let password = this.state.password;
     if(userName && password){      
-      this.authenticate();
+      this.authenticate(userName, password);
     }
   };
 
@@ -129,51 +129,51 @@ class LogInForm extends PureComponent {
     }
 
     return (
-      // <form className="form" onSubmit={this.loginSubmit}>
-      //   <div className="form__form-group">
-      //     <label className="form__form-group-label  login-label" htmlFor="name">Username</label>
-      //     <div className="form__form-group-field">
-      //       <Field
-      //         name="username"
-      //         id="userName"
-      //         component="input"
-      //         type="text"
-      //         placeholder=""
-      //         onChange={event => this.handleUserInput(event)}
-      //       />
-      //     </div>
-      //   </div>
-      //   <div className="form__form-group">
-      //     <label className="form__form-group-label login-label" htmlFor="password">Password</label>
-      //     <div className="form__form-group-field">
-      //       <Field
-      //         name="password"
-      //         component="input"
-      //         id="password"
-      //         type={this.state.showPassword ? 'text' : 'password'}
-      //         placeholder=""
-      //         onChange={event => this.handleUserInput(event)}
-      //       />
-      //     </div>
-      //   </div>
-      //   <div className="account__btns">
-      //     <button
-      //         type="submit"
-      //         className="btn btn-primary account__btn">
-      //           Login
-      //       </button>
-      //   </div>
-      //   <div className="version-number">
-      //     <p>v{version}</p>
-      //   </div>
-      // </form>
-    <div className={`load`}>
-      <div className="load__icon-wrap">
-        <svg className="load__icon">
-          <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-        </svg>
-      </div>
-    </div>
+      <form className="form" onSubmit={this.loginSubmit}>
+        <div className="form__form-group">
+          <label className="form__form-group-label  login-label" htmlFor="name">Username</label>
+          <div className="form__form-group-field">
+            <Field
+              name="username"
+              id="userName"
+              component="input"
+              type="text"
+              placeholder=""
+              onChange={event => this.handleUserInput(event)}
+            />
+          </div>
+        </div>
+        <div className="form__form-group">
+          <label className="form__form-group-label login-label" htmlFor="password">Password</label>
+          <div className="form__form-group-field">
+            <Field
+              name="password"
+              component="input"
+              id="password"
+              type={this.state.showPassword ? 'text' : 'password'}
+              placeholder=""
+              onChange={event => this.handleUserInput(event)}
+            />
+          </div>
+        </div>
+        <div className="account__btns">
+          <button
+              type="submit"
+              className="btn btn-primary account__btn">
+                Login
+            </button>
+        </div>
+        <div className="version-number">
+          <p>v{version}</p>
+        </div>
+      </form>
+    // <div className={`load`}>
+    //   <div className="load__icon-wrap">
+    //     <svg className="load__icon">
+    //       <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+    //     </svg>
+    //   </div>
+    // </div>
     );
   }
 }

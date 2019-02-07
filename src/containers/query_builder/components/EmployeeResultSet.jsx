@@ -261,7 +261,6 @@ class EmployeeResultSet extends React.Component {
     const { rows, renderTimes, heads } = this.state;
     return (
       <div className="grid-container employees-result">
-        <button onClick={e => { e.preventDefault(); this.handleButtonClick(); }}>Test</button>
         <div className="table employees-result-set">
           <ReactDataGrid
             ref={'employeeResultSet'+renderTimes}
