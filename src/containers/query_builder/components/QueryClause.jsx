@@ -505,16 +505,18 @@ class QueryClause extends PureComponent {
     };
 
     
-
+    /**
+     * @method
+     * @name - onOpenClose
+     * This method will used to set the css props to select menu outer to positioning
+     * @param none
+     * @returns none
+    */
     onOpenClose() {
-        // let inputWrapper = $('.Select-control').get(0).getBoundingClientRect();
-        // $('.Select-menu-outer').css({
-        //   'top': inputWrapper.top+inputWrapper.height+'px',
-        //   'left': inputWrapper.left+'px',
-        //   'width': inputWrapper.width+'px',
-        // })
-        debugger;
-    }
+        let inputWrapper = document.querySelector(".is-open").getBoundingClientRect();
+            document.querySelector(".Select-menu").style.width = inputWrapper.width+'px';
+            document.querySelector(".Select-menu").style.top = inputWrapper.top+inputWrapper.height+'px';
+    };
     
     render() {
         const { formattedData } = this.state;
@@ -547,6 +549,7 @@ class QueryClause extends PureComponent {
                                 <td className={"tableWidth-10"}> 
                                     { 
                                         index != 0 && <Select
+                                            onOpen={ _self.onOpenClose.bind()}  
                                             clearable={false}
                                             autosize={false}
                                             isRtl={true}
@@ -565,8 +568,7 @@ class QueryClause extends PureComponent {
                                 </td>
                                 <td className={"tableWidth-20"}> 
                                     <Select
-                                        // onMenuOpen={_self.onOpen}
-                                        // menuContainerStyle={{'position':'fixed', 'zIndex': '1500'}}
+                                        onOpen={ _self.onOpenClose.bind()}                                        
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}
@@ -578,9 +580,7 @@ class QueryClause extends PureComponent {
                                         autoFocus={field.isFocus}
                                         maxMenuHeight={100}
                                         options={field.fields}
-                                        menuPortalTarget={document.body}
-                                        // onMenuOpen={console.log("onMenuOpen")}   
-                                        // onMenuClose={console.log("onMenuClose")}                                     
+                                        menuPortalTarget={document.body}                                     
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
@@ -589,6 +589,7 @@ class QueryClause extends PureComponent {
                                 </td>
                                 <td className={"tableWidth-20"}> 
                                     <Select
+                                        onOpen={ _self.onOpenClose.bind()}  
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}

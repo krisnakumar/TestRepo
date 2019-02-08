@@ -367,6 +367,7 @@ img {
 
 .Select-menu-outer .Select-menu{
     line-height: 0.5 !important;
+    border: solid 1px #bfb8b8;
 }
 
 
@@ -619,9 +620,8 @@ button.query-action-btn.delete:disabled {
 
 .query-section-table.tbody {
   display:block;
-  //display: inherit;
   overflow:auto;
-  height: calc( 100% - 32px );
+  height: calc( 100% - 50px );
   position: absolute;
 }
 .query-section-table.thead, .query-section-table.tbody tr {
@@ -661,78 +661,25 @@ button.query-action-btn.delete:disabled {
   text-align: center;
   padding: 5px 5px 5px 5px !important;
 }
-
-.Resizer {
-  background: #000;
-  opacity: .2;
-  z-index: 1;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding;
-  background-clip: padding-box;
-}
-
-.Resizer:hover {
-  -webkit-transition: all 2s ease;
-  transition: all 2s ease;
-}
-
-.Resizer.horizontal {
-  height: 11px;
-  margin: -5px 0;
-  border-top: 5px solid #797373c5;
-  border-bottom: 5px solid #797373c5;
-  cursor: row-resize;
-  width: 100%;
-}
-
-.Resizer.horizontal:hover {
-  border-top: 5px solid #524d4dc5;
-  border-bottom: 5px solid #524d4dc5;
-}
-
-.Resizer.vertical {
-  width: 11px;
-  margin: 0 -5px;
-  border-left: 5px solid #797373c5;
-  border-right: 5px solid #797373c5;
-  cursor: col-resize;
-}
-
-.Resizer.vertical:hover {
-  border-left: 5px solid #524d4dc5;
-  border-right: 5px solid #524d4dc5;
-}
-.Resizer.disabled {
-cursor: not-allowed;
-}
-.Resizer.disabled:hover {
-border-color: transparent;
-}
-
 .SplitPane.query-builder-section.horizontal {
   // position: inherit !important;
 }
-
 
 .Select-menu {
   position: fixed !important;
 }
 .Select {
-  // width: 444px !important;
-  // margin-right: 5px;
   z-index: 0 !important;
 }
-
-.Select.is-open {
-z-index: 1 !important;
+.Select.is-open, .Select.is-open:hover, .Select.is-open:active, .Select.is-open:visited {
+  z-index: 99999 !important;
 }
-
 .Select-menu {
   position: fixed !important;
- // width: 440px !important;
- width: 100%;
+  width: auto;
   margin: 1px;
+}
+.Select-option.is-focused, .Select-option.is-selected {
+  background-color: #ebf5ff !important;
+  color: #333;
 }

@@ -288,27 +288,6 @@ class QuerySection extends PureComponent {
                 { this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks}/>}
                 
               </SplitterLayout>
-              {/* <SplitterPane
-                split="horizontal"
-                primary="first"
-                minSize={150}
-                defaultSize={250}
-                customClassName={"query-builder-section"}
-                className={"query-builder-section"}
-                vertical={true}
-                allowResize={true}
-              >
-                  <QueryPane
-                    ref={this.queryPane}
-                    selectedOption={this.state.selectedOption}
-                    passTasksToQuerySection={this.passTasksResults}
-                    passWorkbooksResultsToQuerySection={this.passWorkbookResults}
-                    passEmployeesResultsToQuerySection={this.passEmployeesResults} />
-        
-                  {this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees} />}
-                  {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
-                  {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
-              </SplitterPane> */}
         </div>
       </CardBody>
     );
