@@ -233,6 +233,7 @@ class QueryClause extends PureComponent {
                 formattedData[index].valueSelected =  isSameType ? formattedData[index].valueSelected : "";
                 formattedData[index].operators =  FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
+                formattedData[index].isSkipValidation = true;
                 formattedData[index].operatorsSelected = formattedData[index].type == type ? formattedData[index].operatorsSelected : FieldData.operator[type][0];
                 formattedData[index].value= selectedOption.value || "";
                 formattedData[index].type = selectedOption.type || "";
@@ -423,7 +424,11 @@ class QueryClause extends PureComponent {
             this.validator.validate(formattedData) :   // then check validity every time we render
             this.state.validation;
 
-        return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
+        if(formattedData[index].isSkipValidation){
+            return classNames('form-group-has-validation');
+        } else {
+            return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
+        }
     };
 
     /**
@@ -439,7 +444,11 @@ class QueryClause extends PureComponent {
             this.validator.validate(formattedData) :   // then check validity every time we render
             this.state.validation;
 
-        return  validation[index] ? validation[index].message : "";
+        if(formattedData[index].isSkipValidation){
+            return "";
+        } else {
+            return  validation[index] ? validation[index].message : "";
+        }
     };
 
     /**
