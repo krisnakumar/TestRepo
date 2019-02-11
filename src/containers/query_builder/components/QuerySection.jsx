@@ -60,6 +60,7 @@ class QuerySection extends PureComponent {
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
+    this.onOpenClose = this.onOpenClose.bind(this); 
   }
 
   /**
@@ -212,6 +213,19 @@ class QuerySection extends PureComponent {
     this.setState({ tasks: tasks });
   }
 
+   /**
+     * @method
+     * @name - onOpenClose
+     * This method will used to set the css props to select menu outer to positioning
+     * @param none
+     * @returns none
+    */
+   onOpenClose() {
+      let inputWrapper = document.querySelector(".is-open").getBoundingClientRect();
+          document.querySelector(".Select-menu").style.width = inputWrapper.width+'px';
+          document.querySelector(".Select-menu").style.top = inputWrapper.top+inputWrapper.height+'px';
+  };
+
   render() {
     const { selectedOption, isClearable } = this.state;
     return (
@@ -245,6 +259,7 @@ class QuerySection extends PureComponent {
               <Select
                 clearable={isClearable}
                 isRtl={true}
+                onOpen={ this.onOpenClose.bind()}
                 isSearchable={false}
                 searchable={false}
                 openOnClick={false}
