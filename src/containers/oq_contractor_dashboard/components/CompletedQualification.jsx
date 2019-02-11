@@ -67,7 +67,7 @@ class CompletedQualification extends PureComponent {
                 cellClass: "text-left"
             },
             {
-                key: 'assignedDate',
+                key: 'expirationDate',
                 name: 'Expiration Date',
                 sortable: true,
                 editable: false,
@@ -130,7 +130,8 @@ class CompletedQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 oQTask: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
-                assignedDate: qualifications[i].AssignedDate
+                assignedDate: qualifications[i].AssignedDate,
+                expirationDate: qualifications[i].ExpirationDate
             });
         }
 

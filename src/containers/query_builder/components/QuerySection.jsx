@@ -23,8 +23,6 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Select from 'react-select';
 import SplitterLayout from 'react-splitter-layout';
-import SplitterPane from 'react-split-pane';
-import Splitter from 'm-react-splitters';
 import QueryPane from './QueryPane';
 import EmployeeResultSet from './EmployeeResultSet';
 import WorkbookResultSet from './WorkbookResultSet';
