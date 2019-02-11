@@ -624,6 +624,11 @@ button.query-action-btn.delete:disabled {
   height: calc( 100% - 50px );
   position: absolute;
 }
+@-moz-document url-prefix() {
+  .query-section-table.tbody {
+    height: calc( 100% - 33px ) !important;
+  }
+}
 .query-section-table.thead, .query-section-table.tbody tr {
   display:table;
   width:100%;

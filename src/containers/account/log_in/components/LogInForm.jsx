@@ -26,7 +26,7 @@ import * as Constants from '../../../../shared/constants';
 
 class LogInForm extends PureComponent {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
+    loginSubmit: PropTypes.func.isRequired,
     cookies: instanceOf(Cookies).isRequired
   };
 
