@@ -51,6 +51,15 @@ class EmployeeResultSet extends React.Component {
         cellClass: "text-left"
       },
       {
+        key: 'userId',
+        name: 'User Id',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+      },
+      {
         key: 'userName',
         name: 'User Name',
         sortable: true,
@@ -145,6 +154,7 @@ class EmployeeResultSet extends React.Component {
         employeeName: employees[i].EmployeeName,
         role: employees[i].Role,
         totalEmployees: employees[i].TotalEmployees,
+        userId: employees[i].UserId,
         userName: employees[i].UserName,
         testCol: employees[i].TestCol || "N/A"
       });

@@ -96,7 +96,7 @@
 			{
 				"value": "id",
 				"type": "int",
-				"label": "Employee Id",
+				"label": "User Id",
 				"validation": "isEmpty",
 				"field": "USER_ID"
 			},
@@ -195,21 +195,21 @@
 			{
 				"value": "photo",
 				"type": "text",
-				"label": "Photo",
+				"label": "Has Photo",
 				"validation": "isEmpty",
 				"field": "PHOTO"
 			},
 			{
 				"value": "qrcode",
 				"type": "text",
-				"label": "QR Code",
+				"label": "Has QR Code",
 				"validation": "isEmpty",
 				"field": "QR_CODE"
 			},
 			{
 				"value": "department",
 				"type": "text",
-				"label": "Department",
+				"label": "Has Department",
 				"validation": "isEmpty",
 				"field": "DEPARTMENT"
 			}

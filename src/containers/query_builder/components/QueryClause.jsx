@@ -462,7 +462,7 @@ class QueryClause extends PureComponent {
         const { cookies } = this.props;
 
         let payLoad = {"Fields": requestData,
-                    "ColumnList":["EMPLOYEE_NAME","ROLE","USERNAME","ALTERNATE_USERNAME","TOTAL_EMPLOYEES","EMAIL"]};
+                    "ColumnList":["EMPLOYEE_NAME","ROLE","USER_ID","USERNAME","ALTERNATE_USERNAME","TOTAL_EMPLOYEES","EMAIL"]};
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
