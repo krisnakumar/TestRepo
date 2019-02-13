@@ -49,7 +49,7 @@ class OQDashboard extends PureComponent {
     this.heads = [
       {
         key: 'company',
-        name: 'Company',
+        name: 'Demo OQ Contractor',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

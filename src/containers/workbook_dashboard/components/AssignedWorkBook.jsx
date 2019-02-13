@@ -58,7 +58,7 @@ class AssignedWorkBook extends React.Component {
       },
       {
         key: 'workbookName',
-        name: 'Workbook Name',
+        name: 'Workbook',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

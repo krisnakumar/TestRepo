@@ -208,7 +208,7 @@ p.topbar__avatar-name {
   display: flex;
   padding: 9px 20px;
   transition: all 0.3s;
-  height: 32px;
+  min-height: 32px;
   width: 100%;
   position: relative;
   cursor: pointer;

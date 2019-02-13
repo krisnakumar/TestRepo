@@ -69,18 +69,18 @@
                 "href": "/MyReports.aspx"
             },
             {
-                "name": "Employee Reports",
+                "name": "Workbook Dashboard",
                 "href": "/EmployeeReports",
+                "isRedirect":false
+            },
+            {
+                "name": "Contractor OQ Dashboard",
+                "href": "/OQDashboard",
                 "isRedirect":false
             },
             {
                 "name": "Query Builder",
                 "href": "/QueryBuilder",
-                "isRedirect":false
-            },
-            {
-                "name": "OQ Dashboard",
-                "href": "/OQDashboard",
                 "isRedirect":false
             }
         ],

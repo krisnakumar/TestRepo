@@ -79,7 +79,7 @@ class WorkBookRepetition extends React.Component {
       },
       {
         key: 'evaluator',
-        name: 'Evaluator',
+        name: 'Submitted By',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
