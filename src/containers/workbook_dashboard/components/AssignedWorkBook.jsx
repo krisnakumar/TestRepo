@@ -50,7 +50,7 @@ class AssignedWorkBook extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 300,
+        width: 180,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -59,6 +59,7 @@ class AssignedWorkBook extends React.Component {
       {
         key: 'workbookName',
         name: 'Workbook',
+        width: 500,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -68,6 +69,7 @@ class AssignedWorkBook extends React.Component {
       {
         key: 'completedTasks',
         name: 'Completed / Total Tasks',
+        width: 180,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -77,6 +79,7 @@ class AssignedWorkBook extends React.Component {
       {
         key: 'percentageCompleted',
         name: 'Percentage Completed',
+        width: 180,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -86,6 +89,7 @@ class AssignedWorkBook extends React.Component {
       {
         key: 'dueDate',
         name: 'Due Date',
+        width: 100,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

@@ -56,7 +56,7 @@ class MyEmployees extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 200,
+        width: 180,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.employeeFormatter,
@@ -65,6 +65,7 @@ class MyEmployees extends React.Component {
       {
         key: 'role',
         name: 'Role',
+        width: 150,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

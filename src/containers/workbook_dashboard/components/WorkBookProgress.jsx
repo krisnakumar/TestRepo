@@ -48,7 +48,7 @@ class WorkBookProgress extends React.Component {
         key: 'taskCode',
         name: 'Task Code',
         sortable: true,
-        width: 300,
+        width: 200,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -57,6 +57,7 @@ class WorkBookProgress extends React.Component {
       {
         key: 'taskName',
         name: 'Task Name',
+        width: 300,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

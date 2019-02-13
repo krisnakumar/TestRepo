@@ -50,7 +50,7 @@ class WorkBookComingDue extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 300,
+        width: 180,
         editable: false,        
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -60,6 +60,7 @@ class WorkBookComingDue extends React.Component {
         key: 'role',
         name: 'Role',
         sortable: true,
+        width: 150,
         editable: false,        
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -67,6 +68,7 @@ class WorkBookComingDue extends React.Component {
       },
       {
         key: 'workbookName',
+        width: 450,
         name: 'Workbook',
         sortable: true,
         editable: false,
@@ -78,6 +80,7 @@ class WorkBookComingDue extends React.Component {
         key: 'percentageCompleted',
         name: 'Percentage Completed',
         sortable: true,
+        width: 180,
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.workbookFormatter("percentageCompleted", props),
@@ -87,11 +90,12 @@ class WorkBookComingDue extends React.Component {
         key: 'dueDate',
         name: 'Due Date',
         sortable: true,
+        width: 180,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center last-column"
-      },
+      }
     ];
 
     this.employees = [];

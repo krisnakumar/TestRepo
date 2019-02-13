@@ -43,7 +43,8 @@ class WorkBookRepetition extends React.Component {
     this.heads = [
       {
         key: 'attempt',
-        name: 'Attempt',
+        name: 'Attempt(s)',
+        width: 100,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -72,6 +73,7 @@ class WorkBookRepetition extends React.Component {
         key: 'location',
         name: 'Location',
         sortable: true,
+        width: 350,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,

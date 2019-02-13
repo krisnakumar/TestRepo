@@ -40,7 +40,7 @@ class WorkBookCompleted extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 300,
+        width: 180,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -48,6 +48,7 @@ class WorkBookCompleted extends React.Component {
       },
       {
         key: 'role',
+        width: 200,
         name: 'Role',
         sortable: true,
         editable: false,
@@ -58,6 +59,7 @@ class WorkBookCompleted extends React.Component {
       {
         key: 'workbookName',
         name: 'Workbook',
+        width: 550,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -68,6 +70,7 @@ class WorkBookCompleted extends React.Component {
         key: 'completionDate',
         name: 'Completion Date',
         sortable: true,
+        width: 150,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
