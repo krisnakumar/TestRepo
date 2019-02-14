@@ -154,6 +154,12 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
         public APIGatewayProxyResponse RenameQuery(string requestBody, int companyId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();

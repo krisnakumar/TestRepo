@@ -198,5 +198,9 @@ namespace ReportBuilderAPI.Utilities
         public const string TASK = "TASK";
         public const string WORKBOOK = "WORKBOOK";
         public const string EMPLOYEE = "EMPLOYEE";
+
+
+        public const string YES = "YES";
+        public const string NO = "NO";
     }
 }

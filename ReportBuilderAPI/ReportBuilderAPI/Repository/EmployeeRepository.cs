@@ -289,6 +289,7 @@ namespace ReportBuilderAPI.Repository
             Constants.PAST_DUE,
             Constants.SUPERVISOR_USER,
             Constants.NOT_SUPERVISORID,
+            Constants.SUPERVISOR_ID,
             Constants.IN_DUE,
             Constants.IN_COMPLETE,
             Constants.ME,
@@ -308,7 +309,7 @@ namespace ReportBuilderAPI.Repository
             string queryString = string.Empty;
             try
             {
-                if (!workbookFieldList.Contains(field.ToUpper()) && value.ToUpper() != Constants.NULL)
+                if (!workbookFieldList.Contains(field.ToUpper()) && value.ToUpper() != Constants.YES && value.ToUpper() != Constants.NO)
                 {
                     switch (operatorName.ToUpper())
                     {
@@ -346,7 +347,9 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly List<string> valueList = new List<string>
         {
-            Constants.NULL
+            Constants.NULL,
+            Constants.YES,
+            Constants.NO
         };
 
 
@@ -365,15 +368,11 @@ namespace ReportBuilderAPI.Repository
                 {
                     switch (value.ToUpper())
                     {
-                        case Constants.NULL:
-                            if (fieldOperator == "=")
-                            {
-                                customizedValue = " IS NULL";
-                            }
-                            if (fieldOperator == "!=")
-                            {
-                                customizedValue = " IS NOT NULL";
-                            }
+                        case Constants.YES:
+                            customizedValue = " IS NULL";
+                            break;
+                        case Constants.NO:
+                            customizedValue = " IS NOT NULL";
                             break;
                         default:
                             break;

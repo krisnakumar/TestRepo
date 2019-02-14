@@ -304,9 +304,29 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             {
                 return queryRepository.GetUserQueries(request.Body, RequestReader.GetCompanyId(request));
             }
-            catch (Exception saveQueryException)
+            catch (Exception getQueryException)
             {
-                LambdaLogger.Log(saveQueryException.ToString());
+                LambdaLogger.Log(getQueryException.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+        /// <summary>
+        ///     Rename the existing query based on the query Id and UserId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse RenameQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            try
+            {
+                return queryRepository.RenameQuery(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception renameQueryException)
+            {
+                LambdaLogger.Log(renameQueryException.ToString());
                 return ResponseBuilder.InternalError();
             }
         }
