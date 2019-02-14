@@ -34,43 +34,43 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
     public class PastDueWorkbooks
     {
         
-        /// <summary> 
-        /// Test to get past due workbooks list for a user
-        /// [Inputs]        userId is correctly given
-        /// [Expectations]  A well defined response with list of wokrbooks and success code
-        /// [Assertions]    Success response code as 200
-        ///                 Response contains list of workbooks
-        /// </summary>
-        [TestMethod]
-        public void GetDueWorkbookList()
-        {
-            Function function = new Function();
-            var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
-            var workbookResponse = function.GetPastDueWorkbookDetails(APIRequest, null);
-            string responseWorkBooks = Convert.ToString(workbookResponse.Body);
-            List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);
-            Assert.AreEqual(200, workbookResponse.StatusCode);
-            Assert.AreNotEqual(0, wblist.Count);
-        }
+        ///// <summary> 
+        ///// Test to get past due workbooks list for a user
+        ///// [Inputs]        userId is correctly given
+        ///// [Expectations]  A well defined response with list of wokrbooks and success code
+        ///// [Assertions]    Success response code as 200
+        /////                 Response contains list of workbooks
+        ///// </summary>
+        //[TestMethod]
+        //public void GetDueWorkbookList()
+        //{
+        //    Function function = new Function();
+        //    var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
+        //    var workbookResponse = function.GetPastDueWorkbookDetails(APIRequest, null);
+        //    string responseWorkBooks = Convert.ToString(workbookResponse.Body);
+        //    List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);
+        //    Assert.AreEqual(200, workbookResponse.StatusCode);
+        //    Assert.AreNotEqual(0, wblist.Count);
+        //}
         
-        /// <summary> 
-        /// Test to get past due workbooks list for a user
-        /// [Inputs]        userId is given, which does not have any past due workbooks
-        /// [Expectations]  An empty response with success code
-        /// [Assertions]    Success response code as 200
-        ///                 An empty response
-        /// </summary>
-        [TestMethod]
-        public void GetDueWorkbookForUnsubscribedUser()
-        {
-            Function function = new Function();
-            var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
-            var workbookResponse = function.GetPastDueWorkbookDetails(APIRequest, null);
-            string responseWorkBooks = Convert.ToString(workbookResponse.Body);
-            List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);
-            Assert.AreEqual(200, workbookResponse.StatusCode);
-            Assert.IsFalse(wblist.Count > 0, "Empty response");
-        }
+        ///// <summary> 
+        ///// Test to get past due workbooks list for a user
+        ///// [Inputs]        userId is given, which does not have any past due workbooks
+        ///// [Expectations]  An empty response with success code
+        ///// [Assertions]    Success response code as 200
+        /////                 An empty response
+        ///// </summary>
+        //[TestMethod]
+        //public void GetDueWorkbookForUnsubscribedUser()
+        //{
+        //    Function function = new Function();
+        //    var APIRequest = RequestBuilder.PathParamsRequest("userId", "6");
+        //    var workbookResponse = function.GetPastDueWorkbookDetails(APIRequest, null);
+        //    string responseWorkBooks = Convert.ToString(workbookResponse.Body);
+        //    List<WorkbookResponse> wblist = JsonConvert.DeserializeObject<List<WorkbookResponse>>(responseWorkBooks);
+        //    Assert.AreEqual(200, workbookResponse.StatusCode);
+        //    Assert.IsFalse(wblist.Count > 0, "Empty response");
+        //}
         
         /// <summary> 
         /// Test to get  past due workbooks list for a user

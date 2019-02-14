@@ -385,37 +385,37 @@ namespace ReportBuilder.UnitTest.TestModules.Employees
         [TestMethod]
         public void RequestWithoutColumnList()
         {
-            List<EmployeeModel> employeeList = new List<EmployeeModel>();
-            Function function = new Function();
+            //List<EmployeeModel> employeeList = new List<EmployeeModel>();
+            //Function function = new Function();
 
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                Fields = employeeList
-            };
+            //QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            //{
+            //    Fields = employeeList
+            //};
 
-            EmployeeModel employeeModel1 = new EmployeeModel
-            {
-                Name = Constants.USERID,
-                Value = "7",
-                Operator = ">="
-            };
-            employeeList.Add(employeeModel1);
+            //EmployeeModel employeeModel1 = new EmployeeModel
+            //{
+            //    Name = Constants.USERID,
+            //    Value = "7",
+            //    Operator = ">="
+            //};
+            //employeeList.Add(employeeModel1);
 
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+            //Dictionary<string, string> pathValues = new Dictionary<string, string>
+            //{
+            //    { "companyId", "6" }
+            //};
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
-            APIGatewayProxyResponse usersResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
-            ErrorResponse empResponse = JsonConvert.DeserializeObject<ErrorResponse>(usersResponse.Body);
-            Assert.AreEqual(500, usersResponse.StatusCode);
-            Assert.IsTrue(empResponse.Code == 33);
-            StringAssert.Matches(empResponse.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
+            //APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            //{
+            //    Body = JsonConvert.SerializeObject(employeeRequest),
+            //    PathParameters = pathValues
+            //};
+            //APIGatewayProxyResponse usersResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
+            //ErrorResponse empResponse = JsonConvert.DeserializeObject<ErrorResponse>(usersResponse.Body);
+            //Assert.AreEqual(500, usersResponse.StatusCode);
+            //Assert.IsTrue(empResponse.Code == 33);
+            //StringAssert.Matches(empResponse.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
         }
     }
 }
