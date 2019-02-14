@@ -115,6 +115,33 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Query Name already exist! Please select different one!.
+        /// </summary>
+        internal static string RENAME_QUERY_ERROR {
+            get {
+                return ResourceManager.GetString("RENAME_QUERY_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query name has been updated successfully!.
+        /// </summary>
+        internal static string RENAME_SUCCESS_MESSAGE {
+            get {
+                return ResourceManager.GetString("RENAME_SUCCESS_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query has been saved successfully!.
+        /// </summary>
+        internal static string SAVE_QUERY_SUCCESS_MESSAGE {
+            get {
+                return ResourceManager.GetString("SAVE_QUERY_SUCCESS_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd.
         /// </summary>
         internal static string SECRET_KEY {

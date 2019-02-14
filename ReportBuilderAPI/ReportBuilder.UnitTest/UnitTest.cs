@@ -61,25 +61,25 @@ namespace ReportBuilder.UnitTest
         public void GetEmployeeList()
         {
 
-            Function function = new Function();
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "userId", "6" }
+            //Function function = new Function();
+            //Dictionary<string, string> pathValues = new Dictionary<string, string>
+            //{
+            //    { "userId", "6" }
 
-            };
+            //};
 
-            Dictionary<string, string> query = new Dictionary<string, string>
-            {
-                { "param", "accepteddate=20/11/2017 and storypoints<= 3 or severity=High" }
+            //Dictionary<string, string> query = new Dictionary<string, string>
+            //{
+            //    { "param", "accepteddate=20/11/2017 and storypoints<= 3 or severity=High" }
 
-            };
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                PathParameters = pathValues,
-                QueryStringParameters = query
-            };
-            APIGatewayProxyResponse userResponse = function.GetEmployees(aPIGatewayProxyRequest, null);
-            Assert.AreEqual(200, userResponse.StatusCode);
+            //};
+            //APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            //{
+            //    PathParameters = pathValues,
+            //    QueryStringParameters = query
+            //};
+            //APIGatewayProxyResponse userResponse = function.GetEmployees(aPIGatewayProxyRequest, null);
+            //Assert.AreEqual(200, userResponse.StatusCode);
         }
 
 
@@ -208,6 +208,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"SUPERVISOR_ID\",\"EMPLOYEE_NAME\",\"ROLE\",\"ASSIGNED_WORKBOOK\",\"WORKBOOK_DUE\",\"PAST_DUE_WORKBOOK\",\"COMPLETED_WORKBOOK\",\"TOTAL_EMPLOYEES\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -266,7 +267,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":98,\"Operator\":\"=\"},{\"Name\":\"USER_ID\",\"Value\":98,\"Operator\":\"=\",\"Bitwise\":\"and\"}],\"ColumnList\":[\"USER_ID\",\"WORKBOOK_ID\",\"ROLE\",\"EMPLOYEE_NAME\",\"WORKBOOK_NAME\",\"COMPLETED_TASK\",\"TOTAL_TASK\",\"DUE_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"USER_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"COMPANY_NAME\",\"COMPANY_ID\",\"ASSIGNED_COMPANY_QUALIFICATION\",\"COMPLETED_COMPANY_QUALIFICATION\",\"IN_COMPLETE_COMPANY_QUALIFICATION\",\"PAST_DUE_COMPANY_QUALIFICATION\",\"IN_DUE_COMPANY_QUALIFICATION\",\"TOTAL_COMPANY_EMPLOYEES\"]}";
 
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -311,7 +312,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":98,\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"ASSIGNED_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"PAST_DUE\",\"Value\":\"30\",\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"COURSE_EXPIRATION_DATE\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -362,5 +363,94 @@ namespace ReportBuilder.UnitTest
             Assert.AreNotEqual("", userResponse[0].Role);
             Assert.AreNotEqual("", userResponse[0].UserName);
         }
+
+
+        /// </summary>
+        [TestMethod]
+        public void SaveQuery()
+        {
+            //List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            //Function function = new Function();
+            //QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            //{
+            //    ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+            //    Fields = employeeList,
+            //    EntityName = Constants.EMPLOYEE,
+            //    QueryName = "Shoba"
+            //};
+
+            //EmployeeModel employeeModel = new EmployeeModel
+            //{
+            //    Name = Constants.USER_CREATED_DATE,
+            //    Value = "04/02/1990 and 04/02/2019",
+            //    Operator = "Between"
+            //};
+            //EmployeeModel employeeModel2 = new EmployeeModel
+            //{
+            //    Name = Constants.USERID,
+            //    Value = "6",
+            //    Operator = "=",
+            //    Bitwise = "and"
+            //};
+
+            //employeeList.Add(employeeModel);
+            //employeeList.Add(employeeModel2);
+
+            //APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            //{
+            //    Body = JsonConvert.SerializeObject(employeeRequest)
+            //};
+
+            //APIGatewayProxyResponse userResponse = function.SaveQuery(aPIGatewayProxyRequest, null);
+
+            //Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
+        /// </summary>
+        [TestMethod]
+        public void GetQuery()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
+
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                Fields = employeeList,
+                EntityName = Constants.EMPLOYEE,
+                QueryName = "Shoba"
+            };
+
+           
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
+            };
+
+         
+            employeeList.Add(employeeModel2);
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters=pathValues
+            };
+
+            APIGatewayProxyResponse userResponse = function.GetQuery(aPIGatewayProxyRequest, null);
+
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
     }
 }

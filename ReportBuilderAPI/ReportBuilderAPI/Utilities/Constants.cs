@@ -192,5 +192,11 @@ namespace ReportBuilderAPI.Utilities
         public const string DIRECT_SUBORDINATES = "DIRECT_SUBORDINATES";
         public const string ALL_SUBORDINATES = "ALL_SUBORDINATES";
         public const string ME_AND_ALL_SUBORDINATES = "ME_AND_ALL_SUBORDINATES";
+
+
+        //List of entities
+        public const string TASK = "TASK";
+        public const string WORKBOOK = "WORKBOOK";
+        public const string EMPLOYEE = "EMPLOYEE";
     }
 }

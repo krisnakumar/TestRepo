@@ -275,7 +275,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN UserCompany uc on uc.UserId= uwb.UserId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((u.Id)) AND wbs.WorkBookId=wb.id ),0)) AS TotalTasks"},
 
-                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN UserCompany uc on uc.UserId=ss.UserId   WHERE ss.userId IN (select * from getchildusers(u.Id)) and uc.companyId=@companyId) AS TotalEmployees"},
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId = u.Id and uc.companyId=@companyId) AS TotalEmployees"},
 
 
                 { Constants.COMPLETED_WORKBOOK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN UserCompany uc on uc.UserId= uwb.UserId JOIN WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND (SELECT SUM(www.NumberCompleted) FROM WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedWorkbooks"},
@@ -346,25 +346,20 @@ namespace ReportBuilderAPI.Repository
 
         };
 
-
-
         /// <summary>
-        ///     Get list of workbook(s) based on input field and column(s) for specific company [QueryBuilder]
+        /// Create SQL Query for the workbook based on the request
         /// </summary>
-        /// <param name="requestBody"></param>
+        /// <param name="queryRequest"></param>
         /// <param name="companyId"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
+        /// <returns>string</returns>
+        public string CreateWorkbookQuery(QueryBuilderRequest queryRequest, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty, dueDays = string.Empty;
-            List<WorkbookResponse> workbookDetails;
-            List<string> fieldList = new List<string>();
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, companyQuery = string.Empty, supervisorId = string.Empty;
             EmployeeRepository employeeRepository = new EmployeeRepository();
-            Dictionary<string, string> parameterList;
+            List<string> fieldList = new List<string>();
             try
             {
                 selectQuery = "SELECT  DISTINCT ";
-                QueryBuilderRequest queryRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
 
                 //getting column List
                 query = string.Join("", (from column in workbookColumnList
@@ -385,20 +380,18 @@ namespace ReportBuilderAPI.Repository
 
                 query += tableJoin;
 
+                //Read the supervisorId based on the request
                 supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault());
-                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
-
-                if (string.IsNullOrEmpty(dueDays))
-                    dueDays = "30";
+            
                 if (queryRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
                 {
                     queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_SUB : x.Name).ToList();
                 }
                 else
                 {
-                    if(!string.IsNullOrEmpty(supervisorId))
+                    if (!string.IsNullOrEmpty(supervisorId))
                     {
-                        queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID && x.Operator=="!=" ? x.Name = Constants.NOT_SUPERVISORID: x.Name).ToList();
+                        queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID && x.Operator == "!=" ? x.Name = Constants.NOT_SUPERVISORID : x.Name).ToList();
                     }
                 }
 
@@ -409,7 +402,7 @@ namespace ReportBuilderAPI.Repository
                     queryRequest.Fields.Remove(userDetails);
                     queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
                 }
-                
+
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryRequest.Fields
@@ -418,12 +411,48 @@ namespace ReportBuilderAPI.Repository
 
                 companyQuery = (" WHERE  uc.CompanyId=" + companyId);
 
-                if(queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))
+                if (queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))
                 {
                     whereQuery += "AND uwb.isEnabled=1";
                 }
                 query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
+                return query;
+            }
+            catch (Exception createWorkbookQueryException)
+            {
+                LambdaLogger.Log(createWorkbookQueryException.ToString());
+                return string.Empty;
+            }
+        }
 
+        /// <summary>
+        ///     Get list of workbook(s) based on input field and column(s) for specific company [QueryBuilder]
+        /// </summary>
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int companyId)
+        {
+            string query = string.Empty, supervisorId = string.Empty, dueDays = string.Empty;
+            List<WorkbookResponse> workbookDetails;  
+            Dictionary<string, string> parameterList;
+            try
+            {
+
+                QueryBuilderRequest queryRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault());
+                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
+
+                query = CreateWorkbookQuery(queryRequest, companyId);
+                //Read the SQL Parameters value
+            
+
+                if (string.IsNullOrEmpty(dueDays))
+                {
+                    dueDays = "30";
+                }
+
+                //Create the dictionary to pass the parameter value
                 parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "duedays", Convert.ToString(dueDays) } };
 
                 workbookDetails = ReadWorkBookDetails(query, parameterList);
@@ -470,14 +499,14 @@ namespace ReportBuilderAPI.Repository
                             WorkBookId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Id'").Count() == 1) ? (int?)(sqlDataReader["Id"]) : null,
                             LastSignoffBy = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
 
-                            WorkbookAssignedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+                            WorkbookAssignedDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
                             Repetitions = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Repetitions'").Count() == 1) ? Convert.ToString((sqlDataReader["Repetitions"])) : null,
 
-                            FirstAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
+                            FirstAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
-                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy hh:mm:ss tt") : default(DateTime).ToString("MM/dd/yyyy hh:mm:ss tt") : null,
-                                                                       
+                            LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+
                             NumberCompleted = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'NumberCompleted'").Count() == 1) ? (int?)(sqlDataReader["NumberCompleted"]) : null,
                             Role = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString((sqlDataReader["Role"])) : null,
                             CompletedWorkbook = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["CompletedWorkbooks"]) : null,
@@ -500,11 +529,11 @@ namespace ReportBuilderAPI.Repository
                             UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'UserId'").Count() == 1) ? (int?)(sqlDataReader["UserId"]) : null,
 
                             DueDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'DueDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DueDate"])) ? Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-     
-                            CompletedTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? Convert.ToString((sqlDataReader["CompletedTasks"])) : null
-                           
 
-                            
+                            CompletedTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? Convert.ToString((sqlDataReader["CompletedTasks"])) : null
+
+
+
                         };
                         // Adding each workbook details in array list
                         workbookList.Add(workbookResponse);

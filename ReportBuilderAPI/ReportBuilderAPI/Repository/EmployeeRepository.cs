@@ -198,21 +198,19 @@ namespace ReportBuilderAPI.Repository
         };
 
         /// <summary>
-        ///     Get employee(s) details based on provided companyId [QueryBuilder]
+        ///  Generate the employee query based on the query fields
         /// </summary>
         /// <param name="requestBody"></param>
         /// <param name="companyId"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetEmployeeDetails(string requestBody, int companyId)
+        /// <returns>string</returns>
+        public string CreateEmployeeQuery(QueryBuilderRequest employeeRequest, int companyId)
         {
-            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
-            List<EmployeeResponse> employeeResponse;
             List<string> fieldList = new List<string>();
             try
             {
                 selectQuery = "SELECT  ";
-                QueryBuilderRequest employeeRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                
 
                 //getting column List
                 query = string.Join("", (from column in columnList
@@ -228,7 +226,6 @@ namespace ReportBuilderAPI.Repository
                 tableJoin = string.Join("", from joins in tableJoins
                                             where fieldList.Any(x => joins.Value.Any(y => y == x))
                                             select joins.Key);
-
                 query += tableJoin;
 
                 //getting where conditions
@@ -238,6 +235,30 @@ namespace ReportBuilderAPI.Repository
 
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 query += whereQuery + " )";
+                return query;
+            }
+            catch (Exception createEmployeeQueryException)
+            {
+                LambdaLogger.Log(createEmployeeQueryException.ToString());
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///     Get employee(s) details based on provided companyId [QueryBuilder]
+        /// </summary>
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetEmployeeDetails(string requestBody, int companyId)
+        {
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            string query = string.Empty;
+            List<EmployeeResponse> employeeResponse;
+            try
+            {
+                QueryBuilderRequest employeeRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                query = CreateEmployeeQuery(employeeRequest, companyId);
                 employeeResponse = ReadEmployeeDetails(query);
                 if (employeeResponse != null)
                 {
@@ -267,7 +288,6 @@ namespace ReportBuilderAPI.Repository
             Constants.WORKBOOK_IN_DUE,
             Constants.PAST_DUE,
             Constants.SUPERVISOR_USER,
-            Constants.SUPERVISOR_ID,
             Constants.NOT_SUPERVISORID,
             Constants.IN_DUE,
             Constants.IN_COMPLETE,

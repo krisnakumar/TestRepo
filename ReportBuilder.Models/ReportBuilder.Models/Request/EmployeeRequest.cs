@@ -1,4 +1,5 @@
 ﻿using ReportBuilder.Models.Models;
+using System;
 using System.Collections.Generic;
 
 
@@ -18,6 +19,9 @@ namespace ReportBuilder.Models.Request
     {
         public List<EmployeeModel> Fields { get; set; }
         public string[] ColumnList { get; set; }
+        public string QueryName { get; set; }
+        public string EntityName { get; set; }
 
+        public string QueryId { get; set; }
     }
 }

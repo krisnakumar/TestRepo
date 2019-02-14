@@ -269,5 +269,46 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             }
         }
 
+
+        /// <summary>
+        ///    Save Query 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse SaveQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            try
+            {
+                return queryRepository.SaveQuery(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception saveQueryException)
+            {
+                LambdaLogger.Log(saveQueryException.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
+        /// <summary>
+        ///     Get list of queries based on the userId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            try
+            {
+                return queryRepository.GetUserQueries(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception saveQueryException)
+            {
+                LambdaLogger.Log(saveQueryException.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
     }
 }

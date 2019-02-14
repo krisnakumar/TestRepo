@@ -135,6 +135,15 @@
   <data name="PERMISSION_DENIED" xml:space="preserve">
     <value>Permission denied</value>
   </data>
+  <data name="RENAME_QUERY_ERROR" xml:space="preserve">
+    <value>Query Name already exist! Please select different one!</value>
+  </data>
+  <data name="RENAME_SUCCESS_MESSAGE" xml:space="preserve">
+    <value>Query name has been updated successfully!</value>
+  </data>
+  <data name="SAVE_QUERY_SUCCESS_MESSAGE" xml:space="preserve">
+    <value>Query has been saved successfully!</value>
+  </data>
   <data name="SECRET_KEY" xml:space="preserve">
     <value>pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd</value>
   </data>
