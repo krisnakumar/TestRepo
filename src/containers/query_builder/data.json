@@ -9,6 +9,68 @@
 			"label": "OR"
 		}
 	],
+	"params": {
+		"NONE": [
+			{
+				"value": "NONE",
+				"label": "None"
+			}
+		],
+		"user": [
+			{
+				"value": "ME",
+				"label": "@Me"
+			},
+			{
+				"value": "ME_AND_DIRECT_SUBORDINATES",
+				"label": "@Me and Direct Subordinates"
+			},
+			{
+				"value": "DIRECT_SUBORDINATES",
+				"label": "@Direct Subordinates"
+			}
+		],
+		"role": [
+			{
+				"value": "admin",
+				"label": "Admin"
+			},
+			{
+				"value": "contractor",
+				"label": "Contractor"
+			},
+			{
+				"value": "evaluator",
+				"label": "Evaluator"
+			},
+			{
+				"value": "sectionManager",
+				"label": "Section Manager"
+			},
+			{
+				"value": "student",
+				"label": "Student"
+			},
+			{
+				"value": "supervisor",
+				"label": "Supervisor"
+			},
+			{
+				"value": "systemAdmin",
+				"label": "System Admin"
+			}
+		],
+		"bool": [
+			{
+				"value": "YES",
+				"label": "Yes"
+			},
+			{
+				"value": "NO",
+				"label": "No"
+			}
+		]
+	},
 	"operator": {
 		"others": [
 			{
@@ -37,7 +99,7 @@
 				"value": ">=",
 				"label": "Greater Than or Equal To"
 			}
-		],	
+		],
 		"text": [
 			{
 				"value": "=",
@@ -98,6 +160,8 @@
 				"type": "int",
 				"label": "User Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "USER_ID"
 			},
 			{
@@ -105,6 +169,8 @@
 				"type": "text",
 				"label": "User Name",
 				"validation": "isEmpty",
+				"smartParam": "user",
+				"hasSmartParams": true,
 				"field": "USERNAME"
 			},
 			{
@@ -112,6 +178,8 @@
 				"type": "text",
 				"label": "User Name 2",
 				"validation": "isEmpty",
+				"smartParam": "user",
+				"hasSmartParams": true,
 				"field": "USERNAME2"
 			},
 			{
@@ -120,6 +188,8 @@
 				"label": "Date Created",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "USER_CREATED_DATE"
 			},
 			{
@@ -127,6 +197,8 @@
 				"type": "text",
 				"label": "First Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "FIRSTNAME"
 			},
 			{
@@ -134,6 +206,8 @@
 				"type": "text",
 				"label": "Middle Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "MIDDLENAME"
 			},
 			{
@@ -141,6 +215,8 @@
 				"type": "text",
 				"label": "Last Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "LASTNAME"
 			},
 			{
@@ -148,6 +224,8 @@
 				"type": "text",
 				"label": "Email",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "EMAIL"
 			},
 			{
@@ -155,6 +233,8 @@
 				"type": "text",
 				"label": "City",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "CITY"
 			},
 			{
@@ -162,6 +242,8 @@
 				"type": "text",
 				"label": "State",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "STATE"
 			},
 			{
@@ -169,6 +251,8 @@
 				"type": "int",
 				"label": "Zip",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "ZIP"
 			},
 			{
@@ -176,6 +260,8 @@
 				"type": "int",
 				"label": "Phone",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "PHONE"
 			},
 			{
@@ -183,6 +269,8 @@
 				"type": "int",
 				"label": "Supervisor Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "SUPERVISOR_ID"
 			},
 			{
@@ -190,6 +278,8 @@
 				"type": "text",
 				"label": "Role",
 				"validation": "isEmpty",
+				"smartParam": "role",
+				"hasSmartParams": true,
 				"field": "ROLE"
 			},
 			{
@@ -197,6 +287,8 @@
 				"type": "text",
 				"label": "Has Photo",
 				"validation": "isEmpty",
+				"smartParam": "bool",
+				"hasSmartParams": true,
 				"field": "PHOTO"
 			},
 			{
@@ -204,6 +296,8 @@
 				"type": "text",
 				"label": "Has QR Code",
 				"validation": "isEmpty",
+				"smartParam": "bool",
+				"hasSmartParams": true,
 				"field": "QR_CODE"
 			},
 			{
@@ -211,6 +305,8 @@
 				"type": "text",
 				"label": "Has Department",
 				"validation": "isEmpty",
+				"smartParam": "bool",
+				"hasSmartParams": true,
 				"field": "DEPARTMENT"
 			}
 		],
@@ -220,6 +316,8 @@
 				"type": "text",
 				"label": "Workbook Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "WORKBOOK_NAME"
 			},
 			{
@@ -227,6 +325,8 @@
 				"type": "int",
 				"label": "Workbook Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "WORKBOOK_ID"
 			},
 			{
@@ -234,6 +334,8 @@
 				"type": "text",
 				"label": "Description",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "DESCRIPTION"
 			},
 			{
@@ -242,6 +344,8 @@
 				"label": "Date Created",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "WORKBOOK_CREATED"
 			},
 			{
@@ -249,6 +353,8 @@
 				"type": "text",
 				"label": "IsEnabled",
 				"validation": "isEmpty",
+				"smartParam": "bool",
+				"hasSmartParams": true,
 				"field": "WORKBOOK_ISENABLED"
 			},
 			{
@@ -256,6 +362,8 @@
 				"type": "int",
 				"label": "Days to complete",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "DAYS_TO_COMPLETE"
 			},
 			{
@@ -263,6 +371,8 @@
 				"type": "text",
 				"label": "Assigned To",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "ASSIGNED_TO"
 			},
 			{
@@ -270,6 +380,8 @@
 				"type": "text",
 				"label": "Created By",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "WORKBOOK_CREATED_BY"
 			},
 			{
@@ -278,6 +390,8 @@
 				"label": "Due Date ",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "DUE_DATE"
 			},
 			{
@@ -285,6 +399,8 @@
 				"type": "int",
 				"label": "Supervisor Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "SUPERVISOR_ID"
 			},
 			{
@@ -292,6 +408,8 @@
 				"type": "int",
 				"label": "User Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "USER_ID"
 			}
 		],
@@ -301,6 +419,8 @@
 				"type": "text",
 				"label": "Task Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "TASK_NAME"
 			},
 			{
@@ -308,6 +428,8 @@
 				"type": "int",
 				"label": "Task Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "TASK_ID"
 			},
 			{
@@ -315,6 +437,8 @@
 				"type": "date",
 				"label": "Task Created Date",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"placeholder": "MM/DD/YYYY",
 				"field": "TASK_CREATED"
 			},
@@ -323,6 +447,8 @@
 				"type": "date",
 				"label": "Attempt Date",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"placeholder": "MM/DD/YYYY",
 				"field": "ATTEMPT_DATE"
 			},
@@ -331,6 +457,8 @@
 				"type": "int",
 				"label": "User Id",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "USER_ID"
 			},
 			{
@@ -338,6 +466,8 @@
 				"type": "text",
 				"label": "Evaluator Name",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "EVALUATOR_NAME"
 			},
 			{
@@ -345,6 +475,8 @@
 				"type": "date",
 				"label": "Date Taken",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"placeholder": "MM/DD/YYYY",
 				"field": "DATE_TAKEN"
 			},
@@ -353,6 +485,8 @@
 				"type": "text",
 				"label": "Status",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "STATUS"
 			},
 			{
@@ -360,6 +494,8 @@
 				"type": "text",
 				"label": "Created By",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "CREATED_BY"
 			},
 			{
@@ -367,6 +503,8 @@
 				"type": "text",
 				"label": "Deleted By",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "DELETED_BY"
 			},
 			{
@@ -374,6 +512,8 @@
 				"type": "int",
 				"label": "By Repetitions Count",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "REPETITIONS_COUNT"
 			},
 			{
@@ -381,6 +521,8 @@
 				"type": "text",
 				"label": "Location",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "LOCATION"
 			},
 			{
@@ -388,6 +530,8 @@
 				"type": "text",
 				"label": "City",
 				"validation": "isEmpty",
+				"smartParam": "NONE",
+				"hasSmartParams": false,
 				"field": "CITY"
 			}
 		]

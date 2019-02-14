@@ -27,6 +27,10 @@ import FieldData from './../data';
 import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
 import * as Constants from '../../../shared/constants';
+import SelectPlus from 'react-select-plus';
+
+// Be sure to include styles at some point, probably during your bootstrapping
+import 'react-select-plus/dist/react-select-plus.css';
 
 class QueryClause extends PureComponent {
 
@@ -45,16 +49,25 @@ class QueryClause extends PureComponent {
             fieldData: this.props.fieldData || [],
             formattedData: this.formatRowData(this.props.fieldData || []),
             validation: this.validator.valid(),
-            entity: this.props.entity
+            entity: this.props.entity,
+            options: [
+                { value: 'ME', label: '@Me' },
+                { value: 'myEmployee', label: '@MyEmployee' },
+                { value: 'mySupervisor', label: '@MySupervisor' }
+            ],
+            multi: false,
+            multiValue: [],
         };
-        
+
         this.submitted = false;
 
-        this.handleChange = this.handleChange.bind(this); 
-        this.handleInputChange = this.handleInputChange.bind(this); 
-        this.handleAddClause = this.handleAddClause.bind(this);        
+        this.handleChange = this.handleChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleAddClause = this.handleAddClause.bind(this);
         this.handleDeleteClause = this.handleDeleteClause.bind(this);
-        this.onOpenClose = this.onOpenClose.bind(this); 
+        this.onOpenClose = this.onOpenClose.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
+        this.handleOnInputChange = this.handleOnInputChange.bind(this);
     }
 
     /**
@@ -65,9 +78,9 @@ class QueryClause extends PureComponent {
      * @param newProps
      * @returns none
      */
-    componentWillReceiveProps(newProps) {     
-        if(this.state.entity != newProps.entity){            
-            this.state.entity = newProps.entity;      
+    componentWillReceiveProps(newProps) {
+        if (this.state.entity != newProps.entity) {
+            this.state.entity = newProps.entity;
             this.changeQueryClause(newProps.entity);
         }
     }
@@ -79,7 +92,7 @@ class QueryClause extends PureComponent {
      * @param none
      * @returns isSame
      */
-    checkQueryState(){
+    checkQueryState() {
         let initialFormattedData = this.formatRowData(this.props.fieldData),
             currentFormattedData = this.state.formattedData,
             isSame = _.isEqual(initialFormattedData, currentFormattedData);// returns false if different
@@ -109,7 +122,7 @@ class QueryClause extends PureComponent {
      * @param none
      * @returns none
     */
-    resetQueryClause(){        
+    resetQueryClause() {
         const initialState = {
             entity: this.state.entity,
             fieldData: FieldData.field[this.state.entity].slice(0, 2)
@@ -130,14 +143,14 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
-     /**
-     * @method
-     * @name - changeQueryClause
-     * This method change the query clause selection to initial state 
-     * @param none
-     * @returns none
-    */
-    changeQueryClause(selectedEntity){      
+    /**
+    * @method
+    * @name - changeQueryClause
+    * This method change the query clause selection to initial state 
+    * @param none
+    * @returns none
+   */
+    changeQueryClause(selectedEntity) {
         const initialState = {
             entity: selectedEntity,
             fieldData: FieldData.field[selectedEntity].slice(0, 2)
@@ -158,25 +171,25 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
-     /**
-     * @method
-     * @name - formatValidationData
-     * This method format the data to get Validation Data
-     * @param formattedData
-     * @returns validationData
-    */
-    formatValidationData(formattedData){
+    /**
+    * @method
+    * @name - formatValidationData
+    * This method format the data to get Validation Data
+    * @param formattedData
+    * @returns validationData
+   */
+    formatValidationData(formattedData) {
         let validationData = [];
-		formattedData.forEach(function(element, index) {
-			let obj = { 
-						field: index + "+" + element.value,
-                        method: element.validation,
-                        isSkipValidation: element.isSkipValidation || false,
-						validWhen: false, 
-						message: element.errormessage || Constants.FIELD_ERROR_MESSAGE
-					};					
-			validationData.push(obj);
-        });        
+        formattedData.forEach(function (element, index) {
+            let obj = {
+                field: index + "+" + element.value,
+                method: element.validation,
+                isSkipValidation: element.isSkipValidation || false,
+                validWhen: false,
+                message: element.errormessage || Constants.FIELD_ERROR_MESSAGE
+            };
+            validationData.push(obj);
+        });
         return validationData;
     }
 
@@ -187,13 +200,14 @@ class QueryClause extends PureComponent {
      * @param unFormattedData
      * @returns formattedData
     */
-    formatRowData(unFormattedData){
+    formatRowData(unFormattedData) {
         let formattedData = [],
             entity = this.state ? this.state.entity : this.props.entity;
 
         unFormattedData.map(function (field, index) {
             let obj = {},
-            type = field.type;
+                type = field.type,
+                smartParams = field.smartParam;
             obj.label = field.label;
             obj.type = field.type;
             obj.placeholder = field.placeholder || "";
@@ -208,12 +222,14 @@ class QueryClause extends PureComponent {
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field[entity][index];
             obj.operatorsSelected = FieldData.operator[type][0];
+            obj.smartParam = FieldData.params[smartParams];
+            obj.hasSmartParams = field.hasSmartParams;
 
             formattedData.push(obj);
         });
         return formattedData;
     }
-    
+
     /**
      * @method
      * @name - handleChange
@@ -223,24 +239,27 @@ class QueryClause extends PureComponent {
      * @param selectedOption
      * @returns none
     */
-    handleChange(index, key, selectedOption){                           
+    handleChange(index, key, selectedOption) {
         let formattedData = this.state.formattedData;
         formattedData[index][key] = selectedOption;
         let isSameType = formattedData[index].type == selectedOption.type ? true : false;
-        switch(key) {
+        switch (key) {
             case "fieldsSelected":
-                let type = selectedOption ? selectedOption.type : "others";
-                formattedData[index].valueSelected =  isSameType ? formattedData[index].valueSelected : "";
-                formattedData[index].operators =  FieldData.operator[type];
+                let type = selectedOption ? selectedOption.type : "others",
+                    smartParamType = selectedOption.smartParam || "NONE";
+                formattedData[index].valueSelected = isSameType ? formattedData[index].valueSelected : "";
+                formattedData[index].operators = FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
                 formattedData[index].isSkipValidation = true;
                 formattedData[index].operatorsSelected = formattedData[index].type == type ? formattedData[index].operatorsSelected : FieldData.operator[type][0];
-                formattedData[index].value= selectedOption.value || "";
+                formattedData[index].value = selectedOption.value || "";
                 formattedData[index].type = selectedOption.type || "";
                 formattedData[index].label = selectedOption.label || "";
+                formattedData[index].smartParam = FieldData.params[smartParamType];
+                formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
                 break;
             default:
-                // Do nothing
+            // Do nothing
         }
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
@@ -256,7 +275,7 @@ class QueryClause extends PureComponent {
      * @param ele
      * @returns none
     */
-    handleInputChange(index, key, selectedOption, ele){
+    handleInputChange(index, key, selectedOption, ele) {
         ele.preventDefault();
         let formattedData = this.state.formattedData,
             value = ele.target.value.replace(/^\s+/g, '') || "";
@@ -272,47 +291,50 @@ class QueryClause extends PureComponent {
      * @param index
      * @returns none
     */
-    handleAddClause(index){
+    handleAddClause(index) {
 
-        if(index != "n")
+        if (index != "n")
             this.buttonRef[index].blur();
 
         let formattedData = this.state.formattedData,
             entity = this.state ? this.state.entity : this.props.entity;
 
-        formattedData.forEach(function(element, index) {
+        formattedData.forEach(function (element, index) {
             formattedData[index].isFocus = false;
         });
 
         let obj = {},
-            type = FieldData.field[entity][0].type;
-            obj.label = "";
-            obj.type = type;
-            obj.validation = "isEmpty";
-            obj.value = "";
-            obj.placeholder = "";
-            obj.isSkipValidation = true;
-            obj.combinators = FieldData.combinators;
-            obj.fields = FieldData.field[entity];
-            obj.operators = FieldData.operator[type];
-            obj.valueSelected = "";
-            obj.isFocus = false;
-            obj.combinatorsSelected = FieldData.combinators[0];
-            obj.fieldsSelected = FieldData.field[entity][0];
-            obj.operatorsSelected = FieldData.operator[type][0];
+            type = FieldData.field[entity][0].type,
+            smartParamType = FieldData.field[entity][0].smartParam;
+        obj.label = "";
+        obj.type = type;
+        obj.validation = "isEmpty";
+        obj.value = "";
+        obj.placeholder = "";
+        obj.isSkipValidation = true;
+        obj.combinators = FieldData.combinators;
+        obj.fields = FieldData.field[entity];
+        obj.operators = FieldData.operator[type];
+        obj.valueSelected = "";
+        obj.isFocus = false;
+        obj.combinatorsSelected = FieldData.combinators[0];
+        obj.fieldsSelected = FieldData.field[entity][0];
+        obj.operatorsSelected = FieldData.operator[type][0];
+        obj.smartParam = FieldData.params[smartParamType];
+        obj.hasSmartParams = FieldData.field[entity][0].hasSmartParams;
 
-        if(index == "n"){
+        if (index == "n") {
             formattedData.push(obj);
         } else {
             formattedData.splice(index, 0, obj);
             // inserts at 1st position
         }
         this.validator = new FormValidator(this.formatValidationData(this.formatRowData(formattedData)));
-        
+
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
-      
-      };
+
+    };
 
     /**
      * @method
@@ -321,18 +343,19 @@ class QueryClause extends PureComponent {
      * @param index
      * @returns none
     */
-      handleDeleteClause(index){
+    handleDeleteClause(index) {
         let currentIndex = index + 1,
-             formattedData = this.state.formattedData,
-             formattedDataLength = formattedData.length,
-             obj = {},
-             entity = this.state ? this.state.entity : this.props.entity;
-             
-        // Delete by Index from Array
-        formattedData = formattedData.slice(0, currentIndex-1).concat(formattedData.slice(currentIndex, formattedData.length));
+            formattedData = this.state.formattedData,
+            formattedDataLength = formattedData.length,
+            obj = {},
+            entity = this.state ? this.state.entity : this.props.entity;
 
-        if(index == 0 && formattedDataLength <= 1){
-        let type = FieldData.field[entity][0].type;
+        // Delete by Index from Array
+        formattedData = formattedData.slice(0, currentIndex - 1).concat(formattedData.slice(currentIndex, formattedData.length));
+
+        if (index == 0 && formattedDataLength <= 1) {
+            let type = FieldData.field[entity][0].type,
+                smartParamType = FieldData.field[entity][0].smartParam;
             obj.label = "";
             obj.type = type;
             obj.validation = "isEmpty";
@@ -347,6 +370,8 @@ class QueryClause extends PureComponent {
             obj.combinatorsSelected = FieldData.combinators[0];
             obj.fieldsSelected = FieldData.field[entity][0];
             obj.operatorsSelected = FieldData.operator[type][0];
+            obj.smartParam = FieldData.params[smartParamType];
+            obj.hasSmartParams = FieldData.field[entity][0].hasSmartParams;
 
             formattedData.push(obj);
         }
@@ -364,9 +389,10 @@ class QueryClause extends PureComponent {
     */
     buildQuery() {
         let tempFormattedData = this.state.formattedData
-        tempFormattedData.forEach(function(element, index) {
+        tempFormattedData.forEach(function (element, index) {
             tempFormattedData[index].isSkipValidation = false;
         });
+        const { cookies } = this.props;
 
         this.state.formattedData = tempFormattedData;
 
@@ -380,19 +406,30 @@ class QueryClause extends PureComponent {
             // handle actual form submission here
             let queryClause = [],
                 _self = this;
-                
-            this.state.formattedData.forEach(function(element, index){
-                let queryObj = {};
-                queryObj.Value = _self.state.formattedData[index].valueSelected;
+
+            this.state.formattedData.forEach(function (element, index) {
+                let queryObj = {},
+                    fieldValue = _self.state.formattedData[index].valueSelected;
+                    debugger;
+                queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
-                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;    
-                if(index == 0){
+                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
+                if (index == 0) {
                     queryObj.Bitwise = "";
-                }else{
+                } else {
                     queryObj.Bitwise = _self.state.formattedData[index] ? _self.state.formattedData[index].combinatorsSelected.value : "";
-                }            
+                }
                 
-                queryClause.push(queryObj)
+                queryClause.push(queryObj);
+                
+                if(_self.state.formattedData[index].fieldsSelected.smartParam == "user" && (queryObj.Value == "ME" || queryObj.Value == "ME_AND_DIRECT_SUBORDINATES" || queryObj.Value == "DIRECT_SUBORDINATES")){
+                    let queryObjUser = {};
+                        queryObjUser.Value = cookies.get('UserId');
+                        queryObjUser.Operator = "=";
+                        queryObjUser.Name = "USER_ID";
+                        queryObjUser.BitWise = "AND";
+                    queryClause.push(queryObjUser);
+                }
             })
 
             switch (this.state.entity) {
@@ -406,8 +443,8 @@ class QueryClause extends PureComponent {
                     this.getTasksResults(queryClause);
                     break;
                 default:
-                  console.log('Sorry, we are out of options');
-              }                       
+                    console.log('Sorry, we are out of options');
+            }
         }
     };
 
@@ -418,16 +455,16 @@ class QueryClause extends PureComponent {
      * @param index
      * @returns Class name or ""
     */
-    getClassName(index){
+    getClassName(index) {
         const { formattedData } = this.state;
         let validation = this.submitted ?               // if the form has been submitted at least once
             this.validator.validate(formattedData) :   // then check validity every time we render
             this.state.validation;
 
-        if(formattedData[index].isSkipValidation){
+        if (formattedData[index].isSkipValidation) {
             return classNames('form-group-has-validation');
         } else {
-            return classNames('form-group-has-validation', {'has-error': validation[index] ? validation[index].isInvalid : false});
+            return classNames('form-group-has-validation', { 'has-error': validation[index] ? validation[index].isInvalid : false });
         }
     };
 
@@ -438,16 +475,16 @@ class QueryClause extends PureComponent {
      * @param index
      * @returns Message or ""
     */
-    getMessage(index){
+    getMessage(index) {
         const { formattedData } = this.state;
         let validation = this.submitted ?               // if the form has been submitted at least once
             this.validator.validate(formattedData) :   // then check validity every time we render
             this.state.validation;
 
-        if(formattedData[index].isSkipValidation){
+        if (formattedData[index].isSkipValidation) {
             return "";
         } else {
-            return  validation[index] ? validation[index].message : "";
+            return validation[index] ? validation[index].message : "";
         }
     };
 
@@ -458,62 +495,64 @@ class QueryClause extends PureComponent {
      * @param requestData
      * @returns none
     */
-    async getEmployeesResults(requestData){
+    async getEmployeesResults(requestData) {
         const { cookies } = this.props;
 
-        let payLoad = {"Fields": requestData,
-                    "ColumnList":["EMPLOYEE_NAME","ROLE","USER_ID","USERNAME","ALTERNATE_USERNAME","TOTAL_EMPLOYEES","EMAIL"]};
+        let payLoad = {
+            "Fields": requestData,
+            "ColumnList": ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL"]
+        };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "/company/"+companyId+"/employees",
+            url = "/company/" + companyId + "/employees",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passEmployeesResults(response);
     };
 
 
-     /**
-     * @method
-     * @name - getWorkbooksResults
-     * This method will used to get Workbook Results from the Query Clause
-     * @param requestData
-     * @returns none
-    */
-    async getWorkbooksResults(requestData){
+    /**
+    * @method
+    * @name - getWorkbooksResults
+    * This method will used to get Workbook Results from the Query Clause
+    * @param requestData
+    * @returns none
+   */
+    async getWorkbooksResults(requestData) {
         const { cookies } = this.props;
 
-        let payLoad = {"Fields": requestData,"ColumnList":["WORKBOOK_ID","WORKBOOK_NAME","DESCRIPTION","WORKBOOK_CREATED_BY","DAYS_TO_COMPLETE"]};
+        let payLoad = { "Fields": requestData, "ColumnList": ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"] };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "/company/"+companyId+"/workbooks",
+            url = "/company/" + companyId + "/workbooks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passWorkbooksResults(response);
     };
 
-     /**
-     * @method
-     * @name - getTasksResults
-     * This method will used to get Tasks Results from the Query Clause
-     * @param requestData
-     * @returns none
-    */
-   async getTasksResults(requestData){
+    /**
+    * @method
+    * @name - getTasksResults
+    * This method will used to get Tasks Results from the Query Clause
+    * @param requestData
+    * @returns none
+   */
+    async getTasksResults(requestData) {
         const { cookies } = this.props;
 
-        let payLoad = { "Fields": requestData ,"ColumnList": ["TASK_ID","TASK_NAME","ASSIGNED_TO","EVALUATOR_NAME","EXPIRATION_DATE"] };
+        let payLoad = { "Fields": requestData, "ColumnList": ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"] };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
-            url = "/company/"+companyId+"/tasks",
+            url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passTasksResults(response);
     };
 
-    
+
     /**
      * @method
      * @name - onOpenClose
@@ -523,42 +562,59 @@ class QueryClause extends PureComponent {
     */
     onOpenClose() {
         let inputWrapper = document.querySelector(".is-open").getBoundingClientRect();
-            document.querySelector(".Select-menu").style.width = inputWrapper.width+'px';
-            document.querySelector(".Select-menu").style.top = inputWrapper.top+inputWrapper.height+'px';
+        document.querySelector(".Select-menu").style.width = inputWrapper.width + 'px';
+        document.querySelector(".Select-menu").style.top = inputWrapper.top + inputWrapper.height + 'px';
     };
-    
+
+    handleOnChange(index, type, c, value) {
+        let formattedData = this.state.formattedData;
+        formattedData[index][type] = value;
+        this.setState({ ...this.state, formattedData, multiValue: value });
+        this.forceUpdate();
+    };
+
+    handleOnInputChange(index, type, c, value) {
+        let formattedData = this.state.formattedData;
+            value = value.replace(/^\s+/g, '') || "";
+
+        let selectValue = { value: value, label: value, className: "Select-create-option-placeholder" };
+        formattedData[index][type] = selectValue;
+        this.setState({ ...this.state, formattedData, multiValue: selectValue });
+        this.forceUpdate();
+    }
+
     render() {
         const { formattedData } = this.state;
         let _self = this,
             formattedDataLength = formattedData.length;
-        
+        const { multi, multiValue, options } = this.state;
         return (
             <tbody className="query-section-table tbody">
                 {
                     this.state.formattedData &&
                     this.state.formattedData.map(function (field, index) {
-                        return (                           
-                           <tr key={index} className={"query-clause-row-"+index}>
+                        return (
+                            <tr key={index} className={"query-clause-row-" + index}>
                                 <td scope="row" className={"query-clause-firstrow tableWidth-5"}>
-                                    { 
+                                    {
                                         formattedDataLength < 7 && <button ref={(input) => { _self.buttonRef[index] = input; }} onClick={_self.handleAddClause.bind(_self, index)} title="Insert new filter line" className="query-action-btn add"><i className="fa fa-plus"></i></button>
-                                        
-                                        || 
-                                        
-                                        <button ref={(input) => { _self.buttonRef[index] = input; }} title="Insert new filter line" className="query-action-btn add" type="button" disabled><i className="fa fa-plus"></i></button> 
+
+                                        ||
+
+                                        <button ref={(input) => { _self.buttonRef[index] = input; }} title="Insert new filter line" className="query-action-btn add" type="button" disabled><i className="fa fa-plus"></i></button>
                                     }
                                     {
                                         formattedDataLength > 1 && <button onClick={_self.handleDeleteClause.bind(_self, index)} title="Remove this filter line" className="query-action-btn delete"><i className="fa fa-times"></i></button>
-                                                                            
-                                        || 
-                                                                                                                
+
+                                        ||
+
                                         <button title="Remove this filter line" className="query-action-btn delete" disabled><i className="fa fa-times"></i></button>
-                                    }                                    
+                                    }
                                 </td>
-                                <td className={"tableWidth-10"}> 
-                                    { 
+                                <td className={"tableWidth-10"}>
+                                    {
                                         index != 0 && <Select
-                                            onOpen={ _self.onOpenClose.bind()}  
+                                            onOpen={_self.onOpenClose.bind()}
                                             clearable={false}
                                             autosize={false}
                                             isRtl={true}
@@ -571,13 +627,13 @@ class QueryClause extends PureComponent {
                                             onChange={_self.handleChange.bind("", index, "combinatorsSelected")}
                                             backspaceRemoves={false}
                                             deleteRemoves={false}
-                                            placeholder={""}                                            
-                                        /> 
+                                            placeholder={""}
+                                        />
                                     }
                                 </td>
-                                <td className={"tableWidth-20"}> 
+                                <td className={"tableWidth-20"}>
                                     <Select
-                                        onOpen={ _self.onOpenClose.bind()}                                        
+                                        onOpen={_self.onOpenClose.bind()}
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}
@@ -589,16 +645,16 @@ class QueryClause extends PureComponent {
                                         autoFocus={field.isFocus}
                                         maxMenuHeight={100}
                                         options={field.fields}
-                                        menuPortalTarget={document.body}                                     
+                                        menuPortalTarget={document.body}
                                         onChange={_self.handleChange.bind("", index, "fieldsSelected")}
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
                                         placeholder={""}
-                                    /> 
+                                    />
                                 </td>
-                                <td className={"tableWidth-20"}> 
+                                <td className={"tableWidth-20"}>
                                     <Select
-                                        onOpen={ _self.onOpenClose.bind()}  
+                                        onOpen={_self.onOpenClose.bind()}
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}
@@ -611,21 +667,42 @@ class QueryClause extends PureComponent {
                                         backspaceRemoves={false}
                                         deleteRemoves={false}
                                         placeholder={""}
-                                    /> 
+                                    />
                                 </td>
                                 <td>
-                                    <div className={_self.getClassName(index)}>
-                                        <Input 
-                                            type="text" 
+                                    {
+                                        field.hasSmartParams == false && <div className={"query-value-input " + _self.getClassName(index)}>
+                                            <Input
+                                                type="text"
+                                                name={field.label}
+                                                placeholder={field.placeholder || ""}
+                                                id={field.value}
+                                                value={field.valueSelected}
+                                                onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
+                                                className="inputQueryInput"
+                                            />
+                                            <span className="help-block">{_self.getMessage(index)}</span>
+                                        </div>
+
+                                        ||
+
+                                        <SelectPlus.Creatable
+                                            onOpen={_self.onOpenClose.bind()}
+                                            autocomplete="off"
+                                            clearable={false}
+                                            autosize={false}
+                                            backspaceRemoves={false}
+                                            deleteRemoves={false}
+                                            multi={multi}
+                                            className="inputQueryInput"
+                                            options={field.smartParam}
+                                            onChange={_self.handleOnChange.bind("", index, "valueSelected", this)}
                                             name={field.label}
-                                            placeholder={field.placeholder || ""} 
+                                            placeholder={field.placeholder || ""}
                                             id={field.value}
                                             value={field.valueSelected}
-                                            onChange={_self.handleInputChange.bind("", index, "valueSelected", this)}
-                                            className="inputQueryInput"
                                         />
-                                        <span className="help-block">{_self.getMessage(index)}</span>
-                                    </div>
+                                    }
                                 </td>
                             </tr>
                         )
@@ -642,7 +719,7 @@ class QueryClause extends PureComponent {
                         <td></td>
                     </tr>
                 }
-        </tbody>
+            </tbody>
         );
     }
 }
