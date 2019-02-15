@@ -133,7 +133,7 @@ namespace ReportBuilderAPI.Repository
                         {
                             QueryId = Convert.ToString(sqlDataReader["QueryId"]),
                             QueryName = Convert.ToString(sqlDataReader["Name"]),
-                            QueryJson = Convert.ToString(sqlDataReader["QueryJson"]),
+                            //QueryJson = Convert.ToString(sqlDataReader["QueryJson"]),
                             CreatedDate = sqlDataReader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["CreatedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
                             LastModified = sqlDataReader["LastModified"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["LastModified"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
                             CreatedBy = Convert.ToString(sqlDataReader["employeeName"])
@@ -168,7 +168,7 @@ namespace ReportBuilderAPI.Repository
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
                 userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
-                isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId" + userId);
+                isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
                 if (isExist == 0)
                 {
                     rowAffected = databaseWrapper.ExecuteQuery("UPDATE Query SET name='" + queryBuilderRequest.QueryName + "' WHERE QueryId='" + queryBuilderRequest.QueryId + "'");
@@ -196,5 +196,103 @@ namespace ReportBuilderAPI.Repository
                 databaseWrapper.CloseConnection();
             }
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
+        public APIGatewayProxyResponse DeleteQuery(string requestBody, int companyId)
+        {
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            int userId = 0, isExist = 0, rowAffected = 0, Id=0;
+            try
+            {
+                QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
+                isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
+                if (isExist != 0)
+                {
+                    Id = databaseWrapper.ExecuteScalar("SELECT ID FROM Query WHERE QueryId='" + queryBuilderRequest.QueryId + "'");
+                    if (rowAffected > 0)
+                    {
+                        rowAffected = databaseWrapper.ExecuteQuery("DELETE FROM UserQuery WHERE QueryId='" + Id + "'");
+                        if (rowAffected > 0)
+                        {
+                            return ResponseBuilder.GatewayProxyResponse(200, DataResource.RENAME_SUCCESS_MESSAGE, 0);
+                        }
+                        else
+                        {
+                            return ResponseBuilder.InternalError();
+                        }
+                    }
+                    else
+                    {
+                        return ResponseBuilder.InternalError();
+                    }
+                }
+                else
+                {
+                    return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
+                }
+            }
+            catch (Exception renameQueryException)
+            {
+                LambdaLogger.Log(renameQueryException.ToString()); 
+                return ResponseBuilder.InternalError();
+            }
+            finally
+            {
+                databaseWrapper.CloseConnection();
+            }
+        }
+
+
+        /// <summary>
+        /// Get list of user queires
+        /// </summary>
+        /// <param name="requestBody"></param>
+        /// <param name="companyId"></param>
+        public APIGatewayProxyResponse GetUserQuery(string requestBody, int companyId)
+        {
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            int userId = 0;
+            List<QueryResponse> queryList = new List<QueryResponse>();
+            try
+            {
+                QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
+                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId, new Dictionary<string, string> { });
+                if (sqlDataReader != null && sqlDataReader.HasRows)
+                {
+                    while (sqlDataReader.Read())
+                    {
+                        QueryResponse queryResponse = new QueryResponse
+                        {
+                            QueryId = Convert.ToString(sqlDataReader["QueryId"]),
+                            QueryName = Convert.ToString(sqlDataReader["Name"]),
+                            //QueryJson = Convert.ToString(sqlDataReader["QueryJson"]),
+                            CreatedDate = sqlDataReader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["CreatedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
+                            LastModified = sqlDataReader["LastModified"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["LastModified"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
+                            CreatedBy = Convert.ToString(sqlDataReader["employeeName"])
+                        };
+                        queryList.Add(queryResponse);
+                    }
+                }
+                return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
+            }
+            catch (Exception getUserQueriesException)
+            {
+                LambdaLogger.Log(getUserQueriesException.ToString());
+                return ResponseBuilder.InternalError();
+            }
+            finally
+            {
+                databaseWrapper.CloseConnection();
+            }
+        }
+
     }
 }

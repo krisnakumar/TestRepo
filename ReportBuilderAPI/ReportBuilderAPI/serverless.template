@@ -310,7 +310,7 @@
           }
         }
       }
-    }	,
+    },
 
 	"SaveQuery" : {
       "Type" : "AWS::Serverless::Function",	  
@@ -355,6 +355,56 @@
             "Properties": {		
 			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
               "Path": "/company/{companyId}/queries",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+
+		
+	"RenameQuery" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+       "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
+		"FunctionName":"RenameQuery",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/company/{companyId}/query/rename",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },	
+	"DeleteQuery" : {
+      "Type" : "AWS::Serverless::Function",	  
+      "Properties": {		 
+       "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
+		"FunctionName":"DeleteQuery",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 256,
+		"Description": "2",
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],					
+        "Events": {		  			 
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {		
+			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
+              "Path": "/company/{companyId}/query/delete",
               "Method": "POST"
             }
           }

@@ -210,7 +210,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 selectQuery = "SELECT  ";
-                
+
 
                 //getting column List
                 query = string.Join("", (from column in columnList
@@ -227,6 +227,13 @@ namespace ReportBuilderAPI.Repository
                                             where fieldList.Any(x => joins.Value.Any(y => y == x))
                                             select joins.Key);
                 query += tableJoin;
+
+                if (employeeRequest.Fields.Where(x => x.Name == Constants.USERNAME).ToList().Count > 0 && employeeRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
+                {
+                    EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
+                    employeeRequest.Fields.Remove(userDetails);
+                    employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
+                }
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in employeeRequest.Fields
@@ -253,13 +260,19 @@ namespace ReportBuilderAPI.Repository
         public APIGatewayProxyResponse GetEmployeeDetails(string requestBody, int companyId)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            string query = string.Empty;
+            string query = string.Empty, userId = string.Empty;
             List<EmployeeResponse> employeeResponse;
+            Dictionary<string, string> parameterList;
             try
             {
                 QueryBuilderRequest employeeRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                userId = employeeRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
+
                 query = CreateEmployeeQuery(employeeRequest, companyId);
-                employeeResponse = ReadEmployeeDetails(query);
+
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(userId) }, { "companyId", Convert.ToString(companyId) } };
+
+                employeeResponse = ReadEmployeeDetails(query, parameterList);
                 if (employeeResponse != null)
                 {
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
@@ -392,14 +405,14 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="query"></param>
         /// <returns>EmployeeResponse</returns>
-        private List<EmployeeResponse> ReadEmployeeDetails(string query)
+        private List<EmployeeResponse> ReadEmployeeDetails(string query, Dictionary<string, string> parameters)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             EmployeeResponse employeeResponse;
             List<EmployeeResponse> employeeList = new List<EmployeeResponse>();
             try
             {
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, new Dictionary<string, string>() { });
+                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, parameters);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())
