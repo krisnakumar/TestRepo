@@ -189,7 +189,7 @@
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"field": "USER_CREATED_DATE"
 			},
 			{
@@ -345,7 +345,7 @@
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"field": "WORKBOOK_CREATED"
 			},
 			{
@@ -391,7 +391,7 @@
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"field": "DUE_DATE"
 			},
 			{
@@ -438,7 +438,7 @@
 				"label": "Task Created Date",
 				"validation": "isEmpty",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "TASK_CREATED"
 			},
@@ -448,7 +448,7 @@
 				"label": "Attempt Date",
 				"validation": "isEmpty",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "ATTEMPT_DATE"
 			},
@@ -476,7 +476,7 @@
 				"label": "Date Taken",
 				"validation": "isEmpty",
 				"smartParam": "NONE",
-				"hasSmartParams": false,
+				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "DATE_TAKEN"
 			},

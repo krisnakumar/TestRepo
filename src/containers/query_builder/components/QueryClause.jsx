@@ -28,9 +28,17 @@ import classNames from 'classnames';
 import FormValidator from '../../../shared/utils/FormValidator';
 import * as Constants from '../../../shared/constants';
 import SelectPlus from 'react-select-plus';
-
-// Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select-plus/dist/react-select-plus.css';
+
+// React Dates Import here
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+
+import { DateRangePicker } from 'react-dates';
+
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
 
 class QueryClause extends PureComponent {
 
@@ -57,6 +65,11 @@ class QueryClause extends PureComponent {
             ],
             multi: false,
             multiValue: [],
+            startDate: null,
+            endDate: null,
+            focusedInput: null,
+            from: undefined,
+            to: undefined
         };
 
         this.submitted = false;
@@ -68,6 +81,9 @@ class QueryClause extends PureComponent {
         this.onOpenClose = this.onOpenClose.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnInputChange = this.handleOnInputChange.bind(this);
+        this.handleDayClick = this.handleDayClick.bind(this);
+        this.handleFromChange = this.handleFromChange.bind(this);
+        this.handleToChange = this.handleToChange.bind(this);
     }
 
     /**
@@ -410,7 +426,8 @@ class QueryClause extends PureComponent {
             this.state.formattedData.forEach(function (element, index) {
                 let queryObj = {},
                     fieldValue = _self.state.formattedData[index].valueSelected;
-                    debugger;
+
+
                 queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
                 queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
@@ -419,15 +436,15 @@ class QueryClause extends PureComponent {
                 } else {
                     queryObj.Bitwise = _self.state.formattedData[index] ? _self.state.formattedData[index].combinatorsSelected.value : "";
                 }
-                
+
                 queryClause.push(queryObj);
-                
-                if(_self.state.formattedData[index].fieldsSelected.smartParam == "user" && (queryObj.Value == "ME" || queryObj.Value == "ME_AND_DIRECT_SUBORDINATES" || queryObj.Value == "DIRECT_SUBORDINATES")){
+
+                if (_self.state.formattedData[index].fieldsSelected.smartParam == "user" && (queryObj.Value == "ME" || queryObj.Value == "ME_AND_DIRECT_SUBORDINATES" || queryObj.Value == "DIRECT_SUBORDINATES")) {
                     let queryObjUser = {};
-                        queryObjUser.Value = cookies.get('UserId');
-                        queryObjUser.Operator = "=";
-                        queryObjUser.Name = "USER_ID";
-                        queryObjUser.BitWise = "AND";
+                    queryObjUser.Value = cookies.get('UserId');
+                    queryObjUser.Operator = "=";
+                    queryObjUser.Name = "USER_ID";
+                    queryObjUser.BitWise = "AND";
                     queryClause.push(queryObjUser);
                 }
             })
@@ -575,7 +592,7 @@ class QueryClause extends PureComponent {
 
     handleOnInputChange(index, type, c, value) {
         let formattedData = this.state.formattedData;
-            value = value.replace(/^\s+/g, '') || "";
+        value = value.replace(/^\s+/g, '') || "";
 
         let selectValue = { value: value, label: value, className: "Select-create-option-placeholder" };
         formattedData[index][type] = selectValue;
@@ -583,16 +600,74 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
+    CustomOverlay({ classNames, selectedDay, children, ...props }) {
+        return (
+            <div
+                className={classNames.overlayWrapper}
+                style={{ marginLeft: -100 }}
+                {...props}
+            >
+                <div className={classNames.overlay}>
+                    <h3>Hello day picker!</h3>
+                    <p>
+                        <input />
+                        <button onClick={() => console.log("clicked!")}>button</button>
+                    </p>
+                    {/* <p>
+                {selectedDay
+                  ? `You picked: ${selectedDay.toLocaleDateString()}`
+                  : "Please pick a day"}
+              </p> */}
+                    {children}
+                </div>
+            </div>
+        );
+    }
+
+    handleDayClick(day) {
+        debugger;
+        const range = DateUtils.addDayToRange(day, this.state);
+        this.setState(range);
+    }
+
+
+    handleFromChange(index, type, b ,value) {
+        // Change the from date and focus the "to" input field
+        let formattedData = this.state.formattedData;
+        // formattedData[index][type] = {};
+        // formattedData[index][type].from = value;
+        typeof formattedData[index][type] === 'object' ? formattedData[index][type].from = value : formattedData[index][type] = {};
+        formattedData[index][type].from = value;
+        this.setState({ ...this.state, formattedData});
+        this.forceUpdate();
+    }
+    handleToChange(index, type, b ,value) {
+        let formattedData = this.state.formattedData;
+        typeof formattedData[index][type] === 'object' ? formattedData[index][type].to = value : formattedData[index][type] = {};
+        formattedData[index][type].to = value;
+        this.setState({ ...this.state, formattedData});
+        this.forceUpdate();
+    }
+
     render() {
         const { formattedData } = this.state;
         let _self = this,
             formattedDataLength = formattedData.length;
+
+        // const { from, to } = this.state;
+        // const modifiers = { start: from, end: to };
+        // // let temp = {[from, { from, to }]}
+
         const { multi, multiValue, options } = this.state;
         return (
             <tbody className="query-section-table tbody">
                 {
                     this.state.formattedData &&
                     this.state.formattedData.map(function (field, index) {
+                        let fromDate = field.valueSelected ? field.valueSelected.from : "";
+                        let toDate = field.valueSelected ? field.valueSelected.to : "";
+                        let modifiers = { start: fromDate, end: toDate };
+
                         return (
                             <tr key={index} className={"query-clause-row-" + index}>
                                 <td scope="row" className={"query-clause-firstrow tableWidth-5"}>
@@ -671,7 +746,7 @@ class QueryClause extends PureComponent {
                                 </td>
                                 <td>
                                     {
-                                        field.hasSmartParams == false && <div className={"query-value-input " + _self.getClassName(index)}>
+                                        (field.hasSmartParams == false && field.type != "date") && <div className={"query-value-input " + _self.getClassName(index)}>
                                             <Input
                                                 type="text"
                                                 name={field.label}
@@ -686,7 +761,39 @@ class QueryClause extends PureComponent {
 
                                         ||
 
-                                        <SelectPlus.Creatable
+                                        (field.hasSmartParams == true && field.type == "date") && <div>
+                                            <DayPickerInput
+                                                value={fromDate}
+                                                placeholder="From"
+                                                format="L"
+                                                className="inputQueryInput"
+                                                dayPickerProps={{
+                                                    selectedDays: [fromDate, { fromDate, toDate }],
+                                                    modifiers,
+                                                    numberOfMonths: 1,
+                                                    onDayClick: () => _self.to.getInput().focus()
+                                                }}
+                                                onDayChange={_self.handleFromChange.bind("", index, "valueSelected", this)}
+                                            />
+                                            {" "}—{" "}
+                                            <DayPickerInput
+                                                ref={el => (_self.to = el)}
+                                                value={toDate}
+                                                placeholder="To"
+                                                format="L"
+                                                className="inputQueryInput"
+                                                dayPickerProps={{
+                                                    selectedDays: [fromDate, { fromDate, toDate }],
+                                                    modifiers,
+                                                    numberOfMonths: 1
+                                                }}
+                                                onDayChange={_self.handleToChange.bind("", index, "valueSelected", this)}
+                                            />
+                                        </div>
+
+                                        ||
+
+                                        (field.hasSmartParams == true && field.type != "date") && <SelectPlus.Creatable
                                             onOpen={_self.onOpenClose.bind()}
                                             autocomplete="off"
                                             clearable={false}
@@ -713,7 +820,25 @@ class QueryClause extends PureComponent {
                         <td scope="row" className="tableWidth-5">
                             <button onClick={this.handleAddClause.bind(this, "n")} title="Add new clause" className="query-action-btn add"><i className="fa fa-plus"></i></button>
                         </td>
-                        <td></td>
+                        <td className={"tableWidth-10"}>
+                            {/* <DateRangePicker
+                                startDateId="startDate"
+                                endDateId="endDate"
+                                startDate={this.state.startDate}
+                                endDate={this.state.endDate}
+                                onDatesChange={({ startDate, endDate }) => { this.setState({ startDate, endDate })}}
+                                focusedInput={this.state.focusedInput}
+                                onFocusChange={(focusedInput) => { this.setState({ focusedInput })}}
+                            /> */}
+
+                            {/* <DayPickerInput
+                            overlayComponent={this.CustomOverlay}
+                            dayPickerProps={{
+                                todayButton: "Today"
+                            }}
+                            keepFocus={false}
+                            /> */}
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
