@@ -194,9 +194,9 @@ namespace ReportBuilder.UnitTest
 
             EmployeeModel employeeModel = new EmployeeModel
             {
-                Name = Constants.USER_CREATED_DATE,
-                Value = "04/02/1990 and 04/02/2019",
-                Operator = "Between"                
+                Name = Constants.QR_CODE,
+                Value = "Yes",
+                Operator = "="                
             };
 
 
@@ -208,7 +208,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"SUPERVISOR_ID\",\"EMPLOYEE_NAME\",\"ROLE\",\"ASSIGNED_WORKBOOK\",\"WORKBOOK_DUE\",\"PAST_DUE_WORKBOOK\",\"COMPLETED_WORKBOOK\",\"TOTAL_EMPLOYEES\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME_AND_DIRECT_SUBORDINATES\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"Bitwise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -312,7 +312,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"PAST_DUE\",\"Value\":\"30\",\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"COURSE_EXPIRATION_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":98,\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"ASSIGNED_DATE\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -369,48 +369,53 @@ namespace ReportBuilder.UnitTest
         [TestMethod]
         public void SaveQuery()
         {
-            //List<EmployeeModel> employeeList = new List<EmployeeModel>();
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
 
-            //Function function = new Function();
-            //QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            //{
-            //    ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
-            //    Fields = employeeList,
-            //    EntityName = Constants.EMPLOYEE,
-            //    QueryName = "Shoba"
-            //};
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                Fields = employeeList,
+                EntityName = Constants.EMPLOYEE,
+                QueryName = "Shoba-test"
+            };
 
-            //EmployeeModel employeeModel = new EmployeeModel
-            //{
-            //    Name = Constants.USER_CREATED_DATE,
-            //    Value = "04/02/1990 and 04/02/2019",
-            //    Operator = "Between"
-            //};
-            //EmployeeModel employeeModel2 = new EmployeeModel
-            //{
-            //    Name = Constants.USERID,
-            //    Value = "6",
-            //    Operator = "=",
-            //    Bitwise = "and"
-            //};
+            EmployeeModel employeeModel = new EmployeeModel
+            {
+                Name = Constants.USER_CREATED_DATE,
+                Value = "04/02/1990 and 04/02/2019",
+                Operator = "Between"
+            };
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "=",
+                Bitwise = "and"
+            };
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
 
-            //employeeList.Add(employeeModel);
-            //employeeList.Add(employeeModel2);
+            };
+            employeeList.Add(employeeModel);
+            employeeList.Add(employeeModel2);
 
-            //APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            //{
-            //    Body = JsonConvert.SerializeObject(employeeRequest)
-            //};
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters=pathValues
+            };
 
-            //APIGatewayProxyResponse userResponse = function.SaveQuery(aPIGatewayProxyRequest, null);
+            APIGatewayProxyResponse userResponse = function.SaveQuery(aPIGatewayProxyRequest, null);
 
-            //Assert.AreEqual(200, userResponse.StatusCode);
+            Assert.AreEqual(200, userResponse.StatusCode);
         }
 
 
         /// </summary>
         [TestMethod]
-        public void GetQuery()
+        public void GetQueries()
         {
             List<EmployeeModel> employeeList = new List<EmployeeModel>();
 
@@ -446,11 +451,141 @@ namespace ReportBuilder.UnitTest
                 PathParameters=pathValues
             };
 
-            APIGatewayProxyResponse userResponse = function.GetQuery(aPIGatewayProxyRequest, null);
+            aPIGatewayProxyRequest.Body = "{ \"Fields\": [ { \"Name\": \"USER_ID\", \"Value\": \"6\", \"Operator\": \"=\" } ]}";
+            APIGatewayProxyResponse userResponse = function.GetQueries(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
         }
 
 
+        /// </summary>
+        [TestMethod]
+        public void RenameQuery()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
+
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                Fields = employeeList,
+                EntityName = Constants.EMPLOYEE,
+                QueryName = "Shoba-test-New",
+                QueryId = "7bf5f925-ec41-49a8-8d97-61e4c4033703"
+            };
+
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
+            };
+
+            employeeList.Add(employeeModel2);
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters = pathValues
+            };
+
+            APIGatewayProxyResponse userResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
+
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
+        [TestMethod]
+        public void DeleteQuery()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
+
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                Fields = employeeList,
+                EntityName = Constants.EMPLOYEE,
+                QueryName = "Shoba-test-New",
+                QueryId = "7bf5f925-ec41-49a8-8d97-61e4c4033703"
+            };
+
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
+            };
+
+            employeeList.Add(employeeModel2);
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters = pathValues
+            };
+
+            APIGatewayProxyResponse userResponse = function.DeleteQuery(aPIGatewayProxyRequest, null);
+
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
+
+
+
+        [TestMethod]
+        public void GetQuery()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
+
+            Function function = new Function();
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
+                Fields = employeeList,
+                EntityName = Constants.EMPLOYEE,
+                QueryName = "Shoba-test-New",
+                QueryId = "998d83e9-80c3-4b24-840a-a727d1366d0f"
+            };
+
+
+            EmployeeModel employeeModel2 = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
+            };
+
+            employeeList.Add(employeeModel2);
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters = pathValues
+            };
+
+            APIGatewayProxyResponse userResponse = function.GetQuery(aPIGatewayProxyRequest, null);
+
+            Assert.AreEqual(200, userResponse.StatusCode);
+        }
     }
 }

@@ -220,7 +220,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>APIGatewayProxyResponse</returns>
         public APIGatewayProxyResponse GetQueryTaskDetails(string requestBody, int companyId)
         {
-            string query = string.Empty, supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty, dueDays = string.Empty;
+            string query = string.Empty;
             List<TaskResponse> workbookDetails;            
             Dictionary<string, string> parameterList;
             try
@@ -231,17 +231,7 @@ namespace ReportBuilderAPI.Repository
                 query = CreateTaskQuery(queryRequest, companyId);
 
                 //Get the parameters  to send into the sql query
-                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault();
-                workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
-                taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
-                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
-                if (string.IsNullOrEmpty(dueDays))
-                {
-                    dueDays = "30";
-                }
-
-                //Get the parameter dictionary
-                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) } };
+                parameterList = Getparameters(queryRequest, companyId);
 
                 workbookDetails = ReadTaskDetails(query, parameterList);
                 if (workbookDetails != null)
@@ -261,11 +251,41 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
+        /// Get parameter exception
+        /// </summary>
+        public Dictionary<string, string>  Getparameters(QueryBuilderRequest queryRequest, int companyId)
+        {
+            string  supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty, dueDays = string.Empty;
+            Dictionary<string, string> parameterList=new Dictionary<string, string> { };
+            try
+            {
+                //Get the list of Id details
+                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault();
+                workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
+                taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
+                dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
+                if (string.IsNullOrEmpty(dueDays))
+                {
+                    dueDays = "30";
+                }
+
+                //Get the parameter dictionary
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) } };
+                return parameterList;
+            }
+            catch (Exception getParameterException)
+            {
+                LambdaLogger.Log(getParameterException.ToString());
+                return parameterList;
+            }
+        }
+
+        /// <summary>
         ///     Creating response object after reading task(s) details from database
         /// </summary>
         /// <param name="query"></param>
         /// <returns>TaskResponse</returns>
-        private List<TaskResponse> ReadTaskDetails(string query, Dictionary<string, string> parameters)
+        public List<TaskResponse> ReadTaskDetails(string query, Dictionary<string, string> parameters)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             TaskResponse taskResponse;
@@ -280,7 +300,6 @@ namespace ReportBuilderAPI.Repository
                         TaskModel taskModel = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
                         taskResponse = new TaskResponse
                         {
-
                             TaskId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"]!=DBNull.Value ? (int?)sqlDataReader["taskId"]:0) : null,
                             TaskName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : null,
                             AssignedTo = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,

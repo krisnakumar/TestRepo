@@ -405,7 +405,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="query"></param>
         /// <returns>EmployeeResponse</returns>
-        private List<EmployeeResponse> ReadEmployeeDetails(string query, Dictionary<string, string> parameters)
+        public List<EmployeeResponse> ReadEmployeeDetails(string query, Dictionary<string, string> parameters)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             EmployeeResponse employeeResponse;

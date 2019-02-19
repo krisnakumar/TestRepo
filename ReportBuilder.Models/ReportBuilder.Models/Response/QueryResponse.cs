@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ReportBuilder.Models.Models;
 
 namespace ReportBuilder.Models.Response
 {
@@ -20,6 +18,9 @@ namespace ReportBuilder.Models.Response
         public string LastModified { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }
-
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QuerySQL { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public QueryModel QueryModel { get; set; }
     }
 }

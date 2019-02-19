@@ -297,7 +297,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        public APIGatewayProxyResponse GetQueries(APIGatewayProxyRequest request, ILambdaContext context)
         {
             QueryRepository queryRepository = new QueryRepository();
             try
@@ -343,6 +343,27 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             try
             {
                 return queryRepository.DeleteQuery(request.Body, RequestReader.GetCompanyId(request));
+            }
+            catch (Exception renameQueryException)
+            {
+                LambdaLogger.Log(renameQueryException.ToString());
+                return ResponseBuilder.InternalError();
+            }
+        }
+
+
+        /// <summary>
+        ///     Delete the existing query based on the query Id and UserId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public APIGatewayProxyResponse GetQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            try
+            {
+                return queryRepository.GetUserQuery(request.Body, RequestReader.GetCompanyId(request));
             }
             catch (Exception renameQueryException)
             {
