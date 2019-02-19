@@ -61,7 +61,7 @@ class EmployeeResultSet extends React.Component {
       },
       {
         key: 'userName',
-        name: 'User Name',
+        name: 'Username',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

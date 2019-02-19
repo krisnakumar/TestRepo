@@ -60,6 +60,40 @@
 				"label": "System Admin"
 			}
 		],
+		"date": [
+			{
+				"value": "today",
+				"label": "Today"
+			},
+			{
+				"value": "yesterday",
+				"label": "Yesterday"
+			},
+			{
+				"value": "thisWeek",
+				"label": "This Week"
+			},
+			{
+				"value": "lastWeek",
+				"label": "Last Week"
+			},
+			{
+				"value": "thisMonth",
+				"label": "This Month"
+			},
+			{
+				"value": "Last Month",
+				"label": "Last Month"
+			},
+			{
+				"value": "thisYear",
+				"label": "This Year"
+			},
+			{
+				"value": "lastYear",
+				"label": "Last Year"
+			}
+		],
 		"bool": [
 			{
 				"value": "YES",
@@ -132,6 +166,24 @@
 				"label": "Equal To"
 			},
 			{
+				"value": "<",
+				"label": "Lesser Than"
+			},
+			{
+				"value": ">",
+				"label": "Greater Than"
+			},
+			{
+				"value": "IN_BETWEEN",
+				"label": "In Between"
+			}
+		],
+		"date2": [
+			{
+				"value": "=",
+				"label": "Equal To"
+			},
+			{
 				"value": "!=",
 				"label": "Not Equal To"
 			},
@@ -188,7 +240,7 @@
 				"label": "Date Created",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"field": "USER_CREATED_DATE"
 			},
@@ -344,7 +396,7 @@
 				"label": "Date Created",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"field": "WORKBOOK_CREATED"
 			},
@@ -390,7 +442,7 @@
 				"label": "Due Date ",
 				"validation": "isEmpty",
 				"placeholder": "MM/DD/YYYY",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"field": "DUE_DATE"
 			},
@@ -437,7 +489,7 @@
 				"type": "date",
 				"label": "Task Created Date",
 				"validation": "isEmpty",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "TASK_CREATED"
@@ -447,7 +499,7 @@
 				"type": "date",
 				"label": "Attempt Date",
 				"validation": "isEmpty",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "ATTEMPT_DATE"
@@ -475,7 +527,7 @@
 				"type": "date",
 				"label": "Date Taken",
 				"validation": "isEmpty",
-				"smartParam": "NONE",
+				"smartParam": "date",
 				"hasSmartParams": true,
 				"placeholder": "MM/DD/YYYY",
 				"field": "DATE_TAKEN"

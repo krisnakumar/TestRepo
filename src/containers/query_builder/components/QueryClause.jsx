@@ -39,6 +39,7 @@ import { DateRangePicker } from 'react-dates';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
+import { formatDate, parseDate } from "react-day-picker/moment";
 
 class QueryClause extends PureComponent {
 
@@ -73,12 +74,14 @@ class QueryClause extends PureComponent {
         };
 
         this.submitted = false;
+        this.toInputs = [];
 
         this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleAddClause = this.handleAddClause.bind(this);
         this.handleDeleteClause = this.handleDeleteClause.bind(this);
         this.onOpenClose = this.onOpenClose.bind(this);
+        this.onDatePickerOpen = this.onDatePickerOpen.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnInputChange = this.handleOnInputChange.bind(this);
         this.handleDayClick = this.handleDayClick.bind(this);
@@ -274,8 +277,19 @@ class QueryClause extends PureComponent {
                 formattedData[index].smartParam = FieldData.params[smartParamType];
                 formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
                 break;
+            case "operatorsSelected":
+                let operatorType = selectedOption ? selectedOption.value : "=";
+                if(operatorType == "IN_BETWEEN") {
+                    formattedData[index].hasSmartParams = false;
+                    formattedData[index].value = "";
+                } else {
+                    formattedData[index].hasSmartParams = true;
+                    formattedData[index].value = "";
+                }
+
+                break;
             default:
-            // Do nothing
+            // Do nothing 
         }
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
@@ -425,10 +439,15 @@ class QueryClause extends PureComponent {
 
             this.state.formattedData.forEach(function (element, index) {
                 let queryObj = {},
-                    fieldValue = _self.state.formattedData[index].valueSelected;
+                    fieldValue = _self.state.formattedData[index].valueSelected,
+                    fieldType = _self.state.formattedData[index].type,
+                    hasSmartParams =  _self.state.formattedData[index].hasSmartParams;
 
-
-                queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
+                if (fieldType == "date" && !hasSmartParams) {
+                    queryObj.Value = typeof fieldValue === 'object' ? formatDate(fieldValue.from, 'L', 'en') + "-" + formatDate(fieldValue.to, 'L', 'en') : fieldValue;
+                } else {
+                    queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
+                }
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
                 queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
                 if (index == 0) {
@@ -583,6 +602,20 @@ class QueryClause extends PureComponent {
         document.querySelector(".Select-menu").style.top = inputWrapper.top + inputWrapper.height + 'px';
     };
 
+    /**
+    * @method
+    * @name - onDatePickerOpen
+    * This method will used to set the css props to select menu outer to positioning
+    * @param none
+    * @returns none
+   */
+    onDatePickerOpen() {
+        let inputWrapper = document.querySelector(".DayPickerInput-OverlayWrapper").previousElementSibling.getBoundingClientRect();
+        document.querySelector(".DayPickerInput-Overlay").style.position = 'fixed';
+        document.querySelector(".DayPickerInput-Overlay").style.left = inputWrapper.left + 'px';
+        document.querySelector(".DayPickerInput-Overlay").style.display = 'block';
+    };
+
     handleOnChange(index, type, c, value) {
         let formattedData = this.state.formattedData;
         formattedData[index][type] = value;
@@ -598,6 +631,21 @@ class QueryClause extends PureComponent {
         formattedData[index][type] = selectValue;
         this.setState({ ...this.state, formattedData, multiValue: selectValue });
         this.forceUpdate();
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // If we have a snapshot value, we've just added new items.
+        // Adjust scroll so these new items don't push the old ones out of view.
+        // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+        let _self = this,
+            nodeList = document.querySelectorAll('.DayPickerInput');
+        if (nodeList.length > 0) {
+            for (var i = 0, len = nodeList.length; i < len; i++) {
+                nodeList[i].addEventListener('click', function (event) {
+                    _self.onDatePickerOpen();
+                });
+            }
+        }
     }
 
     CustomOverlay({ classNames, selectedDay, children, ...props }) {
@@ -625,27 +673,24 @@ class QueryClause extends PureComponent {
     }
 
     handleDayClick(day) {
-        debugger;
         const range = DateUtils.addDayToRange(day, this.state);
         this.setState(range);
     }
 
 
-    handleFromChange(index, type, b ,value) {
+    handleFromChange(index, type, b, value) {
         // Change the from date and focus the "to" input field
         let formattedData = this.state.formattedData;
-        // formattedData[index][type] = {};
-        // formattedData[index][type].from = value;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].from = value : formattedData[index][type] = {};
         formattedData[index][type].from = value;
-        this.setState({ ...this.state, formattedData});
+        this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }
-    handleToChange(index, type, b ,value) {
+    handleToChange(index, type, b, value) {
         let formattedData = this.state.formattedData;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].to = value : formattedData[index][type] = {};
         formattedData[index][type].to = value;
-        this.setState({ ...this.state, formattedData});
+        this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }
 
@@ -653,10 +698,6 @@ class QueryClause extends PureComponent {
         const { formattedData } = this.state;
         let _self = this,
             formattedDataLength = formattedData.length;
-
-        // const { from, to } = this.state;
-        // const modifiers = { start: from, end: to };
-        // // let temp = {[from, { from, to }]}
 
         const { multi, multiValue, options } = this.state;
         return (
@@ -667,7 +708,7 @@ class QueryClause extends PureComponent {
                         let fromDate = field.valueSelected ? field.valueSelected.from : "";
                         let toDate = field.valueSelected ? field.valueSelected.to : "";
                         let modifiers = { start: fromDate, end: toDate };
-
+                        const ref = React.createRef();
                         return (
                             <tr key={index} className={"query-clause-row-" + index}>
                                 <td scope="row" className={"query-clause-firstrow tableWidth-5"}>
@@ -761,29 +802,42 @@ class QueryClause extends PureComponent {
 
                                         ||
 
-                                        (field.hasSmartParams == true && field.type == "date") && <div>
+                                        (field.hasSmartParams == false && field.type == "date") && <div className={"day-picker-div " + index}>
                                             <DayPickerInput
                                                 value={fromDate}
                                                 placeholder="From"
                                                 format="L"
-                                                className="inputQueryInput"
+                                                formatDate={formatDate}
+                                                parseDate={parseDate}
+                                                component={
+                                                    props =>
+                                                        <Input
+                                                            type="text"
+                                                            className="inputQueryInput form-control" {...props} />
+                                                }
                                                 dayPickerProps={{
-                                                    selectedDays: [fromDate, { fromDate, toDate }],
+                                                    selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                     modifiers,
-                                                    numberOfMonths: 1,
-                                                    onDayClick: () => _self.to.getInput().focus()
+                                                    numberOfMonths: 1
                                                 }}
                                                 onDayChange={_self.handleFromChange.bind("", index, "valueSelected", this)}
                                             />
                                             {" "}—{" "}
                                             <DayPickerInput
-                                                ref={el => (_self.to = el)}
+                                                ref={el => (_self.toInputs[index] = el)}
                                                 value={toDate}
                                                 placeholder="To"
                                                 format="L"
-                                                className="inputQueryInput"
+                                                formatDate={formatDate}
+                                                parseDate={parseDate}
+                                                component={
+                                                    props =>
+                                                        <Input
+                                                            type="text"
+                                                            className="inputQueryInput form-control" {...props} />
+                                                }
                                                 dayPickerProps={{
-                                                    selectedDays: [fromDate, { fromDate, toDate }],
+                                                    selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                     modifiers,
                                                     numberOfMonths: 1
                                                 }}
@@ -793,7 +847,7 @@ class QueryClause extends PureComponent {
 
                                         ||
 
-                                        (field.hasSmartParams == true && field.type != "date") && <SelectPlus.Creatable
+                                        (field.hasSmartParams == true) && <SelectPlus.Creatable
                                             onOpen={_self.onOpenClose.bind()}
                                             autocomplete="off"
                                             clearable={false}
@@ -820,25 +874,7 @@ class QueryClause extends PureComponent {
                         <td scope="row" className="tableWidth-5">
                             <button onClick={this.handleAddClause.bind(this, "n")} title="Add new clause" className="query-action-btn add"><i className="fa fa-plus"></i></button>
                         </td>
-                        <td className={"tableWidth-10"}>
-                            {/* <DateRangePicker
-                                startDateId="startDate"
-                                endDateId="endDate"
-                                startDate={this.state.startDate}
-                                endDate={this.state.endDate}
-                                onDatesChange={({ startDate, endDate }) => { this.setState({ startDate, endDate })}}
-                                focusedInput={this.state.focusedInput}
-                                onFocusChange={(focusedInput) => { this.setState({ focusedInput })}}
-                            /> */}
-
-                            {/* <DayPickerInput
-                            overlayComponent={this.CustomOverlay}
-                            dayPickerProps={{
-                                todayButton: "Today"
-                            }}
-                            keepFocus={false}
-                            /> */}
-                        </td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -849,4 +885,4 @@ class QueryClause extends PureComponent {
     }
 }
 
-export default withCookies(QueryClause);
+export default withCookies(QueryClause); 
