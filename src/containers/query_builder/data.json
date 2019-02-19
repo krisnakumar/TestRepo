@@ -174,7 +174,7 @@
 				"label": "Greater Than"
 			},
 			{
-				"value": "IN_BETWEEN",
+				"value": "Between",
 				"label": "In Between"
 			}
 		],

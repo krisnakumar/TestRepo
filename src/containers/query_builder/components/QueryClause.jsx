@@ -278,11 +278,12 @@ class QueryClause extends PureComponent {
                 formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
                 break;
             case "operatorsSelected":
-                let operatorType = selectedOption ? selectedOption.value : "=";
-                if(operatorType == "IN_BETWEEN") {
+                let operatorType = selectedOption ? selectedOption.value : "=",
+                    isDateType = formattedData[index].type;
+                if(isDateType == "date" && operatorType == "Between") {
                     formattedData[index].hasSmartParams = false;
                     formattedData[index].value = "";
-                } else {
+                } else if(isDateType == "date") {
                     formattedData[index].hasSmartParams = true;
                     formattedData[index].value = "";
                 }
@@ -444,7 +445,7 @@ class QueryClause extends PureComponent {
                     hasSmartParams =  _self.state.formattedData[index].hasSmartParams;
 
                 if (fieldType == "date" && !hasSmartParams) {
-                    queryObj.Value = typeof fieldValue === 'object' ? formatDate(fieldValue.from, 'L', 'en') + "-" + formatDate(fieldValue.to, 'L', 'en') : fieldValue;
+                    queryObj.Value = typeof fieldValue === 'object' ? formatDate(fieldValue.from, 'L', 'en') + " and " + formatDate(fieldValue.to, 'L', 'en') : fieldValue;
                 } else {
                     queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
                 }
