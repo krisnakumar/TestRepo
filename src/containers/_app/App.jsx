@@ -68,7 +68,7 @@ class App extends Component {
   };
 
   autoLogout() {
-    window.location = window.location.origin;
+    window.location = "https://dev.its-training.com/Login.aspx"; //Need to be window.location.origin after integrating with LMS Site
   };
 
   /**
