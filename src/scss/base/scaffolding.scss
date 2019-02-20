@@ -737,9 +737,6 @@ button.query-action-btn.delete:disabled {
   .Select-control {
     border-radius: 0px;
   }
-  .Select {
-
-  }
 }
 
 .slide-pane_from_right {
@@ -769,7 +766,8 @@ button.query-action-btn.delete:disabled {
   position: relative;
   top: -29px;
   right: -38px;
-   span {
+}
+  span {
     font-size: 20px;
    }
 }

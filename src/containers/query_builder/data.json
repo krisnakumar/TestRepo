@@ -1,5 +1,6 @@
 {
-	"combinators": [{
+	"combinators": [
+		{
 			"value": "and",
 			"label": "AND"
 		},
@@ -9,11 +10,14 @@
 		}
 	],
 	"params": {
-		"NONE": [{
-			"value": "NONE",
-			"label": "None"
-		}],
-		"user": [{
+		"NONE": [
+			{
+				"value": "NONE",
+				"label": "None"
+			}
+		],
+		"user": [
+			{
 				"value": "ME",
 				"label": "@Me"
 			},
@@ -26,7 +30,8 @@
 				"label": "@Direct Subordinates"
 			}
 		],
-		"role": [{
+		"role": [
+			{
 				"value": "admin",
 				"label": "Admin"
 			},
@@ -91,18 +96,22 @@
 		],
 		"bool": [
 			{
-		"bool": [{
-				"value": "YES",
-				"label": "Yes"
-			},
-			{
-				"value": "NO",
-				"label": "No"
+				"bool": [
+					{
+						"value": "YES",
+						"label": "Yes"
+					},
+					{
+						"value": "NO",
+						"label": "No"
+					}
+				]
 			}
 		]
 	},
 	"operator": {
-		"others": [{
+		"others": [
+			{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -111,7 +120,8 @@
 				"label": "Not Equal To"
 			}
 		],
-		"int": [{
+		"int": [
+			{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -128,7 +138,8 @@
 				"label": "Greater Than or Equal To"
 			}
 		],
-		"text": [{
+		"text": [
+			{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -153,7 +164,8 @@
 				"label": "Ends With"
 			}
 		],
-		"date": [{
+		"date": [
+			{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -198,7 +210,8 @@
 		]
 	},
 	"columns": {
-		"employees": [{
+		"employees": [
+			{
 				"value": "empName",
 				"label": "Employee Name",
 				"isDefault": true,
@@ -275,7 +288,8 @@
 		"tasks": []
 	},
 	"field": {
-		"employees": [{
+		"employees": [
+			{
 				"value": "id",
 				"type": "int",
 				"label": "User Id",
@@ -430,7 +444,8 @@
 				"field": "DEPARTMENT"
 			}
 		],
-		"workbooks": [{
+		"workbooks": [
+			{
 				"value": "workbookName",
 				"type": "text",
 				"label": "Workbook Name",
@@ -532,7 +547,8 @@
 				"field": "USER_ID"
 			}
 		],
-		"tasks": [{
+		"tasks": [
+			{
 				"value": "taskName",
 				"type": "text",
 				"label": "Task Name",
