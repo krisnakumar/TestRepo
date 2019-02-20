@@ -29,6 +29,9 @@ import WorkbookResultSet from './WorkbookResultSet';
 import TaskResultSet from './TaskResultSet';
 import SlidingPane from './SlideOut';
 import FieldData from './../data';
+import EmployeeExport from './EmployeeExport';
+import WorkbookExport from './WorkbookExport';
+import TaskExport from './TaskExport';
 
 const options = [
   { value: 'employees', label: 'Employees' },
@@ -60,12 +63,12 @@ class QuerySection extends PureComponent {
       isWorkbook: false,
       isTask: false,
       isPaneOpen: false,
-      isPaneOpenLeft:  false,
+      isPaneOpenLeft: false,
       resultSet: []
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
-    this.onOpenClose = this.onOpenClose.bind(this); 
+    this.onOpenClose = this.onOpenClose.bind(this);
   }
 
   /**
@@ -174,28 +177,28 @@ class QuerySection extends PureComponent {
   };
 
 
- /**
-   * @method
-   * @name - onColumnOptionsClick
-   * This method Add or remove the column from initial state
-   * @param none
-   * @returns none
-  */
- onColumnOptionsClick = () => { 
-   this.setState({isPaneOpen:true})
-   
+  /**
+    * @method
+    * @name - onColumnOptionsClick
+    * This method Add or remove the column from initial state
+    * @param none
+    * @returns none
+   */
+  onColumnOptionsClick = () => {
+    this.setState({ isPaneOpen: true })
+
   };
 
-   /**
-   * @method
-   * @name - columnOptionsSlideToggle
-   * This method used to get the workbooks from child component
-   * @param employees
-   * @returns none
-  */
- columnOptionsSlideToggle = () => {
-  this.setState({ isPaneOpen: false });
-}
+  /**
+  * @method
+  * @name - columnOptionsSlideToggle
+  * This method used to get the workbooks from child component
+  * @param employees
+  * @returns none
+ */
+  columnOptionsSlideToggle = () => {
+    this.setState({ isPaneOpen: false });
+  }
 
   /**
    * @method
@@ -242,35 +245,35 @@ class QuerySection extends PureComponent {
     this.setState({ tasks: tasks });
   }
 
-   /**
-     * @method
-     * @name - onOpenClose
-     * This method will used to set the css props to select menu outer to positioning
-     * @param none
-     * @returns none
-    */
-   onOpenClose() {
-      let inputWrapper = document.querySelector(".is-open").getBoundingClientRect();
-          document.querySelector(".Select-menu").style.width = inputWrapper.width+'px';
-          document.querySelector(".Select-menu").style.top = inputWrapper.top+inputWrapper.height+'px';
+  /**
+    * @method
+    * @name - onOpenClose
+    * This method will used to set the css props to select menu outer to positioning
+    * @param none
+    * @returns none
+   */
+  onOpenClose() {
+    let inputWrapper = document.querySelector(".is-open").getBoundingClientRect();
+    document.querySelector(".Select-menu").style.width = inputWrapper.width + 'px';
+    document.querySelector(".Select-menu").style.top = inputWrapper.top + inputWrapper.height + 'px';
   };
 
   render() {
-    const { selectedOption, isClearable} = this.state;
-    this.state.resultSet = []; 
-   let fieldDataTemp = FieldData;
-    switch(selectedOption.value) {
+    const { selectedOption, isClearable } = this.state;
+    this.state.resultSet = [];
+    let fieldDataTemp = FieldData;
+    switch (selectedOption.value) {
       case 'employees':
-          this.state.resultSet = fieldDataTemp.columns.employees;
-          break;
+        this.state.resultSet = fieldDataTemp.columns.employees;
+        break;
       case 'workbooks':
-          this.state.resultSet = fieldDataTemp.columns.workbooks;
-          break;
+        this.state.resultSet = fieldDataTemp.columns.workbooks;
+        break;
       case 'tasks':
-          this.state.resultSet = fieldDataTemp.columns.tasks;
-          break;
+        this.state.resultSet = fieldDataTemp.columns.tasks;
+        break;
       default:
-          break;
+        break;
     }
     return (
       <CardBody>
@@ -302,7 +305,7 @@ class QuerySection extends PureComponent {
               <Select
                 clearable={isClearable}
                 isRtl={true}
-                onOpen={ this.onOpenClose.bind()}
+                onOpen={this.onOpenClose.bind()}
                 isSearchable={false}
                 searchable={false}
                 openOnClick={false}
@@ -333,29 +336,34 @@ class QuerySection extends PureComponent {
                 <span className="fa-text-align">Column Options</span>
               </button>
             </Col>
+            <Col xs="auto">
+              {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} />}
+              {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} />}
+              {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} />}
+            </Col>
           </Row>
         </div>
         <div className="wrapper">
           <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
 
-                <QueryPane 
-                  ref={this.queryPane} 
-                  selectedOption={this.state.selectedOption} 
-                  passTasksToQuerySection={this.passTasksResults} 
-                  passWorkbooksResultsToQuerySection={this.passWorkbookResults} 
-                  passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+            <QueryPane
+              ref={this.queryPane}
+              selectedOption={this.state.selectedOption}
+              passTasksToQuerySection={this.passTasksResults}
+              passWorkbooksResultsToQuerySection={this.passWorkbookResults}
+              passEmployeesResultsToQuerySection={this.passEmployeesResults} />
 
-                { this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees}/>}
-                { this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks}/>}
-                { this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks}/>}
-                
-              </SplitterLayout>
+            {this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees} />}
+            {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
+            {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
+
+          </SplitterLayout>
         </div>
         <div>
           <SlidingPane
-            columnOptionsSlideToggle = {this.columnOptionsSlideToggle}
-            isPaneOpen = {this.state.isPaneOpen}
-            columns= {this.state.resultSet}
+            columnOptionsSlideToggle={this.columnOptionsSlideToggle}
+            isPaneOpen={this.state.isPaneOpen}
+            columns={this.state.resultSet}
           />
         </div>
       </CardBody>
