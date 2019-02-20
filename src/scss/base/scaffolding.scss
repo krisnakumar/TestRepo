@@ -723,6 +723,7 @@ button.query-action-btn.delete:disabled {
 }
 .day-picker-div {
   margin-left: 7px;
+}
 .DayPicker-Day--start {
   border-top-left-radius: 50% !important;
   border-bottom-left-radius: 50% !important;
@@ -739,12 +740,25 @@ button.query-action-btn.delete:disabled {
   }
 }
 
-.slide-pane_from_right {
-  width:25% !important;
+.ReactModalPortal {
+  .slide-pane_from_right {
+    width:30% !important;
+  }
 }
 
+.slide-pane_from_right {
+  width:30% !important;
+}
+
+.ReactModal__Content {
+  width:30% !important;
+}
+
+
+
+
 .slide-pane__content{
-  padding: 15px 5px !important;
+  padding: 35px 5px !important;
   overflow-x: unset !important;
 }
 
@@ -753,7 +767,7 @@ button.query-action-btn.delete:disabled {
   position: relative;
   font-weight: 600;
   top: -4px;
-  
+  width: 50%; 
 }
 
 
@@ -766,8 +780,34 @@ button.query-action-btn.delete:disabled {
   position: relative;
   top: -29px;
   right: -38px;
-}
   span {
     font-size: 20px;
    }
+  }
+
+.slide-pane__header {
+  display: none !important;
+}
+
+.col-options-dropdown
+ .Select-menu {
+  position: relative !important;
+  margin: 0px !important;
+}
+
+
+.col-opt-action-btn {
+  width: 40%;
+  height: 30px;
+  margin: 5px;
+}
+
+
+.col-opt-action-section {
+  float: right;
+  width: 40%;
+}
+
+.headerSection{
+  float: right;
 }
