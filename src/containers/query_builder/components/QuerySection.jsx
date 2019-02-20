@@ -27,6 +27,8 @@ import QueryPane from './QueryPane';
 import EmployeeResultSet from './EmployeeResultSet';
 import WorkbookResultSet from './WorkbookResultSet';
 import TaskResultSet from './TaskResultSet';
+import SlidingPane from './SlideOut';
+import FieldData from './../data';
 
 const options = [
   { value: 'employees', label: 'Employees' },
@@ -56,7 +58,10 @@ class QuerySection extends PureComponent {
       modal: false,
       isEmployee: true,
       isWorkbook: false,
-      isTask: false
+      isTask: false,
+      isPaneOpen: false,
+      isPaneOpenLeft:  false,
+      resultSet: []
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
@@ -168,6 +173,30 @@ class QuerySection extends PureComponent {
     }
   };
 
+
+ /**
+   * @method
+   * @name - onColumnOptionsClick
+   * This method Add or remove the column from initial state
+   * @param none
+   * @returns none
+  */
+ onColumnOptionsClick = () => { 
+   this.setState({isPaneOpen:true})
+   
+  };
+
+   /**
+   * @method
+   * @name - columnOptionsSlideToggle
+   * This method used to get the workbooks from child component
+   * @param employees
+   * @returns none
+  */
+ columnOptionsSlideToggle = () => {
+  this.setState({ isPaneOpen: false });
+}
+
   /**
    * @method
    * @name - resetQueryClick
@@ -227,9 +256,23 @@ class QuerySection extends PureComponent {
   };
 
   render() {
-    const { selectedOption, isClearable } = this.state;
+    const { selectedOption, isClearable} = this.state;
+    this.state.resultSet = []; 
+   let fieldDataTemp = FieldData;
+    switch(selectedOption.value) {
+      case 'employees':
+          this.state.resultSet = fieldDataTemp.columns.employees;
+          break;
+      case 'workbooks':
+          this.state.resultSet = fieldDataTemp.columns.workbooks;
+          break;
+      case 'tasks':
+          this.state.resultSet = fieldDataTemp.columns.tasks;
+          break;
+      default:
+          break;
+    }
     return (
-
       <CardBody>
         <div className="card__title">
           <div className="pageheader">
@@ -284,6 +327,12 @@ class QuerySection extends PureComponent {
                 <span className="fa-text-align">Reset</span>
               </button>
             </Col>
+            <Col xs="auto">
+              <button onClick={this.onColumnOptionsClick} className="query-section-button" size="sm" title="Column Options" aria-label="Column Options">
+                <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span>
+                <span className="fa-text-align">Column Options</span>
+              </button>
+            </Col>
           </Row>
         </div>
         <div className="wrapper">
@@ -301,6 +350,13 @@ class QuerySection extends PureComponent {
                 { this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks}/>}
                 
               </SplitterLayout>
+        </div>
+        <div>
+          <SlidingPane
+            columnOptionsSlideToggle = {this.columnOptionsSlideToggle}
+            isPaneOpen = {this.state.isPaneOpen}
+            columns= {this.state.resultSet}
+          />
         </div>
       </CardBody>
     );

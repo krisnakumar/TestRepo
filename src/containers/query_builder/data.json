@@ -1,6 +1,5 @@
 {
-	"combinators": [
-		{
+	"combinators": [{
 			"value": "and",
 			"label": "AND"
 		},
@@ -10,14 +9,11 @@
 		}
 	],
 	"params": {
-		"NONE": [
-			{
-				"value": "NONE",
-				"label": "None"
-			}
-		],
-		"user": [
-			{
+		"NONE": [{
+			"value": "NONE",
+			"label": "None"
+		}],
+		"user": [{
 				"value": "ME",
 				"label": "@Me"
 			},
@@ -30,8 +26,7 @@
 				"label": "@Direct Subordinates"
 			}
 		],
-		"role": [
-			{
+		"role": [{
 				"value": "admin",
 				"label": "Admin"
 			},
@@ -96,6 +91,7 @@
 		],
 		"bool": [
 			{
+		"bool": [{
 				"value": "YES",
 				"label": "Yes"
 			},
@@ -106,8 +102,7 @@
 		]
 	},
 	"operator": {
-		"others": [
-			{
+		"others": [{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -116,8 +111,7 @@
 				"label": "Not Equal To"
 			}
 		],
-		"int": [
-			{
+		"int": [{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -134,8 +128,7 @@
 				"label": "Greater Than or Equal To"
 			}
 		],
-		"text": [
-			{
+		"text": [{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -160,8 +153,7 @@
 				"label": "Ends With"
 			}
 		],
-		"date": [
-			{
+		"date": [{
 				"value": "=",
 				"label": "Equal To"
 			},
@@ -205,9 +197,85 @@
 			}
 		]
 	},
-	"field": {
-		"employees": [
+	"columns": {
+		"employees": [{
+				"value": "empName",
+				"label": "Employee Name",
+				"isDefault": true,
+				"fields": "EMPLOYEE_NAME"
+			},
 			{
+				"value": "role",
+				"label": "Role",
+				"isDefault": true,
+				"fields": "Role"
+			},
+			{
+				"value": "userId",
+				"label": "User Id",
+				"isDefault": true,
+				"fields": "USER_ID"
+			},
+			{
+				"value": "userName",
+				"label": "User Name",
+				"isDefault": true,
+				"fields": "USERNAME"
+			},
+			{
+				"value": "email",
+				"label": "Email",
+				"isDefault": true,
+				"fields": "EMAIL"
+			},
+			{
+				"value": "alternateUserName",
+				"label": "Alternate Name",
+				"isDefault": true,
+				"fields": "ALTERNATE_USERNAME"
+			},
+			{
+				"value": "totalEmployees",
+				"label": "Total Employees",
+				"isDefault": true,
+				"fields": "TOTAL_EMPLOYEES"
+			},
+			{
+				"value": "address",
+				"label": "Address",
+				"isDefault": false,
+				"fields": "ADDRESS"
+			},
+			{
+				"value": "phone",
+				"label": "Phone",
+				"isDefault": false,
+				"fields": "PHONE"
+			},
+			{
+				"value": "supervisorName",
+				"label": "Supervisor Name",
+				"isDefault": false,
+				"fields": "SUPERVISOR_NAME"
+			},
+			{
+				"value": "userCreatedDate",
+				"label": "User Created Date",
+				"isDefault": false,
+				"fields": "USER_CREATED_DATE"
+			},
+			{
+				"value": "supervisorId",
+				"label": "Supervisor Id",
+				"isDefault": false,
+				"fields": "SUPERVISOR_ID"
+			}
+		],
+		"workbooks": [],
+		"tasks": []
+	},
+	"field": {
+		"employees": [{
 				"value": "id",
 				"type": "int",
 				"label": "User Id",
@@ -362,8 +430,7 @@
 				"field": "DEPARTMENT"
 			}
 		],
-		"workbooks": [
-			{
+		"workbooks": [{
 				"value": "workbookName",
 				"type": "text",
 				"label": "Workbook Name",
@@ -465,8 +532,7 @@
 				"field": "USER_ID"
 			}
 		],
-		"tasks": [
-			{
+		"tasks": [{
 				"value": "taskName",
 				"type": "text",
 				"label": "Task Name",

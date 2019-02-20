@@ -723,4 +723,53 @@ button.query-action-btn.delete:disabled {
 }
 .day-picker-div {
   margin-left: 7px;
+.DayPicker-Day--start {
+  border-top-left-radius: 50% !important;
+  border-bottom-left-radius: 50% !important;
+}
+.DayPicker-Day--end {
+  border-top-right-radius: 50% !important;
+  border-bottom-right-radius: 50% !important;
+}
+
+.columnOptionsSelect{
+  margin: 15px 70px 10px 5px;
+  .Select-control {
+    border-radius: 0px;
+  }
+  .Select {
+
+  }
+}
+
+.slide-pane_from_right {
+  width:25% !important;
+}
+
+.slide-pane__content{
+  padding: 15px 5px !important;
+  overflow-x: unset !important;
+}
+
+.colOptionsTitle {
+  right: -5px;
+  position: relative;
+  font-weight: 600;
+  top: -4px;
+  
+}
+
+
+.col-opt-close {
+  float: right;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  color: #0a1631;
+  position: relative;
+  top: -29px;
+  right: -38px;
+   span {
+    font-size: 20px;
+   }
 }
