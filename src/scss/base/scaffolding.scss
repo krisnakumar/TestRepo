@@ -2,6 +2,9 @@ main {
   padding: 0;
 }
 
+.padding-0 {
+  padding: 0;
+}
 body {
   margin: 0;
   padding: 0 !important;
@@ -515,6 +518,9 @@ button.btn.btn-primary.account__btn:focus, button.btn.btn-primary.account__btn:a
 .padding-rt-0{
   padding-right: 0 !important;
 }
+.padding-lf-0{
+  padding-left: 0 !important;
+}
 
 .employees-result-set {
   .react-grid-Grid {
@@ -770,7 +776,6 @@ button.query-action-btn.delete:disabled {
   width: 50%; 
 }
 
-
 .col-opt-close {
   float: right;
   background-color: white;
@@ -789,10 +794,11 @@ button.query-action-btn.delete:disabled {
   display: none !important;
 }
 
-.col-options-dropdown
+.col-options-dropdown{
  .Select-menu {
   position: relative !important;
   margin: 0px !important;
+}
 }
 
 
@@ -810,4 +816,16 @@ button.query-action-btn.delete:disabled {
 
 .headerSection{
   float: right;
+}
+
+
+.date-picker-btn-group.btn-group {
+  display: list-item !important;
+}
+.date-picker-btn {
+  padding: 0 !important;
+  height: 35px !important;
+  display: list-item !important;
+  margin: 3px !important;
+  width: -webkit-fill-available;
 }

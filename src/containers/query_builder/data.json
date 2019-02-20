@@ -82,7 +82,7 @@
 				"label": "This Month"
 			},
 			{
-				"value": "Last Month",
+				"value": "lastMonth",
 				"label": "Last Month"
 			},
 			{

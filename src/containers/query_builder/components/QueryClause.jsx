@@ -34,12 +34,12 @@ import 'react-select-plus/dist/react-select-plus.css';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-import { DateRangePicker } from 'react-dates';
-
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import { formatDate, parseDate } from "react-day-picker/moment";
+import { Container, Row, Col, Button, ButtonGroup } from 'reactstrap';
+import * as moment from 'moment';
 
 class QueryClause extends PureComponent {
 
@@ -84,7 +84,7 @@ class QueryClause extends PureComponent {
         this.onDatePickerOpen = this.onDatePickerOpen.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnInputChange = this.handleOnInputChange.bind(this);
-        this.handleDayClick = this.handleDayClick.bind(this);
+        this.getDateByValue = this.getDateByValue.bind(this);
         this.handleFromChange = this.handleFromChange.bind(this);
         this.handleToChange = this.handleToChange.bind(this);
     }
@@ -280,10 +280,10 @@ class QueryClause extends PureComponent {
             case "operatorsSelected":
                 let operatorType = selectedOption ? selectedOption.value : "=",
                     isDateType = formattedData[index].type;
-                if(isDateType == "date" && operatorType == "Between") {
+                if (isDateType == "date" && operatorType == "Between") {
                     formattedData[index].hasSmartParams = false;
                     formattedData[index].value = "";
-                } else if(isDateType == "date") {
+                } else if (isDateType == "date") {
                     formattedData[index].hasSmartParams = true;
                     formattedData[index].value = "";
                 }
@@ -419,7 +419,8 @@ class QueryClause extends PureComponent {
      * @returns none
     */
     buildQuery() {
-        let tempFormattedData = this.state.formattedData
+        let tempFormattedData = this.state.formattedData;
+
         tempFormattedData.forEach(function (element, index) {
             tempFormattedData[index].isSkipValidation = false;
         });
@@ -442,15 +443,24 @@ class QueryClause extends PureComponent {
                 let queryObj = {},
                     fieldValue = _self.state.formattedData[index].valueSelected,
                     fieldType = _self.state.formattedData[index].type,
-                    hasSmartParams =  _self.state.formattedData[index].hasSmartParams;
+                    hasSmartParams = _self.state.formattedData[index].hasSmartParams;
 
                 if (fieldType == "date" && !hasSmartParams) {
                     queryObj.Value = typeof fieldValue === 'object' ? formatDate(fieldValue.from, 'L', 'en') + " and " + formatDate(fieldValue.to, 'L', 'en') : fieldValue;
+                } else if (fieldType == "date" && hasSmartParams) {
+                    queryObj.Value = typeof fieldValue === 'object' ? _self.getDateByValue(fieldValue.value) : fieldValue;
                 } else {
                     queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
                 }
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
-                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
+                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;                
+                if (fieldType == "date" && hasSmartParams) {
+                    if(fieldValue.value ==  "today" || fieldValue.value == "yesterday"){
+                        queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
+                    } else {
+                        queryObj.Operator = "Between";
+                    }
+                }
                 if (index == 0) {
                     queryObj.Bitwise = "";
                 } else {
@@ -483,6 +493,40 @@ class QueryClause extends PureComponent {
                     console.log('Sorry, we are out of options');
             }
         }
+    };
+
+
+    getDateByValue(dateValue) {
+        let date = dateValue;
+        switch (dateValue) {
+            case 'today':
+                date = formatDate(moment(), 'L', 'en');
+                break;
+            case 'yesterday':
+                date = formatDate(moment().subtract(1, 'days'), 'L', 'en');
+                break;
+            case 'thisWeek':
+                date = formatDate(moment().startOf('week'), 'L', 'en') +" and "+ formatDate(moment().endOf('week'), 'L', 'en');
+                break;
+            case 'lastWeek':
+                date = formatDate(moment().subtract(1, 'weeks').startOf('week'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'weeks').endOf('week'), 'L', 'en');
+                break;
+            case 'thisMonth':
+                date = formatDate(moment().startOf('month'), 'L', 'en') +" and "+ formatDate(moment().endOf('month'), 'L', 'en');
+                break;
+            case 'lastMonth':
+                date = formatDate(moment().subtract(1, 'months').startOf('month'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'months').endOf('month'), 'L', 'en');
+                break;
+            case 'thisYear':
+                date = formatDate(moment().startOf('year'), 'L', 'en') +" and "+ formatDate(moment().endOf('year'), 'L', 'en');
+                break;
+            case 'lastYear':
+                date = formatDate(moment().subtract(1, 'years').startOf('year'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'years').endOf('year'), 'L', 'en');
+                break;
+            default:
+                date = dateValue;
+        }
+        return date;
     };
 
     /**
@@ -647,9 +691,13 @@ class QueryClause extends PureComponent {
                 });
             }
         }
-    }
+    };
 
-    CustomOverlay({ classNames, selectedDay, children, ...props }) {
+
+    CustomOverlay(index, { classNames, selectedDay, children, ...props }, excess) {
+        let position = index.split("@"),
+            fieldIndex = position[0],
+            fieldType = position[1];
         return (
             <div
                 className={classNames.overlayWrapper}
@@ -657,27 +705,25 @@ class QueryClause extends PureComponent {
                 {...props}
             >
                 <div className={classNames.overlay}>
-                    <h3>Hello day picker!</h3>
-                    <p>
-                        <input />
-                        <button onClick={() => console.log("clicked!")}>button</button>
-                    </p>
-                    {/* <p>
-                {selectedDay
-                  ? `You picked: ${selectedDay.toLocaleDateString()}`
-                  : "Please pick a day"}
-              </p> */}
-                    {children}
+                    <Row>
+                        <Col xs="4" className="padding-rt-0">
+                            <div className="date-picker-btn-group">
+                                <Button className="date-picker-btn">Today</Button>
+                                <Button className="date-picker-btn">Yesterday</Button>
+                                <Button className="date-picker-btn">This Week</Button>
+                                <Button className="date-picker-btn">Last Week</Button>
+                                <Button className="date-picker-btn">This Month</Button>
+                                <Button className="date-picker-btn">Last Month</Button>
+                                <Button className="date-picker-btn">This Year</Button>
+                                <Button className="date-picker-btn">Last Year</Button>
+                            </div>
+                        </Col>
+                        <Col xs="8" className="padding-lf-0"> {children}</Col>
+                    </Row>
                 </div>
             </div>
         );
-    }
-
-    handleDayClick(day) {
-        const range = DateUtils.addDayToRange(day, this.state);
-        this.setState(range);
-    }
-
+    };
 
     handleFromChange(index, type, b, value) {
         // Change the from date and focus the "to" input field
@@ -687,6 +733,7 @@ class QueryClause extends PureComponent {
         this.setState({ ...this.state, formattedData });
         this.forceUpdate();
     }
+
     handleToChange(index, type, b, value) {
         let formattedData = this.state.formattedData;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].to = value : formattedData[index][type] = {};
@@ -810,6 +857,8 @@ class QueryClause extends PureComponent {
                                                 format="L"
                                                 formatDate={formatDate}
                                                 parseDate={parseDate}
+                                                // overlayComponent={_self.CustomOverlay.bind(index, index+"@from")}
+                                                keepFocus={false}
                                                 component={
                                                     props =>
                                                         <Input
@@ -831,6 +880,8 @@ class QueryClause extends PureComponent {
                                                 format="L"
                                                 formatDate={formatDate}
                                                 parseDate={parseDate}
+                                                // overlayComponent={_self.CustomOverlay.bind(index, index+"@to")}
+                                                keepFocus={false}
                                                 component={
                                                     props =>
                                                         <Input
