@@ -125,10 +125,6 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}"
     ],
-    "coverageReporters": [
-      "text",
-      "cobertura"
-    ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
