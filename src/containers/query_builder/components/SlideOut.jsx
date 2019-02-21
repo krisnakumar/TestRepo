@@ -19,6 +19,7 @@ class SlidePane extends Component {
         this.addColumns = this.addColumns.bind(this);
         this.removeColumns = this.removeColumns.bind(this);
         this.requestClose = this.requestClose.bind(this);
+        this.requestOk = this.requestOk.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +56,19 @@ class SlidePane extends Component {
         this.props.columnOptionsSlideToggle();
     }
 
+    /**
+     * @method
+     * @name - requestOk
+     * This method will invoked whenever the props or state
+     *  is update to this component class
+     * @param newProps
+     * @returns none
+    */
+    requestOk() {
+        this.setState({ isPaneOpen: false });
+        this.props.changeColumnOptions(this.state.columnOptions);
+    }
+    
     /**
     * @method
     * @name - addColumns
@@ -168,7 +182,7 @@ class SlidePane extends Component {
                         }
                     </div>
                     <div className="col-opt-action-section"  >
-                        <button className="col-opt-action-btn" size="sm" title="Ok" aria-label="Ok"> Ok </button>
+                        <button className="col-opt-action-btn" size="sm" title="Ok" aria-label="Ok" onClick={self.requestOk.bind()}> Ok </button>
                         <button className="col-opt-action-btn" size="sm" title="Cancel" aria-label="Cancel" onClick={self.requestClose.bind()}> Cancel </button>
                     </div>
                 </div>

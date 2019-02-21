@@ -96,16 +96,12 @@
 		],
 		"bool": [
 			{
-				"bool": [
-					{
-						"value": "YES",
-						"label": "Yes"
-					},
-					{
-						"value": "NO",
-						"label": "No"
-					}
-				]
+				"value": "YES",
+				"label": "Yes"
+			},
+			{
+				"value": "NO",
+				"label": "No"
 			}
 		]
 	},
@@ -212,7 +208,7 @@
 	"columns": {
 		"employees": [
 			{
-				"value": "empName",
+				"value": "employeeName",
 				"label": "Employee Name",
 				"isDefault": true,
 				"fields": "EMPLOYEE_NAME"
@@ -242,7 +238,7 @@
 				"fields": "EMAIL"
 			},
 			{
-				"value": "alternateUserName",
+				"value": "alternateName",
 				"label": "Alternate Name",
 				"isDefault": true,
 				"fields": "ALTERNATE_USERNAME"

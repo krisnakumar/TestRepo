@@ -100,13 +100,14 @@ class EmployeeResultSet extends React.Component {
     this.state = {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
-      heads: this.heads,
+      heads: this.props.columns || this.heads,
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
-      renderTimes: 0
+      renderTimes: 0,
+      count: 0
     };
-  }
+  };
 
   /**
    * @method
@@ -156,7 +157,8 @@ class EmployeeResultSet extends React.Component {
         totalEmployees: employees[i].TotalEmployees,
         userId: employees[i].UserId,
         userName: employees[i].UserName,
-        testCol: employees[i].TestCol || "N/A"
+        testCol: employees[i].TestCol || "N/A",
+        address: employees[i].Address || ""
       });
     }
 
@@ -235,37 +237,39 @@ class EmployeeResultSet extends React.Component {
     this.setState({ rows });
   };
 
-   /**
-    * @method
-    * @name - handleButtonClick
-    * This method will trigger the event of API's respective to cell clicked Data Grid
-    * @param type
-    * @param args
-    * @returns none
-  */
-  handleButtonClick = () => {   
-    let tempCol = {
-      key: 'testCol',
-      name: 'Test Col',
-      sortable: true,
-      editable: false,
-      getRowMetaData: row => row,
-      formatter: this.cellFormatter,
-      cellClass: "text-right"
-    };
-
-    let heads = this.state.heads;
-
-    heads.push(tempCol);
-
-    // this.state.heads = heads;
-    const { renderTimes } = this.state;
-    this.setState({ renderTimes: renderTimes + 1, heads: heads});
-    this.forceUpdate();
-  };
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
+
+  buildColumns = columns =>
+    columns.map((col, i) => ({
+      ...col,
+      formatter: this.cellFormatter,
+    }));
+
+  addColumns = (columnOptions) => {
+    let count = this.state.count;
+    this.setState({
+      heads: this.buildColumns(columnOptions),
+      count: count + 1
+    });
+    this.forceUpdate();
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // If we have a snapshot value, we've just added new items.
+    // Adjust scroll so these new items don't push the old ones out of view.
+    // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+    let { heads } = this.state,
+      currentColumnsLength = heads.length,
+      prevColumnsLength = prevState.heads.length;
+    if (currentColumnsLength == prevColumnsLength) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+    }
+  };
+
 
   render() {
     const { rows, renderTimes, heads } = this.state;
@@ -273,13 +277,14 @@ class EmployeeResultSet extends React.Component {
       <div className="grid-container employees-result">
         <div className="table employees-result-set">
           <ReactDataGrid
-            ref={'employeeResultSet'+renderTimes}
+            ref={'employeeResultSet'}
             onGridSort={this.handleGridSort}
             enableCellSelect={false}
             enableCellAutoFocus={false}
             columns={this.state.heads}
             rowGetter={this.rowGetter}
-            rowsCount={rows.length}
+            rowsCount={this.state.rows.length}
+            minHeight={500}
             onGridRowsUpdated={this.handleGridRowsUpdated}
             rowHeight={25}
             headerRowHeight={32}

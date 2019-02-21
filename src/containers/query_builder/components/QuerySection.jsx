@@ -16,6 +16,7 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 import { CardBody } from 'reactstrap';
 import 'whatwg-fetch'
 import { instanceOf, PropTypes } from 'prop-types';
@@ -50,7 +51,78 @@ class QuerySection extends PureComponent {
 
     this.queryPane = React.createRef();
     this.employeeResultSet = React.createRef();
-
+    this.heads = [
+      {
+        key: 'employeeName',
+        name: 'Employee Name',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'role',
+        name: 'Role',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'userId',
+        name: 'User Id',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+      },
+      {
+        key: 'userName',
+        name: 'Username',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'email',
+        name: 'Email',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'alternateName',
+        name: 'Alternative Name',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'totalEmployees',
+        name: 'Total Employees',
+        sortable: true,
+        editable: false,
+        draggable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+      }
+    ];
     this.state = {
       selectedOption: options[0],
       lastSelectedOption: options[0],
@@ -64,7 +136,8 @@ class QuerySection extends PureComponent {
       isTask: false,
       isPaneOpen: false,
       isPaneOpenLeft: false,
-      resultSet: []
+      resultSet: [],
+      count: 0
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
@@ -106,7 +179,9 @@ class QuerySection extends PureComponent {
       tasks: {},
       selectedOption: this.state.lastSelectedOption,
       modal: false,
-      isResetModal: false
+      isResetModal: false,
+      count: 0,
+      resultSet: []
     });
   }
 
@@ -199,6 +274,36 @@ class QuerySection extends PureComponent {
   columnOptionsSlideToggle = () => {
     this.setState({ isPaneOpen: false });
   }
+
+  /**
+  * @method
+  * @name - changeColumnOptions
+  * This method used to get the workbooks from child component
+  * @param employees
+  * @returns none
+ */
+  changeColumnOptions = (columnOptions) => {
+    const { count } = this.state;
+
+    let addedColumnOptions = [];
+    columnOptions.map(function (field, index) {
+      if (columnOptions[index].isDefault) {
+        let selectCol = {
+          key: columnOptions[index].value,
+          name: columnOptions[index].label,
+          sortable: true,
+          editable: false,
+          draggable: false,
+          getRowMetaData: row => row,
+          cellClass: "text-right"
+        };
+        addedColumnOptions.push(selectCol);
+      }
+    });
+
+    this.setState({ isPaneOpen: false, count: count + 1 });
+    this.employeeResultSet.current.addColumns(addedColumnOptions);
+  };
 
   /**
    * @method
@@ -352,16 +457,17 @@ class QuerySection extends PureComponent {
               passTasksToQuerySection={this.passTasksResults}
               passWorkbooksResultsToQuerySection={this.passWorkbookResults}
               passEmployeesResultsToQuerySection={this.passEmployeesResults} />
-
-            {this.state.isEmployee && <EmployeeResultSet ref={this.employeeResultSet} employees={this.state.employees} />}
-            {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
-            {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
-
+            <div id="queryResultSet">
+              {this.state.isEmployee && <EmployeeResultSet columns={this.heads} ref={this.employeeResultSet} employees={this.state.employees} />}
+              {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
+              {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
+            </div>
           </SplitterLayout>
         </div>
         <div>
           <SlidingPane
             columnOptionsSlideToggle={this.columnOptionsSlideToggle}
+            changeColumnOptions={this.changeColumnOptions}
             isPaneOpen={this.state.isPaneOpen}
             columns={this.state.resultSet}
           />

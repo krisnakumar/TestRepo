@@ -848,3 +848,7 @@ button.query-action-btn.delete:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+div#queryResultSet {
+  height: 100% !important;
+}
