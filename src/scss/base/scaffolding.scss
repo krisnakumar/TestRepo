@@ -760,20 +760,18 @@ button.query-action-btn.delete:disabled {
   width:30% !important;
 }
 
-
-
-
 .slide-pane__content{
-  padding: 35px 5px !important;
+  padding: 50px 5px !important;
   overflow-x: unset !important;
 }
 
 .colOptionsTitle {
   right: -5px;
   position: relative;
-  font-weight: 600;
-  top: -4px;
+  font-weight: 500;
+  top: -15px;
   width: 50%; 
+  font-size: 20px;
 }
 
 .col-opt-close {
@@ -785,11 +783,17 @@ button.query-action-btn.delete:disabled {
   position: relative;
   top: -29px;
   right: -38px;
+  color:red;
+
   span {
     font-size: 20px;
    }
   }
-
+  .col-opt-add-column {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
 .slide-pane__header {
   display: none !important;
 }
@@ -805,6 +809,7 @@ button.query-action-btn.delete:disabled {
   width: 40%;
   height: 30px;
   margin: 5px;
+  cursor: pointer;
 }
 
 .col-opt-action-section {
@@ -814,6 +819,18 @@ button.query-action-btn.delete:disabled {
 
 .headerSection{
   float: right;
+  top: -48px;
+  position: relative;
+  right: 6px;
+  font-size: 24px;
+  border: none;
+  font-weight: bold;
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
 }
 
 .date-picker-btn-group.btn-group {

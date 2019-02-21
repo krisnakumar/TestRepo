@@ -332,7 +332,7 @@ class QuerySection extends PureComponent {
             </Col>
             <Col xs="auto">
               <button onClick={this.onColumnOptionsClick} className="query-section-button" size="sm" title="Column Options" aria-label="Column Options">
-                <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span>
+                <span aria-hidden className="fa-icon-size" ><i className="fa fa-wrench"></i></span>
                 <span className="fa-text-align">Column Options</span>
               </button>
             </Col>

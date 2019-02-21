@@ -118,7 +118,7 @@ class SlidePane extends Component {
                 }}>
                 <div>
                     <div className="headerSection">
-                        <button onClick={self.requestClose.bind()} className="" size="sm" title="" aria-label="">
+                        <button onClick={self.requestClose.bind()} className="" size="sm" title="Close" aria-label="">
                             <span aria-hidden className=""><i className="fa fa-times"></i></span>
                         </button>
                     </div>
@@ -156,12 +156,12 @@ class SlidePane extends Component {
                     <div>
                         {
                             NumberOfDropdowns < columnsOptions.length &&
-                            <button onClick={this.addColumns.bind()} className="query-section-button" size="sm" title="Add Column" aria-label="Add Column">
+                            <button onClick={this.addColumns.bind()} className="query-section-button col-opt-add-column" size="sm" title="Add Column" aria-label="Add Column">
                                 <span aria-hidden className=""><i className="fa fa-plus"></i></span>
                                 <span className="fa-text-align">Add Column</span>
                             </button>
                             ||
-                            <button className="query-section-button" size="sm" title="Add Column" aria-label="Add Column" disabled>
+                            <button className="query-section-button col-opt-add-column" size="sm" title="Add Column" aria-label="Add Column" disabled>
                                 <span aria-hidden className=""><i className="fa fa-plus"></i></span>
                                 <span className="fa-text-align">Add Column</span>
                             </button>
