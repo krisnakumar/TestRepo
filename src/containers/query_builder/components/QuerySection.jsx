@@ -303,6 +303,7 @@ class QuerySection extends PureComponent {
 
     this.setState({ isPaneOpen: false, count: count + 1 });
     this.employeeResultSet.current.addColumns(addedColumnOptions);
+    this.queryPane.current.reloadQuery();
   };
 
   /**

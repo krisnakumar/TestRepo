@@ -70,7 +70,8 @@ class QueryClause extends PureComponent {
             endDate: null,
             focusedInput: null,
             from: undefined,
-            to: undefined
+            to: undefined,
+            queryClause: {}
         };
 
         this.submitted = false;
@@ -87,6 +88,7 @@ class QueryClause extends PureComponent {
         this.getDateByValue = this.getDateByValue.bind(this);
         this.handleFromChange = this.handleFromChange.bind(this);
         this.handleToChange = this.handleToChange.bind(this);
+        this.reloadQuery = this.reloadQuery.bind(this);
     }
 
     /**
@@ -453,9 +455,9 @@ class QueryClause extends PureComponent {
                     queryObj.Value = typeof fieldValue === 'object' ? fieldValue.value : fieldValue;
                 }
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
-                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;                
+                queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
                 if (fieldType == "date" && hasSmartParams) {
-                    if(fieldValue.value ==  "today" || fieldValue.value == "yesterday"){
+                    if (fieldValue.value == "today" || fieldValue.value == "yesterday") {
                         queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
                     } else {
                         queryObj.Operator = "Between";
@@ -478,7 +480,7 @@ class QueryClause extends PureComponent {
                     queryClause.push(queryObjUser);
                 }
             })
-
+            this.state.queryClause = queryClause;
             switch (this.state.entity) {
                 case 'employees':
                     this.getEmployeesResults(queryClause);
@@ -506,27 +508,44 @@ class QueryClause extends PureComponent {
                 date = formatDate(moment().subtract(1, 'days'), 'L', 'en');
                 break;
             case 'thisWeek':
-                date = formatDate(moment().startOf('week'), 'L', 'en') +" and "+ formatDate(moment().endOf('week'), 'L', 'en');
+                date = formatDate(moment().startOf('week'), 'L', 'en') + " and " + formatDate(moment().endOf('week'), 'L', 'en');
                 break;
             case 'lastWeek':
-                date = formatDate(moment().subtract(1, 'weeks').startOf('week'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'weeks').endOf('week'), 'L', 'en');
+                date = formatDate(moment().subtract(1, 'weeks').startOf('week'), 'L', 'en') + " and " + formatDate(moment().subtract(1, 'weeks').endOf('week'), 'L', 'en');
                 break;
             case 'thisMonth':
-                date = formatDate(moment().startOf('month'), 'L', 'en') +" and "+ formatDate(moment().endOf('month'), 'L', 'en');
+                date = formatDate(moment().startOf('month'), 'L', 'en') + " and " + formatDate(moment().endOf('month'), 'L', 'en');
                 break;
             case 'lastMonth':
-                date = formatDate(moment().subtract(1, 'months').startOf('month'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'months').endOf('month'), 'L', 'en');
+                date = formatDate(moment().subtract(1, 'months').startOf('month'), 'L', 'en') + " and " + formatDate(moment().subtract(1, 'months').endOf('month'), 'L', 'en');
                 break;
             case 'thisYear':
-                date = formatDate(moment().startOf('year'), 'L', 'en') +" and "+ formatDate(moment().endOf('year'), 'L', 'en');
+                date = formatDate(moment().startOf('year'), 'L', 'en') + " and " + formatDate(moment().endOf('year'), 'L', 'en');
                 break;
             case 'lastYear':
-                date = formatDate(moment().subtract(1, 'years').startOf('year'), 'L', 'en') +" and "+ formatDate(moment().subtract(1, 'years').endOf('year'), 'L', 'en');
+                date = formatDate(moment().subtract(1, 'years').startOf('year'), 'L', 'en') + " and " + formatDate(moment().subtract(1, 'years').endOf('year'), 'L', 'en');
                 break;
             default:
                 date = dateValue;
         }
         return date;
+    };
+
+    reloadQuery(param) {
+        let { queryClause } = this.state;
+        switch (this.state.entity) {
+            case 'employees':
+                this.getEmployeesResults(queryClause);
+                break;
+            case 'workbooks':
+                this.getWorkbooksResults(queryClause);
+                break;
+            case 'tasks':
+                this.getTasksResults(queryClause);
+                break;
+            default:
+                console.log('Sorry, we are out of options');
+        }
     };
 
     /**
@@ -592,7 +611,6 @@ class QueryClause extends PureComponent {
         this.props.passEmployeesResults(response);
     };
 
-
     /**
     * @method
     * @name - getWorkbooksResults
@@ -632,7 +650,6 @@ class QueryClause extends PureComponent {
 
         this.props.passTasksResults(response);
     };
-
 
     /**
      * @method

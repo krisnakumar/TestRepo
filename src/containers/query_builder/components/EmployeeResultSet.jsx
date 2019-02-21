@@ -101,6 +101,7 @@ class EmployeeResultSet extends React.Component {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
       heads: this.props.columns || this.heads,
+      // heads: this.addColumns(this.props.columns || this.heads),
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
@@ -248,12 +249,14 @@ class EmployeeResultSet extends React.Component {
     }));
 
   addColumns = (columnOptions) => {
-    let count = this.state.count;
+    let length = columnOptions.length - 1,
+    cellClass = columnOptions[length].cellClass + " last-column";
+    columnOptions[length].cellClass = cellClass;
     this.setState({
-      heads: this.buildColumns(columnOptions),
-      count: count + 1
+      heads: this.buildColumns(columnOptions)
     });
     this.forceUpdate();
+   
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {

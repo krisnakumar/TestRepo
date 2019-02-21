@@ -35,15 +35,15 @@ class QueryPane extends PureComponent {
 
     this.initialState = {
       entity: this.props.selectedOption ? this.props.selectedOption.value : "employees",
-      fieldData: FieldData.field[ this.props.selectedOption ? this.props.selectedOption.value : "employees"].slice(0, 2)
+      fieldData: FieldData.field[this.props.selectedOption ? this.props.selectedOption.value : "employees"].slice(0, 2)
     };
 
     this.state = this.initialState;
 
     this.passEmployeesResults = this.passEmployeesResults.bind(this);
-    this.passWorkbooksResults = this.passWorkbooksResults.bind(this); 
-    this.passTasksResults = this.passTasksResults.bind(this); 
-    this.checkQuerySelections = this.checkQuerySelections.bind(this);     
+    this.passWorkbooksResults = this.passWorkbooksResults.bind(this);
+    this.passTasksResults = this.passTasksResults.bind(this);
+    this.checkQuerySelections = this.checkQuerySelections.bind(this);
   }
 
   /**
@@ -55,10 +55,10 @@ class QueryPane extends PureComponent {
    * @returns none
   */
   componentWillReceiveProps(newProps) {
-      this.setState({
-        entity: newProps.selectedOption ? newProps.selectedOption.value : "employees",
-        fieldData: FieldData.field[newProps.selectedOption ? newProps.selectedOption.value :  "employees"].slice(0, 2)
-      });
+    this.setState({
+      entity: newProps.selectedOption ? newProps.selectedOption.value : "employees",
+      fieldData: FieldData.field[newProps.selectedOption ? newProps.selectedOption.value : "employees"].slice(0, 2)
+    });
   }
 
   /**
@@ -87,13 +87,25 @@ class QueryPane extends PureComponent {
     this.queryClause.current.buildQuery();
   };
 
-   /**
-     * @method
-     * @name - resetQuery
-     * This method reset the query clause by trigger the parent component function
-     * @param none
-     * @returns none
+
+  /**
+   * @method
+   * @name - runQuery
+   * This method triggers the parent component buildQuery function
+   * @param none
+   * @returns none
   */
+  reloadQuery = () => {
+    this.queryClause.current.reloadQuery();
+  };
+
+  /**
+    * @method
+    * @name - resetQuery
+    * This method reset the query clause by trigger the parent component function
+    * @param none
+    * @returns none
+ */
   resetQuery = () => {
     this.queryClause.current.resetQueryClause();
   };
@@ -105,8 +117,8 @@ class QueryPane extends PureComponent {
    * @param employees
    * @returns none
   */
-  passEmployeesResults(employees){
-   this.props.passEmployeesResultsToQuerySection(employees);
+  passEmployeesResults(employees) {
+    this.props.passEmployeesResultsToQuerySection(employees);
   }
 
   /**
@@ -116,55 +128,55 @@ class QueryPane extends PureComponent {
    * @param workbooks
    * @returns none
   */
-  passWorkbooksResults(workbooks){
+  passWorkbooksResults(workbooks) {
     this.props.passWorkbooksResultsToQuerySection(workbooks);
   }
 
-   /**
-   * @method
-   * @name - passTasksResults
-   * This method used to pass the tasks parent component
-   * @param tasks
-   * @returns none
-  */
-  passTasksResults(tasks){
+  /**
+  * @method
+  * @name - passTasksResults
+  * This method used to pass the tasks parent component
+  * @param tasks
+  * @returns none
+ */
+  passTasksResults(tasks) {
     this.props.passTasksToQuerySection(tasks);
   }
 
-   /**
-   * @method
-   * @name - checkQuerySelections
-   * This method used to check query selection state is initial
-   * @param none
-   * @returns none
-  */
-  checkQuerySelections(){
+  /**
+  * @method
+  * @name - checkQuerySelections
+  * This method used to check query selection state is initial
+  * @param none
+  * @returns none
+ */
+  checkQuerySelections() {
     let isSame = this.queryClause.current.checkQueryState();
     return isSame;
   }
 
   render() {
-    return (         
-        <div className="query-builder-section">
-          <Table className="query-section-table">
-             <thead className="query-section-table thead">
-              <tr>
-                <th width="125" className="tableWidth-5">Add/Delete</th>
-                <th className="tableWidth-10">And/Or</th>
-                <th className="tableWidth-20">Field</th>
-                <th className="tableWidth-20">Operator</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <QueryClause 
-              ref={this.queryClause}
-              fieldData={this.state.fieldData}
-              entity={this.state.entity}
-              passEmployeesResults={this.passEmployeesResults}
-              passWorkbooksResults={this.passWorkbooksResults}
-              passTasksResults={this.passTasksResults}
-            />          
-        </Table> 
+    return (
+      <div className="query-builder-section">
+        <Table className="query-section-table">
+          <thead className="query-section-table thead">
+            <tr>
+              <th width="125" className="tableWidth-5">Add/Delete</th>
+              <th className="tableWidth-10">And/Or</th>
+              <th className="tableWidth-20">Field</th>
+              <th className="tableWidth-20">Operator</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <QueryClause
+            ref={this.queryClause}
+            fieldData={this.state.fieldData}
+            entity={this.state.entity}
+            passEmployeesResults={this.passEmployeesResults}
+            passWorkbooksResults={this.passWorkbooksResults}
+            passTasksResults={this.passTasksResults}
+          />
+        </Table>
       </div>
     );
   }
