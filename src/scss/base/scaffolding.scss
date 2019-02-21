@@ -801,13 +801,11 @@ button.query-action-btn.delete:disabled {
 }
 }
 
-
 .col-opt-action-btn {
   width: 40%;
   height: 30px;
   margin: 5px;
 }
-
 
 .col-opt-action-section {
   float: right;
@@ -818,7 +816,6 @@ button.query-action-btn.delete:disabled {
   float: right;
 }
 
-
 .date-picker-btn-group.btn-group {
   display: list-item !important;
 }
@@ -828,4 +825,9 @@ button.query-action-btn.delete:disabled {
   display: list-item !important;
   margin: 3px !important;
   width: -webkit-fill-available;
+}
+
+.query-section-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }

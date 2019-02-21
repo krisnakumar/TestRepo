@@ -28,10 +28,11 @@ class TaskExport extends Component {
 
     render() {
         let { entity } = this.state,
-            excelData = this.state[entity];
+            excelData = this.state[entity],
+            isExcelData = excelData.length > 0 ? true : false;
 
-        return (<Workbook filename={entity+".xlsx"} element={
-            <button className="query-section-button" size="sm" title={"Open in Excel"+entity} aria-label="Open in Excel">
+        return (isExcelData && <Workbook filename={entity+".xlsx"} element={
+            <button className="query-section-button" size="sm" title={"Open in Excel"} aria-label="Open in Excel">
                 <span aria-hidden className="fa-icon-size" ><i className="fa fa-undo"></i></span>
                 <span className="fa-text-align">Open in Excel</span>
             </button>
