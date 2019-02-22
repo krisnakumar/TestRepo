@@ -71,7 +71,8 @@ class QueryClause extends PureComponent {
             focusedInput: null,
             from: undefined,
             to: undefined,
-            queryClause: {}
+            queryClause: {},
+            columnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL"]
         };
 
         this.submitted = false;
@@ -531,21 +532,24 @@ class QueryClause extends PureComponent {
         return date;
     };
 
-    reloadQuery(param) {
-        let { queryClause } = this.state;
-        switch (this.state.entity) {
-            case 'employees':
-                this.getEmployeesResults(queryClause);
-                break;
-            case 'workbooks':
-                this.getWorkbooksResults(queryClause);
-                break;
-            case 'tasks':
-                this.getTasksResults(queryClause);
-                break;
-            default:
-                console.log('Sorry, we are out of options');
-        }
+    reloadQuery(params) {
+        let { columnList, entity } = this.state; columnList;
+        let allColumnList = FieldData.columns[entity];
+        let tempColumnList = [];
+        params.forEach(function (value, index) {
+            let key = value.key;
+            allColumnList.forEach(function (value, index) {
+                if(key == value.value){
+                    tempColumnList.push(value.fields);
+                    return;
+                }                
+            });
+        });
+        this.setState({ columnList: tempColumnList});
+        this.forceUpdate();        
+        setTimeout(() => {
+            this.props.reloadQuery();    
+        }, 100);
     };
 
     /**
@@ -597,10 +601,11 @@ class QueryClause extends PureComponent {
     */
     async getEmployeesResults(requestData) {
         const { cookies } = this.props;
+        const { columnList } = this.state;
 
         let payLoad = {
             "Fields": requestData,
-            "ColumnList": ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL", "ADDRESS"]
+            "ColumnList": columnList
         };
 
         let token = cookies.get('IdentityToken'),
@@ -609,6 +614,7 @@ class QueryClause extends PureComponent {
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passEmployeesResults(response);
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -629,6 +635,7 @@ class QueryClause extends PureComponent {
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
         this.props.passWorkbooksResults(response);
+
     };
 
     /**

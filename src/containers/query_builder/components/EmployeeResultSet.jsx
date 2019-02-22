@@ -151,15 +151,18 @@ class EmployeeResultSet extends React.Component {
       length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
       rows.push({
-        alternateName: employees[i].AlternateName,
-        email: employees[i].Email,
-        employeeName: employees[i].EmployeeName,
-        role: employees[i].Role,
-        totalEmployees: employees[i].TotalEmployees,
-        userId: employees[i].UserId,
-        userName: employees[i].UserName,
-        testCol: employees[i].TestCol || "N/A",
-        address: employees[i].Address || ""
+        alternateName: employees[i].AlternateName || "",
+        email: employees[i].Email || "",
+        employeeName: employees[i].EmployeeName || "",
+        role: employees[i].Role || "",
+        totalEmployees: employees[i].TotalEmployees || "",
+        userId: employees[i].UserId || "",
+        userName: employees[i].UserName || "",
+        address: employees[i].Address || "",
+        phone: employees[i].Phone || "",
+        supervisorId: employees[i].SupervisorId || "",
+        supervisorName: employees[i].SupervisorName || "",
+        userCreatedDate: employees[i].UserCreatedDate || "",
       });
     }
 
@@ -259,21 +262,6 @@ class EmployeeResultSet extends React.Component {
     this.forceUpdate();
 
   };
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    // If we have a snapshot value, we've just added new items.
-    // Adjust scroll so these new items don't push the old ones out of view.
-    // (snapshot here is the value returned from getSnapshotBeforeUpdate)
-    let { heads } = this.state,
-      currentColumnsLength = heads.length,
-      prevColumnsLength = prevState.heads.length;
-    if (currentColumnsLength == prevColumnsLength) {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 100);
-    }
-  };
-
 
   render() {
     const { rows, renderTimes, heads } = this.state;

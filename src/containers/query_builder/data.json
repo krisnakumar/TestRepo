@@ -217,7 +217,7 @@
 				"value": "role",
 				"label": "Role",
 				"isDefault": true,
-				"fields": "Role"
+				"fields": "ROLE"
 			},
 			{
 				"value": "userId",

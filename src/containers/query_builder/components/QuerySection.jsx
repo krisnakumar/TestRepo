@@ -260,8 +260,7 @@ class QuerySection extends PureComponent {
     * @returns none
    */
   onColumnOptionsClick = () => {
-    this.setState({ isPaneOpen: true })
-
+    this.setState({ isPaneOpen: true });
   };
 
   /**
@@ -303,7 +302,7 @@ class QuerySection extends PureComponent {
 
     this.setState({ isPaneOpen: false, count: count + 1 });
     this.employeeResultSet.current.addColumns(addedColumnOptions);
-    this.queryPane.current.reloadQuery();
+    this.queryPane.current.reloadQuery(addedColumnOptions);
   };
 
   /**
@@ -425,7 +424,7 @@ class QuerySection extends PureComponent {
               />
             </Col>
             <Col xs="auto">
-              <button onClick={this.onRunQueryClick} className="query-section-button" size="sm" title="Run Query" aria-label="Run Query">
+              <button onClick={this.onRunQueryClick} id="runQueryButton" className="query-section-button" size="sm" title="Run Query" aria-label="Run Query">
                 <span aria-hidden className=""><i className="fa fa-caret-right"></i></span>
                 <span className="fa-text-align">Run Query</span>
               </button>
@@ -455,6 +454,7 @@ class QuerySection extends PureComponent {
             <QueryPane
               ref={this.queryPane}
               selectedOption={this.state.selectedOption}
+              onRunQueryClick={this.onRunQueryClick}
               passTasksToQuerySection={this.passTasksResults}
               passWorkbooksResultsToQuerySection={this.passWorkbookResults}
               passEmployeesResultsToQuerySection={this.passEmployeesResults} />

@@ -44,6 +44,7 @@ class QueryPane extends PureComponent {
     this.passWorkbooksResults = this.passWorkbooksResults.bind(this);
     this.passTasksResults = this.passTasksResults.bind(this);
     this.checkQuerySelections = this.checkQuerySelections.bind(this);
+    this.passReloadQuery = this.passReloadQuery.bind(this);
   }
 
   /**
@@ -94,8 +95,8 @@ class QueryPane extends PureComponent {
    * @param none
    * @returns none
   */
-  reloadQuery = () => {
-    this.queryClause.current.reloadQuery();
+  reloadQuery = (addedColumnOptions) => {
+    this.queryClause.current.reloadQuery(addedColumnOptions);
   };
 
   /**
@@ -143,6 +144,17 @@ class QueryPane extends PureComponent {
   }
 
   /**
+* @method
+* @name - passTasksResults
+* This method used to pass the tasks parent component
+* @param tasks
+* @returns none
+*/
+  passReloadQuery() {
+    this.props.onRunQueryClick();
+  }
+
+  /**
   * @method
   * @name - checkQuerySelections
   * This method used to check query selection state is initial
@@ -171,6 +183,7 @@ class QueryPane extends PureComponent {
             ref={this.queryClause}
             fieldData={this.state.fieldData}
             entity={this.state.entity}
+            reloadQuery={this.passReloadQuery}
             passEmployeesResults={this.passEmployeesResults}
             passWorkbooksResults={this.passWorkbooksResults}
             passTasksResults={this.passTasksResults}
