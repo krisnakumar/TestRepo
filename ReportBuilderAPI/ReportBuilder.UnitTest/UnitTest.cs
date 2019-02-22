@@ -198,17 +198,22 @@ namespace ReportBuilder.UnitTest
                 Value = "Yes",
                 Operator = "="                
             };
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
 
+            };
 
             employeeList.Add(employeeModel);
 
 
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
-                Body = JsonConvert.SerializeObject(employeeRequest)
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters= pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"},{\"Value\":\"1\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -312,7 +317,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\": [{\"Name\": \"TASK_ID\",\"Value\": \"6\",\"Operator\": \">\"}],\"ColumnsList\": [\"TASK_ID\", \"TASK_NAME\", \"ASSIGNED_TO\", \"EVALUATOR_NAME\", \"EXPIRATION_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"e\",\"Operator\":\"contains\",\"Name\":\"TASK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_NAME\",\"TASK_ID\",\"STATUS\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
