@@ -11,7 +11,6 @@ using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Net;
 
 namespace ReportBuilderAPI.Repository
@@ -68,13 +67,13 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
-                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
-                if (userId != 0)
+                userId = queryBuilderRequest.UserId;
+                if (userId != 0 && !string.IsNullOrEmpty(queryBuilderRequest.QueryName))
                 {
                     //generate the custom query Id for each query
                     Guid guid = Guid.NewGuid();
                     query = ProcessSaveQueryRequest(queryBuilderRequest, companyId);
-                    IsExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "'");
+                    IsExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
                     if (IsExist == 0)
                     {
                         rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO QUERY(QueryId,Name, QUeryJson, QuerySQL, CreatedDate,LastModified) VALUES('" + guid + "','" + queryBuilderRequest.QueryName + "','" + requestBody.Replace("'", "''") + "','" + query.Replace("'", "''") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "')");
@@ -132,7 +131,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
-                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
+                userId = queryBuilderRequest.UserId;
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId, new Dictionary<string, string> { });
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
@@ -175,7 +174,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
-                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
+                userId = queryBuilderRequest.UserId;
                 isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
                 if (isExist == 0)
                 {

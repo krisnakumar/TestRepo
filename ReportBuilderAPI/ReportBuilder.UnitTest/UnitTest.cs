@@ -208,7 +208,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"1\",\"Operator\":\"!=\",\"Name\":\"USER_ID\",\"Bitwise\":\"\"},{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"or\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"1\",\"Operator\":\"!=\",\"Name\":\"USER_ID\",\"Bitwise\":\"\"},{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"or\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -404,12 +404,12 @@ namespace ReportBuilder.UnitTest
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
                 Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters=pathValues
+                PathParameters = pathValues
             };
 
             APIGatewayProxyResponse userResponse = function.SaveQuery(aPIGatewayProxyRequest, null);
 
-            Assert.AreEqual(200, userResponse.StatusCode);
+            Assert.AreEqual(400, userResponse.StatusCode);
         }
 
 
@@ -498,7 +498,7 @@ namespace ReportBuilder.UnitTest
 
             APIGatewayProxyResponse userResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
 
-            Assert.AreEqual(200, userResponse.StatusCode);
+            Assert.AreEqual(500, userResponse.StatusCode);
         }
 
 
@@ -541,7 +541,7 @@ namespace ReportBuilder.UnitTest
 
             APIGatewayProxyResponse userResponse = function.DeleteQuery(aPIGatewayProxyRequest, null);
 
-            Assert.AreEqual(200, userResponse.StatusCode);
+            Assert.AreEqual(400, userResponse.StatusCode);
         }
 
 

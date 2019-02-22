@@ -23,5 +23,7 @@ namespace ReportBuilder.Models.Request
         public string EntityName { get; set; }
 
         public string QueryId { get; set; }
+
+        public int UserId { get; set; }
     }
 }

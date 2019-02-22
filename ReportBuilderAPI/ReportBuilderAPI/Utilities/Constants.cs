@@ -99,7 +99,8 @@ namespace ReportBuilderAPI.Utilities
         public const string SYSTEM_PERMS = "SYSTEM_PERMS";
 
         public const string USERID = "USER_ID";
-        
+
+        public const string CURRENT_USER = "CURRENT_USER";
 
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";

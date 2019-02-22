@@ -179,11 +179,11 @@ namespace ReportBuilderAPI.Repository
             {Constants.QR_CODE, "u.BarcodeHash " },
             {Constants.DEPARTMENT, "d.Name " },
             {Constants.SUPERVISOR_ID, "s.SupervisorId " },
-            {Constants.ME, "u.Id in (@userId)" },
-            {Constants.ME_AND_DIRECT_SUBORDINATES, "u.Id in(select @userId Union select userId from supervisor where supervisorId=@userId) " },
-            {Constants.ME_AND_ALL_SUBORDINATES, " u.Id in (SELECT @userId UNION SELECT * FROM getchildUsers(@userId)) " },
-            {Constants.DIRECT_SUBORDINATES, "u.Id in(SELECT userId FROM supervisor WHERE supervisorId=@userId)  " },
-            {Constants.ALL_SUBORDINATES, " u.Id in (SELECT * FROM getchildUsers(@userId))  " },
+            {Constants.ME, "u.Id in (@currentuserId)" },
+            {Constants.ME_AND_DIRECT_SUBORDINATES, "u.Id in(select @userId Union select userId from supervisor where supervisorId=@currentuserId) " },
+            {Constants.ME_AND_ALL_SUBORDINATES, " u.Id in (SELECT @userId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.DIRECT_SUBORDINATES, "u.Id in(SELECT userId FROM supervisor WHERE supervisorId=@currentuserId)  " },
+            {Constants.ALL_SUBORDINATES, " u.Id in (SELECT * FROM getchildUsers(@currentuserId))  " },
         };
 
 
@@ -205,8 +205,9 @@ namespace ReportBuilderAPI.Repository
         /// <returns>string</returns>
         public string CreateEmployeeQuery(QueryBuilderRequest employeeRequest, int companyId)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, currentUserId = string.Empty;
             List<string> fieldList = new List<string>();
+
             try
             {
                 selectQuery = "SELECT  ";
@@ -227,12 +228,14 @@ namespace ReportBuilderAPI.Repository
                                             where fieldList.Any(x => joins.Value.Any(y => y == x))
                                             select joins.Key);
                 query += tableJoin;
+                currentUserId = employeeRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CURRENT_USER).Select(x => x.Value).FirstOrDefault();
 
-                if (employeeRequest.Fields.Where(x => x.Name == Constants.USERNAME).ToList().Count > 0 && employeeRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
+                if (employeeRequest.Fields.Where(x => x.Name == Constants.USERNAME).ToList().Count > 0 && employeeRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).ToList().Count > 0)
                 {
-                    EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
+                    EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).FirstOrDefault();
                     employeeRequest.Fields.Remove(userDetails);
                     employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
+                   
                 }
 
                 //getting where conditions
@@ -241,6 +244,7 @@ namespace ReportBuilderAPI.Repository
                         CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name) + CheckValues(employee.Value, employee.Operator)) : string.Empty));
 
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
+                whereQuery = whereQuery.Replace("@currentuserId", currentUserId);
                 query += whereQuery + " )";
                 return query;
             }
