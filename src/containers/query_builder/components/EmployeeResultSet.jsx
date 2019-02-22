@@ -101,7 +101,6 @@ class EmployeeResultSet extends React.Component {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
       heads: this.props.columns || this.heads,
-      // heads: this.addColumns(this.props.columns || this.heads),
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
@@ -260,7 +259,6 @@ class EmployeeResultSet extends React.Component {
       heads: this.buildColumns(columnOptions)
     });
     this.forceUpdate();
-
   };
 
   render() {

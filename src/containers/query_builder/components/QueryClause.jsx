@@ -72,7 +72,10 @@ class QueryClause extends PureComponent {
             from: undefined,
             to: undefined,
             queryClause: {},
-            columnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL"]
+            empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL"],
+            workbookColumnList: ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"],
+            taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"],
+
         };
 
         this.submitted = false;
@@ -539,16 +542,28 @@ class QueryClause extends PureComponent {
         params.forEach(function (value, index) {
             let key = value.key;
             allColumnList.forEach(function (value, index) {
-                if(key == value.value){
+                if (key == value.value) {
                     tempColumnList.push(value.fields);
                     return;
-                }                
+                }
             });
         });
-        this.setState({ columnList: tempColumnList});
-        this.forceUpdate();        
+        switch (entity) {
+            case 'employees':
+                this.setState({ empColumnList: tempColumnList });
+                break;
+            case 'workbooks':
+                this.setState({ workbookColumnList: tempColumnList });
+                break;
+            case 'tasks':
+                this.setState({ taskColumnList: tempColumnList });
+                break;
+            default:
+                break;
+        }
+        this.forceUpdate();
         setTimeout(() => {
-            this.props.reloadQuery();    
+            this.props.reloadQuery();
         }, 100);
     };
 
@@ -601,11 +616,11 @@ class QueryClause extends PureComponent {
     */
     async getEmployeesResults(requestData) {
         const { cookies } = this.props;
-        const { columnList } = this.state;
+        const { empColumnList } = this.state;
 
         let payLoad = {
             "Fields": requestData,
-            "ColumnList": columnList
+            "ColumnList": empColumnList
         };
 
         let token = cookies.get('IdentityToken'),
@@ -626,8 +641,9 @@ class QueryClause extends PureComponent {
    */
     async getWorkbooksResults(requestData) {
         const { cookies } = this.props;
+        const { workbookColumnList } = this.state;
 
-        let payLoad = { "Fields": requestData, "ColumnList": ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"] };
+        let payLoad = { "Fields": requestData, "ColumnList": workbookColumnList };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),
@@ -647,8 +663,9 @@ class QueryClause extends PureComponent {
    */
     async getTasksResults(requestData) {
         const { cookies } = this.props;
+        const { taskColumnList } = this.state;
 
-        let payLoad = { "Fields": requestData, "ColumnList": ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"] };
+        let payLoad = { "Fields": requestData, "ColumnList": taskColumnList };
 
         let token = cookies.get('IdentityToken'),
             companyId = cookies.get('CompanyId'),

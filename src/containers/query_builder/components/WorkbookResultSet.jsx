@@ -39,8 +39,8 @@ class WorkbookResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-right"
-        },
-        {
+      },
+      {
         key: 'workbookName',
         name: 'Workbook',
         sortable: true,
@@ -48,8 +48,8 @@ class WorkbookResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'description',
         name: 'Description',
         sortable: true,
@@ -57,8 +57,8 @@ class WorkbookResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.descCellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'createdBy',
         name: 'Created By',
         sortable: true,
@@ -66,21 +66,22 @@ class WorkbookResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
-        key: 'daytoComplete',
+      },
+      {
+        key: 'dayToComplete',
         name: 'Day to Complete',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-right last-column"
-        }
-      ];
-    
-    this.state = {    
+      }
+    ];
+
+    this.state = {
       rows: this.createRows(this.props.workbooks),
       pageOfItems: [],
+      heads: this.props.columns || this.heads,
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
@@ -100,13 +101,13 @@ class WorkbookResultSet extends React.Component {
     );
   }
 
-   /**
-   * @method
-   * @name - descCellFormatter
-   * This method will format the cell column other than workbooks Data Grid
-   * @param props
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - descCellFormatter
+  * This method will format the cell column other than workbooks Data Grid
+  * @param props
+  * @returns none
+  */
   descCellFormatter = (props) => {
     return (
       <p className="word-wrap" title={props.value}>{props.value}</p>
@@ -128,24 +129,30 @@ class WorkbookResultSet extends React.Component {
     console.log(error, info);
   }
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param workbooks
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param workbooks
+  * @returns rows
+  */
   createRows = (workbooks) => {
-    const rows = [], 
-          length = workbooks ? workbooks.length : 0;
-    for (let i = 0; i < length; i++) { 
+    const rows = [],
+      length = workbooks ? workbooks.length : 0;
+    for (let i = 0; i < length; i++) {
       rows.push({
-        workbookId:  workbooks[i].WorkBookId || "",
+        workbookId: workbooks[i].WorkBookId || "",
         workbookName: workbooks[i].WorkBookName || "",
         description: workbooks[i].Description || "",
         createdBy: workbooks[i].CreatedBy || "",
-        daytoComplete: workbooks[i].DaysToComplete || ""
+        dayToComplete: workbooks[i].DaysToComplete || "",
+        isEnabled:  workbooks[i].IsEnabled || "",
+        assignedTo: workbooks[i].AssignedTo || "",
+        dueDate: workbooks[i].DueDate || "",
+        supervisorId: workbooks[i].SupervisorId || "",
+        userId: workbooks[i].UserId || "",
+        isEnabled:  workbooks[i].DaysToComplete || ""
       });
     }
 
@@ -161,21 +168,21 @@ class WorkbookResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.workbooks),
-          isArray = Array.isArray(newProps.workbooks),
-          isInitial = isArray;
-          
-      const {sortColumn , sortDirection } = this.state
-      if(sortColumn != "" && sortDirection != "NONE"){
-        this.state.rows = rows;
-        this.state.isInitial = isInitial;
-        this.handleGridSort(sortColumn, sortDirection);
-      } else {
-        this.setState({
-          rows: rows,
-          isInitial: isInitial      
-        });
-      }
+    let rows = this.createRows(newProps.workbooks),
+      isArray = Array.isArray(newProps.workbooks),
+      isInitial = isArray;
+
+    const { sortColumn, sortDirection } = this.state
+    if (sortColumn != "" && sortDirection != "NONE") {
+      this.state.rows = rows;
+      this.state.isInitial = isInitial;
+      this.handleGridSort(sortColumn, sortDirection);
+    } else {
+      this.setState({
+        rows: rows,
+        isInitial: isInitial
+      });
+    }
   }
 
   /**
@@ -218,7 +225,7 @@ class WorkbookResultSet extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
@@ -227,28 +234,45 @@ class WorkbookResultSet extends React.Component {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+  buildColumns = columns =>
+    columns.map((col, i) => ({
+      ...col,
+      formatter: this.cellFormatter,
+      hash: new Date().getTime()
+    }));
+
+  addColumns = (columnOptions) => {
+    let length = columnOptions.length - 1,
+      cellClass = columnOptions[length].cellClass + " last-column";
+    columnOptions[length].cellClass = cellClass;
+    this.setState({
+      heads: this.buildColumns(columnOptions)
+    });
+    this.forceUpdate();
+  };
+
   render() {
     const { rows } = this.state;
     return (
-        <div className="grid-container employees-result">
-            <div className="table employees-result-set">
-                <ReactDataGrid
-                    ref={'WorkbookResultSet'}
-                    onGridSort={this.handleGridSort}
-                    enableCellSelect={false}
-                    enableCellAutoFocus={false}
-                    columns={this.heads}
-                    rowGetter={this.rowGetter}
-                    rowsCount={rows.length}
-                    onGridRowsUpdated={this.handleGridRowsUpdated}
-                    headerRowHeight={32}
-                    minHeight={25}
-                    rowHeight={55}
-                    minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage} 
-                />
-            </div>
+      <div className="grid-container employees-result">
+        <div className="table employees-result-set">
+          <ReactDataGrid
+            ref={'WorkbookResultSet'}
+            onGridSort={this.handleGridSort}
+            enableCellSelect={false}
+            enableCellAutoFocus={false}
+            columns={this.state.heads}
+            rowGetter={this.rowGetter}
+            rowsCount={this.state.rows.length}
+            minHeight={500}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            rowHeight={25}
+            headerRowHeight={32}
+            minColumnWidth={100}
+            emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
+          />
         </div>
+      </div>
     );
   }
 }

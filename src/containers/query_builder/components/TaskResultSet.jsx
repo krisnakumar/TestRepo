@@ -41,8 +41,8 @@ class TaskResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-right"
-        },
-        {
+      },
+      {
         key: 'taskName',
         name: 'Task Name',
         sortable: true,
@@ -50,8 +50,8 @@ class TaskResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'assignedTo',
         name: 'Assigned To',
         sortable: true,
@@ -59,8 +59,8 @@ class TaskResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'evaluatorName',
         name: 'Evaluator Name',
         sortable: true,
@@ -68,8 +68,8 @@ class TaskResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
-        },
-        {
+      },
+      {
         key: 'expirationDate',
         name: 'Expiration Date',
         sortable: true,
@@ -77,12 +77,13 @@ class TaskResultSet extends React.Component {
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-center last-column"
-        }
-      ];
-    
-    this.state = {    
+      }
+    ];
+
+    this.state = {
       rows: this.createRows(this.props.employees),
       pageOfItems: [],
+      heads: this.props.columns || this.heads,
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
@@ -124,9 +125,9 @@ class TaskResultSet extends React.Component {
    * @param data
    * @returns dateString
   */
-  formatDate(date){
+  formatDate(date) {
     let dateString = "";
-    if(date){
+    if (date) {
       let tempDate = new Date(date); // MM/DD/YYY
       let day = tempDate.getDate();
       let month = tempDate.getMonth() + 1;
@@ -138,25 +139,30 @@ class TaskResultSet extends React.Component {
     }
   }
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param tasks
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param tasks
+  * @returns rows
+  */
   createRows = (tasks) => {
-    const rows = [], 
-          length = tasks ? tasks.length : 0;
+    const rows = [],
+      length = tasks ? tasks.length : 0;
     for (let i = 0; i < length; i++) {
       let expirationDate = tasks[i].ExpirationDate ? tasks[i].ExpirationDate.split(" ")[0] : "";
       rows.push({
-        taskId:  tasks[i].TaskId,
-        taskName: tasks[i].TaskName,
-        assignedTo: tasks[i].AssignedTo,
-        evaluatorName: tasks[i].EvaluatorName,
-        expirationDate: this.formatDate(expirationDate)
+        taskId: tasks[i].TaskId || "",
+        taskName: tasks[i].TaskName || "",
+        assignedTo: tasks[i].AssignedTo || "",
+        evaluatorName: tasks[i].EvaluatorName || "",
+        expirationDate: this.formatDate(expirationDate),
+        status: tasks[i].Status || "",
+        dateExpired: tasks[i].DateExpired || "",
+        location: tasks[i].Location || "",
+        duration: tasks[i].Duration || "",
+        score: tasks[i].Score || ""
       });
     }
 
@@ -172,22 +178,22 @@ class TaskResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.tasks),
-          isArray = Array.isArray(newProps.tasks),
-          isInitial = isArray;
+    let rows = this.createRows(newProps.tasks),
+      isArray = Array.isArray(newProps.tasks),
+      isInitial = isArray;
 
-      const {sortColumn , sortDirection } = this.state;
+    const { sortColumn, sortDirection } = this.state;
 
-      if(sortColumn != "" && sortDirection != "NONE"){
-        this.state.rows = rows;
-        this.state.isInitial = isInitial;
-        this.handleGridSort(sortColumn, sortDirection);
-      } else {
-        this.setState({
-          rows: rows,
-          isInitial: isInitial      
-        });
-      }
+    if (sortColumn != "" && sortDirection != "NONE") {
+      this.state.rows = rows;
+      this.state.isInitial = isInitial;
+      this.handleGridSort(sortColumn, sortDirection);
+    } else {
+      this.setState({
+        rows: rows,
+        isInitial: isInitial
+      });
+    }
   }
 
   /**
@@ -239,14 +245,14 @@ class TaskResultSet extends React.Component {
       } else if (sortDirection === 'DESC') {
         return momentA.isBefore(momentB) ? 1 : -1;
       }
-    };    
+    };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
 
     let rows = rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
-    if(isDate)
+    if (isDate)
       rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparerDate).slice(0, rowsLength);
 
     this.setState({ rows });
@@ -255,27 +261,45 @@ class TaskResultSet extends React.Component {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+  buildColumns = columns =>
+    columns.map((col, i) => ({
+      ...col,
+      formatter: this.cellFormatter,
+      hash: new Date().getTime()
+    }));
+
+  addColumns = (columnOptions) => {
+    let length = columnOptions.length - 1,
+      cellClass = columnOptions[length].cellClass + " last-column";
+    columnOptions[length].cellClass = cellClass;
+    this.setState({
+      heads: this.buildColumns(columnOptions)
+    });
+    this.forceUpdate();
+  };
+
   render() {
     const { rows } = this.state;
     return (
-        <div className="grid-container employees-result">
-            <div className="table employees-result-set">
-                <ReactDataGrid
-                    ref={'taskResultSet'}
-                    onGridSort={this.handleGridSort}
-                    enableCellSelect={false}
-                    enableCellAutoFocus={false}
-                    columns={this.heads}
-                    rowGetter={this.rowGetter}
-                    rowsCount={rows.length}
-                    onGridRowsUpdated={this.handleGridRowsUpdated}
-                    rowHeight={25}
-                    headerRowHeight={32}
-                    minColumnWidth={100}
-                    emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
-                />
-            </div>
+      <div className="grid-container employees-result">
+        <div className="table employees-result-set">
+          <ReactDataGrid
+            ref={'taskResultSet'}
+            onGridSort={this.handleGridSort}
+            enableCellSelect={false}
+            enableCellAutoFocus={false}
+            columns={this.state.heads}
+            rowGetter={this.rowGetter}
+            rowsCount={this.state.rows.length}
+            minHeight={500}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            rowHeight={25}
+            headerRowHeight={32}
+            minColumnWidth={100}
+            emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
+          />
         </div>
+      </div>
     );
   }
 }

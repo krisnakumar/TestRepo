@@ -6,15 +6,18 @@ import Modal from 'react-modal';
 import SlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
 import Select from 'react-select';
+import _ from 'lodash';
 
 class SlidePane extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            entity: this.props.entity,
             isPaneOpen: this.props.isPaneOpen,
             isPaneOpenLeft: this.props.isPaneOpenLeft,
             columnOptions: this.props.columns,
             selectedColumnOptions: this.buildOptions(this.props.columns),
+            lastSelectedColumnOptions: this.buildOptions(this.props.columns),
             NumberOfDropdowns: 0
         };
         this.addColumns = this.addColumns.bind(this);
@@ -55,10 +58,22 @@ class SlidePane extends Component {
    * @returns none
    */
     componentWillReceiveProps(newProps) {
-        this.setState({
-            isPaneOpen: newProps.isPaneOpen,
-            NumberOfDropdowns: 0
-        });
+        if(newProps.entity == this.state.entity){
+            this.setState({
+                isPaneOpen: newProps.isPaneOpen,
+                NumberOfDropdowns: 0,
+                columnOptions: newProps.columns
+            });
+        } else {
+            this.setState({
+                isPaneOpen: newProps.isPaneOpen,
+                NumberOfDropdowns: 0,
+                entity: newProps.entity,
+                columnOptions: newProps.columns,
+                selectedColumnOptions: this.buildOptions(newProps.columns),
+                lastSelectedColumnOptions: this.buildOptions(newProps.columns),
+            });
+        }
     };
 
     /**
@@ -70,7 +85,16 @@ class SlidePane extends Component {
    * @returns none
    */
     requestClose() {
-        this.setState({ isPaneOpen: false });
+        let selectedColumnOptions =  this.state.selectedColumnOptions,
+            lastSelectedColumnOptions =  this.state.lastSelectedColumnOptions,
+            isSame = _.isEqual(selectedColumnOptions, lastSelectedColumnOptions);// returns false if different
+        let tempSelectedColumnOptions =  JSON.parse(JSON.stringify( lastSelectedColumnOptions ));
+        if(!isSame){
+            this.setState({ isPaneOpen: false, selectedColumnOptions: tempSelectedColumnOptions });
+        } else {
+            this.setState({ isPaneOpen: false });
+        }
+        this.forceUpdate();
         this.props.columnOptionsSlideToggle();
     }
 
@@ -83,8 +107,11 @@ class SlidePane extends Component {
      * @returns none
     */
     requestOk() {
-        this.setState({ isPaneOpen: false });
-        this.props.changeColumnOptions(this.state.selectedColumnOptions);
+        let selectedColumnOptions = this.state.selectedColumnOptions;
+        let lastSelectedColumnOptions =  JSON.parse(JSON.stringify( selectedColumnOptions ));
+        this.setState({ isPaneOpen: false, lastSelectedColumnOptions });
+        this.forceUpdate();
+        this.props.changeColumnOptions(selectedColumnOptions);
     }
 
     /**

@@ -841,7 +841,7 @@ button.query-action-btn.delete:disabled {
   height: 35px !important;
   display: list-item !important;
   margin: 3px !important;
-  width: -webkit-fill-available;
+  width: stretch;
 }
 
 .query-section-button:disabled {

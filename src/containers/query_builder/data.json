@@ -280,8 +280,130 @@
 				"fields": "SUPERVISOR_ID"
 			}
 		],
-		"workbooks": [],
-		"tasks": []
+		"workbooks": [
+			{
+				"value": "workbookName",
+				"label": "Workbook Name",
+				"isDefault": true,
+				"fields": "WORKBOOK_NAME"
+			},
+			{
+				"value": "workbookId",
+				"label": "Workbook Id",
+				"isDefault": true,
+				"fields": "WORKBOOK_ID"
+			},
+			{
+				"value": "description",
+				"label": "Description",
+				"isDefault": true,
+				"fields": "DESCRIPTION"
+			},
+			{
+				"value": "createdBy",
+				"label": "Created By",
+				"isDefault": true,
+				"fields": "WORKBOOK_CREATED"
+			},
+			{
+				"value": "dayToComplete",
+				"label": "Day to Complete",
+				"isDefault": true,
+				"fields": "DAYS_TO_COMPLETE"
+			},
+			{
+				"value": "isEnabled",
+				"label": "IsEnabled",
+				"isDefault": false,
+				"fields": "WORKBOOK_ISENABLED"
+			},
+			{
+				"value": "assignedTo",
+				"label": "Assigned To",
+				"isDefault": false,
+				"fields": "ASSIGNED_TO"
+			},
+			{
+				"value": "dueDate",
+				"label": "Due Date ",
+				"isDefault": false,
+				"fields": "DUE_DATE"
+			},
+			{
+				"value": "supervisorId",
+				"label": "Supervisor Id",
+				"isDefault": false,
+				"fields": "SUPERVISOR_ID"
+			},
+			{
+				"value": "userId",
+				"label": "User Id",
+				"isDefault": false,
+				"fields": "USER_ID"
+			}
+		],
+		"tasks": [
+			{
+				"value": "taskName",
+				"label": "Task Name",
+				"isDefault": true,
+				"fields": "TASK_NAME"
+			},
+			{
+				"value": "taskId",
+				"label": "Task ID",
+				"isDefault": true,
+				"fields": "TASK_ID"
+			},
+			{
+				"value": "assignedTo",
+				"label": "Assigned To",
+				"isDefault": true,
+				"fields": "ASSIGNED_TO"
+			},
+			{
+				"value": "evaluatorName",
+				"label": "Evaluator Name",
+				"isDefault": true,
+				"fields": "EVALUATOR_NAME"
+			},
+			{
+				"value": "expirationDate",
+				"label": "Expiration Date",
+				"isDefault": true,
+				"fields": "EXPIRATION_DATE"
+			},
+			{
+				"value": "status",
+				"label": "Status",
+				"isDefault": false,
+				"fields": "STATUS"
+			},
+			{
+				"value": "dateExpired",
+				"label": "Date Expired",
+				"isDefault": false,
+				"fields": "DATE_EXPIRED"
+			},
+			{
+				"value": "location",
+				"label": "Location",
+				"isDefault": false,
+				"fields": "LOCATION"
+			},
+			{
+				"value": "duration",
+				"label": "Duration",
+				"isDefault": false,
+				"fields": "DURATION"
+			},
+			{
+				"value": "score",
+				"label": "Score",
+				"isDefault": false,
+				"fields": "SCORE"
+			}
+		]
 	},
 	"field": {
 		"employees": [

@@ -51,7 +51,9 @@ class QuerySection extends PureComponent {
 
     this.queryPane = React.createRef();
     this.employeeResultSet = React.createRef();
-    this.heads = [
+    this.workbookResultSet = React.createRef();
+    this.taskResultSet = React.createRef();
+    this.empHeads = [
       {
         key: 'employeeName',
         name: 'Employee Name',
@@ -123,6 +125,103 @@ class QuerySection extends PureComponent {
         cellClass: "text-right last-column"
       }
     ];
+
+    this.workbookHeads = [
+      {
+        key: 'workbookId',
+        name: 'Workbook ID ',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+      },
+      {
+        key: 'workbookName',
+        name: 'Workbook',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'description',
+        name: 'Description',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.descCellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'createdBy',
+        name: 'Created By',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'dayToComplete',
+        name: 'Day to Complete',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right last-column"
+      }
+    ];
+
+    this.taskHeads = [
+      {
+        key: 'taskId',
+        name: 'Task Id',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-right"
+      },
+      {
+        key: 'taskName',
+        name: 'Task Name',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'assignedTo',
+        name: 'Assigned To',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'evaluatorName',
+        name: 'Evaluator Name',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-left"
+      },
+      {
+        key: 'expirationDate',
+        name: 'Expiration Date',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-center last-column"
+      }
+    ];
+
     this.state = {
       selectedOption: options[0],
       lastSelectedOption: options[0],
@@ -142,6 +241,7 @@ class QuerySection extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
     this.onOpenClose = this.onOpenClose.bind(this);
+    this.changeColumnOptions = this.changeColumnOptions.bind(this);
   }
 
   /**
@@ -282,7 +382,7 @@ class QuerySection extends PureComponent {
   * @returns none
  */
   changeColumnOptions = (columnOptions) => {
-    const { count } = this.state;
+    let { count, selectedOption } = this.state;
 
     let addedColumnOptions = [];
     columnOptions.map(function (field, index) {
@@ -301,7 +401,20 @@ class QuerySection extends PureComponent {
     });
 
     this.setState({ isPaneOpen: false, count: count + 1 });
-    this.employeeResultSet.current.addColumns(addedColumnOptions);
+    switch (selectedOption.value) {
+      case 'employees':
+        this.employeeResultSet.current.addColumns(addedColumnOptions);
+        break;
+      case 'workbooks':
+        this.workbookResultSet.current.addColumns(addedColumnOptions);
+        break;
+      case 'tasks':
+        this.taskResultSet.current.addColumns(addedColumnOptions);
+        break;
+      default:
+        break;
+    }
+    
     this.queryPane.current.reloadQuery(addedColumnOptions);
   };
 
@@ -459,9 +572,9 @@ class QuerySection extends PureComponent {
               passWorkbooksResultsToQuerySection={this.passWorkbookResults}
               passEmployeesResultsToQuerySection={this.passEmployeesResults} />
             <div id="queryResultSet">
-              {this.state.isEmployee && <EmployeeResultSet columns={this.heads} ref={this.employeeResultSet} employees={this.state.employees} />}
-              {this.state.isWorkbook && <WorkbookResultSet ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
-              {this.state.isTask && <TaskResultSet ref={this.taskResultSet} tasks={this.state.tasks} />}
+              {this.state.isEmployee && <EmployeeResultSet columns={this.empHeads} ref={this.employeeResultSet} employees={this.state.employees} />}
+              {this.state.isWorkbook && <WorkbookResultSet columns={this.workbookHeads} ref={this.workbookResultSet} workbooks={this.state.workbooks} />}
+              {this.state.isTask && <TaskResultSet columns={this.taskHeads} ref={this.taskResultSet} tasks={this.state.tasks} />}
             </div>
           </SplitterLayout>
         </div>
@@ -471,6 +584,7 @@ class QuerySection extends PureComponent {
             changeColumnOptions={this.changeColumnOptions}
             isPaneOpen={this.state.isPaneOpen}
             columns={this.state.resultSet}
+            entity={this.state.selectedOption.value}
           />
         </div>
       </CardBody>
