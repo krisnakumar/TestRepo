@@ -68,22 +68,30 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
-                //generate the custom query Id for each query
-                Guid guid = Guid.NewGuid();
-                query = ProcessSaveQueryRequest(queryBuilderRequest, companyId);
-                IsExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "'");
-                if (IsExist == 0)
+                userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
+                if (userId != 0)
                 {
-                    rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO QUERY(QueryId,Name, QUeryJson, QuerySQL, CreatedDate,LastModified) VALUES('" + guid + "','" + queryBuilderRequest.QueryName + "','" + requestBody.Replace("'", "''") + "','" + query.Replace("'", "''") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "')");
-                    if (rowAffected > 0)
+                    //generate the custom query Id for each query
+                    Guid guid = Guid.NewGuid();
+                    query = ProcessSaveQueryRequest(queryBuilderRequest, companyId);
+                    IsExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "'");
+                    if (IsExist == 0)
                     {
-                        queryId = databaseWrapper.ExecuteScalar("SELECT Id FROM Query  where Name='" + queryBuilderRequest.QueryName + "'");
-                        userId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault());
-                        roleId = databaseWrapper.ExecuteScalar("select roleId from UserRole WHERE  userId=" + userId);
-                        rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO UserQuery(QueryId, UserId, CompanyId, Role) VALUES (" + queryId + "," + userId + "," + companyId + "," + roleId + ")");
+                        rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO QUERY(QueryId,Name, QUeryJson, QuerySQL, CreatedDate,LastModified) VALUES('" + guid + "','" + queryBuilderRequest.QueryName + "','" + requestBody.Replace("'", "''") + "','" + query.Replace("'", "''") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "')");
                         if (rowAffected > 0)
                         {
-                            return ResponseBuilder.GatewayProxyResponse(200, DataResource.SAVE_QUERY_SUCCESS_MESSAGE, 0);
+                            queryId = databaseWrapper.ExecuteScalar("SELECT Id FROM Query  where Name='" + queryBuilderRequest.QueryName + "'");
+
+                            roleId = databaseWrapper.ExecuteScalar("select roleId from UserRole WHERE  userId=" + userId);
+                            rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO UserQuery(QueryId, UserId, CompanyId, Role) VALUES (" + queryId + "," + userId + "," + companyId + "," + roleId + ")");
+                            if (rowAffected > 0)
+                            {
+                                return ResponseBuilder.SuccessMessage(DataResource.SAVE_QUERY_SUCCESS_MESSAGE);
+                            }
+                            else
+                            {
+                                return ResponseBuilder.InternalError();
+                            }
                         }
                         else
                         {
@@ -92,12 +100,12 @@ namespace ReportBuilderAPI.Repository
                     }
                     else
                     {
-                        return ResponseBuilder.InternalError();
+                        return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
                     }
                 }
                 else
                 {
-                    return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
+                    return ResponseBuilder.BadRequest("UserId");
                 }
             }
             catch (Exception saveQueryException)
@@ -174,7 +182,7 @@ namespace ReportBuilderAPI.Repository
                     rowAffected = databaseWrapper.ExecuteQuery("UPDATE Query SET name='" + queryBuilderRequest.QueryName + "' WHERE QueryId='" + queryBuilderRequest.QueryId + "'");
                     if (rowAffected > 0)
                     {
-                        return ResponseBuilder.GatewayProxyResponse(200, DataResource.RENAME_SUCCESS_MESSAGE, 0);
+                        return ResponseBuilder.SuccessMessage(DataResource.RENAME_SUCCESS_MESSAGE);
                     }
                     else
                     {
@@ -220,7 +228,7 @@ namespace ReportBuilderAPI.Repository
                         rowAffected = databaseWrapper.ExecuteQuery("DELETE FROM UserQuery WHERE QueryId='" + Id + "'");
                         if (rowAffected > 0)
                         {
-                            return ResponseBuilder.GatewayProxyResponse(200, DataResource.RENAME_SUCCESS_MESSAGE, 0);
+                            return ResponseBuilder.SuccessMessage(DataResource.DELETE_SUCCESS_MESSAGE);
                         }
                         else
                         {
@@ -256,12 +264,12 @@ namespace ReportBuilderAPI.Repository
         /// <param name="companyId"></param>
         public APIGatewayProxyResponse GetUserQuery(string requestBody, int companyId)
         {
-            DatabaseWrapper databaseWrapper = new DatabaseWrapper();            
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<QueryResponse> queryList = new List<QueryResponse>();
 
             try
             {
-                QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);             
+                QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and q.QueryId='" + queryBuilderRequest.QueryId + "'", new Dictionary<string, string> { });
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {

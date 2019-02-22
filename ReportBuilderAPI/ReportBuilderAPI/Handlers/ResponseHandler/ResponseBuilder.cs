@@ -166,5 +166,37 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 return null;
             }
         }
+
+
+        /// <summary>
+        ///     Creates success response
+        /// </summary>
+        /// <param name="statusCode"></param>
+        /// <param name="responseBody"></param>
+        /// <param name="code"></param>
+        /// <returns>APIGatewayProxyResponse</returns>
+        public static APIGatewayProxyResponse SuccessMessage(string Messgae)
+        {
+            try
+            {
+                ErrorResponse successResponse = new ErrorResponse
+                {                    
+                    Message = Messgae
+                };
+                var response = new APIGatewayProxyResponse
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Body = JsonConvert.SerializeObject(successResponse),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
+                };
+                return response;
+            }
+            catch (Exception exception)
+            {
+                LambdaLogger.Log(exception.ToString());
+                return null;
+            }
+        }
+
     }
 }

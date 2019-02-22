@@ -79,6 +79,15 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Query has been deleted succcessfully!.
+        /// </summary>
+        internal static string DELETE_SUCCESS_MESSAGE {
+            get {
+                return ResourceManager.GetString("DELETE_SUCCESS_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid username or password.
         /// </summary>
         internal static string INVALID_CREDENTILAS {

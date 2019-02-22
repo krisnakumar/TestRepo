@@ -208,7 +208,7 @@ namespace ReportBuilder.UnitTest
                 Body = JsonConvert.SerializeObject(employeeRequest)
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME_AND_DIRECT_SUBORDINATES\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"Bitwise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"1\",\"Operator\":\"!=\",\"Name\":\"USER_ID\",\"Bitwise\":\"\"},{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"or\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -312,7 +312,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"SUPERVISOR_ID\",\"Value\":98,\"Operator\":\"=\"}],\"ColumnList\":[\"TASK_CODE\",\"TASK_NAME\",\"EMPLOYEE_NAME\",\"ASSIGNED_DATE\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\": [{\"Name\": \"TASK_ID\",\"Value\": \"6\",\"Operator\": \">\"}],\"ColumnsList\": [\"TASK_ID\", \"TASK_NAME\", \"ASSIGNED_TO\", \"EVALUATOR_NAME\", \"EXPIRATION_DATE\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -377,7 +377,7 @@ namespace ReportBuilder.UnitTest
                 ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
                 Fields = employeeList,
                 EntityName = Constants.EMPLOYEE,
-                QueryName = "Shoba-test"
+                QueryName = "Shoba"
             };
 
             EmployeeModel employeeModel = new EmployeeModel

@@ -381,7 +381,7 @@
             "Properties": {		
 			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
               "Path": "/company/{companyId}/query/rename",
-              "Method": "POST"
+              "Method": "PUT"
             }
           }
         }
@@ -405,7 +405,7 @@
             "Properties": {		
 			 "RestApiId": { "Ref" : "ReportBuilderAPI" } ,
               "Path": "/company/{companyId}/query/delete",
-              "Method": "POST"
+              "Method": "DELETE"
             }
           }
         }
