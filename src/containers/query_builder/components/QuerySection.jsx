@@ -414,7 +414,7 @@ class QuerySection extends PureComponent {
       default:
         break;
     }
-    
+
     this.queryPane.current.reloadQuery(addedColumnOptions);
   };
 

@@ -261,6 +261,13 @@ class TaskResultSet extends React.Component {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+   /**
+   * @method
+   * @name - buildColumns
+   * This method will build the columns dynamically from state
+   * @param columns
+   * @returns columns
+   */
   buildColumns = columns =>
     columns.map((col, i) => ({
       ...col,
@@ -268,6 +275,13 @@ class TaskResultSet extends React.Component {
       hash: new Date().getTime()
     }));
 
+    /**
+   * @method
+   * @name - addColumns
+   * This method will add the columns to the state
+   * @param columnOptions
+   * @returns none
+   */
   addColumns = (columnOptions) => {
     let length = columnOptions.length - 1,
       cellClass = columnOptions[length].cellClass + " last-column";

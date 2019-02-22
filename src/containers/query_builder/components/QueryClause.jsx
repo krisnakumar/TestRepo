@@ -501,7 +501,13 @@ class QueryClause extends PureComponent {
         }
     };
 
-
+    /**
+       * @method
+       * @name - getDateByValue
+       * This method will used to format the date by smart params
+       * @param dateValue
+       * @returns date
+    */
     getDateByValue(dateValue) {
         let date = dateValue;
         switch (dateValue) {
@@ -535,6 +541,13 @@ class QueryClause extends PureComponent {
         return date;
     };
 
+    /**
+       * @method
+       * @name - reloadQuery
+       * This method will used trigger the reload query feature
+       * @param params
+       * @returns none
+    */
     reloadQuery(params) {
         let { columnList, entity } = this.state; columnList;
         let allColumnList = FieldData.columns[entity];
@@ -702,14 +715,34 @@ class QueryClause extends PureComponent {
         document.querySelector(".DayPickerInput-Overlay").style.display = 'block';
     };
 
-    handleOnChange(index, type, c, value) {
+     /**
+       * @method
+       * @name - handleOnChange
+       * This method will used update value on smart params change event
+       * @param index
+       * @param type
+       * @param event
+       * @param value
+       * @returns none
+    */
+    handleOnChange(index, type, event, value) {
         let formattedData = this.state.formattedData;
         formattedData[index][type] = value;
         this.setState({ ...this.state, formattedData, multiValue: value });
         this.forceUpdate();
     };
 
-    handleOnInputChange(index, type, c, value) {
+    /**
+       * @method
+       * @name - handleOnInputChange
+       * This method will used update value on smart params input typing event
+       * @param index
+       * @param type
+       * @param event
+       * @param value
+       * @returns none
+    */
+    handleOnInputChange(index, type, event, value) {
         let formattedData = this.state.formattedData;
         value = value.replace(/^\s+/g, '') || "";
 
@@ -719,6 +752,15 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     };
 
+     /**
+       * @method
+       * @name - componentDidUpdate
+       * This method will triggered whenever the component is updated the props
+       * @param prevProps
+       * @param prevState
+       * @param snapshot
+       * @returns none
+    */
     componentDidUpdate(prevProps, prevState, snapshot) {
         // If we have a snapshot value, we've just added new items.
         // Adjust scroll so these new items don't push the old ones out of view.
@@ -734,7 +776,15 @@ class QueryClause extends PureComponent {
         }
     };
 
-
+    /**
+       * @method
+       * @name - CustomOverlay
+       * This method will used to render the UI for Datepicker
+       * @param index
+       * @param { classNames, selectedDay, children, ...props }
+       * @param excess
+       * @returns none
+    */
     CustomOverlay(index, { classNames, selectedDay, children, ...props }, excess) {
         let position = index.split("@"),
             fieldIndex = position[0],
@@ -766,7 +816,17 @@ class QueryClause extends PureComponent {
         );
     };
 
-    handleFromChange(index, type, b, value) {
+     /**
+       * @method
+       * @name - handleFromChange
+       * This method will used update value on smart params date from select
+       * @param index
+       * @param type
+       * @param event
+       * @param value
+       * @returns none
+    */
+    handleFromChange(index, type, event, value) {
         // Change the from date and focus the "to" input field
         let formattedData = this.state.formattedData;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].from = value : formattedData[index][type] = {};
@@ -775,7 +835,18 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
-    handleToChange(index, type, b, value) {
+     /**
+     /**
+       * @method
+       * @name - handleToChange
+       * This method will used update value on smart params date to select
+       * @param index
+       * @param type
+       * @param event
+       * @param value
+       * @returns none
+    */
+    handleToChange(index, type, event, value) {
         let formattedData = this.state.formattedData;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].to = value : formattedData[index][type] = {};
         formattedData[index][type].to = value;
@@ -945,8 +1016,8 @@ class QueryClause extends PureComponent {
                                             autocomplete="off"
                                             clearable={false}
                                             autosize={false}
-                                            backspaceRemoves={false}
-                                            deleteRemoves={false}
+                                            backspaceRemoves={true}
+                                            deleteRemoves={true}
                                             multi={multi}
                                             className="inputQueryInput"
                                             options={field.smartParam}

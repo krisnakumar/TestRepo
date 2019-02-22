@@ -27,17 +27,24 @@ class SlidePane extends Component {
         this.handleChange = this.handleChange.bind(this);
     };
 
+    /**
+  * @method
+  * @name - componentDidMount
+  * This method will catch all the exceptions in this class
+  * @param none
+  * @returns none
+  */
     componentDidMount() {
         Modal.setAppElement(this.el);
     };
 
-    buildOptionsTest = options =>
-        options.map((option, i) => ({
-            ...option,
-            valueSelected: ""
-        }));
-
-
+    /**
+     * @method
+     * @name - buildOptions
+     * This method will build the options dynamically from state
+     * @param columns
+     * @returns columns
+     */
     buildOptions = options => {
         let obj = [];
         options.map((option, i) => {
@@ -58,7 +65,7 @@ class SlidePane extends Component {
    * @returns none
    */
     componentWillReceiveProps(newProps) {
-        if(newProps.entity == this.state.entity){
+        if (newProps.entity == this.state.entity) {
             this.setState({
                 isPaneOpen: newProps.isPaneOpen,
                 NumberOfDropdowns: 0,
@@ -85,11 +92,11 @@ class SlidePane extends Component {
    * @returns none
    */
     requestClose() {
-        let selectedColumnOptions =  this.state.selectedColumnOptions,
-            lastSelectedColumnOptions =  this.state.lastSelectedColumnOptions,
+        let selectedColumnOptions = this.state.selectedColumnOptions,
+            lastSelectedColumnOptions = this.state.lastSelectedColumnOptions,
             isSame = _.isEqual(selectedColumnOptions, lastSelectedColumnOptions);// returns false if different
-        let tempSelectedColumnOptions =  JSON.parse(JSON.stringify( lastSelectedColumnOptions ));
-        if(!isSame){
+        let tempSelectedColumnOptions = JSON.parse(JSON.stringify(lastSelectedColumnOptions));
+        if (!isSame) {
             this.setState({ isPaneOpen: false, selectedColumnOptions: tempSelectedColumnOptions });
         } else {
             this.setState({ isPaneOpen: false });
@@ -103,12 +110,12 @@ class SlidePane extends Component {
      * @name - requestOk
      * This method will invoked whenever the props or state
      *  is update to this component class
-     * @param newProps
+     * @param none
      * @returns none
     */
     requestOk() {
         let selectedColumnOptions = this.state.selectedColumnOptions;
-        let lastSelectedColumnOptions =  JSON.parse(JSON.stringify( selectedColumnOptions ));
+        let lastSelectedColumnOptions = JSON.parse(JSON.stringify(selectedColumnOptions));
         this.setState({ isPaneOpen: false, lastSelectedColumnOptions });
         this.forceUpdate();
         this.props.changeColumnOptions(selectedColumnOptions);
@@ -119,7 +126,7 @@ class SlidePane extends Component {
     * @name - addColumns
     * This method will invoked whenever the props or state
     *  is update to this component class
-    * @param newProps
+    * @param none
     * @returns none
     */
     addColumns() {
@@ -134,10 +141,10 @@ class SlidePane extends Component {
 
     /**
    * @method
-   * @name - addColumns
+   * @name - removeColumns
    * This method will invoked whenever the props or state
    *  is update to this component class
-   * @param newProps
+   * @param el
    * @returns none
    */
     removeColumns(el) {

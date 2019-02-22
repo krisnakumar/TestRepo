@@ -1,4 +1,15 @@
 /* eslint-disable */
+/*
+* EmployeeExport.jsx
+* Written by Prashanth Ravi (pravi@its-training.com)
+* This javascript file will used render Employee Export details to list the Employees 
+* Template: React.Component
+* Prerequisites: React and babel
+
+METHODS
+--------
+componentWillReceiveProps(newProps)
+*/
 import Workbook from 'react-excel-workbook'
 import React, { Component } from 'react';
 

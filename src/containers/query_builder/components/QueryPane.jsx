@@ -145,8 +145,8 @@ class QueryPane extends PureComponent {
 
   /**
 * @method
-* @name - passTasksResults
-* This method used to pass the tasks parent component
+* @name - passReloadQuery
+* This method used to pass the reload query parent component
 * @param tasks
 * @returns none
 */
