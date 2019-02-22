@@ -120,7 +120,7 @@ class QuerySection extends PureComponent {
         draggable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-right"
+        cellClass: "text-right last-column"
       }
     ];
     this.state = {

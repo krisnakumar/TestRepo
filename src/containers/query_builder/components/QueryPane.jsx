@@ -87,7 +87,6 @@ class QueryPane extends PureComponent {
     this.queryClause.current.buildQuery();
   };
 
-
   /**
    * @method
    * @name - runQuery

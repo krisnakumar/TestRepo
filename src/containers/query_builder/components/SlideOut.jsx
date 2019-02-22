@@ -14,18 +14,38 @@ class SlidePane extends Component {
             isPaneOpen: this.props.isPaneOpen,
             isPaneOpenLeft: this.props.isPaneOpenLeft,
             columnOptions: this.props.columns,
+            selectedColumnOptions: this.buildOptions(this.props.columns),
             NumberOfDropdowns: 0
         };
         this.addColumns = this.addColumns.bind(this);
         this.removeColumns = this.removeColumns.bind(this);
         this.requestClose = this.requestClose.bind(this);
         this.requestOk = this.requestOk.bind(this);
-    }
+        this.handleChange = this.handleChange.bind(this);
+    };
 
     componentDidMount() {
         Modal.setAppElement(this.el);
-    }
+    };
 
+    buildOptionsTest = options =>
+        options.map((option, i) => ({
+            ...option,
+            valueSelected: ""
+        }));
+
+
+    buildOptions = options => {
+        let obj = [];
+        options.map((option, i) => {
+            if (option.isDefault) {
+                option.valueSelected = "";
+                obj.push(option);
+            }
+        });
+
+        return obj;
+    }
     /**
    * @method
    * @name - componentWillReceiveProps
@@ -37,9 +57,7 @@ class SlidePane extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             isPaneOpen: newProps.isPaneOpen,
-            columnOptions: newProps.columns,
             NumberOfDropdowns: 0
-
         });
     };
 
@@ -66,9 +84,9 @@ class SlidePane extends Component {
     */
     requestOk() {
         this.setState({ isPaneOpen: false });
-        this.props.changeColumnOptions(this.state.columnOptions);
+        this.props.changeColumnOptions(this.state.selectedColumnOptions);
     }
-    
+
     /**
     * @method
     * @name - addColumns
@@ -78,14 +96,12 @@ class SlidePane extends Component {
     * @returns none
     */
     addColumns() {
-        let { columnOptions, NumberOfDropdowns } = this.state;
-        NumberOfDropdowns = 0;
-        columnOptions.map(function (field, index) {
-            columnOptions[index].isDefault ? NumberOfDropdowns = NumberOfDropdowns + 1 : NumberOfDropdowns
-        });
+        let { selectedColumnOptions, NumberOfDropdowns, columnOptions } = this.state;
+        NumberOfDropdowns = selectedColumnOptions.length;
         columnOptions[NumberOfDropdowns].isDefault = true;
-        NumberOfDropdowns = NumberOfDropdowns + 1;
-        this.setState({ columnOptions, NumberOfDropdowns });
+        columnOptions[NumberOfDropdowns].valueSelected = "";
+        selectedColumnOptions.push(columnOptions[NumberOfDropdowns]);
+        this.setState({ selectedColumnOptions, NumberOfDropdowns, columnOptions });
         this.forceUpdate();
     };
 
@@ -99,24 +115,38 @@ class SlidePane extends Component {
    */
     removeColumns(el) {
         let position = el.currentTarget.dataset.position;
-        let { columnOptions } = this.state;
-        columnOptions[position].isDefault = false;
-        let tempObj = columnOptions[position];
-        columnOptions.splice(position, 1);
-        columnOptions.push(tempObj)
-        this.setState({ columnOptions });
+        let { selectedColumnOptions, NumberOfDropdowns } = this.state;
+        selectedColumnOptions.splice(position, 1);
+        NumberOfDropdowns = selectedColumnOptions.length - 1;
+        this.setState({ selectedColumnOptions, NumberOfDropdowns });
+        this.forceUpdate();
+    }
+
+    /**
+     * @method
+     * @name - handleChange
+     * This method will triggered on select option change to update the selected value in state
+     * @param index
+     * @param key
+     * @param selectedOption
+     * @returns none
+    */
+    handleChange(index, key, selectedOption) {
+        let selectedColumnOptions = this.state.selectedColumnOptions,
+            value = selectedOption.value.replace(/^\s+/g, '') || "",
+            fields = selectedOption.fields.replace(/^\s+/g, '') || "",
+            label = selectedOption.label.replace(/^\s+/g, '') || "";
+        selectedColumnOptions[index][key] = value;
+        selectedColumnOptions[index].fields = fields;
+        selectedColumnOptions[index].label = label;
+        selectedColumnOptions[index].value = value;
+        this.setState({ ...this.state, selectedColumnOptions });
         this.forceUpdate();
     }
 
     render() {
-        let columnsOptions = this.state.columnOptions || [];
-        let tempDropdownCount = 0
-        columnsOptions.map(function (field, index) {
-            if (field.isDefault) {
-                tempDropdownCount = tempDropdownCount + 1
-            }
-        })
-        this.state.NumberOfDropdowns = tempDropdownCount;
+        let columnsOptions = this.state.columnOptions || [],
+            selectedColumnOptions = this.state.selectedColumnOptions || [];
         let { NumberOfDropdowns } = this.state,
             self = this;
         return <div className="slidepane1" ref={ref => this.el = ref}>
@@ -140,7 +170,8 @@ class SlidePane extends Component {
                         <h4 className="colOptionsTitle" >Column Options</h4>
                     </div>
                     {
-                        columnsOptions.map(function (field, index) {
+                        selectedColumnOptions.map(function (field, index) {
+                            let valueSelected = field.valueSelected == "" || undefined ? selectedColumnOptions[index].value : field.valueSelected;
                             if (field.isDefault) {
                                 return (
                                     <div key={index} className={"row-col" + index + " columnOptionsSelect"}>
@@ -151,8 +182,9 @@ class SlidePane extends Component {
                                             isRtl={true}
                                             isSearchable={false}
                                             openOnClick={true}
-                                            value={columnsOptions[index].value}
+                                            value={valueSelected}
                                             autoFocus={false}
+                                            onChange={self.handleChange.bind("", index, "valueSelected")}
                                             backspaceRemoves={false}
                                             deleteRemoves={false}
                                             placeholder={""}
@@ -169,7 +201,7 @@ class SlidePane extends Component {
                     }
                     <div>
                         {
-                            NumberOfDropdowns < columnsOptions.length &&
+                            NumberOfDropdowns < (columnsOptions.length - 1) &&
                             <button onClick={this.addColumns.bind()} className="query-section-button col-opt-add-column" size="sm" title="Add Column" aria-label="Add Column">
                                 <span aria-hidden className=""><i className="fa fa-plus"></i></span>
                                 <span className="fa-text-align">Add Column</span>

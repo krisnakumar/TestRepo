@@ -475,7 +475,7 @@ class QueryClause extends PureComponent {
                     let queryObjUser = {};
                     queryObjUser.Value = cookies.get('UserId');
                     queryObjUser.Operator = "=";
-                    queryObjUser.Name = "USER_ID";
+                    queryObjUser.Name = "CURRENT_USER";
                     queryObjUser.BitWise = "AND";
                     queryClause.push(queryObjUser);
                 }

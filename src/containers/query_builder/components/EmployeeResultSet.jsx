@@ -246,17 +246,18 @@ class EmployeeResultSet extends React.Component {
     columns.map((col, i) => ({
       ...col,
       formatter: this.cellFormatter,
+      hash: new Date().getTime()
     }));
 
   addColumns = (columnOptions) => {
     let length = columnOptions.length - 1,
-    cellClass = columnOptions[length].cellClass + " last-column";
+      cellClass = columnOptions[length].cellClass + " last-column";
     columnOptions[length].cellClass = cellClass;
     this.setState({
       heads: this.buildColumns(columnOptions)
     });
     this.forceUpdate();
-   
+
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
