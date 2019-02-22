@@ -195,6 +195,12 @@ namespace ReportBuilderAPI.Utilities
         public const string ME_AND_ALL_SUBORDINATES = "ME_AND_ALL_SUBORDINATES";
 
 
+        public const string NOT_ME = "NOT_ME";
+        public const string NOT_ME_AND_DIRECT_SUBORDINATES = "NOT_ME_AND_DIRECT_SUBORDINATES";
+        public const string NOT_DIRECT_SUBORDINATES = "NOT_DIRECT_SUBORDINATES";
+        public const string NOT_ALL_SUBORDINATES = "NOT_ALL_SUBORDINATES";
+        public const string NOT_ME_AND_ALL_SUBORDINATES = "NOT_ME_AND_ALL_SUBORDINATES";
+
         //List of entities
         public const string TASK = "TASK";
         public const string WORKBOOK = "WORKBOOK";

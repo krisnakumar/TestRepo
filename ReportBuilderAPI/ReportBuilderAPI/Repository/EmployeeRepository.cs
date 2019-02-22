@@ -184,6 +184,12 @@ namespace ReportBuilderAPI.Repository
             {Constants.ME_AND_ALL_SUBORDINATES, " u.Id in (SELECT @userId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
             {Constants.DIRECT_SUBORDINATES, "u.Id in(SELECT userId FROM supervisor WHERE supervisorId=@currentuserId)  " },
             {Constants.ALL_SUBORDINATES, " u.Id in (SELECT * FROM getchildUsers(@currentuserId))  " },
+
+            {Constants.NOT_ME, "u.Id not in (@currentuserId)" },
+            {Constants.NOT_ME_AND_DIRECT_SUBORDINATES, "u.Id not in (select @userId Union select userId from supervisor where supervisorId=@currentuserId) " },
+            {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.Id not in (SELECT @userId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.NOT_DIRECT_SUBORDINATES, "u.Id not in (SELECT userId FROM supervisor WHERE supervisorId=@currentuserId)  " },
+            {Constants.NOT_ALL_SUBORDINATES, " u.Id not in (SELECT * FROM getchildUsers(@currentuserId))  " }
         };
 
 
@@ -234,8 +240,8 @@ namespace ReportBuilderAPI.Repository
                 {
                     EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).FirstOrDefault();
                     employeeRequest.Fields.Remove(userDetails);
-                    employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
-                   
+                    //employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
+                    employeeRequest.Fields.Select(x => (x.Name == Constants.USERNAME && x.Operator == "=") ? x.Name = x.Value : x.Name = "NOT_" + x.Value).ToList();
                 }
 
                 //getting where conditions
@@ -313,7 +319,12 @@ namespace ReportBuilderAPI.Repository
             Constants.ME_AND_ALL_SUBORDINATES,
             Constants.ME_AND_DIRECT_SUBORDINATES,
             Constants.ALL_SUBORDINATES,
-            Constants.DIRECT_SUBORDINATES
+            Constants.DIRECT_SUBORDINATES,
+            Constants.NOT_ME,
+            Constants.NOT_ME_AND_ALL_SUBORDINATES,
+            Constants.NOT_ME_AND_DIRECT_SUBORDINATES,
+            Constants.NOT_ALL_SUBORDINATES,
+            Constants.NOT_DIRECT_SUBORDINATES
         };
 
         /// <summary>
