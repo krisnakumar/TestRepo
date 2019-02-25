@@ -43,6 +43,7 @@
     "react-chartjs-2": "^2.7.4",
     "react-color": "^2.14.1",
     "react-cookie": "^3.0.4",
+    "react-data-export": "^0.5.0",
     "react-data-grid": "^3.0.10",
     "react-data-grid-addons": "^5.0.5",
     "react-date-range": "^0.9.4",
