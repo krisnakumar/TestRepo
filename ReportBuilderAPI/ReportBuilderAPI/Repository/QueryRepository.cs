@@ -104,7 +104,7 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    return ResponseBuilder.BadRequest("UserId");
+                    return ResponseBuilder.BadRequest(DataResource.CHECK_INPUT);
                 }
             }
             catch (Exception saveQueryException)
@@ -132,23 +132,28 @@ namespace ReportBuilderAPI.Repository
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
                 userId = queryBuilderRequest.UserId;
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId, new Dictionary<string, string> { });
-                if (sqlDataReader != null && sqlDataReader.HasRows)
-                {
-                    while (sqlDataReader.Read())
+                if(userId > 0){
+                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId, new Dictionary<string, string> { });
+                    if (sqlDataReader != null && sqlDataReader.HasRows)
                     {
-                        QueryResponse queryResponse = new QueryResponse
+                        while (sqlDataReader.Read())
                         {
-                            QueryId = Convert.ToString(sqlDataReader["QueryId"]),
-                            QueryName = Convert.ToString(sqlDataReader["Name"]),
-                            CreatedDate = sqlDataReader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["CreatedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
-                            LastModified = sqlDataReader["LastModified"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["LastModified"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
-                            CreatedBy = Convert.ToString(sqlDataReader["employeeName"])
-                        };
-                        queryList.Add(queryResponse);
+                            QueryResponse queryResponse = new QueryResponse
+                            {
+                                QueryId = Convert.ToString(sqlDataReader["QueryId"]),
+                                QueryName = Convert.ToString(sqlDataReader["Name"]),
+                                CreatedDate = sqlDataReader["CreatedDate"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["CreatedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
+                                LastModified = sqlDataReader["LastModified"] != DBNull.Value ? Convert.ToDateTime(sqlDataReader["LastModified"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy"),
+                                CreatedBy = Convert.ToString(sqlDataReader["employeeName"])
+                            };
+                            queryList.Add(queryResponse);
+                        }
                     }
+                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
                 }
-                return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
+                else {
+                    return ResponseBuilder.BadRequest("UserId");
+                }
             }
             catch (Exception getUserQueriesException)
             {
@@ -175,22 +180,29 @@ namespace ReportBuilderAPI.Repository
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
                 userId = queryBuilderRequest.UserId;
-                isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
-                if (isExist == 0)
+                if (userId > 0 && !String.IsNullOrEmpty(queryBuilderRequest.QueryId) && !String.IsNullOrEmpty(queryBuilderRequest.QueryName))
                 {
-                    rowAffected = databaseWrapper.ExecuteQuery("UPDATE Query SET name='" + queryBuilderRequest.QueryName + "' WHERE QueryId='" + queryBuilderRequest.QueryId + "'");
-                    if (rowAffected > 0)
+                    isExist = databaseWrapper.ExecuteScalar("SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryBuilderRequest.QueryName + "' and uq.UserId=" + userId);
+                    if (isExist == 0)
                     {
-                        return ResponseBuilder.SuccessMessage(DataResource.RENAME_SUCCESS_MESSAGE);
+                        rowAffected = databaseWrapper.ExecuteQuery("UPDATE Query SET name='" + queryBuilderRequest.QueryName + "' WHERE QueryId='" + queryBuilderRequest.QueryId + "'");
+                        if (rowAffected > 0)
+                        {
+                            return ResponseBuilder.SuccessMessage(DataResource.RENAME_SUCCESS_MESSAGE);
+                        }
+                        else
+                        {
+                            return ResponseBuilder.InternalError();
+                        }
                     }
                     else
                     {
-                        return ResponseBuilder.InternalError();
+                        return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
                     }
                 }
                 else
                 {
-                    return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
+                    return ResponseBuilder.BadRequest(DataResource.CHECK_INPUT);
                 }
             }
             catch (Exception renameQueryException)
@@ -241,7 +253,7 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    return ResponseBuilder.BadRequest(DataResource.RENAME_QUERY_ERROR);
+                    return ResponseBuilder.BadRequest(DataResource.CHECK_INPUT);
                 }
             }
             catch (Exception renameQueryException)
@@ -269,20 +281,27 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest queryBuilderRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and q.QueryId='" + queryBuilderRequest.QueryId + "'", new Dictionary<string, string> { });
-                if (sqlDataReader != null && sqlDataReader.HasRows)
+                if (!String.IsNullOrEmpty(queryBuilderRequest.QueryId))
                 {
-                    while (sqlDataReader.Read())
+                    SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and q.QueryId='" + queryBuilderRequest.QueryId + "'", new Dictionary<string, string> { });
+                    if (sqlDataReader != null && sqlDataReader.HasRows)
                     {
-                        QueryResponse queryResponse = new QueryResponse
+                        while (sqlDataReader.Read())
                         {
-                            QueryJson = Convert.ToString(sqlDataReader["QueryJson"]),
-                            QueryModel = GetResults(companyId, Convert.ToString(sqlDataReader["QuerySQL"]), Convert.ToString(sqlDataReader["QueryJson"]))
-                        };
-                        queryList.Add(queryResponse);
+                            QueryResponse queryResponse = new QueryResponse
+                            {
+                                QueryJson = Convert.ToString(sqlDataReader["QueryJson"]),
+                                QueryModel = GetResults(companyId, Convert.ToString(sqlDataReader["QuerySQL"]), Convert.ToString(sqlDataReader["QueryJson"]))
+                            };
+                            queryList.Add(queryResponse);
+                        }
                     }
+                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
                 }
-                return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
+                else
+                {
+                    return ResponseBuilder.BadRequest(DataResource.CHECK_INPUT);
+                }
             }
             catch (Exception getUserQueriesException)
             {

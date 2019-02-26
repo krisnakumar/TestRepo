@@ -123,8 +123,14 @@
   <data name="ACCOUNT_NOT_HAVING_PERMISSION" xml:space="preserve">
     <value>Account doesn’t have login permission</value>
   </data>
+  <data name="CHECK_INPUT" xml:space="preserve">
+    <value>Check inputs</value>
+  </data>
   <data name="DELETE_SUCCESS_MESSAGE" xml:space="preserve">
     <value>Query has been deleted succcessfully!</value>
+  </data>
+  <data name="EMPTY_NAME_ERROR" xml:space="preserve">
+    <value>Empty name! Please give a Query name to save</value>
   </data>
   <data name="INVALID_CREDENTILAS" xml:space="preserve">
     <value>Invalid username or password</value>

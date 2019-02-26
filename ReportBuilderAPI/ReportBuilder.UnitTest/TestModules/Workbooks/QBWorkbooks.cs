@@ -370,7 +370,7 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
         }
         
         [TestMethod]
-        public void GetWorkbooksWithoutColumns()
+        public void GetWorkbooksWithEmptyColumnsList()
         {
             List<EmployeeModel> wbList = new List<EmployeeModel>();
             Function function = new Function();
