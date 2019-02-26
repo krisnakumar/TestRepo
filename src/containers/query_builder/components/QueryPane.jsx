@@ -177,21 +177,17 @@ class QueryPane extends PureComponent {
   passResultSetColumns(type, columns) {
     switch (type) {
       case 'employees':
-        console.log(type, columns);
         this.props.passEmployeesColumnsToQuerySection(type, columns);
         break;
       case 'workbooks':
-        console.log(type, columns);
         this.props.passWorkbooksColumnsToQuerySection(type, columns);
         break;
       case 'tasks':
-        console.log(type, columns);
         this.props.passTasksColumnsToQuerySection(type, columns);
         break;
       default:
         break;
     }
-    // this.props.passEmployeesColumnsToQuerySection(columns);
   }
 
   render() {

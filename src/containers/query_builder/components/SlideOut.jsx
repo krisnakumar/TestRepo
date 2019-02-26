@@ -165,7 +165,7 @@ class SlidePane extends Component {
      * @param selectedOption
      * @returns none
     */
-    handleChange(index, key, selectedOption) {        
+    handleChange(index, key, selectedOption) {
         let selectedColumnOptions = this.state.selectedColumnOptions,
             value = selectedOption.value.replace(/^\s+/g, '') || "",
             fields = selectedOption.fields.replace(/^\s+/g, '') || "",
@@ -224,9 +224,15 @@ class SlidePane extends Component {
                                             placeholder={""}
                                             className="col-options-dropdown"
                                         />
-                                        <button data-position={index} onClick={self.removeColumns.bind()} className={"col-opt-close remove-" + index} size="sm" title="Remove Column" aria-label="Remove Column">
-                                            <span aria-hidden className=""><i className="fa fa-times"></i></span>
-                                        </button>
+                                        {
+                                            (selectedColumnOptions.length > 1) && <button data-position={index} onClick={self.removeColumns.bind()} className={"col-opt-close remove-" + index} size="sm" title="Remove Column" aria-label="Remove Column">
+                                                <span aria-hidden className=""><i className="fa fa-times"></i></span>
+                                            </button>
+                                            ||
+                                            <button data-position={index} className={"col-opt-info remove-" + index} size="sm" title="At least one column is required" aria-label="At least one column is required" disabled>
+                                                <span aria-hidden className=""><i className="fa fa-info-circle"></i></span>
+                                            </button>
+                                        }
 
                                     </div>
                                 )

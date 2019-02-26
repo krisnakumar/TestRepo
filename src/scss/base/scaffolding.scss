@@ -774,6 +774,22 @@ button.query-action-btn.delete:disabled {
   font-size: 20px;
 }
 
+.col-opt-info {
+  float: right;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  color: #0a1631;
+  position: relative;
+  top: -29px;
+  right: -38px;
+  color: #093254;
+
+  span {
+    font-size: 20px;
+   }
+}
+
 .col-opt-close {
   float: right;
   background-color: white;
