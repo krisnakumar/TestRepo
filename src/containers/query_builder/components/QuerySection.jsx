@@ -236,7 +236,10 @@ class QuerySection extends PureComponent {
       isPaneOpen: false,
       isPaneOpenLeft: false,
       resultSet: [],
-      count: 0
+      count: 0,
+      empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "EMAIL", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES"],
+      workbookColumnList: ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"],
+      taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"]
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
@@ -464,6 +467,41 @@ class QuerySection extends PureComponent {
   }
 
   /**
+   * @method
+   * @name - passEmployeesColumns
+   * This method used to get the tasks from child component
+   * @param employees
+   * @returns none
+  */
+  passEmployeesColumns = (type, columns) => {
+    console.log("passEmployeesColumns-", columns);
+    this.setState({ empColumnList: columns });
+  }
+
+  /**
+  * @method
+  * @name - passTasksColumns
+  * This method used to get the tasks from child component
+  * @param employees
+  * @returns none
+ */
+  passTasksColumns = (type, columns) => {
+    console.log("passTasksColumns-", columns);
+    this.setState({ taskColumnList: columns });
+  }
+  /**
+    * @method
+    * @name - passWorkbooksColumns
+    * This method used to get the tasks from child component
+    * @param employees
+    * @returns none
+   */
+  passWorkbooksColumns = (type, columns) => {
+    console.log("passWorkbooksColumns-", columns);
+    this.setState({ workbookColumnList: columns });
+  }
+
+  /**
     * @method
     * @name - onOpenClose
     * This method will used to set the css props to select menu outer to positioning
@@ -555,22 +593,24 @@ class QuerySection extends PureComponent {
               </button>
             </Col>
             <Col xs="auto">
-              {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} />}
-              {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} />}
-              {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} />}
+              {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} columnOptions={this.state.empColumnList} />}
+              {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} columnOptions={this.state.workbookColumnList} />}
+              {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} columnOptions={this.state.taskColumnList} />}
             </Col>
           </Row>
         </div>
         <div className="wrapper">
           <SplitterLayout primaryIndex={0} primaryMinSize={150} secondaryMinSize={200} customClassName={"query-builder-section"} vertical={true}>
-
             <QueryPane
               ref={this.queryPane}
               selectedOption={this.state.selectedOption}
               onRunQueryClick={this.onRunQueryClick}
               passTasksToQuerySection={this.passTasksResults}
               passWorkbooksResultsToQuerySection={this.passWorkbookResults}
-              passEmployeesResultsToQuerySection={this.passEmployeesResults} />
+              passEmployeesResultsToQuerySection={this.passEmployeesResults}
+              passEmployeesColumnsToQuerySection={this.passEmployeesColumns}
+              passTasksColumnsToQuerySection={this.passTasksColumns}
+              passWorkbooksColumnsToQuerySection={this.passWorkbooksColumns} />
             <div id="queryResultSet">
               {this.state.isEmployee && <EmployeeResultSet columns={this.empHeads} ref={this.employeeResultSet} employees={this.state.employees} />}
               {this.state.isWorkbook && <WorkbookResultSet columns={this.workbookHeads} ref={this.workbookResultSet} workbooks={this.state.workbooks} />}

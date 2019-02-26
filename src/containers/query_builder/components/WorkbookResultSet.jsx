@@ -152,7 +152,7 @@ class WorkbookResultSet extends React.Component {
         dueDate: workbooks[i].DueDate || "",
         supervisorId: workbooks[i].SupervisorId || "",
         userId: workbooks[i].UserId || "",
-        isEnabled: workbooks[i].DaysToComplete || ""
+        isEnabled: workbooks[i].IsEnabled || ""
       });
     }
 

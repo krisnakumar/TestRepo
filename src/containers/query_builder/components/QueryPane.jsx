@@ -45,6 +45,7 @@ class QueryPane extends PureComponent {
     this.passTasksResults = this.passTasksResults.bind(this);
     this.checkQuerySelections = this.checkQuerySelections.bind(this);
     this.passReloadQuery = this.passReloadQuery.bind(this);
+    this.passResultSetColumns = this.passResultSetColumns.bind(this);
   }
 
   /**
@@ -166,6 +167,33 @@ class QueryPane extends PureComponent {
     return isSame;
   }
 
+  /**
+   * @method
+   * @name - passEmployeesColumns
+   * This method used to pass the tasks parent component
+   * @param tasks
+   * @returns none
+ */
+  passResultSetColumns(type, columns) {
+    switch (type) {
+      case 'employees':
+        console.log(type, columns);
+        this.props.passEmployeesColumnsToQuerySection(type, columns);
+        break;
+      case 'workbooks':
+        console.log(type, columns);
+        this.props.passWorkbooksColumnsToQuerySection(type, columns);
+        break;
+      case 'tasks':
+        console.log(type, columns);
+        this.props.passTasksColumnsToQuerySection(type, columns);
+        break;
+      default:
+        break;
+    }
+    // this.props.passEmployeesColumnsToQuerySection(columns);
+  }
+
   render() {
     return (
       <div className="query-builder-section">
@@ -187,6 +215,7 @@ class QueryPane extends PureComponent {
             passEmployeesResults={this.passEmployeesResults}
             passWorkbooksResults={this.passWorkbooksResults}
             passTasksResults={this.passTasksResults}
+            passResultSetColumns={this.passResultSetColumns}
           />
         </Table>
       </div>

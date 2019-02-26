@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import * as moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
+import FieldData from './../data';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -24,7 +25,8 @@ class EmployeeExport extends Component {
         super(props);
         this.state = {
             employees: this.formatData(this.props.employees),
-            entity: this.props.entity
+            entity: this.props.entity,
+            columnOptions: this.props.columnOptions
         };
         this.formatData = this.formatData.bind(this);
     };
@@ -40,7 +42,8 @@ class EmployeeExport extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             employees: this.formatData(newProps.employees),
-            entity: newProps.entity
+            entity: newProps.entity,
+            columnOptions: newProps.columnOptions
         });
     };
 
@@ -53,7 +56,7 @@ class EmployeeExport extends Component {
     */
     formatData(employeeData) {
         const { cookies } = this.props;
-
+        let fieldDataColumns = FieldData.columns.employees;
         let employees = employeeData || [],
             runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
@@ -74,8 +77,18 @@ class EmployeeExport extends Component {
 
         if (employees.length > 0) {
 
-            let columns = Object.keys(employees[0]),
-                dataSet = [];
+            let columns = [],
+                dataSet = [],
+                currentColumnOptions = this.state.columnOptions;
+
+            currentColumnOptions.forEach(function (column, empIndex) {
+                fieldDataColumns.forEach(function (value, index) {
+                    if(column == value.fields){
+                        columns.push(value.id);
+                    }
+                    return;
+                });
+            });
 
             employees.forEach(function (empValue, empIndex) {
                 let tempDataSet = [];
@@ -105,7 +118,7 @@ class EmployeeExport extends Component {
                     <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
                     <span className="fa-text-align">Export</span>
                 </button>
-            } filename={"OnBoard LMS Employee Report " + date} fileExtension="xlsx">
+            } filename={"Industrial Training Services, Inc. Employee Report " + date} fileExtension="xlsx">
                 <ExcelSheet dataSet={excelData} name="OnBoard LMS Employee Report" />
             </ExcelFile>
         );

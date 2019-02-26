@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import * as moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
+import FieldData from './../data';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -24,7 +25,8 @@ class TaskExport extends Component {
         super(props);
         this.state = {
             tasks: this.formatData(this.props.tasks),
-            entity: this.props.entity
+            entity: this.props.entity,
+            columnOptions: this.props.columnOptions
         };
     };
 
@@ -39,7 +41,8 @@ class TaskExport extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             tasks: this.formatData(newProps.tasks),
-            entity: newProps.entity
+            entity: newProps.entity,
+            columnOptions: newProps.columnOptions
         });
     };
 
@@ -52,7 +55,7 @@ class TaskExport extends Component {
     */
     formatData(taskData) {
         const { cookies } = this.props;
-
+        let fieldDataColumns = FieldData.columns.tasks;
         let tasks = taskData || [],
             runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
@@ -73,8 +76,18 @@ class TaskExport extends Component {
 
         if (tasks.length > 0) {
 
-            let columns = Object.keys(tasks[0]),
-                dataSet = [];
+            let columns = [],
+                dataSet = [],
+                currentColumnOptions = this.state.columnOptions;
+
+            currentColumnOptions.forEach(function (column, empIndex) {
+                fieldDataColumns.forEach(function (value, index) {
+                    if(column == value.fields){
+                        columns.push(value.id);
+                    }
+                    return;
+                });
+            });
 
             tasks.forEach(function (taskValue, taskIndex) {
                 let tempDataSet = [];
@@ -104,7 +117,7 @@ class TaskExport extends Component {
                     <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
                     <span className="fa-text-align">Export</span>
                 </button>
-            } filename={"OnBoard LMS Task Report " + date} fileExtension="xlsx">
+            } filename={"Industrial Training Services, Inc. Task Report " + date} fileExtension="xlsx">
                 <ExcelSheet dataSet={excelData} name="OnBoard LMS Task Report" />
             </ExcelFile>
         );

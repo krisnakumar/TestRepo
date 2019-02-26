@@ -78,7 +78,7 @@ class SlidePane extends Component {
                 entity: newProps.entity,
                 columnOptions: newProps.columns,
                 selectedColumnOptions: this.buildOptions(newProps.columns),
-                lastSelectedColumnOptions: this.buildOptions(newProps.columns),
+                lastSelectedColumnOptions: this.buildOptions(newProps.columns)
             });
         }
     };
@@ -165,7 +165,7 @@ class SlidePane extends Component {
      * @param selectedOption
      * @returns none
     */
-    handleChange(index, key, selectedOption) {
+    handleChange(index, key, selectedOption) {        
         let selectedColumnOptions = this.state.selectedColumnOptions,
             value = selectedOption.value.replace(/^\s+/g, '') || "",
             fields = selectedOption.fields.replace(/^\s+/g, '') || "",

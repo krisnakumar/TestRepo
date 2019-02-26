@@ -211,73 +211,85 @@
 				"value": "employeeName",
 				"label": "Employee Name",
 				"isDefault": true,
-				"fields": "EMPLOYEE_NAME"
+				"fields": "EMPLOYEE_NAME",
+				"id": "EmployeeName"
 			},
 			{
 				"value": "role",
 				"label": "Role",
 				"isDefault": true,
-				"fields": "ROLE"
+				"fields": "ROLE",
+				"id": "Role"
 			},
 			{
 				"value": "userId",
 				"label": "User Id",
 				"isDefault": true,
-				"fields": "USER_ID"
+				"fields": "USER_ID",
+				"id": "UserId"
 			},
 			{
 				"value": "userName",
-				"label": "User Name",
+				"label": "Username",
 				"isDefault": true,
-				"fields": "USERNAME"
+				"fields": "USERNAME",
+				"id": "UserName"
 			},
 			{
 				"value": "email",
 				"label": "Email",
 				"isDefault": true,
-				"fields": "EMAIL"
+				"fields": "EMAIL",
+				"id": "Email"
 			},
 			{
 				"value": "alternateName",
-				"label": "Alternate Name",
+				"label": "Alternative Name",
 				"isDefault": true,
-				"fields": "ALTERNATE_USERNAME"
+				"fields": "ALTERNATE_USERNAME",
+				"id": "AlternateName"
 			},
 			{
 				"value": "totalEmployees",
 				"label": "Total Employees",
 				"isDefault": true,
-				"fields": "TOTAL_EMPLOYEES"
+				"fields": "TOTAL_EMPLOYEES",
+				"id": "TotalEmployees"
 			},
 			{
 				"value": "address",
 				"label": "Address",
 				"isDefault": false,
-				"fields": "ADDRESS"
+				"fields": "ADDRESS",
+				"id": "Address"
 			},
 			{
 				"value": "phone",
 				"label": "Phone",
 				"isDefault": false,
-				"fields": "PHONE"
+				"fields": "PHONE",
+				"id": "Phone"
 			},
 			{
 				"value": "supervisorName",
 				"label": "Supervisor Name",
 				"isDefault": false,
-				"fields": "SUPERVISOR_NAME"
+				"fields": "SUPERVISOR_NAME",
+				"id": "SupervisorName"
 			},
 			{
 				"value": "userCreatedDate",
 				"label": "User Created Date",
 				"isDefault": false,
-				"fields": "USER_CREATED_DATE"
+				"fields": "USER_CREATED_DATE",
+				"id": "UserCreatedDate"
 			},
 			{
 				"value": "supervisorId",
 				"label": "Supervisor Id",
 				"isDefault": false,
-				"fields": "SUPERVISOR_ID"
+				"fields": "SUPERVISOR_ID",
+				"id": "SupervisorId"
 			}
 		],
 		"workbooks": [
@@ -285,61 +297,71 @@
 				"value": "workbookName",
 				"label": "Workbook Name",
 				"isDefault": true,
-				"fields": "WORKBOOK_NAME"
+				"fields": "WORKBOOK_NAME",
+				"id": "WorkBookName"
 			},
 			{
 				"value": "workbookId",
 				"label": "Workbook Id",
 				"isDefault": true,
-				"fields": "WORKBOOK_ID"
+				"fields": "WORKBOOK_ID",
+				"id": "WorkBookId"
 			},
 			{
 				"value": "description",
 				"label": "Description",
 				"isDefault": true,
-				"fields": "DESCRIPTION"
+				"fields": "DESCRIPTION",
+				"id": "Description"
 			},
 			{
 				"value": "createdBy",
 				"label": "Created By",
 				"isDefault": true,
-				"fields": "WORKBOOK_CREATED"
+				"fields": "WORKBOOK_CREATED",
+				"id": "CreatedBy"
 			},
 			{
 				"value": "dayToComplete",
-				"label": "Day to Complete",
+				"label": "Days to Complete",
 				"isDefault": true,
-				"fields": "DAYS_TO_COMPLETE"
+				"fields": "DAYS_TO_COMPLETE",
+				"id": "DaysToComplete"
 			},
 			{
 				"value": "isEnabled",
 				"label": "IsEnabled",
 				"isDefault": false,
-				"fields": "WORKBOOK_ISENABLED"
+				"fields": "WORKBOOK_ISENABLED",
+				"id": "IsEnabled"
 			},
 			{
 				"value": "assignedTo",
 				"label": "Assigned To",
 				"isDefault": false,
-				"fields": "ASSIGNED_TO"
+				"fields": "ASSIGNED_TO",
+				"id": "AssignedTo"
 			},
 			{
 				"value": "dueDate",
 				"label": "Due Date ",
 				"isDefault": false,
-				"fields": "DUE_DATE"
+				"fields": "DUE_DATE",
+				"id": "DueDate"
 			},
 			{
 				"value": "supervisorId",
 				"label": "Supervisor Id",
 				"isDefault": false,
-				"fields": "SUPERVISOR_ID"
+				"fields": "SUPERVISOR_ID",
+				"id": "SupervisorId"
 			},
 			{
 				"value": "userId",
 				"label": "User Id",
 				"isDefault": false,
-				"fields": "USER_ID"
+				"fields": "USER_ID",
+				"id": "UserId"
 			}
 		],
 		"tasks": [
@@ -347,61 +369,71 @@
 				"value": "taskName",
 				"label": "Task Name",
 				"isDefault": true,
-				"fields": "TASK_NAME"
+				"fields": "TASK_NAME",
+				"id": "TaskName"
 			},
 			{
 				"value": "taskId",
 				"label": "Task ID",
 				"isDefault": true,
-				"fields": "TASK_ID"
+				"fields": "TASK_ID",
+				"id": "TaskId"
 			},
 			{
 				"value": "assignedTo",
 				"label": "Assigned To",
 				"isDefault": true,
-				"fields": "ASSIGNED_TO"
+				"fields": "ASSIGNED_TO",
+				"id": "AssignedTo"
 			},
 			{
 				"value": "evaluatorName",
 				"label": "Evaluator Name",
 				"isDefault": true,
-				"fields": "EVALUATOR_NAME"
+				"fields": "EVALUATOR_NAME",
+				"id": "EvaluatorName"
 			},
 			{
 				"value": "expirationDate",
 				"label": "Expiration Date",
 				"isDefault": true,
-				"fields": "EXPIRATION_DATE"
+				"fields": "EXPIRATION_DATE",
+				"id": "expirationDate"
 			},
 			{
 				"value": "status",
 				"label": "Status",
 				"isDefault": false,
-				"fields": "STATUS"
+				"fields": "STATUS",
+				"id": "Status"
 			},
 			{
 				"value": "dateExpired",
 				"label": "Date Expired",
 				"isDefault": false,
-				"fields": "DATE_EXPIRED"
+				"fields": "DATE_EXPIRED",
+				"id": "DateExpired"
 			},
 			{
 				"value": "location",
 				"label": "Location",
 				"isDefault": false,
-				"fields": "LOCATION"
+				"fields": "LOCATION",
+				"id": "Location"
 			},
 			{
 				"value": "duration",
 				"label": "Duration",
 				"isDefault": false,
-				"fields": "DURATION"
+				"fields": "DURATION",
+				"id": "Duration"
 			},
 			{
 				"value": "score",
 				"label": "Score",
 				"isDefault": false,
-				"fields": "SCORE"
+				"fields": "SCORE",
+				"id": "Score"
 			}
 		]
 	},

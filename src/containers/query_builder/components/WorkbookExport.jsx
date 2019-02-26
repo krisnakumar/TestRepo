@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import * as moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
+import FieldData from './../data';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -24,7 +25,8 @@ class WorkbookExport extends Component {
         super(props);
         this.state = {
             workbooks: this.formatData(this.props.workbooks),
-            entity: this.props.entity
+            entity: this.props.entity,
+            columnOptions: this.props.columnOptions
         };
     };
 
@@ -39,7 +41,8 @@ class WorkbookExport extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             workbooks: this.formatData(newProps.workbooks),
-            entity: newProps.entity
+            entity: newProps.entity,
+            columnOptions: newProps.columnOptions
         });
     };
 
@@ -52,7 +55,7 @@ class WorkbookExport extends Component {
     */
     formatData(workbookData) {
         const { cookies } = this.props;
-
+        let fieldDataColumns = FieldData.columns.employees;
         let workbooks = workbookData || [],
             runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
@@ -73,8 +76,18 @@ class WorkbookExport extends Component {
 
         if (workbooks.length > 0) {
 
-            let columns = Object.keys(workbooks[0]),
-                dataSet = [];
+            let columns = [],
+                dataSet = [],
+                currentColumnOptions = this.state.columnOptions;
+
+            currentColumnOptions.forEach(function (column, empIndex) {
+                fieldDataColumns.forEach(function (value, index) {
+                    if (column == value.fields) {
+                        columns.push(value.id);
+                    }
+                    return;
+                });
+            });
 
             workbooks.forEach(function (workbookValue, workbookIndex) {
                 let tempDataSet = [];
@@ -104,7 +117,7 @@ class WorkbookExport extends Component {
                     <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
                     <span className="fa-text-align">Export</span>
                 </button>
-            } filename={"OnBoard LMS Workbook Report " + date} fileExtension="xlsx">
+            } filename={"Industrial Training Services, Inc. Workbook Report " + date} fileExtension="xlsx">
                 <ExcelSheet dataSet={excelData} name="OnBoard LMS Workbook Report" />
             </ExcelFile>
         );

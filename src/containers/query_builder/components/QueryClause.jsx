@@ -72,10 +72,9 @@ class QueryClause extends PureComponent {
             from: undefined,
             to: undefined,
             queryClause: {},
-            empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES", "EMAIL"],
+            empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "EMAIL", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES"],
             workbookColumnList: ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"],
-            taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"],
-
+            taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"]
         };
 
         this.submitted = false;
@@ -561,15 +560,19 @@ class QueryClause extends PureComponent {
                 }
             });
         });
+        
         switch (entity) {
             case 'employees':
                 this.setState({ empColumnList: tempColumnList });
+                this.props.passResultSetColumns(entity, tempColumnList);
                 break;
             case 'workbooks':
                 this.setState({ workbookColumnList: tempColumnList });
+                this.props.passResultSetColumns(entity, tempColumnList);
                 break;
             case 'tasks':
                 this.setState({ taskColumnList: tempColumnList });
+                this.props.passResultSetColumns(entity, tempColumnList);
                 break;
             default:
                 break;
