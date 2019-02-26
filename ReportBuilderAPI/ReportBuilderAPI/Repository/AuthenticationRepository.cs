@@ -9,6 +9,8 @@ using ReportBuilderAPI.Handlers.RequestHandler;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Net;
 
 /* 
@@ -56,6 +58,7 @@ namespace ReportBuilderAPI.Repository
                         RefreshToken = authResponse.AuthenticationResult.RefreshToken,
                         UserId = Convert.ToInt32(GetUserId(userRequest.UserName)),
                         CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
+                        UserName = GetUserName(userRequest.UserName)
                     };
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
                 }
@@ -89,6 +92,34 @@ namespace ReportBuilderAPI.Repository
             {
                 LambdaLogger.Log(exception.ToString());
                 return userId;
+            }
+            finally
+            {
+                databaseWrapper.CloseConnection();
+            }
+        }
+
+        /// <summary>
+        /// Get user name of the  logged in user.
+        /// </summary>
+        /// <param name="userName"></param>
+        public string GetUserName(string email)
+        {
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            string userName = string.Empty;
+            try
+            {
+                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM [User] WHERE Email='" + email + "'", new Dictionary<string, string>());
+                if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
+                {
+                    userName = Convert.ToString(sqlDataReader["employeeName"]);
+                }
+                return userName;
+            }
+            catch (Exception getUserNameException)
+            {
+                LambdaLogger.Log(getUserNameException.ToString());
+                return userName;
             }
             finally
             {

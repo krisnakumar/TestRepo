@@ -213,7 +213,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters= pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"},{\"Value\":\"1\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME\",\"Operator\":\"!=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);

@@ -37,5 +37,7 @@ namespace ReportBuilder.Models.Response
 
         public int CompanyId { get; set; }
 
+        public string UserName { get; set; }
+
     }
 }

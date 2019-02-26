@@ -242,7 +242,7 @@ namespace ReportBuilderAPI.Repository
                     employeeRequest.Fields.Remove(userDetails);
                     employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
 
-                    employeeRequest.Fields.Select(x => (x.Name == Constants.USERNAME && x.Operator == "!=") ? x.Name = "NOT_" + x.Name : x.Name).ToList();
+                    employeeRequest.Fields.Select(x => (x.Name == Constants.ME && x.Operator == "!=") ? x.Name = "NOT_" + x.Name : x.Name).ToList();
                 }
 
                 //getting where conditions

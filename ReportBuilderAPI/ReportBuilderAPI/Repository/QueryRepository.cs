@@ -80,7 +80,6 @@ namespace ReportBuilderAPI.Repository
                         if (rowAffected > 0)
                         {
                             queryId = databaseWrapper.ExecuteScalar("SELECT Id FROM Query  where Name='" + queryBuilderRequest.QueryName + "'");
-
                             roleId = databaseWrapper.ExecuteScalar("select roleId from UserRole WHERE  userId=" + userId);
                             rowAffected = databaseWrapper.ExecuteQuery("INSERT INTO UserQuery(QueryId, UserId, CompanyId, Role) VALUES (" + queryId + "," + userId + "," + companyId + "," + roleId + ")");
                             if (rowAffected > 0)
