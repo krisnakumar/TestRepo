@@ -10,10 +10,10 @@ METHODS
 --------
 componentWillReceiveProps(newProps)
 */
-import Workbook from 'react-excel-workbook'
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import * as moment from 'moment';
+import { withCookies, Cookies } from 'react-cookie';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -23,7 +23,7 @@ class TaskExport extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tasks: this.props.tasks,
+            tasks: this.formatData(this.props.tasks),
             entity: this.props.entity
         };
     };
@@ -36,34 +36,79 @@ class TaskExport extends Component {
      * @param newProps
      * @returns none
      */
-    componentWillReceiveProps(newProps) {       
+    componentWillReceiveProps(newProps) {
         this.setState({
-            tasks: newProps.tasks,
+            tasks: this.formatData(newProps.tasks),
             entity: newProps.entity
         });
+    };
+
+    /**
+     * @method
+     * @name - formatData
+     * This method used to format the task data to export in excel
+     * @param taskData
+     * @returns multiDataSet
+    */
+    formatData(taskData) {
+        const { cookies } = this.props;
+
+        let tasks = taskData || [],
+            runByUser = cookies.get('UserName') || "",
+            runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
+            userDetails = "Run By " + runByUser + " " + runByDateTime;
+
+        let multiDataSet = [
+            {
+                columns: [userDetails],
+                data: []
+            },
+            {
+                xSteps: 0, // Will start putting cell with 1 empty cell on left most
+                ySteps: 1, //will put space of 5 rows,
+                columns: [],
+                data: []
+            }
+        ];
+
+        if (tasks.length > 0) {
+
+            let columns = Object.keys(tasks[0]),
+                dataSet = [];
+
+            tasks.forEach(function (taskValue, taskIndex) {
+                let tempDataSet = [];
+                columns.forEach(function (value, index) {
+                    tempDataSet.push(tasks[taskIndex][value]);
+                    return;
+                });
+                dataSet.push(tempDataSet);
+            });
+
+            multiDataSet[1].columns = columns;
+            multiDataSet[1].data = dataSet;
+        }
+
+        return multiDataSet;
     };
 
     render() {
         let { entity } = this.state,
             excelData = this.state[entity],
-            isExcelData = excelData.length > 0 ? true : false,
-            date = moment().format('MM.DD.YYYY');        
-        
-        return (isExcelData && <ExcelFile element={
-            <button className="query-section-button" size="sm" title="Export" aria-label="Export">
-                <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
-                <span className="fa-text-align">Export</span>
-            </button>
-        } filename={"Industrial Training Services, Inc. -Task Report " + date} fileExtension="xlsx">
-        <ExcelSheet data={excelData} name="OnBoard LMS Task Report">
-            <ExcelColumn label="Task Id" value="TaskId" />
-            <ExcelColumn label="Task Name" value="TaskName" />
-            <ExcelColumn label="Assigned To" value="AssignedTo" />
-            <ExcelColumn label="Evaluator Name" value="EvaluatorName" />
-            <ExcelColumn label="Expiration Date" value="ExpirationDate" />
-        </ExcelSheet>
-    </ExcelFile>);
+            hasExcelData = excelData[1].data.length > 0 ? true : false,
+            date = moment().format('MM.DD.YYYY');
+
+        return (
+            hasExcelData && <ExcelFile element={
+                <button className="query-section-button" size="sm" title="Export" aria-label="Export">
+                    <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
+                    <span className="fa-text-align">Export</span>
+                </button>
+            } filename={"OnBoard LMS Task Report " + date} fileExtension="xlsx">
+                <ExcelSheet dataSet={excelData} name="OnBoard LMS Task Report" />
+            </ExcelFile>
+        );
     }
 }
 
-export default TaskExport;
+export default withCookies(TaskExport);
