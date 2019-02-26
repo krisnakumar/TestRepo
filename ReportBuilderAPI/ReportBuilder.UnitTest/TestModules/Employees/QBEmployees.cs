@@ -31,7 +31,7 @@ namespace ReportBuilder.UnitTest.TestModules.Employees
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.USERNAME, Constants.ALTERNATE_USERNAME, Constants.TOTAL_EMPLOYEES, Constants.EMAIL },
+                ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.USERNAME, Constants.ALTERNATE_USERNAME, Constants.TOTAL_EMPLOYEES, Constants.EMAIL },
                 Fields = employeeList
             };
             EmployeeModel employeeModel1 = new EmployeeModel
@@ -122,7 +122,7 @@ namespace ReportBuilder.UnitTest.TestModules.Employees
 
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.USERNAME, Constants.ALTERNATE_USERNAME, Constants.TOTAL_EMPLOYEES, Constants.EMAIL, Constants.USERID, Constants.USER_CREATED_DATE, Constants.TOTAL_EMPLOYEES },
+                ColumnList = new string[] { Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.USERNAME, Constants.ALTERNATE_USERNAME, Constants.TOTAL_EMPLOYEES, Constants.EMAIL, Constants.USERID, Constants.USER_CREATED_DATE },
                 Fields = employeeList
             };
             EmployeeModel employeeModel1 = new EmployeeModel
@@ -336,7 +336,7 @@ namespace ReportBuilder.UnitTest.TestModules.Employees
         }
 
         [TestMethod]
-        public void GetEmployeesWithoutColumns()
+        public void GetEmployeesWithEmptyColumnsList()
         {
             List<EmployeeModel> employeeList = new List<EmployeeModel>();
             Function function = new Function();
@@ -383,7 +383,7 @@ namespace ReportBuilder.UnitTest.TestModules.Employees
         // Test for try-catch block
 
         [TestMethod]
-        public void RequestWithoutColumnList()
+        public void RequestWithoutColumnsList()
         {
             //List<EmployeeModel> employeeList = new List<EmployeeModel>();
             //Function function = new Function();
