@@ -397,7 +397,7 @@ class QuerySection extends PureComponent {
           editable: false,
           draggable: false,
           getRowMetaData: row => row,
-          cellClass: "text-right"
+          cellClass: columnOptions[index].cellClass
         };
         addedColumnOptions.push(selectCol);
       }

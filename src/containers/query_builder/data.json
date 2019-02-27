@@ -212,84 +212,96 @@
 				"label": "Employee Name",
 				"isDefault": true,
 				"fields": "EMPLOYEE_NAME",
-				"id": "EmployeeName"
+				"id": "EmployeeName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "role",
 				"label": "Role",
 				"isDefault": true,
 				"fields": "ROLE",
-				"id": "Role"
+				"id": "Role",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "userId",
 				"label": "User Id",
 				"isDefault": true,
 				"fields": "USER_ID",
-				"id": "UserId"
+				"id": "UserId",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "userName",
 				"label": "Username",
 				"isDefault": true,
 				"fields": "USERNAME",
-				"id": "UserName"
+				"id": "UserName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "email",
 				"label": "Email",
 				"isDefault": true,
 				"fields": "EMAIL",
-				"id": "Email"
+				"id": "Email",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "alternateName",
 				"label": "Alternative Name",
 				"isDefault": true,
 				"fields": "ALTERNATE_USERNAME",
-				"id": "AlternateName"
+				"id": "AlternateName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "totalEmployees",
 				"label": "Total Employees",
 				"isDefault": true,
 				"fields": "TOTAL_EMPLOYEES",
-				"id": "TotalEmployees"
+				"id": "TotalEmployees",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "address",
 				"label": "Address",
 				"isDefault": false,
 				"fields": "ADDRESS",
-				"id": "Address"
+				"id": "Address",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "phone",
 				"label": "Phone",
 				"isDefault": false,
 				"fields": "PHONE",
-				"id": "Phone"
+				"id": "Phone",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "supervisorName",
 				"label": "Supervisor Name",
 				"isDefault": false,
 				"fields": "SUPERVISOR_NAME",
-				"id": "SupervisorName"
+				"id": "SupervisorName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "userCreatedDate",
 				"label": "User Created Date",
 				"isDefault": false,
 				"fields": "USER_CREATED_DATE",
-				"id": "UserCreatedDate"
+				"id": "UserCreatedDate",
+				"cellClass": "text-center"
 			},
 			{
 				"value": "supervisorId",
 				"label": "Supervisor Id",
 				"isDefault": false,
 				"fields": "SUPERVISOR_ID",
-				"id": "SupervisorId"
+				"id": "SupervisorId",
+				"cellClass": "text-right"
 			}
 		],
 		"workbooks": [
@@ -298,70 +310,80 @@
 				"label": "Workbook Name",
 				"isDefault": true,
 				"fields": "WORKBOOK_NAME",
-				"id": "WorkBookName"
+				"id": "WorkBookName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "workbookId",
 				"label": "Workbook Id",
 				"isDefault": true,
 				"fields": "WORKBOOK_ID",
-				"id": "WorkBookId"
+				"id": "WorkBookId",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "description",
 				"label": "Description",
 				"isDefault": true,
 				"fields": "DESCRIPTION",
-				"id": "Description"
+				"id": "Description",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "createdBy",
 				"label": "Created By",
 				"isDefault": true,
 				"fields": "WORKBOOK_CREATED",
-				"id": "CreatedBy"
+				"id": "CreatedBy",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "dayToComplete",
 				"label": "Days to Complete",
 				"isDefault": true,
 				"fields": "DAYS_TO_COMPLETE",
-				"id": "DaysToComplete"
+				"id": "DaysToComplete",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "isEnabled",
 				"label": "IsEnabled",
 				"isDefault": false,
 				"fields": "WORKBOOK_ISENABLED",
-				"id": "IsEnabled"
+				"id": "IsEnabled",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "assignedTo",
 				"label": "Assigned To",
 				"isDefault": false,
 				"fields": "ASSIGNED_TO",
-				"id": "AssignedTo"
+				"id": "AssignedTo",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "dueDate",
 				"label": "Due Date ",
 				"isDefault": false,
 				"fields": "DUE_DATE",
-				"id": "DueDate"
+				"id": "DueDate",
+				"cellClass": "text-center"
 			},
 			{
 				"value": "supervisorId",
 				"label": "Supervisor Id",
 				"isDefault": false,
 				"fields": "SUPERVISOR_ID",
-				"id": "SupervisorId"
+				"id": "SupervisorId",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "userId",
 				"label": "User Id",
 				"isDefault": false,
 				"fields": "USER_ID",
-				"id": "UserId"
+				"id": "UserId",
+				"cellClass": "text-right"
 			}
 		],
 		"tasks": [
@@ -370,70 +392,80 @@
 				"label": "Task Name",
 				"isDefault": true,
 				"fields": "TASK_NAME",
-				"id": "TaskName"
+				"id": "TaskName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "taskId",
 				"label": "Task ID",
 				"isDefault": true,
 				"fields": "TASK_ID",
-				"id": "TaskId"
+				"id": "TaskId",
+				"cellClass": "text-right"
 			},
 			{
 				"value": "assignedTo",
 				"label": "Assigned To",
 				"isDefault": true,
 				"fields": "ASSIGNED_TO",
-				"id": "AssignedTo"
+				"id": "AssignedTo",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "evaluatorName",
 				"label": "Evaluator Name",
 				"isDefault": true,
 				"fields": "EVALUATOR_NAME",
-				"id": "EvaluatorName"
+				"id": "EvaluatorName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "expirationDate",
 				"label": "Expiration Date",
 				"isDefault": true,
 				"fields": "EXPIRATION_DATE",
-				"id": "expirationDate"
+				"id": "expirationDate",
+				"cellClass": "text-center"
 			},
 			{
 				"value": "status",
 				"label": "Status",
 				"isDefault": false,
 				"fields": "STATUS",
-				"id": "Status"
+				"id": "Status",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "dateExpired",
 				"label": "Date Expired",
 				"isDefault": false,
 				"fields": "DATE_EXPIRED",
-				"id": "DateExpired"
+				"id": "DateExpired",
+				"cellClass": "text-center"
 			},
 			{
 				"value": "location",
 				"label": "Location",
 				"isDefault": false,
 				"fields": "LOCATION",
-				"id": "Location"
+				"id": "Location",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "duration",
 				"label": "Duration",
 				"isDefault": false,
 				"fields": "DURATION",
-				"id": "Duration"
+				"id": "Duration",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "score",
 				"label": "Score",
 				"isDefault": false,
 				"fields": "SCORE",
-				"id": "Score"
+				"id": "Score",
+				"cellClass": "text-left"
 			}
 		]
 	},
