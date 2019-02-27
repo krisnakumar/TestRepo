@@ -244,7 +244,7 @@ class SlidePane extends Component {
                     }
                     <div>
                         {
-                            NumberOfDropdowns < (columnsOptions.length - 1) &&
+                            (selectedColumnOptions.length) < (columnsOptions.length - 1) &&
                             <button onClick={this.addColumns.bind()} className="query-section-button col-opt-add-column" size="sm" title="Add Column" aria-label="Add Column">
                                 <span aria-hidden className=""><i className="fa fa-plus"></i></span>
                                 <span className="fa-text-align">Add Column</span>

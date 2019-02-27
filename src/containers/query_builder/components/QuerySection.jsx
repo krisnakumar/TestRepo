@@ -474,7 +474,6 @@ class QuerySection extends PureComponent {
    * @returns none
   */
   passEmployeesColumns = (type, columns) => {
-    console.log("passEmployeesColumns-", columns);
     this.setState({ empColumnList: columns });
   }
 
@@ -486,7 +485,6 @@ class QuerySection extends PureComponent {
   * @returns none
  */
   passTasksColumns = (type, columns) => {
-    console.log("passTasksColumns-", columns);
     this.setState({ taskColumnList: columns });
   }
   /**
@@ -497,7 +495,6 @@ class QuerySection extends PureComponent {
     * @returns none
    */
   passWorkbooksColumns = (type, columns) => {
-    console.log("passWorkbooksColumns-", columns);
     this.setState({ workbookColumnList: columns });
   }
 
