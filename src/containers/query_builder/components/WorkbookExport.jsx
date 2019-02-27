@@ -55,7 +55,7 @@ class WorkbookExport extends Component {
     */
     formatData(workbookData) {
         const { cookies } = this.props;
-        let fieldDataColumns = FieldData.columns.employees;
+        let fieldDataColumns = FieldData.columns.workbooks;
         let workbooks = workbookData || [],
             runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
