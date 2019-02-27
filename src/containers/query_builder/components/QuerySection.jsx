@@ -517,13 +517,12 @@ class QuerySection extends PureComponent {
     let fieldDataTemp = FieldData;
     switch (selectedOption.value) {
       case 'employees':
-        this.state.resultSet = fieldDataTemp.columns.employees;
+        this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.employees));
         break;
       case 'workbooks':
-        this.state.resultSet = fieldDataTemp.columns.workbooks;
-        break;
+        this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.workbooks));
       case 'tasks':
-        this.state.resultSet = fieldDataTemp.columns.tasks;
+        this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.tasks));
         break;
       default:
         break;
