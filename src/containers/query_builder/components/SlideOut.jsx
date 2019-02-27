@@ -20,6 +20,7 @@ class SlidePane extends Component {
             lastSelectedColumnOptions: this.buildOptions(this.props.columns),
             NumberOfDropdowns: 0
         };
+        this.columns = JSON.parse(JSON.stringify(this.props.columns)) || [];
         this.addColumns = this.addColumns.bind(this);
         this.removeColumns = this.removeColumns.bind(this);
         this.requestClose = this.requestClose.bind(this);
@@ -210,7 +211,7 @@ class SlidePane extends Component {
                                 return (
                                     <div key={index} className={"row-col" + index + " columnOptionsSelect"}>
                                         <Select
-                                            options={columnsOptions}
+                                            options={self.columns}
                                             clearable={false}
                                             autosize={false}
                                             isRtl={true}

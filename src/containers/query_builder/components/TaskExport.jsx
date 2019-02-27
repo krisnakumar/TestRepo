@@ -78,12 +78,14 @@ class TaskExport extends Component {
 
             let columns = [],
                 dataSet = [],
+                columnNames = [],
                 currentColumnOptions = this.state.columnOptions;
 
             currentColumnOptions.forEach(function (column, empIndex) {
                 fieldDataColumns.forEach(function (value, index) {
                     if(column == value.fields){
                         columns.push(value.id);
+                        columnNames.push(value.label);
                     }
                     return;
                 });
@@ -98,7 +100,7 @@ class TaskExport extends Component {
                 dataSet.push(tempDataSet);
             });
 
-            multiDataSet[1].columns = columns;
+            multiDataSet[1].columns = columnNames;
             multiDataSet[1].data = dataSet;
         }
 

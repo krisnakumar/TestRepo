@@ -77,6 +77,7 @@ class WorkbookExport extends Component {
         if (workbooks.length > 0) {
 
             let columns = [],
+                columnNames = [],
                 dataSet = [],
                 currentColumnOptions = this.state.columnOptions;
 
@@ -84,6 +85,7 @@ class WorkbookExport extends Component {
                 fieldDataColumns.forEach(function (value, index) {
                     if (column == value.fields) {
                         columns.push(value.id);
+                        columnNames.push(value.label);
                     }
                     return;
                 });
@@ -98,7 +100,7 @@ class WorkbookExport extends Component {
                 dataSet.push(tempDataSet);
             });
 
-            multiDataSet[1].columns = columns;
+            multiDataSet[1].columns = columnNames;
             multiDataSet[1].data = dataSet;
         }
 
