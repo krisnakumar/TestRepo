@@ -16,6 +16,7 @@ class SlidePane extends Component {
             isPaneOpen: this.props.isPaneOpen,
             isPaneOpenLeft: this.props.isPaneOpenLeft,
             columnOptions: this.props.columns,
+            columnDropDowns: JSON.parse(JSON.stringify(this.props.columns)) || [],
             selectedColumnOptions: this.buildOptions(this.props.columns),
             lastSelectedColumnOptions: this.buildOptions(this.props.columns),
             NumberOfDropdowns: 0
@@ -79,7 +80,8 @@ class SlidePane extends Component {
                 entity: newProps.entity,
                 columnOptions: newProps.columns,
                 selectedColumnOptions: this.buildOptions(newProps.columns),
-                lastSelectedColumnOptions: this.buildOptions(newProps.columns)
+                lastSelectedColumnOptions: this.buildOptions(newProps.columns),
+                columnDropDowns: JSON.parse(JSON.stringify(newProps.columns)) || [],
             });
         }
     };
@@ -211,7 +213,7 @@ class SlidePane extends Component {
                                 return (
                                     <div key={index} className={"row-col" + index + " columnOptionsSelect"}>
                                         <Select
-                                            options={self.columns}
+                                            options={self.state.columnDropDowns}
                                             clearable={false}
                                             autosize={false}
                                             isRtl={true}
