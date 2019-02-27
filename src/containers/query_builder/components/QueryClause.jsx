@@ -281,6 +281,9 @@ class QueryClause extends PureComponent {
                 formattedData[index].label = selectedOption.label || "";
                 formattedData[index].smartParam = FieldData.params[smartParamType];
                 formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
+                if(formattedData[index].type == "date" && formattedData[index].operatorsSelected.value == "Between"){
+                    formattedData[index].hasSmartParams = false;
+                } 
                 break;
             case "operatorsSelected":
                 let operatorType = selectedOption ? selectedOption.value : "=",
