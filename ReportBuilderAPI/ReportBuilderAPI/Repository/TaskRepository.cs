@@ -341,7 +341,11 @@ namespace ReportBuilderAPI.Repository
 
                             CompanyName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'companyName'").Count() == 1) ? Convert.ToString(sqlDataReader["companyName"]) : null,
 
-                            CompanyId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'companyId'").Count() == 1) ? (int?)(sqlDataReader["companyId"]) : null
+                            CompanyId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'companyId'").Count() == 1) ? (int?)(sqlDataReader["companyId"]) : null,
+
+                            Score = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'score'").Count() == 1) ? Convert.ToString(sqlDataReader["score"]) : null,
+
+                            Duration = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Duration'").Count() == 1) ? Convert.ToString(sqlDataReader["Duration"]) : null
 
                         };
                         // Adding each task details in array list
@@ -354,7 +358,7 @@ namespace ReportBuilderAPI.Repository
             {
                 LambdaLogger.Log(readEmployeeDetailsException.ToString());
                 return taskList;
-            }
+            } 
             finally
             {
                 databaseWrapper.CloseConnection();

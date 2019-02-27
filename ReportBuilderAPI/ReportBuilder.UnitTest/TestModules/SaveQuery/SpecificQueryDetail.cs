@@ -26,7 +26,7 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
             Function function = new Function();
             QueryBuilderRequest employeeRequest = new QueryBuilderRequest
             {
-                QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
+                QueryId = "c6901bc5-7fda-4098-9e25-04af806bab4c"
             };
             Dictionary<string, string> pathValues = new Dictionary<string, string>
             {
@@ -67,7 +67,7 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
             APIGatewayProxyResponse queryResponse = function.GetQuery(aPIGatewayProxyRequest, null);
             ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
             Assert.AreEqual(400, queryResponse.StatusCode);
-            Assert.AreEqual("Invalid input: Please check input", RenameQueryResponse.Message);
+            Assert.AreEqual("Invalid input: QueryId", RenameQueryResponse.Message);
         }
 
         [TestMethod]

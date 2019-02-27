@@ -295,6 +295,10 @@ namespace ReportBuilderAPI.Repository
                             queryList.Add(queryResponse);
                         }
                     }
+                    else
+                    {
+
+                    }
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(queryList), 0);
                 }
                 else

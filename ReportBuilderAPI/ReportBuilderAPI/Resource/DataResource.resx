@@ -124,7 +124,7 @@
     <value>Account doesn’t have login permission</value>
   </data>
   <data name="CHECK_INPUT" xml:space="preserve">
-    <value>Check inputs</value>
+    <value>QueryId</value>
   </data>
   <data name="DELETE_SUCCESS_MESSAGE" xml:space="preserve">
     <value>Query has been deleted succcessfully!</value>

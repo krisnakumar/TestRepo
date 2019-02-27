@@ -247,7 +247,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_CREATED_BY, ", (Select us.UserName from dbo.[User] us WHERE us.Id=wb.Createdby) as Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                 { Constants.DUE_DATE, ", DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded) AS DueDate"},
-                 { Constants.USERNAME, ", u.UserName"},
+                { Constants.USERNAME, ", u.UserName"},
                 { Constants.USERNAME2, ", u.UserName2"},
 
                 { Constants.USER_CREATED_DATE, ", u.DateCreated"},

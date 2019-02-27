@@ -79,11 +79,29 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to QueryId.
+        /// </summary>
+        internal static string CHECK_INPUT {
+            get {
+                return ResourceManager.GetString("CHECK_INPUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Query has been deleted succcessfully!.
         /// </summary>
         internal static string DELETE_SUCCESS_MESSAGE {
             get {
                 return ResourceManager.GetString("DELETE_SUCCESS_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty name! Please give a Query name to save.
+        /// </summary>
+        internal static string EMPTY_NAME_ERROR {
+            get {
+                return ResourceManager.GetString("EMPTY_NAME_ERROR", resourceCulture);
             }
         }
         

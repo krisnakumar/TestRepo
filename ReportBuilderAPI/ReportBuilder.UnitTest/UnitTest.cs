@@ -272,7 +272,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"USER_ID\",\"Value\":\"6\",\"Operator\":\"=\"}],\"ColumnList\":[\"USER_ID\",\"COMPANY_NAME\",\"COMPANY_ID\",\"ASSIGNED_COMPANY_QUALIFICATION\",\"COMPLETED_COMPANY_QUALIFICATION\",\"IN_COMPLETE_COMPANY_QUALIFICATION\",\"PAST_DUE_COMPANY_QUALIFICATION\",\"IN_DUE_COMPANY_QUALIFICATION\",\"TOTAL_COMPANY_EMPLOYEES\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"SUPERVISOR_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]}";
 
             APIGatewayProxyResponse userResponse = function.GetWorkbookQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -317,7 +317,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"e\",\"Operator\":\"contains\",\"Name\":\"TASK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_NAME\",\"TASK_ID\",\"STATUS\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"e\",\"Operator\":\"contains\",\"Name\":\"TASK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_NAME\",\"TASK_ID\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"DATE_EXPIRED\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }

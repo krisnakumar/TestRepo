@@ -105,7 +105,7 @@ namespace ReportBuilderAPI.Utilities
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";
         public const string WORKBOOK_CREATED = "WORKBOOK_CREATED";
-        public const string WORKBOOK_ISENABLED = "ISENABLED";
+        public const string WORKBOOK_ISENABLED = "WORKBOOK_ISENABLED";
         public const string WORKBOOK_CREATED_BY = "WORKBOOK_CREATED_BY";
         public const string DAYS_TO_COMPLETE = "DAYS_TO_COMPLETE";
         public const string WORKBOOK_ID = "WORKBOOK_ID";
