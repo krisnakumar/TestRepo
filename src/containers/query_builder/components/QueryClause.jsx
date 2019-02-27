@@ -968,7 +968,7 @@ class QueryClause extends PureComponent {
                                         (field.hasSmartParams == false && field.type == "date") && <div className={"day-picker-div " + index}>
                                             <DayPickerInput
                                                 value={fromDate}
-                                                placeholder="From"
+                                                placeholder="MM/DD/YYYY"
                                                 format="L"
                                                 formatDate={formatDate}
                                                 parseDate={parseDate}
@@ -991,7 +991,7 @@ class QueryClause extends PureComponent {
                                             <DayPickerInput
                                                 ref={el => (_self.toInputs[index] = el)}
                                                 value={toDate}
-                                                placeholder="To"
+                                                placeholder="MM/DD/YYYY"
                                                 format="L"
                                                 formatDate={formatDate}
                                                 parseDate={parseDate}
