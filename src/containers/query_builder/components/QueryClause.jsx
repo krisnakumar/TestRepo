@@ -272,6 +272,7 @@ class QueryClause extends PureComponent {
                 let type = selectedOption ? selectedOption.type : "others",
                     smartParamType = selectedOption.smartParam || "NONE";
                 formattedData[index].valueSelected = isSameType ? formattedData[index].valueSelected : "";
+                formattedData[index].valueSelected = selectedOption.hasSmartParams ?  formattedData[index].valueSelected : "";
                 formattedData[index].operators = FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
                 formattedData[index].isSkipValidation = true;
@@ -283,7 +284,10 @@ class QueryClause extends PureComponent {
                 formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
                 if(formattedData[index].type == "date" && formattedData[index].operatorsSelected.value == "Between"){
                     formattedData[index].hasSmartParams = false;
-                } 
+                }
+                if(smartParamType != formattedData[index].smartParam){
+                    // formattedData[index].valueSelected = "";
+                }
                 break;
             case "operatorsSelected":
                 let operatorType = selectedOption ? selectedOption.value : "=",
