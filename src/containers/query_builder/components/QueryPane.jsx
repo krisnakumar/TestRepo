@@ -97,6 +97,20 @@ class QueryPane extends PureComponent {
    * @returns none
   */
   reloadQuery = (addedColumnOptions) => {
+    let type = this.state.entity;
+    switch (type) {
+      case 'employees':
+        this.props.passEmployeesResultsToQuerySection(undefined);
+        break;
+      case 'workbooks':
+        this.props.passWorkbooksResultsToQuerySection(undefined);
+        break;
+      case 'tasks':
+        this.props.passTasksToQuerySection(undefined);
+        break;
+      default:
+        break;
+    }
     this.queryClause.current.reloadQuery(addedColumnOptions);
   };
 

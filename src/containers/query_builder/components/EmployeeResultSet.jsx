@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
 import ResultSetEmptyMessage from './ResultSetEmptyMessage';
+import ResultSetLoadingMessage from './ResultSetLoadingMessage';
 
 class EmployeeResultSet extends React.Component {
   static propTypes = {
@@ -104,8 +105,7 @@ class EmployeeResultSet extends React.Component {
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
-      renderTimes: 0,
-      count: 0
+      isLoading: false
     };
   };
 
@@ -177,20 +177,23 @@ class EmployeeResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    let rows = this.createRows(newProps.employees),
-      isArray = Array.isArray(newProps.employees),
-      isInitial = isArray;
+    let rows = this.createRows(newProps.employees || []),
+      isArray = Array.isArray(newProps.employees || []),
+      isInitial = isArray,
+      isLoading = (newProps.employees == undefined);
 
     const { sortColumn, sortDirection } = this.state;
 
     if (sortColumn != "" && sortDirection != "NONE") {
       this.state.rows = rows;
       this.state.isInitial = isInitial;
+      this.state.isLoading = isLoading;
       this.handleGridSort(sortColumn, sortDirection);
     } else {
       this.setState({
         rows: rows,
-        isInitial: isInitial
+        isInitial: isInitial,
+        isLoading: isLoading
       });
     }
   };
@@ -276,7 +279,7 @@ class EmployeeResultSet extends React.Component {
   };
 
   render() {
-    const { rows, renderTimes, heads } = this.state;
+    const { rows, heads } = this.state;
     return (
       <div className="grid-container employees-result">
         <div className="table employees-result-set">
@@ -293,7 +296,7 @@ class EmployeeResultSet extends React.Component {
             rowHeight={25}
             headerRowHeight={32}
             minColumnWidth={100}
-            emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
+            emptyRowsView={this.state.isInitial ? (this.state.isLoading ? ResultSetLoadingMessage : ResultSetEmptyMessage) : ResultSetGuidanceMessage}
           />
         </div>
       </div>

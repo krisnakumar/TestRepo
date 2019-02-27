@@ -22,6 +22,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import ResultSetGuidanceMessage from './ResultSetGuidanceMessage';
 import ResultSetEmptyMessage from './ResultSetEmptyMessage';
+import ResultSetLoadingMessage from './ResultSetLoadingMessage';
 
 class WorkbookResultSet extends React.Component {
   static propTypes = {
@@ -85,6 +86,7 @@ class WorkbookResultSet extends React.Component {
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
+      isLoading: false
     };
   }
 
@@ -168,19 +170,22 @@ class WorkbookResultSet extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    let rows = this.createRows(newProps.workbooks),
-      isArray = Array.isArray(newProps.workbooks),
-      isInitial = isArray;
+    let rows = this.createRows(newProps.workbooks || []),
+      isArray = Array.isArray(newProps.workbooks || []),
+      isInitial = isArray,
+      isLoading = (newProps.workbooks == undefined);
 
     const { sortColumn, sortDirection } = this.state
     if (sortColumn != "" && sortDirection != "NONE") {
       this.state.rows = rows;
       this.state.isInitial = isInitial;
+      this.state.isLoading = isLoading;
       this.handleGridSort(sortColumn, sortDirection);
     } else {
       this.setState({
         rows: rows,
-        isInitial: isInitial
+        isInitial: isInitial,
+        isLoading: isLoading
       });
     }
   }
@@ -283,7 +288,7 @@ class WorkbookResultSet extends React.Component {
             rowHeight={25}
             headerRowHeight={32}
             minColumnWidth={100}
-            emptyRowsView={this.state.isInitial ? ResultSetEmptyMessage : ResultSetGuidanceMessage}
+            emptyRowsView={this.state.isInitial ? (this.state.isLoading ? ResultSetLoadingMessage : ResultSetEmptyMessage) : ResultSetGuidanceMessage}
           />
         </div>
       </div>

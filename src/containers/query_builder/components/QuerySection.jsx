@@ -521,6 +521,7 @@ class QuerySection extends PureComponent {
         break;
       case 'workbooks':
         this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.workbooks));
+        break;
       case 'tasks':
         this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.tasks));
         break;
