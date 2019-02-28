@@ -347,35 +347,99 @@
 				"cellClass": "text-right"
 			},
 			{
-				"value": "isEnabled",
-				"label": "IsEnabled",
+				"value": "employeeName",
+				"label": "Employee Name",
 				"isDefault": false,
-				"fields": "WORKBOOK_ISENABLED",
-				"id": "IsEnabled",
+				"fields": "EMPLOYEE_NAME",
+				"id": "EmployeeName",
 				"cellClass": "text-left"
 			},
 			{
-				"value": "assignedTo",
-				"label": "Assigned To",
+				"value": "workbookName",
+				"label": "Workbook Name",
 				"isDefault": false,
-				"fields": "ASSIGNED_TO",
-				"id": "AssignedTo",
+				"fields": "WORKBOOK_NAME",
+				"id": "WorkbookName",
 				"cellClass": "text-left"
 			},
 			{
-				"value": "dueDate",
-				"label": "Due Date ",
+				"value": "Description",
+				"label": "Description",
 				"isDefault": false,
-				"fields": "DUE_DATE",
-				"id": "DueDate",
+				"fields": "DESCRIPTION",
+				"id": "Description",
 				"cellClass": "text-center"
 			},
 			{
-				"value": "supervisorId",
-				"label": "Supervisor Id",
+				"value": "workbookCreated",
+				"label": "Workbook Created",
 				"isDefault": false,
-				"fields": "SUPERVISOR_ID",
-				"id": "SupervisorId",
+				"fields": "WORKBOOK_CREATED",
+				"id": "WorkbookCreated",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "isEnabled",
+				"label": "Is Enabled",
+				"isDefault": false,
+				"fields": "ISENABLED",
+				"id": "IsEnabled",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "workbookID",
+				"label": "Workbook Id",
+				"isDefault": false,
+				"fields": "WORKBOOK_ID",
+				"id": "WorkbookID",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "workbookCreatedDate",
+				"label": "Workbook Created Date",
+				"isDefault": false,
+				"fields": "WORKBOOK_CREATED_BY",
+				"id": "WorkbookCreatedDate",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "daysToComplete",
+				"label": "Days To Complete",
+				"isDefault": false,
+				"fields": "DAYS_TO_COMPLETE",
+				"id": "DaysToComplete",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "dueDate",
+				"label": "Due Date",
+				"isDefault": false,
+				"fields": "DUE_DATE",
+				"id": "DueDate",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "userName",
+				"label": "User Name",
+				"isDefault": false,
+				"fields": "USERNAME",
+				"id": "UserName",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "userCreatedDate",
+				"label": "User Created Date",
+				"isDefault": false,
+				"fields": "USER_CREATED_DATE",
+				"id": "UserCreatedDate",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "Email",
+				"label": "Email",
+				"isDefault": false,
+				"fields": "EMAIL",
+				"id": "Email",
 				"cellClass": "text-right"
 			},
 			{
@@ -384,6 +448,134 @@
 				"isDefault": false,
 				"fields": "USER_ID",
 				"id": "UserId",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "entityCount",
+				"label": "Entity Count",
+				"isDefault": false,
+				"fields": "ENTITY_COUNT",
+				"id": "EntityCount",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "userCount",
+				"label": "User Count",
+				"isDefault": false,
+				"fields": "USER_COUNT",
+				"id": "UserCount",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "assignedWorkbook",
+				"label": "Assigned Workbook",
+				"isDefault": false,
+				"fields": "ASSIGNED_WORKBOOK",
+				"id": "AssignedWorkbook",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "pastDueWorkbook",
+				"label": "Past Due Workbook",
+				"isDefault": false,
+				"fields": "PAST_DUE_WORKBOOK",
+				"id": "PastDueWorkbook",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "workbookDue",
+				"label": "Workbook Due",
+				"isDefault": false,
+				"fields": "WORKBOOK_DUE",
+				"id": "WorkbookDue",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "incompleteWorkbook",
+				"label": "Incomplete Workbook",
+				"isDefault": false,
+				"fields": "INCOMPLETE_WORKBOOK",
+				"id": "IncompleteWorkbook",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "totalWorkbook",
+				"label": "Total Workbook",
+				"isDefault": false,
+				"fields": "TOTAL_WORKBOOK",
+				"id": "TotalWorkbook",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "totalTask",
+				"label": "Total Task",
+				"isDefault": false,
+				"fields": "TOTAL_TASK",
+				"id": "TotalTask",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "totalEmployees",
+				"label": "Total Employees",
+				"isDefault": false,
+				"fields": "TOTAL_EMPLOYEES",
+				"id": "TotalEmployees",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "completedWorkBook",
+				"label": "Completed WorkBook",
+				"isDefault": false,
+				"fields": "COMPLETED_WORKBOOK",
+				"id": "CompletedWorkBook",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "completedTask",
+				"label": "Completed Task",
+				"isDefault": false,
+				"fields": "COMPLETED_TASK",
+				"id": "CompletedTask",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "numberCompleted",
+				"label": "Number Completed",
+				"isDefault": false,
+				"fields": "NUMBER_COMPLETED",
+				"id": "NumberCompleted",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "lastAttemptDate",
+				"label": "Last Attempt Date",
+				"isDefault": false,
+				"fields": "LAST_ATTEMPT_DATE",
+				"id": "LastAttemptDate",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "firstAttemptDate",
+				"label": "First Attempt Date",
+				"isDefault": false,
+				"fields": "FIRST_ATTEMPT_DATE",
+				"id": "FirstAttemptDate",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "Repetitions",
+				"label": "Repetitions",
+				"isDefault": false,
+				"fields": "REPETITIONS",
+				"id": "Repetitions",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "workbookAssignedDate",
+				"label": "Workbook Assigned Date",
+				"isDefault": false,
+				"fields": "WORKBOOK_ASSIGNED_DATE",
+				"id": "WorkbookAssignedDate",
 				"cellClass": "text-right"
 			}
 		],
@@ -419,14 +611,6 @@
 				"fields": "EVALUATOR_NAME",
 				"id": "EvaluatorName",
 				"cellClass": "text-left"
-			},
-			{
-				"value": "expirationDate",
-				"label": "Expiration Date",
-				"isDefault": true,
-				"fields": "EXPIRATION_DATE",
-				"id": "expirationDate",
-				"cellClass": "text-center"
 			},
 			{
 				"value": "status",
@@ -466,6 +650,118 @@
 				"isDefault": false,
 				"fields": "SCORE",
 				"id": "Score",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "evaluatorName",
+				"label": "Evaluator Name",
+				"isDefault": false,
+				"fields": "EVALUATOR_NAME",
+				"id": "evaluatorName",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "dateTaken",
+				"label": "Date Taken",
+				"isDefault": false,
+				"fields": "DATE_TAKEN",
+				"id": "DateTaken",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "workbookID",
+				"label": "Workbook ID",
+				"isDefault": false,
+				"fields": "WORKBOOK_ID",
+				"id": "WorkbookID",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "lastAttemptDate",
+				"label": "Last Attempt Date",
+				"isDefault": false,
+				"fields": "LAST_ATTEMPT_DATE",
+				"id": "LastAttemptDate",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "createdBy",
+				"label": "Created By",
+				"isDefault": false,
+				"fields": "CREATED_BY",
+				"id": "CreatedBy",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "deletedBy",
+				"label": "Deleted By",
+				"isDefault": false,
+				"fields": "DELETED_BY",
+				"id": "DeletedBy",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "parentTaskName",
+				"label": "Parent Task Name",
+				"isDefault": false,
+				"fields": "PARENT_TASK_NAME",
+				"id": "ParentTaskName",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "childTaskName",
+				"label": "Child Task Name",
+				"isDefault": false,
+				"fields": "CHILD_TASK_NAME",
+				"id": "ChildTaskName",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "numberOfAttmepts",
+				"label": "Number Of Attempts",
+				"isDefault": false,
+				"fields": "NUMBER_OF_ATTEMPTS",
+				"id": "NumberOfAttempts",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "expirationDate",
+				"label": "Expiration Date",
+				"isDefault": false,
+				"fields": "EXPIRATION_DATE",
+				"id": "Expiration Date",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "taskCode",
+				"label": "Task Code",
+				"isDefault": false,
+				"fields": "TASK_CODE",
+				"id": "TaskCode",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "Role",
+				"label": "Role",
+				"isDefault": false,
+				"fields": "ROLE",
+				"id": "Role",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "assignedDate",
+				"label": "Assigned Date",
+				"isDefault": false,
+				"fields": "ASSIGNED_DATE",
+				"id": "AssignedDate",
+				"cellClass": "text-left"
+			},
+			{
+				"value": "courseExpirationDate",
+				"label": "Course Expiration Date",
+				"isDefault": false,
+				"fields": "COURSE_EXPIRATION_DATE",
+				"id": "CourseExpirationDate",
 				"cellClass": "text-left"
 			}
 		]
