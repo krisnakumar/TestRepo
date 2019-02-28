@@ -305,15 +305,7 @@
 			}
 
 		],
-		"workbooks": [
-			{
-				"value": "workbookName",
-				"label": "Workbook Name",
-				"isDefault": true,
-				"fields": "WORKBOOK_NAME",
-				"id": "WorkBookName",
-				"cellClass": "text-left"
-			},
+		"workbooks": [			
 			{
 				"value": "workbookId",
 				"label": "Workbook Id",
@@ -321,6 +313,14 @@
 				"fields": "WORKBOOK_ID",
 				"id": "WorkBookId",
 				"cellClass": "text-right"
+			},
+			{
+				"value": "workbookName",
+				"label": "Workbook Name",
+				"isDefault": true,
+				"fields": "WORKBOOK_NAME",
+				"id": "WorkBookName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "description",
@@ -420,7 +420,7 @@
 			},
 			{
 				"value": "userName",
-				"label": "User Name",
+				"label": "Username",
 				"isDefault": false,
 				"fields": "USERNAME",
 				"id": "UserName",
@@ -579,15 +579,7 @@
 				"cellClass": "text-right"
 			}
 		],
-		"tasks": [
-			{
-				"value": "taskName",
-				"label": "Task Name",
-				"isDefault": true,
-				"fields": "TASK_NAME",
-				"id": "TaskName",
-				"cellClass": "text-left"
-			},
+		"tasks": [			
 			{
 				"value": "taskId",
 				"label": "Task ID",
@@ -595,6 +587,14 @@
 				"fields": "TASK_ID",
 				"id": "TaskId",
 				"cellClass": "text-right"
+			},
+			{
+				"value": "taskName",
+				"label": "Task Name",
+				"isDefault": true,
+				"fields": "TASK_NAME",
+				"id": "TaskName",
+				"cellClass": "text-left"
 			},
 			{
 				"value": "assignedTo",
@@ -780,7 +780,7 @@
 			{
 				"value": "userName",
 				"type": "text",
-				"label": "User Name",
+				"label": "Username",
 				"validation": "isEmpty",
 				"smartParam": "user",
 				"hasSmartParams": true,
@@ -789,7 +789,7 @@
 			{
 				"value": "userName2",
 				"type": "text",
-				"label": "User Name 2",
+				"label": "Username 2",
 				"validation": "isEmpty",
 				"smartParam": "user",
 				"hasSmartParams": true,
@@ -964,7 +964,7 @@
 			{
 				"value": "isEnabled",
 				"type": "text",
-				"label": "IsEnabled",
+				"label": "Is Enabled",
 				"validation": "isEmpty",
 				"smartParam": "bool",
 				"hasSmartParams": true,

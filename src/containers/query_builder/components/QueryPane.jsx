@@ -210,7 +210,7 @@ class QueryPane extends PureComponent {
         <Table className="query-section-table">
           <thead className="query-section-table thead">
             <tr>
-              <th width="125" className="tableWidth-5">Add/Delete</th>
+              <th width="180" className="tableWidth-5">Add/Delete</th>
               <th className="tableWidth-10">And/Or</th>
               <th className="tableWidth-20">Field</th>
               <th className="tableWidth-20">Operator</th>

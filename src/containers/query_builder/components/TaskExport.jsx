@@ -115,7 +115,7 @@ class TaskExport extends Component {
 
         return (
             hasExcelData && <ExcelFile element={
-                <button className="query-section-button" size="sm" title="Export" aria-label="Export">
+                <button className="query-section-button" size="sm" >
                     <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
                     <span className="fa-text-align">Export</span>
                 </button>
