@@ -154,7 +154,7 @@ class EmployeeResultSet extends React.Component {
         email: employees[i].Email || "",
         employeeName: employees[i].EmployeeName || "",
         role: employees[i].Role || "",
-        totalEmployees: employees[i].TotalEmployees || "",
+        totalEmployees: employees[i].TotalEmployees || 0,
         userId: employees[i].UserId || "",
         userName: employees[i].UserName || "",
         address: employees[i].Address || "",

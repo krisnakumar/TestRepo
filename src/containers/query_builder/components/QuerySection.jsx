@@ -165,7 +165,7 @@ class QuerySection extends PureComponent {
       },
       {
         key: 'dayToComplete',
-        name: 'Day to Complete',
+        name: 'Days to Complete',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
