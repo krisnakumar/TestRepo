@@ -138,16 +138,16 @@ namespace ReportBuilderAPI.Repository
                 { Constants.PHONE, ", u.Phone" },
                 { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
                 { Constants.USER_CREATED_DATE, ", u.DateCreated" },
-                { Constants.USER_PERMS, ", u.UserPerms" },
-                { Constants.SETTINGS_PERMS, ", u.settingsperms" },
-                { Constants.COURSE_PERMS, ", u.courseperms" },
-                { Constants.TRANSCRIPT_PERMS, ", u.Transcriptperms" },
-                { Constants.COMPANY_PERMS, ", u.companyperms" },
-                { Constants.FORUM_PERMS, ", u.forumperms" },
-                { Constants.COM_PERMS, ", u.comperms" },
-                { Constants.REPORTS_PERMS, ", u.reportsperms" },
-                { Constants.ANNOUNCEMENT_PERMS, ", u.announcementperms" },
-                { Constants.SYSTEM_PERMS, ",u.systemperms" },
+                //{ Constants.USER_PERMS, ", u.UserPerms" },
+                //{ Constants.SETTINGS_PERMS, ", u.settingsperms" },
+                //{ Constants.COURSE_PERMS, ", u.courseperms" },
+                //{ Constants.TRANSCRIPT_PERMS, ", u.Transcriptperms" },
+                //{ Constants.COMPANY_PERMS, ", u.companyperms" },
+                //{ Constants.FORUM_PERMS, ", u.forumperms" },
+                //{ Constants.COM_PERMS, ", u.comperms" },
+                //{ Constants.REPORTS_PERMS, ", u.reportsperms" },
+                //{ Constants.ANNOUNCEMENT_PERMS, ", u.announcementperms" },
+                //{ Constants.SYSTEM_PERMS, ",u.systemperms" },
                 { Constants.USERID, ", u. Id as userId" },
                 { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM Supervisor s WHERE userId=u.Id) as supervisorId" }
 
@@ -240,9 +240,10 @@ namespace ReportBuilderAPI.Repository
                 {
                     EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).FirstOrDefault();
                     employeeRequest.Fields.Remove(userDetails);
-                    employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME ? x.Name = x.Value : x.Name).ToList();
 
-                    employeeRequest.Fields.Select(x => (x.Name == Constants.ME && x.Operator == "!=") ? x.Name = "NOT_" + x.Name : x.Name).ToList();
+                    employeeRequest.Fields.Select(x => x.Name == Constants.USERNAME && UsernameSmartParameters.Contains(x.Value) ? x.Name = x.Value : x.Name).ToList();
+
+                    employeeRequest.Fields.Select(x => (UsernameSmartParameters.Contains(x.Name) && x.Operator == "!=") ? x.Name = "NOT_" + x.Name : x.Name).ToList();
                 }
 
                 //getting where conditions
@@ -328,6 +329,15 @@ namespace ReportBuilderAPI.Repository
             Constants.NOT_DIRECT_SUBORDINATES
         };
 
+
+        private readonly List<string> UsernameSmartParameters = new List<string>
+        {
+            Constants.ME,
+            Constants.ME_AND_ALL_SUBORDINATES,
+            Constants.ME_AND_DIRECT_SUBORDINATES,
+            Constants.ALL_SUBORDINATES,
+            Constants.DIRECT_SUBORDINATES
+        };
         /// <summary>
         /// form he query based on the operator Name
         /// </summary>

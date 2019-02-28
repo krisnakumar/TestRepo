@@ -25,6 +25,10 @@ namespace ReportBuilder.Models.Response
         public string Role { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string WorkbookName { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string WorkBookName { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CompletedTasks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -37,8 +41,7 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CompletionDate { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string WorkBookName { get; set; }
+      
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 
         public int? AssignedWorkBook { get; set; }
@@ -49,7 +52,7 @@ namespace ReportBuilder.Models.Response
         public int? InDueWorkBook { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? InCompleteWorkbook { get; set; }
+        public int? InCompleteWorkBook { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? TotalWorkbook { get; set; }
 

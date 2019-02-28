@@ -42,7 +42,7 @@ namespace ReportBuilder.UnitTest
             {
                 UserName = "devtester@its-training.com",
 
-                RefreshToken = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.a40fcGx7A6aqc9_uXPLG_oqXDTstqDdxMCe7gipIEP3isUxQuM-e_aGgrMGxo9HZ_PBS1I2t9GV-mRf5AakZTMlZJqfYiPIhbPU9AeSUfM32k3Vx191bHPKkNpkOzj20-o7xzUI1rfF0r8x1It-V1sfyp54ybAtOh2ZbodujtVCWKekF6tCtxt4SdLCSjIPTRGNs2QDWe8AV_5JhDybIWuqDe3-Wj3J3T3GXyHYJNKMOdH1UvF8m4BH7r5MU0SWbR8cy80Ll0Cco2CwbzMCKDs-BoWH9AwfZZrqjHQZe6L8bB1EhwiSO7EmBNaKivw_AcfjvlLaN3RAO14dYiSOj9Q.RllyQxB-i2DGAPco.58FX3agH0re38YxenRZoJUy7FV4b1iYXzb6AWBqG1_T8LyCcXlc_W7PzDLXOrceQirewmi8xP_uxYl4bnrFvgGC9O-s16nlLvmQuOrWedfi02LNR4fCUUcNQz_U9uz3nAfIWt-uf98SBuJ7If2WbwtK2NqFjAyGXRujGDxEqxw5aQ3P9wSxVHNdJZPTao8aG4VHlOP9zbaAEmLt_ZEgZ2tbhurwHlEatPDFhoRh_As1a3owNvBDOOVLIUR1VNObKGXFpr7ZQW8bUHM2LN8WWd9bNBoy8t54g7PHBuHNf7h0VlPdZNFGDbLSsAW0U3WM8yV501WPgReBjNOB8y-wTJIBdLXok1OQtD6kbb5ixzro3BiV7WeY-c8FBI_IugFMODZaEQ3k0Fhgg_cU86wvW1L-tl7A9VM0vT9qVVjYdAC2OkLfKYFeHW1CBMDWD_GiZ_tq494bwWpFshVORA2SmkG05uFEBlwDKfwrAXuOoJp6Zc2Z86v456RkeCK5hTDwjtq0l8peXoJNQCpMinN07Aw9_sN9pP-noRI3XTSKZ0XTKEUJtkLOfQrOupV7P8dOc4SxffgnUc9Rf1Qruku-3_jaUZ71QTm_z9AriF-QCrXT33lX7eDKpYeCBAIBKJp1Pa3HT6O3tJ6e4O-4TG6j-XzRr0D2GNaZudmR4UEpy-jrlgJwjZB1UGON4iCJ2xyWEx6dIpeVD-da8TJcYdoamMO2y2Hmu2vPEtsNGTFTCoFga_3PQObFvsKIzv_PyEsyVWgqGbit2GOc6aOXE8uFhrlOnbp0hfKxzKRisUwKUrQBcERZvUa1mEL0dEwRLqwADkxIyn2pwvK-iWDaEfG4suCE0vBj6u56DO-2kDWTKf7Slq6ZeUQYW_epHcZFtiVH8iNIE4hmI6ygTe_XJDzf3HjHssrdyPDmImT3_EwUbCGDukNf-OEuk9R3poQPo_SI90qqj9xHVhA6SX8eHapPPApKCgdcimoVHNurwrsdRUefVQt-UIZy4xkAx7DQ-nufOBSgekWoWFrL9L2BzMo8mHXTeteFBaD6e-6TyUBVmezUwNnBXXT6QTpyBlIpSRfR1kjTllLqXvruVftZwa4r3OL26DXZu18KdsmfV2k_OOrTiFbrrAYot5prVjhETRpEDrYA3Y7V36zt1BuujoHf7vo664-t2Nv01yREr2Gautdei9_-T2S9J4uhvCJULLgYMPdx8NfaxuJ9DSVp_q4f5JMZaW_pjpq05KHOqBGqrbDdYtOe1GOnlhZlA1CV7NRGnvppWEuJE4xsQsGJJMWhQmf42qgtVPRRdMzmx36RJykRrwrP3NAHrO7FWj5U.URj_nE2qRt2cx147jAhypg"
+                RefreshToken = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.IUJmjYXRBVr40WXOehJtU6LDVAOtMCKxegZXxxhYIcOuGwk7hqgGCMYYnhtDPK5QiDG82ijTRkYsbF9cL0EbSsb2QRuqhiId2mpuDnU7bLSBHW_xmlSKK4l4LKxPdJVzjV9WF6yWSJ6DXMaE6MJd11bhZJMKn-Tg2uR7CQBXjeA3JJCVAEBfUZJ87EDPdwexhdnziHSZjT1Xrwbye43FJaN3lcTBfHdohEYVRJjmCynR3SETxA35JLvXI0YNZngIr-an814ZdzAWdIVA6w0FUAlKcQ3b1OY4adZdViTA189_Am6hFMkmAvld4FO9xxKmJzXbc60RtmGn_19SO6AChg.7lUVWNv_w-QzbpJC.rIzxKUXEN1j46tTWv3SOYWrrzOBb9is0RoA-qU3NOB7vIkcpnwyXaFxyTt07xtVf7HSvN2vK7tZkLVnBOE1w33ZuszlZVxvm_WypHdBjr0ET_xMVJDB8Kknz2NqmiD3t2xBegLqFZP2G1lfTV1rdLtfkF5CV5ccInMDdB9nhnbUgq560ZNTz_eDGYsGHLWg44ddH-GbKzJCxnBYzYE1OfwsD2Y_GOP2ish_9fr4Esg2IqJx-gMBOgZF3ysU2X0ijFh2NqyhGZsn2Ln-_of-uLUHz6ngHt6F6MHEUYRw7q4yA8-r0A8go2jhU9vhZZL9LeQo8GMMBUt1sur93hK4-FAzVGxcgMUjgXfBN4ctkKHGQCfHFpineZNHcJOJ-60nHQaxtAp1TXH35mCRlCY7tfbVtUp-k_r5L3Uncw3M6NDGfZctnocM1wnNvwEloBnrlTMQH09AfRo6B_4bHWo2eQcXnVBdMQyIy0UOTsM_-J2f9gMsuWh52EXJs2zkuGspsbIwyWmL0r71lpH7YUL2w5ot2nZnamUg8gbUa4830ikhZQjJm42rIWZHZ3lxYLiqkr7rlNwP9zHWA4ptcLrN07sniMWzcPj2NOhjptYwkuu_zlJ6A8er29XKch42onO-tmxkU5koc-56qY4aHxML0B20MEGNeDc5xdTEEjIVCwqGJRpRcySAIioHEdm4chkP8Z7WI8QMtmqA3UXvHxW10TYDlR9pJ9VFYhgrSA1CfmZA3_2ZNz6lpvUMQq79OgF9opQz_780NsMS3f_JalMjT5ubIV_VY33JoIei10_bza8cOkf3dS4LutlZrcAkARwnNtKrG_HwHVz9LA6MqrA76gUsCA90UNAYyBYCmhohQGEbvL2RDczJ6vpEtxUAUHgW6xjMBPWOgpnT6CPHvy69Lw883rj4crUp_CVARgsRh9P6QU3NpWlLXWWQYvTUmvLgh6H7una41LMqEvcS3R3jN-HG86GpBxdICsz7n4ekGKrB_OpJc66get9EinUpCutYaoTNPgRMBlLg46Ehg7htsWvqffSzVF20FWI1nrjcit_QKcDhG3_PppSPIK_at7s7NCZxk-qW7UIQkKcbKsfxtzmf680jsrJ_SiFq7OLuCu16p1oR5B-NiD9swHP9JRWI80blD1PPnJOHHsH3UX8f32bAZJ665y3y55mY7O81-MUU6kWLVL-4x2QUB0gW9jVS9xY7LjAzwgV_EHaUD9dO_kENbmNUEEEpUbjnOLP0r69HiP3ax51ms-z8ShEcayDrMFbV_Km56s5jUGiQxciy5K6iTtWRxtTmYtrAiY1C17-52zjQ831fFRZN8hHM.mEie4VpsVJ2QRf9KRYKZsg"
             };
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
@@ -213,7 +213,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters= pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME\",\"Operator\":\"!=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\",\"EMAIL\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME_AND_DIRECT_SUBORDINATES\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"},{\"Value\":\"Sheila136\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"USER_CREATED_DATE\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"EMAIL\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\"]}";
             APIGatewayProxyResponse userResponse = function.GetEmployeesQuerBuilder(aPIGatewayProxyRequest, null);
 
             Assert.AreEqual(200, userResponse.StatusCode);
@@ -382,7 +382,7 @@ namespace ReportBuilder.UnitTest
                 ColumnList = new string[] { Constants.USERID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES },
                 Fields = employeeList,
                 EntityName = Constants.EMPLOYEE,
-                QueryName = "Shoba"
+                QueryName = "Shoba-test"
             };
 
             EmployeeModel employeeModel = new EmployeeModel
@@ -482,7 +482,8 @@ namespace ReportBuilder.UnitTest
                 Fields = employeeList,
                 EntityName = Constants.EMPLOYEE,
                 QueryName = "Shoba-test-New",
-                QueryId = "7bf5f925-ec41-49a8-8d97-61e4c4033703"
+                QueryId = "1e23a802-f6fa-4aa8-b77c-186db54ebbce",
+                UserId=6
             };
 
 

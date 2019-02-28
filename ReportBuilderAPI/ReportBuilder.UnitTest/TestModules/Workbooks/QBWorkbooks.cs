@@ -131,7 +131,7 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
             Assert.AreNotEqual(0, workbookList.Count);
             Assert.AreNotEqual("", workbookList[0].WorkBookId);
             Assert.IsTrue(workbookList[0].WorkBookId >= 40);
-            StringAssert.Matches(workbookList[0].WorkBookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
+            StringAssert.Matches(workbookList[0].WorkbookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
         }
         
         [TestMethod]
@@ -189,7 +189,7 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
             Assert.AreNotEqual(null, workbookList[0].WorkbookAssignedDate);
             Assert.AreNotEqual(null, workbookList[0].Repetitions);
             Assert.AreNotEqual(null, workbookList[0].LastAttemptDate);
-            StringAssert.Matches(workbookList[0].WorkBookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
+            StringAssert.Matches(workbookList[0].WorkbookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
         }
 
         [TestMethod]
@@ -366,7 +366,7 @@ namespace ReportBuilder.UnitTest.TestModules.Workbooks
             Assert.AreEqual(200, wbResponse.StatusCode);
             Assert.AreNotEqual(0, workbookList.Count);
             Assert.AreNotEqual(null, workbookList[0].WorkBookId);
-            StringAssert.Matches(workbookList[0].WorkBookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
+            StringAssert.Matches(workbookList[0].WorkbookName, new Regex(@"(?i)\b(.*?)e(.*?)\b"));
         }
         
         [TestMethod]

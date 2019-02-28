@@ -103,7 +103,7 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    return ResponseBuilder.BadRequest(DataResource.CHECK_INPUT);
+                    return ResponseBuilder.BadRequest("UserId");
                 }
             }
             catch (Exception saveQueryException)
