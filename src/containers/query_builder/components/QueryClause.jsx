@@ -721,9 +721,9 @@ class QueryClause extends PureComponent {
     * @returns none
    */
     onDatePickerOpen() {
-        let inputWrapper = document.querySelector(".DayPickerInput-OverlayWrapper").previousElementSibling.getBoundingClientRect();
+        let inputWrapper = document.querySelector(".DayPickerInput-OverlayWrapper") ? document.querySelector(".DayPickerInput-OverlayWrapper").previousElementSibling.getBoundingClientRect() : null;
         document.querySelector(".DayPickerInput-Overlay").style.position = 'fixed';
-        document.querySelector(".DayPickerInput-Overlay").style.left = inputWrapper.left + 'px';
+        document.querySelector(".DayPickerInput-Overlay").style.left = inputWrapper ? inputWrapper.left + 'px' :  '0px';
         document.querySelector(".DayPickerInput-Overlay").style.display = 'block';
     };
 
@@ -995,12 +995,6 @@ class QueryClause extends PureComponent {
                                                 parseDate={parseDate}
                                                 // overlayComponent={_self.CustomOverlay.bind(index, index+"@from")}
                                                 keepFocus={false}
-                                                component={
-                                                    props =>
-                                                        <Input
-                                                            type="text"
-                                                            className="inputQueryInput form-control" {...props} />
-                                                }
                                                 dayPickerProps={{
                                                     selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                     modifiers,
@@ -1018,12 +1012,6 @@ class QueryClause extends PureComponent {
                                                 parseDate={parseDate}
                                                 // overlayComponent={_self.CustomOverlay.bind(index, index+"@to")}
                                                 keepFocus={false}
-                                                component={
-                                                    props =>
-                                                        <Input
-                                                            type="text"
-                                                            className="inputQueryInput form-control" {...props} />
-                                                }
                                                 dayPickerProps={{
                                                     selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                     modifiers,
