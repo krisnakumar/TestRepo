@@ -51,6 +51,7 @@ class QueryClause extends PureComponent {
         super(props);
         // create a ref to store the textInput DOM element
         this.buttonRef = [];
+        this.selectCreatable = [];
 
         this.validator = new FormValidator(this.formatValidationData(this.formatRowData(this.props.fieldData || [])));
 
@@ -92,6 +93,7 @@ class QueryClause extends PureComponent {
         this.handleFromChange = this.handleFromChange.bind(this);
         this.handleToChange = this.handleToChange.bind(this);
         this.reloadQuery = this.reloadQuery.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
     /**
@@ -864,6 +866,18 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
+     /**
+       * @method
+       * @name - handleBlur
+       * This method will used update value on smart params when user type's on input select
+       * @param index
+       * @returns none
+    */
+    handleBlur(index){
+        let { inputValue } = this.selectCreatable[index];
+        this.selectCreatable[index].createNewOption(inputValue)
+    }
+
     render() {
         const { formattedData } = this.state;
         let _self = this,
@@ -1028,6 +1042,8 @@ class QueryClause extends PureComponent {
                                             autosize={false}
                                             backspaceRemoves={true}
                                             deleteRemoves={true}
+                                            onBlurResetsInput={false}
+                                            onBlur={_self.handleBlur.bind("", index, this)}
                                             multi={multi}
                                             className="inputQueryInput"
                                             options={field.smartParam}
@@ -1036,6 +1052,7 @@ class QueryClause extends PureComponent {
                                             placeholder={field.placeholder || ""}
                                             id={field.value}
                                             value={field.valueSelected}
+                                            ref={s => _self.selectCreatable[index] = s}
                                         />
                                     }
                                 </td>
