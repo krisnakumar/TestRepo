@@ -296,13 +296,78 @@
 				"cellClass": "text-center"
 			},
 			{
-				"value": "supervisorId",
-				"label": "Supervisor Id",
+				"value": "userPermission",
+				"label": "User Permission",
 				"isDefault": false,
-				"fields": "SUPERVISOR_ID",
-				"id": "SupervisorId",
+				"fields": "USER_PERMS",
+				"id": "UserPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "settingsPermission",
+				"label": "Settings Permission",
+				"isDefault": false,
+				"fields": "SETTINGS_PERMS",
+				"id": "SettingsPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "coursePermission",
+				"label": "Course Permission",
+				"isDefault": false,
+				"fields": "COURSE_PERMS",
+				"id": "CoursePermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "transcriptPermission",
+				"label": "Transcript Permission",
+				"isDefault": false,
+				"fields": "TRANSCRIPT_PERMS",
+				"id": "TranscriptPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "companyPermission",
+				"label": "Company Permission",
+				"isDefault": false,
+				"fields": "COMPANY_PERMS",
+				"id": "CompanyPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "forumPermission",
+				"label": "Forum Permission",
+				"isDefault": false,
+				"fields": "FORUM_PERMS",
+				"id": "ForumPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "reportPermission",
+				"label": "Report Permission",
+				"isDefault": false,
+				"fields": "REPORTS_PERMS",
+				"id": "ReportPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "announcementPermission",
+				"label": "Announcement Permission",
+				"isDefault": false,
+				"fields": "ANNOUNCEMENT_PERMS",
+				"id": "AnnouncementPermission",
+				"cellClass": "text-right"
+			},
+			{
+				"value": "systemPermission",
+				"label": "System Permission",
+				"isDefault": false,
+				"fields": "SYSTEM_PERMS",
+				"id": "SystemPermission",
 				"cellClass": "text-right"
 			}
+
 		],
 		"workbooks": [
 			{
