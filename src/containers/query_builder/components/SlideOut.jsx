@@ -143,11 +143,24 @@ class SlidePane extends Component {
     * @returns none
     */
     addColumns() {
-        let { selectedColumnOptions, NumberOfDropdowns, columnOptions } = this.state;
+        let { selectedColumnOptions, NumberOfDropdowns, columnOptions, columnDropDowns } = this.state;
+        columnDropDowns.map(function (c, i) {
+            columnDropDowns[i].isDisabled = false;
+            columnDropDowns[i].disabled = false;
+        });
         NumberOfDropdowns = selectedColumnOptions.length;
         columnOptions[NumberOfDropdowns].isDefault = true;
         columnOptions[NumberOfDropdowns].valueSelected = "";
         selectedColumnOptions.push(columnOptions[NumberOfDropdowns]);
+        selectedColumnOptions.map(function (selectedColumn, selectedColumnIndex) {
+            columnDropDowns.map(function (column, columnIndex) {
+                if (selectedColumn.id == column.id) {
+                    columnDropDowns[columnIndex].isDisabled = true;
+                    columnDropDowns[columnIndex].disabled = true;
+                    return;
+                }
+            });
+        });
         this.setState({ selectedColumnOptions, NumberOfDropdowns, columnOptions });
         this.forceUpdate();
     };
@@ -162,9 +175,22 @@ class SlidePane extends Component {
    */
     removeColumns(el) {
         let position = el.currentTarget.dataset.position;
-        let { selectedColumnOptions, NumberOfDropdowns } = this.state;
+        let { selectedColumnOptions, NumberOfDropdowns, columnDropDowns } = this.state;
+        columnDropDowns.map(function (c, i) {
+            columnDropDowns[i].isDisabled = false;
+            columnDropDowns[i].disabled = false;
+        });
         selectedColumnOptions.splice(position, 1);
         NumberOfDropdowns = selectedColumnOptions.length - 1;
+        selectedColumnOptions.map(function (selectedColumn, selectedColumnIndex) {
+            columnDropDowns.map(function (column, columnIndex) {
+                if (selectedColumn.id == column.id) {
+                    columnDropDowns[columnIndex].isDisabled = true;
+                    columnDropDowns[columnIndex].disabled = true;
+                    return;
+                }
+            });
+        });
         this.setState({ selectedColumnOptions, NumberOfDropdowns });
         this.forceUpdate();
     }
@@ -184,8 +210,7 @@ class SlidePane extends Component {
             value = selectedOption.value.replace(/^\s+/g, '') || "",
             fields = selectedOption.fields.replace(/^\s+/g, '') || "",
             label = selectedOption.label.replace(/^\s+/g, '') || "",
-            id = selectedOption.id.replace(/^\s+/g, '') || "",
-            selectedOptions = [];
+            id = selectedOption.id.replace(/^\s+/g, '') || "";
 
         columnDropDowns.map(function (c, i) {
             columnDropDowns[i].isDisabled = false;
@@ -210,9 +235,6 @@ class SlidePane extends Component {
     };
 
     optionRenderer(option) {
-        // debugger
-        // option.isDisabled = option.isDefault;
-        // option.disabled = option.isDefault;
         return option.label;
     }
 
@@ -221,7 +243,7 @@ class SlidePane extends Component {
             selectedColumnOptions = this.state.selectedColumnOptions || [];
         let { NumberOfDropdowns } = this.state,
             self = this;
-        return <div className="slidepane1" ref={ref => this.el = ref}>
+        return <div className="slide-pane" ref={ref => this.el = ref}>
             <SlidingPane
                 className='some-custom-class'
                 width='25%'
