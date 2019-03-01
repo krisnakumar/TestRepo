@@ -16,17 +16,18 @@ class SlidePane extends Component {
             isPaneOpen: this.props.isPaneOpen,
             isPaneOpenLeft: this.props.isPaneOpenLeft,
             columnOptions: this.props.columns,
-            columnDropDowns: JSON.parse(JSON.stringify(this.props.columns)) || [],
+            columnDropDowns: JSON.parse(JSON.stringify(this.buildDropDownOptions(this.props.columns))) || [],
             selectedColumnOptions: this.buildOptions(this.props.columns),
             lastSelectedColumnOptions: this.buildOptions(this.props.columns),
             NumberOfDropdowns: 0
         };
-        this.columns = JSON.parse(JSON.stringify(this.props.columns)) || [];
+        this.columns = JSON.parse(JSON.stringify(this.buildDropDownOptions(this.props.columns))) || [];
         this.addColumns = this.addColumns.bind(this);
         this.removeColumns = this.removeColumns.bind(this);
         this.requestClose = this.requestClose.bind(this);
         this.requestOk = this.requestOk.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.optionRenderer = this.optionRenderer.bind(this);
     };
 
     /**
@@ -39,6 +40,15 @@ class SlidePane extends Component {
     componentDidMount() {
         Modal.setAppElement(this.el);
     };
+
+    buildDropDownOptions(options) {
+        let dropDownOptions = options;
+        dropDownOptions.map(function (column, index) {
+            column.isDisabled = column.isDefault;
+            column.disabled = column.isDefault;
+        });
+        return dropDownOptions;
+    }
 
     /**
      * @method
@@ -81,7 +91,7 @@ class SlidePane extends Component {
                 columnOptions: newProps.columns,
                 selectedColumnOptions: this.buildOptions(newProps.columns),
                 lastSelectedColumnOptions: this.buildOptions(newProps.columns),
-                columnDropDowns: JSON.parse(JSON.stringify(newProps.columns)) || [],
+                columnDropDowns: JSON.parse(JSON.stringify(this.buildDropDownOptions(newProps.columns))) || [],
             });
         }
     };
@@ -170,15 +180,40 @@ class SlidePane extends Component {
     */
     handleChange(index, key, selectedOption) {
         let selectedColumnOptions = this.state.selectedColumnOptions,
+            columnDropDowns = this.state.columnDropDowns,
             value = selectedOption.value.replace(/^\s+/g, '') || "",
             fields = selectedOption.fields.replace(/^\s+/g, '') || "",
-            label = selectedOption.label.replace(/^\s+/g, '') || "";
+            label = selectedOption.label.replace(/^\s+/g, '') || "",
+            id = selectedOption.id.replace(/^\s+/g, '') || "",
+            selectedOptions = [];
+
+        columnDropDowns.map(function (c, i) {
+            columnDropDowns[i].isDisabled = false;
+            columnDropDowns[i].disabled = false;
+        });
         selectedColumnOptions[index][key] = value;
         selectedColumnOptions[index].fields = fields;
         selectedColumnOptions[index].label = label;
         selectedColumnOptions[index].value = value;
-        this.setState({ ...this.state, selectedColumnOptions });
+        selectedColumnOptions[index].id = id;
+        selectedColumnOptions.map(function (selectedColumn, selectedColumnIndex) {
+            columnDropDowns.map(function (column, columnIndex) {
+                if (selectedColumn.id == column.id) {
+                    columnDropDowns[columnIndex].isDisabled = true;
+                    columnDropDowns[columnIndex].disabled = true;
+                    return;
+                }
+            });
+        });
+        this.setState({ ...this.state, selectedColumnOptions, columnDropDowns });
         this.forceUpdate();
+    };
+
+    optionRenderer(option) {
+        // debugger
+        // option.isDisabled = option.isDefault;
+        // option.disabled = option.isDefault;
+        return option.label;
     }
 
     render() {
@@ -226,6 +261,7 @@ class SlidePane extends Component {
                                             deleteRemoves={false}
                                             placeholder={""}
                                             className="col-options-dropdown"
+                                            optionRenderer={self.optionRenderer}
                                         />
                                         {
                                             (selectedColumnOptions.length > 1) && <button data-position={index} onClick={self.removeColumns.bind()} className={"col-opt-close remove-" + index} size="sm" title="Remove Column" aria-label="Remove Column">

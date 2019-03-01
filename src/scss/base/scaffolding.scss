@@ -894,3 +894,9 @@ div#queryResultSet {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   padding: 0 0 0 6px;
 }
+
+.Select-option.is-disabled {
+  color: #cccccc;
+  cursor: default;
+  display: none !important;
+}

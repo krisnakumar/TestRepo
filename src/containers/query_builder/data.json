@@ -621,14 +621,6 @@
 				"cellClass": "text-left"
 			},
 			{
-				"value": "dateExpired",
-				"label": "Date Expired",
-				"isDefault": false,
-				"fields": "DATE_EXPIRED",
-				"id": "DateExpired",
-				"cellClass": "text-center"
-			},
-			{
 				"value": "location",
 				"label": "Location",
 				"isDefault": false,
