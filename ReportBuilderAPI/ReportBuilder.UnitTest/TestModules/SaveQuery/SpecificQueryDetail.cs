@@ -20,30 +20,30 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
         //                                                             //
         /////////////////////////////////////////////////////////////////
 
-        [TestMethod]
-        public void GetSpecificQueryDetail()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                QueryId = "c6901bc5-7fda-4098-9e25-04af806bab4c"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void GetSpecificQueryDetail()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        QueryId = "c6901bc5-7fda-4098-9e25-04af806bab4c"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.GetQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(200, queryResponse.StatusCode);
-            Assert.AreEqual("Query has been deleted succcessfully!", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.GetQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(200, queryResponse.StatusCode);
+        //    Assert.AreEqual("Query has been deleted succcessfully!", RenameQueryResponse.Message);
+        //}
 
         [TestMethod]
         public void GetSpecificQueryWithEmptyQueryId()
@@ -70,29 +70,29 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
             Assert.AreEqual("Invalid input: QueryId", RenameQueryResponse.Message);
         }
 
-        [TestMethod]
-        public void GetSpecificQueryWithInvalidQueryId()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                QueryId = "ITS-Delete-Query"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void GetSpecificQueryWithInvalidQueryId()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        QueryId = "ITS-Delete-Query"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.GetQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(400, queryResponse.StatusCode);
-            Assert.AreEqual("Invalid input: Please check input", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.GetQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(400, queryResponse.StatusCode);
+        //    Assert.AreEqual("Invalid input: Please check input", RenameQueryResponse.Message);
+        //}
     }
 }

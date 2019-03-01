@@ -21,86 +21,86 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
         //                                                             //
         /////////////////////////////////////////////////////////////////
 
-        [TestMethod]
-        public void RenameAQuery()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                UserId = 6,
-                QueryName = "22-FEB-Employee-Set",
-                QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void RenameAQuery()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        UserId = 6,
+        //        QueryName = "22-FEB-Employee-Set",
+        //        QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(200, queryResponse.StatusCode);
-            Assert.AreEqual("Query name has been updated successfully!", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(200, queryResponse.StatusCode);
+        //    Assert.AreEqual("Query name has been updated successfully!", RenameQueryResponse.Message);
+        //}
 
-        [TestMethod]
-        public void AttemptingToRenameWithEmptyQueryName()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                UserId = 6,
-                QueryName = "",
-                QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void AttemptingToRenameWithEmptyQueryName()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        UserId = 6,
+        //        QueryName = "",
+        //        QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(400, queryResponse.StatusCode);
-            Assert.AreEqual("Invalid input: Check inputs", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(400, queryResponse.StatusCode);
+        //    Assert.AreEqual("Invalid input: Check inputs", RenameQueryResponse.Message);
+        //}
 
-        [TestMethod]
-        public void AttemptingToRenameWithInvalidQueryId()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                UserId = 6,
-                QueryName = "Renaming Query",
-                QueryId = "Its-Query-Id"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void AttemptingToRenameWithInvalidQueryId()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        UserId = 6,
+        //        QueryName = "Renaming Query",
+        //        QueryId = "Its-Query-Id"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(400, queryResponse.StatusCode);
-            Assert.AreEqual("Invalid input: Check inputs", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(400, queryResponse.StatusCode);
+        //    Assert.AreEqual("Invalid input: Check inputs", RenameQueryResponse.Message);
+        //}
 
         [TestMethod]
         public void AttemptingToRenameWithExistingName()
@@ -129,31 +129,31 @@ namespace ReportBuilder.UnitTest.TestModules.SaveQuery
             Assert.AreEqual("Invalid input: Query Name already exist! Please select different one!", RenameQueryResponse.Message);
         }
 
-        [TestMethod]
-        public void RenameQueryWithSpecialCharacters()
-        {
-            Function function = new Function();
-            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-            {
-                UserId = 6,
-                QueryName = "&*^%!$#;:<,,,,?@~`_+=-",
-                QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
-            };
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
+        //[TestMethod]
+        //public void RenameQueryWithSpecialCharacters()
+        //{
+        //    Function function = new Function();
+        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+        //    {
+        //        UserId = 6,
+        //        QueryName = "&*^%!$#;:<,,,,?@~`_+=-",
+        //        QueryId = "905736be-d8f2-4418-b8c8-c25b57211e4a"
+        //    };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
 
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(employeeRequest),
-                PathParameters = pathValues
-            };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(employeeRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
-            ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
-            Assert.AreEqual(200, queryResponse.StatusCode);
-            Assert.AreEqual("Query name has been updated successfully!", RenameQueryResponse.Message);
-        }
+        //    APIGatewayProxyResponse queryResponse = function.RenameQuery(aPIGatewayProxyRequest, null);
+        //    ErrorResponse RenameQueryResponse = JsonConvert.DeserializeObject<ErrorResponse>(queryResponse.Body);
+        //    Assert.AreEqual(200, queryResponse.StatusCode);
+        //    Assert.AreEqual("Query name has been updated successfully!", RenameQueryResponse.Message);
+        //}
     }
 }

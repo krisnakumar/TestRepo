@@ -411,40 +411,40 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
 
         // Test for try-catch block
 
-        [TestMethod]
-        public void RequestWithoutColumnList()
-        {
-            List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
+        //[TestMethod]
+        //public void RequestWithoutColumnList()
+        //{
+        //    List<EmployeeModel> tasksList = new List<EmployeeModel>();
+        //    Function function = new Function();
 
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                Fields = tasksList
-            };
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.TASK_ID,
-                Value = "90",
-                Operator = "="
-            };
-            tasksList.Add(task1);
+        //    QueryBuilderRequest taskRequest = new QueryBuilderRequest
+        //    {
+        //        Fields = tasksList
+        //    };
+        //    EmployeeModel task1 = new EmployeeModel
+        //    {
+        //        Name = Constants.TASK_ID,
+        //        Value = "90",
+        //        Operator = "="
+        //    };
+        //    tasksList.Add(task1);
 
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(taskRequest),
-                PathParameters = pathValues
-            };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(taskRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
-            ErrorResponse tasksResponse = JsonConvert.DeserializeObject<ErrorResponse>(taskResponse.Body);
-            Assert.AreEqual(500, taskResponse.StatusCode);
-            Assert.IsTrue(tasksResponse.Code == 33);
-            StringAssert.Matches(tasksResponse.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
-        }
+        //    APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
+        //    ErrorResponse tasksResponse = JsonConvert.DeserializeObject<ErrorResponse>(taskResponse.Body);
+        //    Assert.AreEqual(500, taskResponse.StatusCode);
+        //    Assert.IsTrue(tasksResponse.Code == 33);
+        //    StringAssert.Matches(tasksResponse.Message, new Regex(@"(?i)\b(.*?)error(.*?)\b"));
+        //}
 
         // For OQ Dashboard / Conditional test - OQ
 
@@ -489,47 +489,47 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             Assert.IsTrue(tasksResponse[0].TotalEmployees >= 0);
         }
 
-        [TestMethod]
-        public void GetEmployeesQualificationsDetails()
-        {
-            List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
+        //[TestMethod]
+        //public void GetEmployeesQualificationsDetails()
+        //{
+        //    List<EmployeeModel> tasksList = new List<EmployeeModel>();
+        //    Function function = new Function();
 
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                ColumnList = new string[] { Constants.USERID, Constants.ROLE, Constants.COMPANY_ID, Constants.EMPLOYEE_NAME, Constants.TOTAL_EMPLOYEES, Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION },
-                Fields = tasksList
-            };
-            var suervisor_company_id = "6";
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.SUPERVISOR_ID,
-                Value = suervisor_company_id,
-                Operator = "=",
-                Bitwise = ""
-            };
-            tasksList.Add(task1);
+        //    QueryBuilderRequest taskRequest = new QueryBuilderRequest
+        //    {
+        //        ColumnList = new string[] { Constants.USERID, Constants.ROLE, Constants.COMPANY_ID, Constants.EMPLOYEE_NAME, Constants.TOTAL_EMPLOYEES, Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION },
+        //        Fields = tasksList
+        //    };
+        //    var suervisor_company_id = "6";
+        //    EmployeeModel task1 = new EmployeeModel
+        //    {
+        //        Name = Constants.SUPERVISOR_ID,
+        //        Value = suervisor_company_id,
+        //        Operator = "=",
+        //        Bitwise = ""
+        //    };
+        //    tasksList.Add(task1);
 
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", suervisor_company_id }
-            };
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(taskRequest),
-                PathParameters = pathValues
-            };
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", suervisor_company_id }
+        //    };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(taskRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
-            List<TaskResponse> tasksResponse = JsonConvert.DeserializeObject<List<TaskResponse>>(taskResponse.Body);
-            int userIndex = tasksResponse.FindIndex(x => x.UserId.ToString() == suervisor_company_id);
-            Assert.AreEqual(200, taskResponse.StatusCode);
-            Assert.IsTrue(tasksResponse.Count > 0);
-            Assert.AreNotEqual("", tasksResponse[0].Role);
-            Assert.AreNotEqual("", tasksResponse[0].EmployeeName);
-            Assert.IsTrue(userIndex < 0);
-            Assert.IsTrue(tasksResponse[0].TotalEmployees >= 0);
-        }
+        //    APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
+        //    List<TaskResponse> tasksResponse = JsonConvert.DeserializeObject<List<TaskResponse>>(taskResponse.Body);
+        //    int userIndex = tasksResponse.FindIndex(x => x.UserId.ToString() == suervisor_company_id);
+        //    Assert.AreEqual(200, taskResponse.StatusCode);
+        //    Assert.IsTrue(tasksResponse.Count > 0);
+        //    Assert.AreNotEqual("", tasksResponse[0].Role);
+        //    Assert.AreNotEqual("", tasksResponse[0].EmployeeName);
+        //    Assert.IsTrue(userIndex < 0);
+        //    Assert.IsTrue(tasksResponse[0].TotalEmployees >= 0);
+        //}
 
         [TestMethod]
         public void GetAssignedQualificationsForCompany()
@@ -680,43 +680,43 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             Assert.AreNotEqual(null, tasksResponse[0].ExpirationDate);
         }
 
-        [TestMethod]
-        public void Get30DaysInDueQualificationsForCompany()
-        {
-            List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
+        //[TestMethod]
+        //public void Get30DaysInDueQualificationsForCompany()
+        //{
+        //    List<EmployeeModel> tasksList = new List<EmployeeModel>();
+        //    Function function = new Function();
 
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE },
-                Fields = tasksList
-            };
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.IN_DUE,
-                Operator = "=",
-                Value = "30"
-            };
-            tasksList.Add(task1);
-            Dictionary<string, string> pathValues = new Dictionary<string, string>
-            {
-                { "companyId", "6" }
-            };
-            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            {
-                Body = JsonConvert.SerializeObject(taskRequest),
-                PathParameters = pathValues
-            };
+        //    QueryBuilderRequest taskRequest = new QueryBuilderRequest
+        //    {
+        //        ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE },
+        //        Fields = tasksList
+        //    };
+        //    EmployeeModel task1 = new EmployeeModel
+        //    {
+        //        Name = Constants.IN_DUE,
+        //        Operator = "=",
+        //        Value = "30"
+        //    };
+        //    tasksList.Add(task1);
+        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
+        //    {
+        //        { "companyId", "6" }
+        //    };
+        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+        //    {
+        //        Body = JsonConvert.SerializeObject(taskRequest),
+        //        PathParameters = pathValues
+        //    };
 
-            APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
-            List<TaskResponse> tasksResponse = JsonConvert.DeserializeObject<List<TaskResponse>>(taskResponse.Body);
-            Assert.AreEqual(200, taskResponse.StatusCode);
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.IsTrue(tasksResponse[0].TaskId > 0);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskName);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
-            Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
-            Assert.AreNotEqual(null, tasksResponse[0].ExpirationDate);
-        }
+        //    APIGatewayProxyResponse taskResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
+        //    List<TaskResponse> tasksResponse = JsonConvert.DeserializeObject<List<TaskResponse>>(taskResponse.Body);
+        //    Assert.AreEqual(200, taskResponse.StatusCode);
+        //    Assert.AreNotEqual(0, tasksResponse.Count);
+        //    Assert.IsTrue(tasksResponse[0].TaskId > 0);
+        //    Assert.AreNotEqual(null, tasksResponse[0].TaskName);
+        //    Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
+        //    Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
+        //    Assert.AreNotEqual(null, tasksResponse[0].ExpirationDate);
+        //}
     }
 }
