@@ -900,3 +900,24 @@ div#queryResultSet {
   cursor: default;
   display: none !important;
 }
+.section-info-title {
+  padding: 1% 1% 0% 1%;
+}
+.section-info-pageheader {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0a1631;
+  text-align: left;
+}
+.section-info-description {
+  font-size: 13px;
+  margin: 0;
+}
+.has-section-view .react-grid-Container .react-grid-Main{
+  padding: 1%;
+  
+  .react-grid-Grid{
+    border: 1px solid #aaaaaa;
+    border-radius: 5px;
+  }
+}

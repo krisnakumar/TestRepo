@@ -21,6 +21,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import IncompleteCompanies from './IncompleteCompanies';
 
 
 const mockDataLevelOne = [
@@ -43,6 +44,37 @@ const mockDataLevelOne = [
     "Role": "Core Training",
     "IncompleteCompanies": 3,
     "CompletedCompanies": 3
+  }
+];
+
+const mockDataIncompleteCompanies = [
+  {
+    "Company": "Contractor Company 1",
+    "IncompleteUsers": 1,
+    "CompletedUsers": 2,
+    "Total": 3,
+    "PercentageCompleted": 67
+  },
+  {
+    "Company": "Contractor Company 2",
+    "IncompleteUsers": 2,
+    "CompletedUsers": 1,
+    "Total": 3,
+    "PercentageCompleted": 33
+  },
+  {
+    "Company": "Contractor Company 3",
+    "IncompleteUsers": 3,
+    "CompletedUsers": 0,
+    "Total": 3,
+    "PercentageCompleted": 0
+  },
+  {
+    "Company": "Contractor Company 4",
+    "IncompleteUsers": 3,
+    "CompletedUsers": 3,
+    "Total": 6,
+    "PercentageCompleted": 50
   }
 ];
 
@@ -82,7 +114,7 @@ class CTDashboard extends PureComponent {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: (props) => this.roleDetailsFormatter("incompleteCompanies", props),
         cellClass: "text-center"
       },
       {
@@ -91,14 +123,16 @@ class CTDashboard extends PureComponent {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: this.cellFormatter,
+        formatter: (props) => this.roleDetailsFormatter("completedCompanies", props),
         cellClass: "text-center last-column"
       }
     ];
 
     this.state = {
       rows: this.createRows([]),
-      isInitial: false
+      isInitial: false,
+      inCompleteCompanies: {},
+      isIncompleteCompaniesModal: false
     };
 
   }
@@ -114,7 +148,30 @@ class CTDashboard extends PureComponent {
     return (
       <span>{props.value}</span>
     );
+    ;
   }
+
+  /**
+   * @method
+   * @name - roleDetailsFormatter
+   * This method will format the cell column other than CT Data Grid
+   * @param type
+   * @param props
+   * @returns react element
+  */
+  roleDetailsFormatter = (type, props) => {
+    if (props.dependentValues[type] <= 0) {
+      return (
+        <span>{props.value}</span>
+      );
+    } else {
+      return (
+        <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+          {props.value}
+        </span>
+      );
+    }
+  };
 
   /**
    * @method
@@ -147,6 +204,20 @@ class CTDashboard extends PureComponent {
   };
 
   /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
+  updateModalState = (modelName) => {
+    let value = !this.state[modelName];
+    this.setState({
+      [modelName]: value
+    });
+  };
+
+  /**
   * @method
   * @name - getEmployees
   * This method will used to get Employees details
@@ -156,8 +227,7 @@ class CTDashboard extends PureComponent {
   async getRoles(companyId, userId) {
     const { cookies } = this.props;
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
-      "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
+
     };
     let token = cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/workbooks",
@@ -166,6 +236,28 @@ class CTDashboard extends PureComponent {
       isInitial = true,
       rows = this.createRows(mockDataLevelOne);
     this.setState({ rows: rows, isInitial: isInitial });
+  };
+
+  async getInCompleteCompanies(userId) {
+    const { cookies } = this.props;
+    const payLoad = {
+
+    };
+
+    let isIncompleteCompaniesModal = this.state.isIncompleteCompaniesModal,
+      inCompleteCompanies = {};
+    isIncompleteCompaniesModal = true;
+    this.setState({ isIncompleteCompaniesModal, inCompleteCompanies });
+
+    // let token = cookies.get('IdentityToken'),
+    //   companyId = cookies.get('CompanyId'),
+    //   url = "/company/" + companyId + "/workbooks",
+    //   response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+    inCompleteCompanies = mockDataIncompleteCompanies;
+
+    isIncompleteCompaniesModal = true;
+    this.setState({ ...this.state, isIncompleteCompaniesModal, inCompleteCompanies });
   };
 
   /**
@@ -234,6 +326,29 @@ class CTDashboard extends PureComponent {
     this.setState({ rows });
   };
 
+  /**
+  * @method
+  * @name - handleCellClick
+  * This method will trigger the event of API's respective to cell clicked Data Grid
+  * @param type
+  * @param args
+  * @returns none
+  */
+  handleCellClick = (type, args) => {
+    let userId = 0;
+    switch (type) {
+      case "incompleteCompanies":
+        this.getInCompleteCompanies(userId);
+        break;
+      case "completedCompanies":
+        console.log('completedCompanies', args);
+        break;
+      default:
+        break;
+    }
+    this.refs.contractorDashboardDataGrid.deselect();
+  };
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
@@ -241,27 +356,40 @@ class CTDashboard extends PureComponent {
     const { rows } = this.state;
     return (
       <CardBody>
+        <IncompleteCompanies
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isIncompleteCompaniesModal}
+          inCompleteCompanies={this.state.inCompleteCompanies}
+        />
         <div className="card__title">
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard
             </div>
-          <p className="card__description">This is the default level. Shows a list of all shared roles and the overall progress of the entire contractor fleet(all contractor companies)</p>
+          <p className="card__description">This is the default level. Shows a list of all shared roles and the overall progress of the entire contractor fleet(all contractor companies).</p>
         </div>
         <div className="grid-container">
-          <div className="table is-table-page-view">
-            <ReactDataGrid
-              ref={'reactDataGrid'}
-              onGridSort={this.handleGridSort}
-              enableCellSelect={false}
-              enableCellAutoFocus={false}
-              columns={this.heads}
-              rowGetter={this.rowGetter}
-              rowsCount={rows.length}
-              onGridRowsUpdated={this.handleGridRowsUpdated}
-              rowHeight={35}
-              minColumnWidth={100}
-              emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
-            />
+          <div className="section-info-view">
+            <div className="section-info-title">
+              <div className="section-info-pageheader">Progress by Role</div>
+              <p className="section-info-description">Complete =  Number of contractor companies that have users in a role, who have completed all the training tasks in the role complete.</p>
+            </div>
+            <div className="table has-section-view is-table-page-view">
+              <ReactDataGrid
+                ref={'contractorDashboardDataGrid'}
+                className={"contractor-training-dashboard"}
+                onGridSort={this.handleGridSort}
+                enableCellSelect={false}
+                enableCellAutoFocus={false}
+                columns={this.heads}
+                rowGetter={this.rowGetter}
+                rowsCount={rows.length}
+                onGridRowsUpdated={this.handleGridRowsUpdated}
+                rowHeight={35}
+                minColumnWidth={100}
+                emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
+              />
+            </div>
           </div>
         </div>
       </CardBody>
