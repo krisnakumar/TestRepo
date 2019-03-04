@@ -5,6 +5,7 @@ import WorkbookDashboard from '../workbook_dashboard/index';
 import Login from '../account/log_in/index';
 import QueryBuilder from '../query_builder/index';
 import OQDashboard from '../oq_contractor_dashboard/index';
+import CTDashboard from '../contractor_training_dashboard/index';
 
 /**
  * @method
@@ -31,6 +32,7 @@ const Router = () => (
         <Route exact path="/EmployeeReports" component={WorkbookDashboard} />
         <Route exact path="/QueryBuilder" component={QueryBuilder} />
         <Route exact path="/OQDashboard" component={OQDashboard} />
+        <Route exact path="/CTDashboard" component={CTDashboard} />
       </Switch>
     </main>
   </MainWrapper>
