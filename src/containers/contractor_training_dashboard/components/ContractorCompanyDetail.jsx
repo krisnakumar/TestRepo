@@ -19,23 +19,23 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
-import * as API from '../../../shared/utils/APIUtils';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
+import * as API from '../../../shared/utils/APIUtils';
 
 /**
- * CompanyDetailEmptyRowsView Class defines the React component to render
+ * ContractorCompanyDetailEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react data grid module.
  */
-class CompanyDetailEmptyRowsView extends React.Component{
+class ContractorCompanyDetailEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
 };
 
-class CompanyDetail extends React.Component {
+class ContractorCompanyDetail extends React.Component {
 
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
@@ -133,6 +133,7 @@ class CompanyDetail extends React.Component {
           length = companyTasks ? companyTasks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
+        companyId: companyTasks[i].CompanyId || 0,
         company:  companyTasks[i].CompanyName || "",
         incompleteUsers: companyTasks[i].InCompletedCompanyQualification || 0, 
         completedUsers: companyTasks[i].CompletedCompanyQualification || 0,
@@ -334,7 +335,7 @@ class CompanyDetail extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && CompanyDetailEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && ContractorCompanyDetailEmptyRowsView} 
                   />
               </div>
             </div>
@@ -345,4 +346,4 @@ class CompanyDetail extends React.Component {
   }
 }
 
-export default withCookies(CompanyDetail);
+export default withCookies(ContractorCompanyDetail);

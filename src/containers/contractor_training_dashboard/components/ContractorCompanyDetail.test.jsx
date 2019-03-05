@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CompanyDetail from './CompanyDetail';
+import ContractorCompanyDetail from './ContractorCompanyDetail';
 
 /**
  * This Class defines the jest to test
- * the CompanyDetail components
+ * the ContractorCompanyDetail components
  * extending ReactDOM module.
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<CompanyDetail />, div);
+  ReactDOM.render(<ContractorCompanyDetail />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

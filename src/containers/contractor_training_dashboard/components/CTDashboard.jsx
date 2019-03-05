@@ -21,7 +21,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
-import CompanyDetail from './CompanyDetail';
+import ContractorCompanyDetail from './ContractorCompanyDetail';
 
 
 const mockDataLevelOne = [
@@ -252,8 +252,8 @@ class CTDashboard extends PureComponent {
     const { cookies } = this.props;
     let companyId = cookies.get('CompanyId');
     const postData = {
-      "Fields": [{ "Name": "ROLE_ID", "Value": userId, "Operator": "=" },{ "Name": "COMPANY_ID", "Value": companyId, "Operator": "=" }],
-      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME']
+      "Fields": [{ "Name": "ROLE_ID", "Value": userId, "Operator": "=" }],
+      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID']
     }
 
     let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
@@ -369,7 +369,7 @@ class CTDashboard extends PureComponent {
     const { rows } = this.state;
     return (
       <CardBody>
-        <CompanyDetail
+        <ContractorCompanyDetail
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isCompanyDetailsModal}
