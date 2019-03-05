@@ -1,8 +1,8 @@
 /* eslint-disable */
 /*
-* IncompleteCompanies.jsx
+* CompanyDetail.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render Incomplete Companies task details 
+* This javascript file will used render Companies task details 
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -25,17 +25,17 @@ import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
 
 /**
- * IncompleteCompaniesEmptyRowsView Class defines the React component to render
+ * CompanyDetailEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react data grid module.
  */
-class IncompleteCompaniesEmptyRowsView extends React.Component{
+class CompanyDetailEmptyRowsView extends React.Component{
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
 };
 
-class IncompleteCompanies extends React.Component {
+class CompanyDetail extends React.Component {
 
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
@@ -98,8 +98,9 @@ class IncompleteCompanies extends React.Component {
 
     this.state = {
       modal: this.props.modal,      
-      rows: this.createRows(this.props.inCompleteCompanies || {}),
+      rows: this.createRows(this.props.companyDetails || {}),
       isInitial: false,
+      title: this.props.title || ""
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -132,11 +133,11 @@ class IncompleteCompanies extends React.Component {
           length = companyTasks ? companyTasks.length : 0;
     for (let i = 0; i < length; i++) { 
       rows.push({
-        company:  companyTasks[i].Company || "",
-        incompleteUsers: companyTasks[i].IncompleteUsers || 0, 
-        completedUsers: companyTasks[i].CompletedUsers || 0,
-        total: companyTasks[i].Total || 0,
-        percentageCompleted: companyTasks[i].PercentageCompleted + "%" || "0%"
+        company:  companyTasks[i].CompanyName || "",
+        incompleteUsers: companyTasks[i].InCompletedCompanyQualification || 0, 
+        completedUsers: companyTasks[i].CompletedCompanyQualification || 0,
+        total: companyTasks[i].TotalCompanyQualification || 0,
+        percentageCompleted: ((companyTasks[i].CompletedCompanyQualification / companyTasks[i].TotalCompanyQualification  * 100) + "%") || "0%"
       });      
     }
 
@@ -152,13 +153,14 @@ class IncompleteCompanies extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.inCompleteCompanies),
-          isArray = Array.isArray(newProps.inCompleteCompanies),
+      let rows = this.createRows(newProps.companyDetails),
+          isArray = Array.isArray(newProps.companyDetails),
           isInitial = isArray;
       this.setState({
         modal: newProps.modal,
         rows: rows,
-        isInitial: isInitial
+        isInitial: isInitial,
+        title: newProps.title || ""
       });
   }
 
@@ -187,7 +189,7 @@ class IncompleteCompanies extends React.Component {
     this.setState({
       modal: !this.state.modal
     });
-    this.props.updateState("isIncompleteCompaniesModal");
+    this.props.updateState("isCompanyDetailsModal");
   }
 
   /**
@@ -260,8 +262,10 @@ class IncompleteCompanies extends React.Component {
     switch(type) {
       case "percentageCompleted":
       case "completedTasks":
+          console.log(type, args);
           break;
       default:
+          console.log(type, args);
           break;
     }
     this.refs.incompleteCompaniesReactDataGrid.deselect();
@@ -306,12 +310,13 @@ class IncompleteCompanies extends React.Component {
   rowGetter = i => this.state.rows[i];
 
   render() {
-    const { rows } = this.state;
+    const { rows, title } = this.state;
+    let titleText = title || "";
     return (
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader className="text-left" toggle={this.toggle}>
-            Bundle 3 - Incomplete
+            {titleText}
             <p className="section-info-description">Complete Users = Shows number of users who have completed all tasks in the role, over the total users in the role</p>
             <p className="section-info-description">% Complete = Shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
           </ModalHeader>
@@ -329,7 +334,7 @@ class IncompleteCompanies extends React.Component {
                       onGridRowsUpdated={this.handleGridRowsUpdated}
                       rowHeight={35}
                       minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && IncompleteCompaniesEmptyRowsView} 
+                      emptyRowsView={this.state.isInitial && CompanyDetailEmptyRowsView} 
                   />
               </div>
             </div>
@@ -340,4 +345,4 @@ class IncompleteCompanies extends React.Component {
   }
 }
 
-export default withCookies(IncompleteCompanies);
+export default withCookies(CompanyDetail);

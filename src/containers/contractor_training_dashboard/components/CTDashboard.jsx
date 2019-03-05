@@ -21,7 +21,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
-import IncompleteCompanies from './IncompleteCompanies';
+import CompanyDetail from './CompanyDetail';
 
 
 const mockDataLevelOne = [
@@ -131,8 +131,10 @@ class CTDashboard extends PureComponent {
     this.state = {
       rows: this.createRows([]),
       isInitial: false,
-      inCompleteCompanies: {},
-      isIncompleteCompaniesModal: false
+      selectedRole: "",
+      companyDetails: {},
+      isCompanyDetailsModal: false
+
     };
 
   }
@@ -197,10 +199,7 @@ class CTDashboard extends PureComponent {
    * @returns none
   */
   componentDidMount() {
-    const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId'),
-      userId = cookies.get('UserId');
-    this.getRoles(companyId, userId);
+    this.getRoles();
   };
 
   /**
@@ -213,7 +212,8 @@ class CTDashboard extends PureComponent {
   updateModalState = (modelName) => {
     let value = !this.state[modelName];
     this.setState({
-      [modelName]: value
+      [modelName]: value,
+      selectedRole: ""
     });
   };
 
@@ -221,43 +221,55 @@ class CTDashboard extends PureComponent {
   * @method
   * @name - getEmployees
   * This method will used to get Employees details
-  * @param userId
+  * @param none
   * @returns none
   */
-  async getRoles(companyId, userId) {
+  async getRoles() {
     const { cookies } = this.props;
     const postData = {
+      "Fields": [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }],
+      "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE']
+    }
 
-    };
     let token = cookies.get('IdentityToken'),
-      url = "/company/" + companyId + "/workbooks",
-      // response = await API.ProcessAPI(url, postData, token, false, "POST", true),
-      // rows = this.createRows(response),
-      isInitial = true,
-      rows = this.createRows(mockDataLevelOne);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true),
+      rows = this.createRows(response),
+      isInitial = true;
+
     this.setState({ rows: rows, isInitial: isInitial });
   };
 
-  async getInCompleteCompanies(userId) {
+  /**
+ * @method
+ * @name - getInCompleteCompanies
+ * This method will used to get InComplete Companies details
+ * @param userId
+ * @returns none
+ */
+  async getCompanyDetails(role, userId) {
     const { cookies } = this.props;
-    const payLoad = {
+    let companyId = cookies.get('CompanyId');
+    const postData = {
+      "Fields": [{ "Name": "ROLE_ID", "Value": userId, "Operator": "=" },{ "Name": "COMPANY_ID", "Value": companyId, "Operator": "=" }],
+      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME']
+    }
 
-    };
+    let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
+        companyDetails = {},
+        selectedRole = role;
+      isCompanyDetailsModal = true;
+    this.setState({ isCompanyDetailsModal, companyDetails, selectedRole });
 
-    let isIncompleteCompaniesModal = this.state.isIncompleteCompaniesModal,
-      inCompleteCompanies = {};
-    isIncompleteCompaniesModal = true;
-    this.setState({ isIncompleteCompaniesModal, inCompleteCompanies });
+    let token = cookies.get('IdentityToken'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
-    // let token = cookies.get('IdentityToken'),
-    //   companyId = cookies.get('CompanyId'),
-    //   url = "/company/" + companyId + "/workbooks",
-    //   response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+    companyDetails = response;
 
-    inCompleteCompanies = mockDataIncompleteCompanies;
-
-    isIncompleteCompaniesModal = true;
-    this.setState({ ...this.state, isIncompleteCompaniesModal, inCompleteCompanies });
+    isCompanyDetailsModal = true;
+    this.setState({ ...this.state, isCompanyDetailsModal, companyDetails });
   };
 
   /**
@@ -273,9 +285,10 @@ class CTDashboard extends PureComponent {
       length = roleDetails ? roleDetails.length : 0;
     for (let i = 0; i < length; i++) {
       rows.push({
+        roleId: parseInt(roleDetails[i].RoleId || 0),
         role: roleDetails[i].Role || "",
-        incompleteCompanies: parseInt(roleDetails[i].IncompleteCompanies),
-        completedCompanies: parseInt(roleDetails[i].CompletedCompanies)
+        incompleteCompanies: parseInt(roleDetails[i].InCompletedRoleQualification || 0),
+        completedCompanies: parseInt(roleDetails[i].CompletedRoleQualification || 0)
       });
     }
 
@@ -335,13 +348,13 @@ class CTDashboard extends PureComponent {
   * @returns none
   */
   handleCellClick = (type, args) => {
-    let userId = 0;
+    let userId = args.roleId || 0,
+        role = args.role || "",
+        title = (type == "incompleteCompanies" ? role + " - Incomplete" : role + " - sCompleted");
     switch (type) {
       case "incompleteCompanies":
-        this.getInCompleteCompanies(userId);
-        break;
       case "completedCompanies":
-        console.log('completedCompanies', args);
+        this.getCompanyDetails(title, userId);
         break;
       default:
         break;
@@ -356,11 +369,12 @@ class CTDashboard extends PureComponent {
     const { rows } = this.state;
     return (
       <CardBody>
-        <IncompleteCompanies
+        <CompanyDetail
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
-          modal={this.state.isIncompleteCompaniesModal}
-          inCompleteCompanies={this.state.inCompleteCompanies}
+          modal={this.state.isCompanyDetailsModal}
+          companyDetails={this.state.companyDetails}
+          title={this.state.selectedRole}
         />
         <div className="card__title">
           <div className="pageheader">
