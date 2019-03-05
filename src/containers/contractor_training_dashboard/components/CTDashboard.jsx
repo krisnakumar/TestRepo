@@ -102,7 +102,6 @@ class CTDashboard extends PureComponent {
         key: 'role',
         name: 'Role',
         sortable: true,
-        width: 200,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -112,19 +111,21 @@ class CTDashboard extends PureComponent {
         key: 'incompleteCompanies',
         name: 'Incomplete Companies',
         sortable: true,
+        width: 400,
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("incompleteCompanies", props),
-        cellClass: "text-center"
+        cellClass: "text-right"
       },
       {
         key: 'completedCompanies',
         name: 'Completed Companies',
         sortable: true,
+        width: 400,
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("completedCompanies", props),
-        cellClass: "text-center last-column"
+        cellClass: "text-right last-column padding-rt-2p"
       }
     ];
 

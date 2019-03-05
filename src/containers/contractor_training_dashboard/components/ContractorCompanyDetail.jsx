@@ -62,7 +62,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("incompleteUsers", props),
-        cellClass: "text-center"
+        cellClass: "text-right"
       },
       {
         key: 'completedUsers',
@@ -71,7 +71,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("completedUsers", props),
-        cellClass: "text-center"
+        cellClass: "text-right"
       },
       {
         key: 'total',
@@ -80,7 +80,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("total", props),
-        cellClass: "text-center"
+        cellClass: "text-right"
       },
       {
         key: 'percentageCompleted',
