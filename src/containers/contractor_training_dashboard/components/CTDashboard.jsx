@@ -249,11 +249,11 @@ class CTDashboard extends PureComponent {
  * @param userId
  * @returns none
  */
-  async getCompanyDetails(role, userId) {
+  async getCompanyDetails(role, roleId) {
     const { cookies } = this.props;
     let companyId = cookies.get('CompanyId');
     const postData = {
-      "Fields": [{ "Name": "ROLE_ID", "Value": userId, "Operator": "=" }],
+      "Fields": [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }],
       "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID']
     }
 
@@ -349,13 +349,13 @@ class CTDashboard extends PureComponent {
   * @returns none
   */
   handleCellClick = (type, args) => {
-    let userId = args.roleId || 0,
+    let roleId = args.roleId || 0,
         role = args.role || "",
-        title = (type == "incompleteCompanies" ? role + " - Incomplete" : role + " - sCompleted");
+        title = (type == "incompleteCompanies" ? role + " - Incomplete" : role + " - Completed");
     switch (type) {
       case "incompleteCompanies":
       case "completedCompanies":
-        this.getCompanyDetails(title, userId);
+        this.getCompanyDetails(title, roleId);
         break;
       default:
         break;
