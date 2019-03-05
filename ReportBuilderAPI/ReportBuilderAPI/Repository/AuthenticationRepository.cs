@@ -8,6 +8,7 @@ using ReportBuilderAPI.DatabaseManager;
 using ReportBuilderAPI.Handlers.RequestHandler;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
+using ReportBuilderAPI.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -29,7 +30,7 @@ namespace ReportBuilderAPI.Repository
     /// <summary>
     ///     Class that authenticates the user(s), login the user(s) into the app and handle the session(s)
     /// </summary>
-    public class AuthenticationRepository
+    public class AuthenticationRepository : IAuthentication
     {
         /// <summary>
         ///     Login API to create session in cognito for valid user(s)
@@ -42,8 +43,11 @@ namespace ReportBuilderAPI.Repository
             UserResponse userResponse;
             try
             {
+                //Read username and password from gatewayrequest
                 UserRequest userRequest = RequestReader.GetRequestBody(request);
+                //Generate Access token for valid user 
                 Amazon.Extensions.CognitoAuthentication.AuthFlowResponse authResponse = sessionGenerator.GenerateAccessToken(userRequest);
+                //Generate response depends upon the authResponse
                 if (authResponse != null && authResponse.AuthenticationResult == null)
                 {
                     string message = sessionGenerator.CheckChallenge(authResponse.ChallengeName);
@@ -67,9 +71,9 @@ namespace ReportBuilderAPI.Repository
                     return ResponseBuilder.BadRequest("Username and Password");
                 }
             }
-            catch (Exception exception)
+            catch (Exception loginException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(loginException.ToString());
                 return ResponseBuilder.InternalError();
             }
         }
@@ -85,6 +89,7 @@ namespace ReportBuilderAPI.Repository
             int userId = 0;
             try
             {
+                //Get userId based on the username
                 userId = databaseWrapper.ExecuteScalar(Employee.GetUserId(userName));
                 return userId;
             }
@@ -103,12 +108,13 @@ namespace ReportBuilderAPI.Repository
         /// Get user name of the  logged in user.
         /// </summary>
         /// <param name="userName"></param>
-        public string GetUserName(string email)
+        private string GetUserName(string email)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             string userName = string.Empty;
             try
             {
+                //Read employee name using user email
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM [User] WHERE Email='" + email + "'", new Dictionary<string, string>());
                 if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
                 {
@@ -139,6 +145,7 @@ namespace ReportBuilderAPI.Repository
             int companyId = 0;
             try
             {
+                //Read companyId from the db
                 companyId = databaseWrapper.ExecuteScalar(Employee.GetCompanyId(userName));
                 return companyId;
             }
@@ -166,6 +173,7 @@ namespace ReportBuilderAPI.Repository
             UserResponse userResponse;
             try
             {
+                //Generate Id token from the refresh token
                 Amazon.Extensions.CognitoAuthentication.AuthFlowResponse authResponse = sessionGenerator.ProcessRefreshToken(RequestReader.GetRequestBody(request));
                 if (authResponse != null && authResponse.AuthenticationResult == null)
                 {
@@ -192,6 +200,5 @@ namespace ReportBuilderAPI.Repository
                 return ResponseBuilder.InternalError();
             }
         }
-
     }
 }

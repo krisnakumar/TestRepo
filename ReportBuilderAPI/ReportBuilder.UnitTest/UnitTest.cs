@@ -317,7 +317,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"e\",\"Operator\":\"contains\",\"Name\":\"TASK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_NAME\",\"TASK_ID\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"DATE_EXPIRED\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"ROLE_ID\",\"Value\":14,\"Operator\":\"=\"}],\"ColumnList\":[\"NOT_COMPLETED_COMPANY_USERS\",\"COMPLETED_COMPANY_USERS\",\"TOTAL_COMPLETED_COMPANY_USERS\",\"COMPANY_NAME\",\"COMPANY_ID\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }

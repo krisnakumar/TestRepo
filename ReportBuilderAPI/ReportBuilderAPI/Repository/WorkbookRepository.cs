@@ -33,6 +33,7 @@ namespace ReportBuilderAPI.Repository
     /// </summary>
     public class WorkbookRepository : IWorkbook
     {
+        #region deprecated 
         /// <summary>
         ///      Get assigned workbook(s) details for a user [ReportBuilder]
         /// </summary>
@@ -230,7 +231,7 @@ namespace ReportBuilderAPI.Repository
                 databaseWrapper.CloseConnection();
             }
         }
-
+        #endregion
 
         /// <summary>
         ///     Dictionary having Column list for the workbook(s) details.
@@ -359,6 +360,7 @@ namespace ReportBuilderAPI.Repository
             List<string> fieldList = new List<string>();
             try
             {
+                //Select statement for the Query
                 selectQuery = "SELECT  DISTINCT ";
 
                 //getting column List
@@ -367,6 +369,8 @@ namespace ReportBuilderAPI.Repository
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
+
+                //Append the workbook tables with select statement
                 query += "  FROM Workbook wb FULL OUTER JOIN UserWorkBook uwb ON uwb.workbookId=wb.Id  FULL OUTER JOIN  UserCompany uc ON uc.UserId=uwb.UserId";
 
                 //get table joins
@@ -382,7 +386,8 @@ namespace ReportBuilderAPI.Repository
 
                 //Read the supervisorId based on the request
                 supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault());
-            
+
+                //handles the Supervisor Id depends upon the Request
                 if (queryRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
                 {
                     queryRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_SUB : x.Name).ToList();
@@ -395,7 +400,7 @@ namespace ReportBuilderAPI.Repository
                     }
                 }
 
-
+                //handles the Supervisor Id depends upon the Request
                 if (queryRequest.Fields.Where(x => x.Name == Constants.SUPERVISOR_ID).ToList().Count > 0 && queryRequest.Fields.Where(x => x.Name == Constants.USERID).ToList().Count > 0)
                 {
                     ReportBuilder.Models.Models.EmployeeModel userDetails = queryRequest.Fields.Where(x => x.Name == Constants.USERID).FirstOrDefault();
@@ -408,13 +413,16 @@ namespace ReportBuilderAPI.Repository
                 whereQuery = string.Join("", from employee in queryRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + employeeRepository.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
-
+                //Add the where condition for the company
                 companyQuery = (" WHERE  uc.CompanyId=" + companyId);
 
+                
                 if (queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))
                 {
                     whereQuery += "AND uwb.isEnabled=1";
                 }
+
+                //Create the final query 
                 query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
                 return query;
             }
@@ -440,13 +448,15 @@ namespace ReportBuilderAPI.Repository
             {
 
                 QueryBuilderRequest queryRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                
+                //Read the Sqlparameters from the request
                 supervisorId = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault());
                 dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
 
                 query = CreateWorkbookQuery(queryRequest, companyId);
                 //Read the SQL Parameters value
             
-
+                //Set default due days as 30
                 if (string.IsNullOrEmpty(dueDays))
                 {
                     dueDays = "30";
@@ -456,7 +466,8 @@ namespace ReportBuilderAPI.Repository
                 parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(companyId) }, { "duedays", Convert.ToString(dueDays) } };
 
                 workbookDetails = ReadWorkBookDetails(query, parameterList);
-
+                
+                //Send the response depends upon the workboook details
                 if (workbookDetails != null)
                 {
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(workbookDetails), 0);
@@ -484,11 +495,13 @@ namespace ReportBuilderAPI.Repository
             List<WorkbookResponse> workbookList = new List<WorkbookResponse>();
             try
             {
+                //Read the data from the database
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, parameters);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {
                     while (sqlDataReader.Read())
                     {
+                        //Get the workbook details from the database
                         WorkbookResponse workbookResponse = new WorkbookResponse
                         {
                             EmployeeName = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,

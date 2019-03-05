@@ -2,6 +2,7 @@
 using Amazon.CognitoIdentityProvider;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.Lambda.Core;
+using Amazon.Runtime;
 using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Resource;
 using ReportBuilderAPI.Utilities;
@@ -63,8 +64,8 @@ namespace ReportBuilderAPI.Helpers
             AuthFlowResponse authResponse;
             try
             {
-                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);
-                CognitoUserPool userPool = new CognitoUserPool(Constants.COGNITO_USERPOOLID, Constants.COGNITO_USERPOOL_CLIENTID, provider);
+                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
+                CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", Constants.COGNITO_USERPOOL_CLIENTID, provider);
                 CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider) {SessionTokens= new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
                 InitiateRefreshTokenAuthRequest authRequest = new InitiateRefreshTokenAuthRequest()
                 {

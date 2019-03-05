@@ -35,6 +35,7 @@ namespace ReportBuilderAPI.Repository
     public class EmployeeRepository : IEmployee
     {
 
+        #region deprecated
         /// <summary>
         ///     Get list of employee(s) who currently working under the specific user [ReportBuilder]
         /// </summary>
@@ -122,6 +123,8 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+        #endregion
+
         /// <summary>
         ///     Dictionary having Column list for the employee details.
         ///     Based on column name, query is being formed/updated
@@ -137,17 +140,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
                 { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[User] usr LEFT JOIN Supervisor s on s.SupervisorId=usr.Id WHERE s.userId=u.Id) as supervisorName" },
-                { Constants.USER_CREATED_DATE, ", u.DateCreated" },
-                //{ Constants.USER_PERMS, ", u.UserPerms" },
-                //{ Constants.SETTINGS_PERMS, ", u.settingsperms" },
-                //{ Constants.COURSE_PERMS, ", u.courseperms" },
-                //{ Constants.TRANSCRIPT_PERMS, ", u.Transcriptperms" },
-                //{ Constants.COMPANY_PERMS, ", u.companyperms" },
-                //{ Constants.FORUM_PERMS, ", u.forumperms" },
-                //{ Constants.COM_PERMS, ", u.comperms" },
-                //{ Constants.REPORTS_PERMS, ", u.reportsperms" },
-                //{ Constants.ANNOUNCEMENT_PERMS, ", u.announcementperms" },
-                //{ Constants.SYSTEM_PERMS, ",u.systemperms" },
+                { Constants.USER_CREATED_DATE, ", u.DateCreated" },                
                 { Constants.USERID, ", u. Id as userId" },
                 { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM Supervisor s WHERE userId=u.Id) as supervisorId" }
 
@@ -169,7 +162,6 @@ namespace ReportBuilderAPI.Repository
             {Constants.EMAIL, "u.Email" },
             {Constants.CITY, "u.City" },
             {Constants.STATE, "u.State" },
-
             {Constants.ZIP, "u.Zip" },
             {Constants.ROLE, "r.Name " },
             {Constants.PHONE, "u.phone" },
@@ -184,7 +176,6 @@ namespace ReportBuilderAPI.Repository
             {Constants.ME_AND_ALL_SUBORDINATES, " u.Id in (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
             {Constants.DIRECT_SUBORDINATES, "u.Id in(SELECT userId FROM supervisor WHERE supervisorId=@currentuserId)  " },
             {Constants.ALL_SUBORDINATES, " u.Id in (SELECT * FROM getchildUsers(@currentuserId))  " },
-
             {Constants.NOT_ME, "u.Id not in (@currentuserId)" },
             {Constants.NOT_ME_AND_DIRECT_SUBORDINATES, "u.Id not in (select @currentuserId Union select userId from supervisor where supervisorId=@currentuserId) " },
             {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.Id not in (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
@@ -211,11 +202,13 @@ namespace ReportBuilderAPI.Repository
         /// <returns>string</returns>
         public string CreateEmployeeQuery(QueryBuilderRequest employeeRequest, int companyId)
         {
+            //Parameters that used to read the data
             string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, currentUserId = string.Empty;
             List<string> fieldList = new List<string>();
 
             try
             {
+                //Select statement for the query
                 selectQuery = "SELECT  ";
 
 
@@ -225,6 +218,8 @@ namespace ReportBuilderAPI.Repository
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
+
+                //Append the user query with select statement
                 query += " FROM dbo.[User] u  LEFT JOIN UserCompany uc on uc.UserId=u.Id ";
 
                 //get table joins
@@ -234,6 +229,8 @@ namespace ReportBuilderAPI.Repository
                                             where fieldList.Any(x => joins.Value.Any(y => y == x))
                                             select joins.Key);
                 query += tableJoin;
+
+                //Handles the smart parameter for the userName
                 currentUserId = employeeRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CURRENT_USER).Select(x => x.Value).FirstOrDefault();
 
                 if (employeeRequest.Fields.Where(x => x.Name == Constants.USERNAME).ToList().Count > 0 && employeeRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).ToList().Count > 0)
@@ -250,9 +247,10 @@ namespace ReportBuilderAPI.Repository
                 whereQuery = string.Join("", from employee in employeeRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
                         CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name) + CheckValues(employee.Value, employee.Operator)) : string.Empty));
-
+                //Append the company query
                 whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + companyId + " and  (" + whereQuery) : string.Empty;
                 whereQuery = whereQuery.Replace("@currentuserId", currentUserId);
+                //Create the final query that helps to retrieve the data
                 query += whereQuery + " )";
                 return query;
             }
@@ -278,13 +276,18 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 QueryBuilderRequest employeeRequest = JsonConvert.DeserializeObject<QueryBuilderRequest>(requestBody);
+                //Read sql parameters from the DB
                 userId = employeeRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
-
+                
+                //Create the query based on the input fields
                 query = CreateEmployeeQuery(employeeRequest, companyId);
 
+                //SQL Parameter list
                 parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(userId) }, { "companyId", Convert.ToString(companyId) } };
-
+                //Read the response from the DB
                 employeeResponse = ReadEmployeeDetails(query, parameterList);
+
+                //Create response based on the employee response
                 if (employeeResponse != null)
                 {
                     return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(employeeResponse), 0);
@@ -305,7 +308,9 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
-
+        /// <summary>
+        /// List of fields that need to skip the value
+        /// </summary>
         private readonly List<string> workbookFieldList = new List<string>
         {
             Constants.ASSIGNED,
@@ -329,7 +334,9 @@ namespace ReportBuilderAPI.Repository
             Constants.NOT_DIRECT_SUBORDINATES
         };
 
-
+        /// <summary>
+        /// Smart parameters for the Username
+        /// </summary>
         private readonly List<string> UsernameSmartParameters = new List<string>
         {
             Constants.ME,
@@ -338,16 +345,20 @@ namespace ReportBuilderAPI.Repository
             Constants.ALL_SUBORDINATES,
             Constants.DIRECT_SUBORDINATES
         };
+
         /// <summary>
-        /// form he query based on the operator Name
+        /// form the query based on the operator Name
         /// </summary>
         /// <param name="operatorName"></param>
-        /// <returns></returns>
+        /// <param name="value"></param>
+        /// <param name="field"></param>
+        /// <returns>string</returns>
         public string CheckOperator(string operatorName, string value, string field)
         {
             string queryString = string.Empty;
             try
             {
+                //Handles the like and between operator 
                 if (!workbookFieldList.Contains(field.ToUpper()) && value.ToUpper() != Constants.YES && value.ToUpper() != Constants.NO)
                 {
                     switch (operatorName.ToUpper())
@@ -393,7 +404,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// 
+        /// Handles Yes and No values for some fields
         /// </summary>
         /// <param name="value"></param>
         /// <param name=""></param>
@@ -438,6 +449,7 @@ namespace ReportBuilderAPI.Repository
             List<EmployeeResponse> employeeList = new List<EmployeeResponse>();
             try
             {
+                //Read the employee details from the DB
                 SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, parameters);
                 if (sqlDataReader != null && sqlDataReader.HasRows)
                 {

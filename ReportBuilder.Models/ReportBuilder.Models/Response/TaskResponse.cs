@@ -133,5 +133,32 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? TotalEmployees { get; set; }
 
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompletedRoleQualification { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InCompletedRoleQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? RoleId { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompletedCompanyQualification { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InCompletedCompanyQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TotalCompanyQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Company { get; set; }
+
+  
     }
 }

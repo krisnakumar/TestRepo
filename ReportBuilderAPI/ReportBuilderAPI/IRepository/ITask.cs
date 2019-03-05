@@ -1,4 +1,7 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
+using System.Collections.Generic;
 
 
 /*
@@ -21,5 +24,14 @@ namespace ReportBuilderAPI.IRepository
         APIGatewayProxyResponse GetTaskDetails(int userId, int workbookId);
 
         APIGatewayProxyResponse GetTaskAttemptsDetails(int userId, int workbookId, int taskId);
+
+        string CreateTaskQuery(QueryBuilderRequest queryRequest, int companyId);
+
+        APIGatewayProxyResponse GetQueryTaskDetails(string requestBody, int companyId);
+
+
+        Dictionary<string, string> Getparameters(QueryBuilderRequest queryRequest, int companyId);
+
+        List<TaskResponse> ReadTaskDetails(string query, Dictionary<string, string> parameters);
     }
 }

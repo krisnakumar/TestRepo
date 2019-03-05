@@ -187,7 +187,13 @@ namespace ReportBuilderAPI.Utilities
 
         public const string COMPLETED_ROLE_QUALIFICATION = "COMPLETED_ROLE_QUALIFICATION";
 
+        public const string COMPLETED_COMPANY_USERS = "COMPLETED_COMPANY_USERS";
+        public const string NOT_COMPLETED_COMPANY_USERS = "NOT_COMPLETED_COMPANY_USERS";
+        public const string TOTAL_COMPLETED_COMPANY_USERS = "TOTAL_COMPLETED_COMPANY_USERS";
+
         public const string IS_SHARED = "IS_SHARED";
+
+        public const string ROLE_ID = "ROLE_ID";
 
         public const string NOT_COMPLETED_ROLE_QUALIFICATION = "NOT_COMPLETED_ROLE_QUALIFICATION";
 

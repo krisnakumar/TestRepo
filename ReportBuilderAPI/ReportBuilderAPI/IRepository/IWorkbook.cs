@@ -1,4 +1,7 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
+using System.Collections.Generic;
 
 
 /*
@@ -18,6 +21,8 @@ namespace ReportBuilderAPI.IRepository
     /// </summary>
     public interface IWorkbook
     {
-        APIGatewayProxyResponse GetWorkbookDetails(int userId);
+        APIGatewayProxyResponse GetWorkbookDetails(string requestBody, int userId);
+        string CreateWorkbookQuery(QueryBuilderRequest queryRequest, int companyId);
+        List<WorkbookResponse> ReadWorkBookDetails(string query, Dictionary<string, string> parameters);
     }
 }
