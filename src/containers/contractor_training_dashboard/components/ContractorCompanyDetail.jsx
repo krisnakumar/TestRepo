@@ -181,7 +181,7 @@ class ContractorCompanyDetail extends React.Component {
     const { cookies } = this.props;
     const postData = {
       "Fields": [ ],
-      "ColumnList": ['EMPLOYEE_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
+      "ColumnList": ['USER_ID', 'COMPANY_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
     };
 
     let isUserDetailsModal = this.state.isUserDetailsModal,

@@ -137,7 +137,8 @@ class CompanyUserDetail extends React.Component {
       length = companyTasks ? companyTasks.length : 0;
     for (let i = 0; i < length; i++) {
       rows.push({
-        employeeId: companyTasks[i].EmployeeId || 0,
+        userId: companyTasks[i].UserId || 0,
+        companyId: companyTasks[i].CompanyId || 0,
         employee: companyTasks[i].EmployeeName || "",
         incomplete: companyTasks[i].IncompleteQualification || 0,
         completed: companyTasks[i].CompletedQualification || 0,
@@ -263,16 +264,16 @@ class CompanyUserDetail extends React.Component {
   * @param companyId
   * @returns none
   */
-  async getUserTaskDetails(employee, companyId) {
+  async getUserTaskDetails(employeeName, companyId, userId) {
     const { cookies } = this.props;
     const postData = {
-      "Fields": [],
-      "ColumnList": ['EMPLOYEE_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
+      "Fields": [{"Name":"USER_ID","Value":userId,"Operator":"="}],
+      "ColumnList": ['TASK_NAME', 'TASK_CODE', 'STATUS']
     };
 
     let isTaskDetailsModal = this.state.isTaskDetailsModal,
       taskDetails = {},
-      selectedEmployee = employee;
+      selectedEmployee = employeeName;
     isTaskDetailsModal = true;
 
     this.setState({ isTaskDetailsModal, taskDetails, selectedEmployee });
@@ -296,10 +297,15 @@ class CompanyUserDetail extends React.Component {
    * @returns none
    */
   handleCellClick = (type, args) => {
+    let userId = args.userId || 0,
+        companyId = args.companyId || 0,
+        employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee;
     switch (type) {
+      case "incomplete":
+      case "completed":
+      case "total":
       case "percentageCompleted":
-      case "completedTasks":
-        console.log(type, args);
+        this.getUserTaskDetails(employeeName, companyId, userId);
         break;
       default:
         console.log(type, args);
