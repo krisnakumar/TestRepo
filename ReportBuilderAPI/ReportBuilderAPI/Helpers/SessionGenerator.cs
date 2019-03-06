@@ -38,7 +38,7 @@ namespace ReportBuilderAPI.Helpers
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);
                 CognitoUserPool userPool = new CognitoUserPool(Constants.COGNITO_USERPOOLID, Constants.COGNITO_USERPOOL_CLIENTID, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider);
+                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider);                
                 InitiateSrpAuthRequest authRequest = new InitiateSrpAuthRequest()
                 {
                     Password = userRequest.Password
@@ -66,12 +66,14 @@ namespace ReportBuilderAPI.Helpers
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
                 CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", Constants.COGNITO_USERPOOL_CLIENTID, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider) {SessionTokens= new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
+                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider) { SessionTokens = new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
+
+
                 InitiateRefreshTokenAuthRequest authRequest = new InitiateRefreshTokenAuthRequest()
                 {
-                    AuthFlowType=AuthFlowType.REFRESH_TOKEN                    
+                    AuthFlowType = AuthFlowType.REFRESH_TOKEN
                 };
-                authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;                
+                authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;
                 return authResponse;
             }
             catch (Exception sessionGeneratorException)
@@ -93,9 +95,14 @@ namespace ReportBuilderAPI.Helpers
             try
             {
                 if (challengeNameType == ChallengeNameType.NEW_PASSWORD_REQUIRED)
+                {
                     message = DataResource.ACCOUNT_NOT_HAVING_PERMISSION;
+                }
                 else
+                {
                     message = DataResource.INVALID_CREDENTILAS;
+                }
+
                 return message;
             }
             catch (Exception checkChallengeException)

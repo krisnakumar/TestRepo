@@ -322,6 +322,8 @@ namespace ReportBuilderAPI.Repository
             Constants.SUPERVISOR_ID,
             Constants.IN_DUE,
             Constants.IN_COMPLETE,
+            Constants.IN_COMPLETE_COMPANY_QUALIFICATION,
+            Constants.COMPLETED_COMPANY_QUALIFICATION,
             Constants.ME,
             Constants.ME_AND_ALL_SUBORDINATES,
             Constants.ME_AND_DIRECT_SUBORDINATES,

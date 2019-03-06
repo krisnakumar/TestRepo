@@ -21,7 +21,7 @@ namespace ReportBuilder.UnitTest
             Function function = new Function();
             UserRequest userRequest = new UserRequest
             {
-                UserName = "shoba.eswar@in.sysvine.com",
+                UserName = "devtester@its-training.com",
                 Password = "Demo@2017"
             };
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
@@ -317,7 +317,7 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Name\":\"ROLE_ID\",\"Value\":14,\"Operator\":\"=\"}],\"ColumnList\":[\"NOT_COMPLETED_COMPANY_USERS\",\"COMPLETED_COMPANY_USERS\",\"TOTAL_COMPLETED_COMPANY_USERS\",\"COMPANY_NAME\",\"COMPANY_ID\"]}";
+            aPIGatewayProxyRequest.Body = "{\"Fields\":[],\"ColumnList\":[\"USER_ID\",\"EMPLOYEE_NAME\",\"ASSIGNED_COMPANY_QUALIFICATION\",\"COMPLETED_COMPANY_QUALIFICATION\",\"IN_COMPLETE_COMPANY_QUALIFICATION\"]}";
             APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
             Assert.AreEqual(200, userResponse.StatusCode);
         }

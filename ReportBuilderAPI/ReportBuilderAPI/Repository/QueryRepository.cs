@@ -7,7 +7,6 @@ using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.IRepository;
-using ReportBuilderAPI.Queries;
 using ReportBuilderAPI.Resource;
 using ReportBuilderAPI.Utilities;
 using System;

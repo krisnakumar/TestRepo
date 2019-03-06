@@ -250,12 +250,12 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
-       /// <summary>
-       /// Get the list of sql parameters
-       /// </summary>
-       /// <param name="queryRequest"></param>
-       /// <param name="companyId"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// Get the list of sql parameters
+        /// </summary>
+        /// <param name="queryRequest"></param>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
         public Dictionary<string, string> Getparameters(QueryBuilderRequest queryRequest, int companyId)
         {
             //Parameters which used to create query
@@ -319,7 +319,7 @@ namespace ReportBuilderAPI.Repository
                             CompletedTasksCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (int?)sqlDataReader["CompletedTasks"] : null,
                             TotalTasks = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)sqlDataReader["TotalTasks"] : null,
                             IncompletedTasksCount = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (int?)sqlDataReader["InCompleteTask"] : null,
-                            UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
+                            UserId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : null,
                             WorkbookId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'workbookId'").Count() == 1) ? (int?)sqlDataReader["workbookId"] : null,
                             NumberofAttempts = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
                             LastAttemptDate = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
@@ -358,7 +358,7 @@ namespace ReportBuilderAPI.Repository
 
                             CompletedRoleQualification = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["CompletedRoleQualification"] : null,
                             InCompletedRoleQualification = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'NotCompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["NotCompletedRoleQualification"] : null,
-                            RoleId =  (sqlDataReader.GetSchemaTable().Select("ColumnName = 'roleId'").Count() == 1) ? (int?)sqlDataReader["roleId"] : null,
+                            RoleId = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'roleId'").Count() == 1) ? (int?)sqlDataReader["roleId"] : null,
 
 
                             CompletedCompanyQualification = (sqlDataReader.GetSchemaTable().Select("ColumnName = 'CompletedCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["CompletedCompanyUsers"] : null,
@@ -510,6 +510,12 @@ namespace ReportBuilderAPI.Repository
             {Constants.PAST_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate < GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),ca.ExpirationDate)) <=@duedays AND ca.FirstAccessed IS NULL " },
             {Constants.IN_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate > GETDATE() AND   ABS(DATEDIFF(DAY,GETDATE(),ca.ExpirationDate)) <=@duedays  AND ca.FirstAccessed IS NULL " },
             {Constants.IN_COMPLETE, "  Knowledge_Cert_Status IN (3, 2,0,4, 255) " },
+
+            {Constants.NOT_COMPLETED_ROLE_QUALIFICATION, "  ca.UserId in(	 SELECT USERID FROM CourseAssignment ts WHERE companyId IN (Select ClientCompany from      companyClient WHERE ownerCompany=6) and TaskversionId    NOT IN(SELECT TaskversionId FROM TranscriptSkillsDN t WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5    and CompanyId IN (Select ClientCompany from companyClient WHERE ownerCompany=6))) " },
+
+            {Constants.COMPLETED_ROLE_QUALIFICATION, "  ca.UserId in(	SELECT ts.UserId FROM CourseAssignment ts WHERE companyId IN (Select ClientCompany from companyClient WHERE ownerCompany=6)    GROUP by ts.UserId, TaskversionId HAVING Count(TaskversionId)= (SELECT COUNT(TaskversionId) FROM TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1    AND Knowledge_Status_Code = 5 and CompanyId   IN (Select ClientCompany from companyClient WHERE ownerCompany=6))) " },
+
+
             {Constants.SUPERVISOR_USER, " u.Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
             { Constants.IS_SHARED, " r.IsShared"},
             { Constants.ROLE_ID, " r.Id"}
