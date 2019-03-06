@@ -23,13 +23,14 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
 import * as API from '../../../shared/utils/APIUtils';
+import UserTaskDetail from './UserTaskDetail';
 
 /**
  * CompanyUserDetailEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react data grid module.
  */
-class CompanyUserDetailEmptyRowsView extends React.Component{
+class CompanyUserDetailEmptyRowsView extends React.Component {
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
@@ -97,10 +98,13 @@ class CompanyUserDetail extends React.Component {
     this.employees = [];
 
     this.state = {
-      modal: this.props.modal,      
+      modal: this.props.modal,
       rows: this.createRows(this.props.userDetails || {}),
       isInitial: false,
-      title: this.props.title || ""
+      title: this.props.title || "",
+      isTaskDetailsModal: false,
+      taskDetails: {},
+      selectedEmployee: ""
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -120,27 +124,26 @@ class CompanyUserDetail extends React.Component {
     console.log(error, info);
   }
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param companyTasks
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param companyTasks
+  * @returns rows
+  */
   createRows = (companyTasks) => {
-      debugger
-    const rows = [], 
-          length = companyTasks ? companyTasks.length : 0;
-    for (let i = 0; i < length; i++) { 
+    const rows = [],
+      length = companyTasks ? companyTasks.length : 0;
+    for (let i = 0; i < length; i++) {
       rows.push({
         employeeId: companyTasks[i].EmployeeId || 0,
-        employee:  companyTasks[i].EmployeeName || "",
-        incomplete: companyTasks[i].IncompleteQualification || 0, 
+        employee: companyTasks[i].EmployeeName || "",
+        incomplete: companyTasks[i].IncompleteQualification || 0,
         completed: companyTasks[i].CompletedQualification || 0,
         total: companyTasks[i].AssignedQualification || 0,
-        percentageCompleted: parseInt(((companyTasks[i].CompletedQualification / companyTasks[i].AssignedQualification  * 100))) + "%" || "0%"
-      });      
+        percentageCompleted: parseInt(((companyTasks[i].CompletedQualification / companyTasks[i].AssignedQualification * 100))) + "%" || "0%"
+      });
     }
 
     return rows;
@@ -155,15 +158,15 @@ class CompanyUserDetail extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.userDetails),
-          isArray = Array.isArray(newProps.userDetails),
-          isInitial = isArray;
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        isInitial: isInitial,
-        title: newProps.title || ""
-      });
+    let rows = this.createRows(newProps.userDetails),
+      isArray = Array.isArray(newProps.userDetails),
+      isInitial = isArray;
+    this.setState({
+      modal: newProps.modal,
+      rows: rows,
+      isInitial: isInitial,
+      title: newProps.title || ""
+    });
   }
 
   /**
@@ -233,7 +236,7 @@ class CompanyUserDetail extends React.Component {
       }
     };
 
-    const percentageComparer = (a, b) => { 
+    const percentageComparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
@@ -242,14 +245,46 @@ class CompanyUserDetail extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
 
     let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
-    if(isPercentage)
+    if (isPercentage)
       rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
 
     this.setState({ rows });
+  };
+
+  /**
+  * @method
+  * @name - getUserTaskDetails
+  * This method will used to get Companies User details
+  * @param company
+  * @param companyId
+  * @returns none
+  */
+  async getUserTaskDetails(employee, companyId) {
+    const { cookies } = this.props;
+    const postData = {
+      "Fields": [],
+      "ColumnList": ['EMPLOYEE_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
+    };
+
+    let isTaskDetailsModal = this.state.isTaskDetailsModal,
+      taskDetails = {},
+      selectedEmployee = employee;
+    isTaskDetailsModal = true;
+
+    this.setState({ isTaskDetailsModal, taskDetails, selectedEmployee });
+
+    let token = cookies.get('IdentityToken'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true);
+
+    taskDetails = response;
+
+    isTaskDetailsModal = true;
+    this.setState({ ...this.state, isTaskDetailsModal, taskDetails, selectedEmployee });
   };
 
   /**
@@ -261,25 +296,25 @@ class CompanyUserDetail extends React.Component {
    * @returns none
    */
   handleCellClick = (type, args) => {
-    switch(type) {
+    switch (type) {
       case "percentageCompleted":
       case "completedTasks":
-          console.log(type, args);
-          break;
+        console.log(type, args);
+        break;
       default:
-          console.log(type, args);
-          break;
+        console.log(type, args);
+        break;
     }
     this.refs.companyUserDetailReactDataGrid.deselect();
   };
 
-   /**
-   * @method
-   * @name - cellFormatter
-   * This method will format the cell column other than workbooks Data Grid
-   * @param props
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - cellFormatter
+  * This method will format the cell column other than workbooks Data Grid
+  * @param props
+  * @returns none
+  */
   cellFormatter = (props) => {
     return (
       <span>{props.value}</span>
@@ -295,19 +330,19 @@ class CompanyUserDetail extends React.Component {
    * @returns none
    */
   cellClickFormatter = (type, props) => {
-    if(props.dependentValues[type] <= 0){
+    if (props.dependentValues[type] <= 0) {
       return (
         <span>{props.value}</span>
       );
     } else {
       return (
-       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
-        {props.value}
-      </span>
+        <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+          {props.value}
+        </span>
       );
     }
   };
-  
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
@@ -316,26 +351,33 @@ class CompanyUserDetail extends React.Component {
     let titleText = title || "";
     return (
       <div>
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <UserTaskDetail
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isTaskDetailsModal}
+          taskDetails={this.state.taskDetails}
+          title={this.state.selectedEmployee}
+        />
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader className="text-left" toggle={this.toggle}>
             {titleText}
           </ModalHeader>
           <ModalBody>
-          <div className="grid-container">
+            <div className="grid-container">
               <div className="table">
-                  <ReactDataGrid
-                      ref={'companyUserDetailReactDataGrid'}
-                      onGridSort={this.handleGridSort}
-                      enableCellSelect={false}
-                      enableCellAutoFocus={false}
-                      columns={this.heads}
-                      rowGetter={this.rowGetter}
-                      rowsCount={rows.length}
-                      onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={35}
-                      minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView} 
-                  />
+                <ReactDataGrid
+                  ref={'companyUserDetailReactDataGrid'}
+                  onGridSort={this.handleGridSort}
+                  enableCellSelect={false}
+                  enableCellAutoFocus={false}
+                  columns={this.heads}
+                  rowGetter={this.rowGetter}
+                  rowsCount={rows.length}
+                  onGridRowsUpdated={this.handleGridRowsUpdated}
+                  rowHeight={35}
+                  minColumnWidth={100}
+                  emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView}
+                />
               </div>
             </div>
           </ModalBody>

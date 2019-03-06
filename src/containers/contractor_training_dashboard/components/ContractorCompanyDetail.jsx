@@ -173,14 +173,15 @@ class ContractorCompanyDetail extends React.Component {
   * @method
   * @name - getUserDetails
   * This method will used to get Companies User details
-  * @param userId
+  * @param company
+  * @param companyId
   * @returns none
   */
   async getUserDetails(company, companyId) {
     const { cookies } = this.props;
     const postData = {
       "Fields": [ ],
-      "ColumnList": ['EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
+      "ColumnList": ['EMPLOYEE_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
     };
 
     let isUserDetailsModal = this.state.isUserDetailsModal,
@@ -218,7 +219,7 @@ class ContractorCompanyDetail extends React.Component {
    * @method
    * @name - toggle
    * This method will update the current of modal window
-   * @param workbooks
+   * @param none
    * @returns none
    */
   toggle() {
@@ -302,6 +303,8 @@ class ContractorCompanyDetail extends React.Component {
     switch (type) {
       case "incompleteUsers":
       case "completedUsers":
+      case "total":
+      case "percentageCompleted":
         this.getUserDetails(companyType, companyId);
         break;
       default:
