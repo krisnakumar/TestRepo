@@ -79,6 +79,11 @@
                 "isRedirect":false
             },
             {
+                "name": "Contractor Training Dashboard",
+                "href": "/CTDashboard",
+                "isRedirect":false
+            },
+            {
                 "name": "Query Builder",
                 "href": "/QueryBuilder",
                 "isRedirect":false

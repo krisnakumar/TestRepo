@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react';
 import { Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import NotificationsIcon from 'mdi-react/NotificationsIcon';
 
 const notifications = [
   {

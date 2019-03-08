@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Topbar from './topbar/Topbar';
 import TopbarWithNavigation from './topbar_with_navigation/TopbarWithNavigation';
-import { CustomizerProps, SidebarProps, ThemeProps } from '../../shared/prop-types/ReducerProps';
+import { ThemeProps } from '../../shared/prop-types/ReducerProps';
 
 /**
  * Layout Class defines the React component to render
@@ -14,8 +14,6 @@ import { CustomizerProps, SidebarProps, ThemeProps } from '../../shared/prop-typ
 class Layout extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    sidebar: SidebarProps.isRequired,
-    customizer: CustomizerProps.isRequired,
     theme: ThemeProps.isRequired,
   };
 
@@ -33,7 +31,5 @@ class Layout extends Component {
 }
 
 export default withRouter(connect(state => ({
-  customizer: state.customizer,
-  sidebar: state.sidebar,
   theme: state.theme,
 }))(Layout));
