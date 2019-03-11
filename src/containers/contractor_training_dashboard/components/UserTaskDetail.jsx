@@ -21,8 +21,6 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import * as Constants from '../../../shared/constants';
-import * as API from '../../../shared/utils/APIUtils';
 
 /**
  * UserTaskDetailEmptyRowsView Class defines the React component to render
@@ -52,7 +50,7 @@ class UserTaskDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-right"
+        cellClass: "text-left"
       },
       {
         key: 'taskName',
@@ -71,7 +69,7 @@ class UserTaskDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-left"
+        cellClass: "text-left last-column"
       }
     ];
 
@@ -252,6 +250,8 @@ class UserTaskDetail extends React.Component {
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader className="text-left" toggle={this.toggle}>
             {titleText}
+            <p className="section-info-description">This level will display the contractors training tasks and their respective status</p>
+            <p className="section-info-description"> </p>
           </ModalHeader>
           <ModalBody>
           <div className="grid-container">

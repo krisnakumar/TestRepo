@@ -264,10 +264,21 @@ class CompanyUserDetail extends React.Component {
   * @param companyId
   * @returns none
   */
-  async getUserTaskDetails(employeeName, companyId, userId) {
+  async getUserTaskDetails(employeeName, companyId, userId, isCompleted) {
     const { cookies } = this.props;
+    let fields = [{"Name":"USER_ID","Value":userId,"Operator":"="}];
+
+    if (isCompleted) {
+      fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
+    } else {
+      fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
+    }
+    if(isCompleted == null){
+      fields = [{"Name":"USER_ID","Value":userId,"Operator":"="}];
+    }
+    
     const postData = {
-      "Fields": [{"Name":"USER_ID","Value":userId,"Operator":"="}],
+      "Fields": fields,
       "ColumnList": ['TASK_NAME', 'TASK_CODE', 'STATUS']
     };
 
@@ -299,13 +310,16 @@ class CompanyUserDetail extends React.Component {
   handleCellClick = (type, args) => {
     let userId = args.userId || 0,
         companyId = args.companyId || 0,
-        employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee;
+        employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee,
+        isCompleted = type == "completed";
     switch (type) {
       case "incomplete":
       case "completed":
+        this.getUserTaskDetails(employeeName, companyId, userId, isCompleted);
+        break;
       case "total":
       case "percentageCompleted":
-        this.getUserTaskDetails(employeeName, companyId, userId);
+        this.getUserTaskDetails(employeeName, companyId, userId, null);
         break;
       default:
         console.log(type, args);
@@ -367,6 +381,8 @@ class CompanyUserDetail extends React.Component {
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader className="text-left" toggle={this.toggle}>
             {titleText}
+            <p className="section-info-description">This level will display the contractor's training progress required by the role</p>
+            <p className="section-info-description"> </p>
           </ModalHeader>
           <ModalBody>
             <div className="grid-container">

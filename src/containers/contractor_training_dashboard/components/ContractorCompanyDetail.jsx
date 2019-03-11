@@ -177,10 +177,20 @@ class ContractorCompanyDetail extends React.Component {
   * @param companyId
   * @returns none
   */
-  async getUserDetails(company, companyId) {
+  async getUserDetails(company, companyId, isCompleted) {
     const { cookies } = this.props;
+    let fields = [];
+
+    if (isCompleted) {
+      fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=" });
+    } else {
+      fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=" });
+    }
+    if(isCompleted == null){
+      fields = [];
+    }
     const postData = {
-      "Fields": [ ],
+      "Fields": fields,
       "ColumnList": ['USER_ID', 'COMPANY_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
     };
 
@@ -298,17 +308,20 @@ class ContractorCompanyDetail extends React.Component {
   handleCellClick = (type, args) => {
     const { title } = this.state;
     let companyId = args.companyId || 0,
-        company = args.company || "",
-        companyType = title ? title.split('-')[0] + "- " + company : company;
+      company = args.company || "",
+      companyType = title ? title.split('-')[0] + "- " + company : company,
+      isCompleted = type == "completedUsers";
     switch (type) {
       case "incompleteUsers":
       case "completedUsers":
+        this.getUserDetails(companyType, companyId, isCompleted);
+        break;
       case "total":
       case "percentageCompleted":
-        this.getUserDetails(companyType, companyId);
+        this.getUserDetails(companyType, companyId, null);
         break;
       default:
-        console.log(companyType, companyId);
+        console.log(companyType, companyId, isCompleted);
         break;
     }
     this.refs.incompleteCompaniesReactDataGrid.deselect();
@@ -367,8 +380,8 @@ class ContractorCompanyDetail extends React.Component {
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader className="text-left" toggle={this.toggle}>
             {titleText}
-            <p className="section-info-description">Complete Users = Shows number of users who have completed all tasks in the role, over the total users in the role</p>
-            <p className="section-info-description">% Complete = Shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
+            <p className="section-info-description">Completed Users shows number of users who have completed all tasks in the role, over the total users in the role</p>
+            <p className="section-info-description">% Complete shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
           </ModalHeader>
           <ModalBody>
             <div className="grid-container">
