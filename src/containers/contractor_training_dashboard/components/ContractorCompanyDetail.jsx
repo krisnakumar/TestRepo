@@ -21,7 +21,6 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import * as Constants from '../../../shared/constants';
 import * as API from '../../../shared/utils/APIUtils';
 import CompanyUserDetail from './CompanyUserDetail';
 

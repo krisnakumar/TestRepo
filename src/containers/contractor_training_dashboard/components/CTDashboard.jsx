@@ -13,70 +13,14 @@ handleGridRowsUpdated(fromRow, toRow, updated)
 handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
-import { CardBody } from 'reactstrap';
+import { Collapse, Button, CardBody, Card, Row, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
-import * as Constants from '../../../shared/constants';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
-
-
-const mockDataLevelOne = [
-  {
-    "Role": "Bundle 1",
-    "IncompleteCompanies": 1,
-    "CompletedCompanies": 2
-  },
-  {
-    "Role": "Bundle 2",
-    "IncompleteCompanies": 0,
-    "CompletedCompanies": 1
-  },
-  {
-    "Role": "Bundle 3",
-    "IncompleteCompanies": 4,
-    "CompletedCompanies": 0
-  },
-  {
-    "Role": "Core Training",
-    "IncompleteCompanies": 3,
-    "CompletedCompanies": 3
-  }
-];
-
-const mockDataIncompleteCompanies = [
-  {
-    "Company": "Contractor Company 1",
-    "IncompleteUsers": 1,
-    "CompletedUsers": 2,
-    "Total": 3,
-    "PercentageCompleted": 67
-  },
-  {
-    "Company": "Contractor Company 2",
-    "IncompleteUsers": 2,
-    "CompletedUsers": 1,
-    "Total": 3,
-    "PercentageCompleted": 33
-  },
-  {
-    "Company": "Contractor Company 3",
-    "IncompleteUsers": 3,
-    "CompletedUsers": 0,
-    "Total": 3,
-    "PercentageCompleted": 0
-  },
-  {
-    "Company": "Contractor Company 4",
-    "IncompleteUsers": 3,
-    "CompletedUsers": 3,
-    "Total": 6,
-    "PercentageCompleted": 50
-  }
-];
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -88,7 +32,6 @@ class DataTableEmptyRowsView extends React.Component {
     return (<div className="no-records-found">Sorry, no records</div>)
   }
 };
-
 class CTDashboard extends PureComponent {
 
   static propTypes = {
@@ -134,9 +77,11 @@ class CTDashboard extends PureComponent {
       isInitial: false,
       selectedRole: "",
       companyDetails: {},
-      isCompanyDetailsModal: false
-
+      isCompanyDetailsModal: false,
+      collapse: false,
+      collapseText: "More Options"
     };
+    this.toggle = this.toggle.bind(this);
 
   }
 
@@ -252,12 +197,12 @@ class CTDashboard extends PureComponent {
   async getCompanyDetails(role, roleId, isCompleted) {
     const { cookies } = this.props;
     let companyId = cookies.get('CompanyId'),
-        fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }];
+      fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }];
 
-    if(isCompleted){
+    if (isCompleted) {
       fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
     } else {
-      fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and"});
+      fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
 
     const postData = {
@@ -266,9 +211,9 @@ class CTDashboard extends PureComponent {
     };
 
     let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
-        companyDetails = {},
-        selectedRole = role;
-      isCompanyDetailsModal = true;
+      companyDetails = {},
+      selectedRole = role;
+    isCompanyDetailsModal = true;
     this.setState({ isCompanyDetailsModal, companyDetails, selectedRole });
 
     let token = cookies.get('IdentityToken'),
@@ -358,9 +303,9 @@ class CTDashboard extends PureComponent {
   */
   handleCellClick = (type, args) => {
     let roleId = args.roleId || 0,
-        role = args.role || "",
-        title = (type == "incompleteCompanies" ? role + " - Incomplete" : role + " - Completed"),
-        isCompleted = type == "completedCompanies";
+      role = args.role || "",
+      title = (type == "incompleteCompanies" ? role + " - Incomplete" : role + " - Completed"),
+      isCompleted = type == "completedCompanies";
     switch (type) {
       case "incompleteCompanies":
       case "completedCompanies":
@@ -375,8 +320,14 @@ class CTDashboard extends PureComponent {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+  toggle() {
+    let collapseText = this.state.collapse ? "More Options" : "Less Options" ;
+    this.setState(state => ({ collapse: !state.collapse, collapseText: collapseText }));
+  }
+
   render() {
-    const { rows } = this.state;
+    const { rows, collapseText, collapse } = this.state;
+    let collapseClassName = (collapse ? "show" : "hide");
     return (
       <CardBody>
         <ContractorCompanyDetail
@@ -391,6 +342,16 @@ class CTDashboard extends PureComponent {
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard
             </div>
           <p className="card__description">This is the default level. Shows a list of all shared roles and the overall progress of the entire contractor fleet(all contractor companies).</p>
+        </div>
+        <div className="grid-filter-section">
+          <div className={"grid-filter-collapse "+ collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button> </div> 
+          <Collapse  className="grid-filter-collapse-body" isOpen={collapse}>                
+                  <Row>
+                    <Col xs="2">.col-3</Col>
+                    <Col xs="2">.col-auto - variable width content</Col>
+                    <Col xs="1">.col-3</Col>
+                </Row>
+          </Collapse>
         </div>
         <div className="grid-container">
           <div className="section-info-view">

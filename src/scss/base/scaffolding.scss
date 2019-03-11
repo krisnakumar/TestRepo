@@ -924,3 +924,32 @@ div#queryResultSet {
 .padding-rt-2p{
   padding-right: 2% !important;
 }
+
+.grid-filter-section {
+  background: #e8e9ea;
+  margin: 1% 0 1% 0;
+  border-radius: 10px;
+}
+.btn-as-text{
+  background:none;
+  border:none;
+  font-size: smaller;
+  margin:0 !important;
+  padding:0 !important;
+  cursor: pointer !important;
+  text-decoration: underline;
+}
+.grid-filter-collapse {
+  font-size: initial;
+  font-weight: bold;
+  margin: 1%;
+}
+.grid-filter-collapse.hide {
+  padding: 1% 0% 1% 0%;
+}
+.grid-filter-collapse.show {
+  padding: 1% 0% 0% 0%;
+}
+.grid-filter-collapse-body {
+  margin: 1%;
+}
