@@ -21,6 +21,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
+import FilterModal from './FilterModal';
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -79,9 +80,12 @@ class CTDashboard extends PureComponent {
       companyDetails: {},
       isCompanyDetailsModal: false,
       collapse: false,
-      collapseText: "More Options"
+      collapseText: "More Options",
+      isFilterModal: false,
+      filterModalTitle: "Role"
     };
     this.toggle = this.toggle.bind(this);
+    this.toggleFilter = this.toggleFilter.bind(this);
 
   }
 
@@ -321,8 +325,12 @@ class CTDashboard extends PureComponent {
   rowGetter = i => this.state.rows[i];
 
   toggle() {
-    let collapseText = this.state.collapse ? "More Options" : "Less Options" ;
+    let collapseText = this.state.collapse ? "More Options" : "Less Options";
     this.setState(state => ({ collapse: !state.collapse, collapseText: collapseText }));
+  }
+
+  toggleFilter() {
+    this.setState(state => ({ isFilterModal: true }));
   }
 
   render() {
@@ -337,6 +345,12 @@ class CTDashboard extends PureComponent {
           companyDetails={this.state.companyDetails}
           title={this.state.selectedRole}
         />
+         <FilterModal
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isFilterModal}
+          title={this.state.filterModalTitle}
+        />
         <div className="card__title">
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard
@@ -344,13 +358,23 @@ class CTDashboard extends PureComponent {
           <p className="card__description">This is the default level. Shows a list of all shared roles and the overall progress of the entire contractor fleet(all contractor companies).</p>
         </div>
         <div className="grid-filter-section">
-          <div className={"grid-filter-collapse "+ collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button> </div> 
-          <Collapse  className="grid-filter-collapse-body" isOpen={collapse}>                
-                  <Row>
-                    <Col xs="2">.col-3</Col>
-                    <Col xs="2">.col-auto - variable width content</Col>
-                    <Col xs="1">.col-3</Col>
-                </Row>
+          <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>
+          <Collapse className="grid-filter-collapse-body" isOpen={collapse}>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label>Role:</label></Col>
+              <Col xs="auto"><input value="ALL" disabled className="text-center" /></Col>
+              <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
+            </Row>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label>Company:</label></Col>
+              <Col xs="auto"><input value="ALL" disabled className="text-center" /></Col>
+              <Col xs="1"><button className="btn-as-text" onClick={console.log(this)} >Change</button></Col>
+            </Row>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label></label></Col>
+              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={console.log(this)} >Go</button></Col>
+              <Col xs="1"></Col>
+            </Row>
           </Collapse>
         </div>
         <div className="grid-container">
