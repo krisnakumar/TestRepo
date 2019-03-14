@@ -14,6 +14,15 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input } from 'rea
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
+import Picky from "react-picky";
+import "react-picky/dist/picky.css";
+
+const bigList = [];
+
+for (var i = 1; i <= 100; i++) {
+    bigList.push({ value: i, label: `Item ${i}` });
+}
+
 class FilterModal extends React.Component {
 
     static propTypes = {
@@ -25,9 +34,18 @@ class FilterModal extends React.Component {
 
         this.state = {
             modal: this.props.modal,
-            title: this.props.title || ""
+            title: this.props.title || "",
+            multi: true,
+            multiValue: [],
+            options: bigList,
+            value: null,
+            arrayValue: [],
+            filterSearchValue: ""
         };
         this.toggle = this.toggle.bind(this);
+        this.selectMultipleOption = this.selectMultipleOption.bind(this);
+        this.refreshList = this.refreshList.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     /**
@@ -89,9 +107,43 @@ class FilterModal extends React.Component {
         this.props.updateState("isFilterModal");
     };
 
+    handleOnChange(value) {
+        this.setState({ multiValue: value });
+        console.log("this is new", value);
+    }
+
+    selectMultipleOption(value) {
+        console.count('onChange')
+        console.log("Val", value);
+        this.setState({ arrayValue: value });
+    }
+
+    refreshList() {
+        this.setState({
+            arrayValue: []
+        });
+    };
+
+    /**
+     * @method
+     * @name - handleInputChange
+     * This method will triggered on input change to update the value in state
+     * @param ele
+     * @returns none
+    */
+    handleInputChange(event) {
+        debugger; 
+        event.preventDefault();
+        let name = event.target.name;
+        let value = event.target.value;
+        this.setState({ [name]: value });
+    }
+
     render() {
         const { title } = this.state;
         let titleText = title || "";
+
+        let { multi, multiValue, options, filterSearchValue } = this.state;
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-filter">
@@ -101,11 +153,28 @@ class FilterModal extends React.Component {
                     <ModalBody className="custom-modal-filter-body">
                         <Row className="custom-modal-filter-search">
                             <Col sm={{ size: 1, offset: 3 }}><label>Search</label></Col>
-                            <Col sm={{ size: 4 }}><Input value="" className="" /></Col>
-                            <Col sm={{ size: 2 }}><button className="btn-as-text" onClick={console.log(this)} >Refresh List</button></Col>
+                            <Col sm={{ size: 4 }}><Input value={filterSearchValue} name="filterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
+                            <Col sm={{ size: 2 }}><button className="btn-as-text" onClick={this.refreshList} >Refresh List</button></Col>
                         </Row>
                         <div className="grid-container">
-
+                            <div className="row">
+                                <div className="col">
+                                    <Picky
+                                        className="custom-picky"
+                                        value={this.state.arrayValue}
+                                        options={bigList}
+                                        onChange={this.selectMultipleOption}
+                                        open={true}
+                                        keepOpen={true}
+                                        valueKey="value"
+                                        labelKey="label"
+                                        multiple={true}
+                                        includeSelectAll={false}
+                                        includeFilter={true}
+                                        dropdownHeight={250}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>

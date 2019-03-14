@@ -996,3 +996,11 @@ button.grid-filter-go-btn {
     padding-right: 0;
   }
 }
+.picky__dropdown {
+  position: initial !important;
+}
+.custom-picky{
+  .picky__input{
+    display: none !important;
+  }
+}

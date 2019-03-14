@@ -68,6 +68,7 @@
     "react-images": "^0.5.19",
     "react-input-mask": "^1.2.2",
     "react-modal": "^3.8.1",
+    "react-picky": "^4.1.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",

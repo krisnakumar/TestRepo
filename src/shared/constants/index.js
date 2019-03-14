@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* Constants for API Requests */
 
-export const API_DOMAIN = 'https://ktznj95sy1.execute-api.us-west-2.amazonaws.com/';
+export const API_DOMAIN = 'https://61pin7si6f.execute-api.us-west-2.amazonaws.com/';
 export const API_STAGE_NAME = 'dev';
 
 /* Constants for Validations */
