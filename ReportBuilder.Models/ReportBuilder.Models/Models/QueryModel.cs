@@ -7,10 +7,30 @@ namespace ReportBuilder.Models.Models
     public class QueryModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<TaskResponse> Tasks { get; set; }
+        public List<TaskModel> Tasks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<WorkbookResponse> Workbooks { get; set; }
+        public List<WorkbookModel> Workbooks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<EmployeeResponse> Employee { get; set; }
+        public List<EmployeeQueryModel> Employee { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QueryId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QueryName { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QueryJson { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CreatedDate { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastModified { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QuerySQL { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public QueryModel QueryResult { get; set; }
+
     }
 }

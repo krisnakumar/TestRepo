@@ -1,16 +1,15 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Amazon.Lambda.Core;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
 
 namespace ReportBuilderAPI.IRepository
 {
     /// <summary>
-    /// Interface that handles the Authentication
+    /// Interface that helps to handle the Authentication
     /// </summary>
     public interface IAuthentication
     {
-        APIGatewayProxyResponse Login(APIGatewayProxyRequest request);
-        APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request);
+        UserResponse Login(UserRequest userRequest, ILambdaContext context);
+        UserResponse SilentAuth(UserRequest userRequest);
     }
 }

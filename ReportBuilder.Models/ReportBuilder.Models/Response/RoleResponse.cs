@@ -1,11 +1,16 @@
-﻿using System;
+﻿
+
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace ReportBuilder.Models.Response
 {
     public class RoleResponse
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<RoleModel> Roles { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public ErrorResponse Error { get; set; }
     }
 }

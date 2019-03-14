@@ -79,7 +79,7 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to QueryId.
+        ///   Looks up a localized string similar to Invalid Input!.
         /// </summary>
         internal static string CHECK_INPUT {
             get {

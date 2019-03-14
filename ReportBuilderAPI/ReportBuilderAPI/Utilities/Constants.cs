@@ -1,20 +1,11 @@
 ﻿
-/*
- <copyright file="Constants.cs">
-      Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author>Shoba Eswar</author>
- <date>10-10-2018</date>
- <summary>
-    Class that handles the constants value
- </summary>
-*/
+
 namespace ReportBuilderAPI.Utilities
 {
     /// <summary>
     ///     Class that handles the constants value
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         public const string COGNITO_USERPOOLID = "us-west-2_nrrZaoTAs";
 

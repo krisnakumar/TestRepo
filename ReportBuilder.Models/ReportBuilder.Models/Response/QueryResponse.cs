@@ -1,26 +1,15 @@
 ﻿using Newtonsoft.Json;
 using ReportBuilder.Models.Models;
+using System.Collections.Generic;
 
 namespace ReportBuilder.Models.Response
 {
-    public class QueryResponse
+    public class QueryResponse : SuccessResponse
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string QueryId { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string QueryName { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string QueryJson { get; set; }
+        public List<QueryModel> Queries { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CreatedDate { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LastModified { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CreatedBy { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string QuerySQL { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public QueryModel QueryModel { get; set; }
+        public ErrorResponse Error { get; set; }
     }
 }

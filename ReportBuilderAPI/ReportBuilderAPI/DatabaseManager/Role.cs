@@ -12,7 +12,7 @@
         /// <returns></returns>
         public static string GetRole(int companyId)
         {
-            return "select Name, Id from role WHERE CompanyId=" + companyId + " and IsShared=1";
+            return "SELECT Name, Id FROM dbo.Role WHERE CompanyId=" + companyId + " AND IsShared=1";
         }
     }
 }

@@ -1,17 +1,9 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
-using ReportBuilder.Models.Models;
+﻿using ReportBuilder.Models.Models;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
+using System.Collections.Generic;
 
 
-/*
-  <copyright file = "IEmployee.cs" >
-        Copyright(c) 2018 All Rights Reserved
-  </copyright>
-  <author> Shoba Eswar </author>
-  <date>10-10-2018</date>
-  <summary>
-        Interface for Employees
-  </summary>
- */
 namespace ReportBuilderAPI.IRepository
 {
     /// <summary>
@@ -19,6 +11,10 @@ namespace ReportBuilderAPI.IRepository
     /// </summary>
     public interface IEmployee
     {
-        APIGatewayProxyResponse GetEmployeeList(int userId, QueryStringModel queryStringModel);
+        EmployeeResponse GetEmployeeDetails(QueryBuilderRequest queryBuilderRequest);
+        string CreateEmployeeQuery(QueryBuilderRequest employeeRequest);
+        string CheckValues(string value, string fieldOperator);
+        List<EmployeeQueryModel> ReadEmployeeDetails(string query, Dictionary<string, string> parameters);
     }
 }
+    

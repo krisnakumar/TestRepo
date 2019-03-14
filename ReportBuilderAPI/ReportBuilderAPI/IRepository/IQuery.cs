@@ -1,24 +1,22 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
-using ReportBuilder.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ReportBuilder.Models.Models;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
 
 namespace ReportBuilderAPI.IRepository
 {
     /// <summary>
-    /// Interface that handles the Save queries
+    /// Interface that helps to handle the user queries
     /// </summary>
     public interface IQuery
     {
-        APIGatewayProxyResponse SaveQuery(string requestBody, int companyId);
-        APIGatewayProxyResponse GetUserQueries(string requestBody, int companyId);
+        QueryResponse SaveQuery(QueryBuilderRequest queryBuilderRequest);
+        QueryResponse GetUserQueries(QueryBuilderRequest queryBuilderRequest);
 
-        APIGatewayProxyResponse RenameQuery(string requestBody, int companyId);
+        QueryResponse RenameQuery(QueryBuilderRequest queryBuilderRequest);
 
-        APIGatewayProxyResponse DeleteQuery(string requestBody, int companyId);
+        QueryResponse DeleteQuery(QueryBuilderRequest queryBuilderRequest);
 
-        APIGatewayProxyResponse GetUserQuery(string requestBody, int companyId);
+        QueryResponse GetUserQuery(QueryBuilderRequest queryBuilderRequest);
 
         QueryModel GetResults(int companyId, string query, string queryJson);
     }

@@ -3,163 +3,122 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-/*
- <copyright file="TaskModel.cs">
-    Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author>Shoba Eswar</author>
- <date>22-10-2018</date>
- <summary>
-    Model for task attempt comment 
- </summary>
-*/
-
 namespace ReportBuilder.Models.Models
 {
-    public class TaskModel
+    public class WorkbookModel
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TaskId { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompanyId { get; set; }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? UserId { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? WorkbookId { get; set; }
+        public string EmployeeName { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TaskCode { get; set; }
+        public string Role { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TaskName { get; set; }
+        public string WorkbookName { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Comments { get; set; }
+        public string WorkBookName { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompletedTasksCount { get; set; }
+        public string CompletedTasks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? IncompletedTasksCount { get; set; }
+        public int? PercentageCompleted { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TotalTasks { get; set; }
+        public string DueDate { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompletionPrecentage { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string IP { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Duration { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Score { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EvaluatorName { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string DateTaken { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Status { get; set; }
+        public int? WorkBookId { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CompletionDate { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LastAttemptDate { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+        public int? AssignedWorkBook { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? PastDueWorkBook { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InDueWorkBook { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? InCompleteWorkBook { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TotalWorkbook { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TotalTasks { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompletedWorkbook { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string WorkbookCreated { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string DaysToComplete { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TaskCount { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? UserCount { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string DeletedBy { get; set; }
+        public string UserName { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AlternateName { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ParentTaskName { get; set; }
+        public string Address { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ChildTaskName { get; set; }
+        public string DateCreated { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string FirstName { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string MiddleName { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastName { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string AssignedTo { get; set; }
-
+        public string Email { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string City { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NumberofAttempts { get; set; }
+        public string State { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ExpirationDate { get; set; }
-
-
+        public string Zip { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Phone { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string AssignedDate { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CompanyName { get; set; }
-
+        public string TotalEmployees { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EmployeeName { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Role { get; set; }
-
+        public int? EntityCount { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? AssignedQualification { get; set; }
-
+        public int? NumberCompleted { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastAttemptDate { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string FirstAttemptDate { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Repetitions { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompletedQualification { get; set; }
-
+        public string WorkbookAssignedDate { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string WorkbookRemoved { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastSignoffBy { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? InDueQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? PastDueQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? IncompleteQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TotalEmployees { get; set; }
-
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompletedRoleQualification { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? InCompletedRoleQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? RoleId { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? CompletedCompanyQualification { get; set; }
-
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? InCompletedCompanyQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TotalCompanyQualification { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Company { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-
-        public string Comment { get; set; }
+        public bool? WorkbookEnabled { get; set; }
     }
 }

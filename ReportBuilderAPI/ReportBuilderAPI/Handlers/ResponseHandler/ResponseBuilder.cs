@@ -1,54 +1,34 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
-using Newtonsoft.Json;
+﻿using Amazon.Lambda.Core;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Resource;
 using System;
-using System.Collections.Generic;
-using System.Net;
 
 
-/*
- <copyright file="ResponseBuilder.cs">
-    Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author> Shoba Eswar </author>
- <date>10-10-2018</date>
- <summary>
-    Response Builder that builds the responses
- </summary>
-*/
 namespace ReportBuilderAPI.Handlers.ResponseHandler
 {
     /// <summary>
-    ///     Class responsible for creating common responses for the API gateway
+    ///     Class responsible for creating Error responses for the API gateway
     /// </summary>
     public class ResponseBuilder
     {
         /// <summary>
         ///     Creates response for internal error
         /// </summary>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse InternalError()
+        /// <returns>ErrorResponse</returns>
+        public static ErrorResponse InternalError()
         {
             try
             {
-                ErrorResponse employeeResponse = new ErrorResponse
+                ErrorResponse errorResponse = new ErrorResponse
                 {
                     Code = 33,
                     Message = DataResource.SYSTEM_ERROR
-                };
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.InternalServerError,
-                    Body = JsonConvert.SerializeObject(employeeResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*"  } }
-                };
-                return response;
+                };              
+                return errorResponse;
             }
-            catch (Exception exception)
+            catch (Exception systemErrorException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(systemErrorException.ToString());
                 return null;
             }
         }
@@ -57,8 +37,8 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         ///     Creates response for bad / invalid requests
         /// </summary>
         /// <param name="fieldName"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse BadRequest(string fieldName)
+        /// <returns>ErrorResponse</returns>
+        public static ErrorResponse BadRequest(string fieldName)
         {
             try
             {
@@ -66,18 +46,12 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 {
                     Code = 1,
                     Message = DataResource.INVALID_INPUT +": "+ fieldName
-                };
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.BadRequest,
-                    Body = JsonConvert.SerializeObject(errorResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
-                };
-                return response;
+                };               
+                return errorResponse;
             }
-            catch (Exception exception)
+            catch (Exception badRequestException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(badRequestException.ToString());
                 return null;
             }
         }
@@ -86,8 +60,8 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         /// <summary>
         ///     Creates response for forbidden resources
         /// </summary>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse Forbidden()
+        /// <returns>ErrorResponse</returns>
+        public static ErrorResponse Forbidden()
         {
             try
             {
@@ -95,18 +69,12 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 {
                     Code = 14,
                     Message = DataResource.PERMISSION_DENIED
-                };
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.Forbidden,
-                    Body = JsonConvert.SerializeObject(errorResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
-                };
-                return response;
+                };              
+                return errorResponse;
             }
-            catch (Exception exception)
+            catch (Exception forbiddenException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(forbiddenException.ToString());
                 return null;
             }
         }
@@ -116,30 +84,26 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         ///     Creates response for unauthorized request
         /// </summary>
         /// <param name="message"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse UnAuthorized(string message)
+        /// <returns>ErrorResponse</returns>
+        public static ErrorResponse UnAuthorized(string message)
         {
             try
             {
-                ErrorResponse employeeResponse = new ErrorResponse
+                ErrorResponse errorResponse = new ErrorResponse
                 {
                     Code = 13,
                     Message = message
-                };
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.Forbidden,
-                    Body = JsonConvert.SerializeObject(employeeResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
-                };
-                return response;
+                };              
+                return errorResponse;
             }
-            catch (Exception exception)
+            catch (Exception unAuthException)
             {
-                LambdaLogger.Log(exception.ToString());
+                LambdaLogger.Log(unAuthException.ToString());
                 return null;
             }
         }
+
+      
 
         /// <summary>
         ///     Creates success response
@@ -148,48 +112,15 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         /// <param name="responseBody"></param>
         /// <param name="code"></param>
         /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse GatewayProxyResponse(int statusCode, string responseBody, int code)
+        public static SuccessResponse SuccessMessage(string Messgae)
         {
             try
             {
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = statusCode,
-                    Body = responseBody,
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
-                };
-                return response;
-            }
-            catch (Exception exception)
-            {
-                LambdaLogger.Log(exception.ToString());
-                return null;
-            }
-        }
-
-
-        /// <summary>
-        ///     Creates success response
-        /// </summary>
-        /// <param name="statusCode"></param>
-        /// <param name="responseBody"></param>
-        /// <param name="code"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public static APIGatewayProxyResponse SuccessMessage(string Messgae)
-        {
-            try
-            {
-                ErrorResponse successResponse = new ErrorResponse
+                SuccessResponse successResponse = new SuccessResponse
                 {                    
                     Message = Messgae
                 };
-                var response = new APIGatewayProxyResponse
-                {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Body = JsonConvert.SerializeObject(successResponse),
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" }, { "Access-Control-Allow-Origin", "*" } }
-                };
-                return response;
+                return successResponse;
             }
             catch (Exception exception)
             {

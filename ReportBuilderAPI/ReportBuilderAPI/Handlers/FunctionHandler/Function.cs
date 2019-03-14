@@ -1,26 +1,14 @@
-using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using ReportBuilderAPI.Handlers.RequestHandler;
+using DataInterface.Database;
+using ReportBuilder.Models.Request;
+using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Repository;
 using System;
 
 
-/*
- <copyright file="Function.cs">
-    Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author>Shoba Eswar</author>
- <date>10-10-2018</date>
- <summary>
-    - Repository to handle Lambda operations.
-    - Entry point for APIGateway requests
- </summary>
-*/
-
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
-
 namespace ReportBuilderAPI.Handlers.FunctionHandler
 {
     /// <summary>
@@ -29,368 +17,263 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     public class Function
     {
 
+
+
         /// <summary>
-        ///     Function that takes user credentials as request and responsible for login the user
+        ///  Function that helps to validate the user using user name and password
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse Login(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>UserResponse</returns>
+        public UserResponse Login(UserRequest request, ILambdaContext context = null)
         {
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
+            UserResponse userResponse = new UserResponse();
             try
             {
-                return authenticationRepository.Login(request);
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                LambdaLogger.Log(DatabaseWrapper._connectionString);
+                return authenticationRepository.Login(request, context);
             }
-            catch (Exception exception)
+            catch (Exception loginException)
             {
-                LambdaLogger.Log(exception.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(loginException.ToString());
+                userResponse.Error = ResponseBuilder.InternalError();
+                return userResponse;
             }
         }
-        
         /// <summary>
-        ///     This function generaes new token once previous token is expired
+        ///   This function generates new Identity token using refresh token
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="userRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>UserResponse</returns>
+        public UserResponse SilentAuth(UserRequest userRequest, ILambdaContext context = null)
         {
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
+            UserResponse userResponse = new UserResponse();
             try
             {
-                return authenticationRepository.SilentAuth(request);
+                return authenticationRepository.SilentAuth(userRequest);
             }
-            catch (Exception exception)
+            catch (Exception silentAuthException)
             {
-                LambdaLogger.Log(exception.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(silentAuthException.ToString());
+                userResponse.Error = ResponseBuilder.InternalError();
+                return userResponse;
             }
         }
 
+
+
         /// <summary>
-        ///     [ReportBuilder] Function to get list of employee(s) under a user
+        /// [QueryBuilder] Function to get list of employee(s) filtered with some condition(s)
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="queryBuilderRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetEmployees(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>EmployeeResponse</returns>
+        public EmployeeResponse GetEmployeesQueryBuilder(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
         {
             EmployeeRepository employeeRepository = new EmployeeRepository();
+            EmployeeResponse employeeResponse = new EmployeeResponse();
             try
             {
-                return employeeRepository. GetEmployeeList(RequestReader.GetUserId(request), RequestReader.ReadQueryString(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
             }
-            catch (Exception getEmployees)
+            catch (Exception getEmployeesException)
             {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(getEmployeesException.ToString());
+                employeeResponse.Error = ResponseBuilder.InternalError();
+                return employeeResponse;
             }
         }
-
         /// <summary>
-        ///     [ReportBuilder] Function to get list of assigned workbook(s) for a user
+        ///  [QueryBuilder] Function to get list of workbook(s) filtered with some condition(s)
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="queryBuilderRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>WorkbookResponse</returns>
+        public WorkbookResponse GetWorkbookQueryBuilder(QueryBuilderRequest queryBuilderRequest, ILambdaContext context)
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
+            WorkbookResponse workbookResponse = new WorkbookResponse();
             try
             {
-                return workbookRepository.GetWorkbookDetails(RequestReader.GetUserId(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
             }
-            catch (Exception getEmployees)
+            catch (Exception getWorkbookQueryBuilderException)
             {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(getWorkbookQueryBuilderException.ToString());
+                workbookResponse.Error = ResponseBuilder.InternalError();
+                return workbookResponse;
             }
         }
 
         /// <summary>
-        ///     [ReportBuilder] Function to get list of past due workbook(s) for a user
+        ///   [QueryBuilder] Function to get list of task(s) filtered with some condition(s)
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="queryBuilderRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetPastDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            WorkbookRepository workbookRepository = new WorkbookRepository();
-            try
-            {
-                return workbookRepository.GetPastDueWorkbooks(RequestReader.GetUserId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [ReportBuilder] Function to get list of coming due workbook(s) for a user
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetInDueWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            WorkbookRepository workbookRepository = new WorkbookRepository();
-            try
-            {
-                return workbookRepository.GetInDueWorkbooks(RequestReader.GetUserId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [ReportBuilder] Function to get list of completed workbook(s) for a user
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetCompletedWorkbookDetails(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            WorkbookRepository workbookRepository = new WorkbookRepository();
-            try
-            {
-                return workbookRepository.GetCompletedWorkbooks(RequestReader.GetUserId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [ReportBuilder] Function to get list of task(s) under a workbook for a user
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetTaskList(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>TaskResponse</returns>
+        public TaskResponse GetTaskQueryBuilder(QueryBuilderRequest queryBuilderRequest, ILambdaContext context)
         {
             TaskRepository taskRepository = new TaskRepository();
+            TaskResponse taskResponse = new TaskResponse();
             try
             {
-                return taskRepository.GetTaskDetails(RequestReader.GetUserId(request), RequestReader.GetWorkbookId(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
             }
-            catch (Exception getEmployees)
+            catch (Exception getTaskQueryBuilderException)
             {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [ReportBuilder] Function to get attempt(s) made over a task under a workbook for a user
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetTaskAttemptsDetails(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            TaskRepository taskRepository = new TaskRepository();
-            try
-            {
-                return taskRepository.GetTaskAttemptsDetails(RequestReader.GetUserId(request), RequestReader.GetWorkbookId(request), RequestReader.GetTaskId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [QueryBuilder] Function to get list of employee(s) filtered with some condition(s)
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetEmployeesQuerBuilder(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            EmployeeRepository employeeRepository = new EmployeeRepository();
-            try
-            {
-                return employeeRepository.GetEmployeeDetails(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [QueryBuilder] Function to get list of workbook(s) filtered with some condition(s)
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetWorkbookQuerBuilder(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            WorkbookRepository workbookRepository = new WorkbookRepository();
-            try
-            {
-                return workbookRepository.GetWorkbookDetails(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     [QueryBuilder] Function to get list of task(s) filtered with some condition(s)
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetTaskQuerBuilder(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            TaskRepository taskRepository = new TaskRepository();
-            try
-            {
-                return taskRepository.GetQueryTaskDetails(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception getEmployees)
-            {
-                LambdaLogger.Log(getEmployees.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(getTaskQueryBuilderException.ToString());
+                taskResponse.Error = ResponseBuilder.InternalError();
+                return taskResponse;
             }
         }
 
 
         /// <summary>
-        ///    Save Query 
+        ///  save's the userquery using userId and companyId 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="queryBuilderRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse SaveQuery(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>QueryResponse</returns>
+        public QueryResponse SaveQuery(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
         {
             QueryRepository queryRepository = new QueryRepository();
+            QueryResponse queryResponse = new QueryResponse();
             try
             {
-                return queryRepository.SaveQuery(request.Body, RequestReader.GetCompanyId(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return queryRepository.SaveQuery(queryBuilderRequest);
             }
             catch (Exception saveQueryException)
             {
                 LambdaLogger.Log(saveQueryException.ToString());
-                return ResponseBuilder.InternalError();
+                queryResponse.Error = ResponseBuilder.InternalError();
+                return queryResponse;
             }
         }
 
 
         /// <summary>
-        ///     Get list of queries based on the userId
+        ///  Get list of queries based on the userId
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="queryBuilderRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetQueries(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>QueryResponse</returns>
+        public QueryResponse GetQueries(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
         {
             QueryRepository queryRepository = new QueryRepository();
+            QueryResponse queryResponse = new QueryResponse();
             try
             {
-                return queryRepository.GetUserQueries(request.Body, RequestReader.GetCompanyId(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return queryRepository.GetUserQueries(queryBuilderRequest);
+            }
+            catch (Exception getQueriesException)
+            {
+                LambdaLogger.Log(getQueriesException.ToString());
+                queryResponse.Error = ResponseBuilder.InternalError();
+                return queryResponse;
+            }
+        }
+
+        /// <summary>
+        ///   Rename the existing query based on the query Id and UserId
+        /// </summary>
+        /// <param name="queryBuilderRequest"></param>
+        /// <param name="context"></param>
+        /// <returns>QueryResponse</returns>
+        public QueryResponse RenameQuery(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            QueryResponse queryResponse = new QueryResponse();
+            try
+            {
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return queryRepository.RenameQuery(queryBuilderRequest);
+            }
+            catch (Exception renameQueryException)
+            {
+                LambdaLogger.Log(renameQueryException.ToString());
+                queryResponse.Error = ResponseBuilder.InternalError();
+                return queryResponse;
+            }
+        }
+
+        /// <summary>
+        ///  Delete the existing query based on the query Id and UserId
+        /// </summary>
+        /// <param name="queryBuilderRequest"></param>
+        /// <param name="context"></param>
+        /// <returns>QueryResponse</returns>
+        public QueryResponse DeleteQuery(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            QueryResponse queryResponse = new QueryResponse();
+            try
+            {
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return queryRepository.DeleteQuery(queryBuilderRequest);
+            }
+            catch (Exception deleteQueryException)
+            {
+                LambdaLogger.Log(deleteQueryException.ToString());
+                queryResponse.Error = ResponseBuilder.InternalError();
+                return queryResponse;
+            }
+        }
+
+
+        /// <summary>
+        /// Get specific query details and results based on the queryId
+        /// </summary>
+        /// <param name="queryBuilderRequest"></param>
+        /// <param name="context"></param>
+        /// <returns>QueryResponse</returns>
+        public QueryResponse GetQuery(QueryBuilderRequest queryBuilderRequest, ILambdaContext context = null)
+        {
+            QueryRepository queryRepository = new QueryRepository();
+            QueryResponse queryResponse = new QueryResponse();
+            try
+            {
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return queryRepository.GetUserQuery(queryBuilderRequest);
             }
             catch (Exception getQueryException)
             {
                 LambdaLogger.Log(getQueryException.ToString());
-                return ResponseBuilder.InternalError();
+                queryResponse.Error = ResponseBuilder.InternalError();
+                return queryResponse;
             }
         }
 
         /// <summary>
-        ///     Rename the existing query based on the query Id and UserId
+        /// Get the list of roles based on the company
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="roleRequest"></param>
         /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse RenameQuery(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            QueryRepository queryRepository = new QueryRepository();
-            try
-            {
-                return queryRepository.RenameQuery(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception renameQueryException)
-            {
-                LambdaLogger.Log(renameQueryException.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-        /// <summary>
-        ///     Delete the existing query based on the query Id and UserId
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse DeleteQuery(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            QueryRepository queryRepository = new QueryRepository();
-            try
-            {
-                return queryRepository.DeleteQuery(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception renameQueryException)
-            {
-                LambdaLogger.Log(renameQueryException.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-
-        /// <summary>
-        ///     Delete the existing query based on the query Id and UserId
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetQuery(APIGatewayProxyRequest request, ILambdaContext context)
-        {
-            QueryRepository queryRepository = new QueryRepository();
-            try
-            {
-                return queryRepository.GetUserQuery(request.Body, RequestReader.GetCompanyId(request));
-            }
-            catch (Exception renameQueryException)
-            {
-                LambdaLogger.Log(renameQueryException.ToString());
-                return ResponseBuilder.InternalError();
-            }
-        }
-
-
-        /// <summary>
-        ///     Delete the existing query based on the query Id and UserId
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse GetRoles(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>RoleResponse</returns>
+        public RoleResponse GetRoles(RoleRequest roleRequest, ILambdaContext context = null)
         {
             RoleRepository roleRepository = new RoleRepository();
+            RoleResponse roleResponse = new RoleResponse();
             try
             {
-                return roleRepository.GetRoles(RequestReader.GetCompanyId(request));
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+                return roleRepository.GetRoles(roleRequest);
             }
-            catch (Exception renameQueryException)
+            catch (Exception getRolesException)
             {
-                LambdaLogger.Log(renameQueryException.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(getRolesException.ToString());
+                roleResponse.Error = ResponseBuilder.InternalError();
+                return roleResponse;
             }
         }
     }
 }
+

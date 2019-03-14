@@ -1,30 +1,17 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
+﻿using Amazon.Extensions.CognitoAuthentication;
 using Amazon.Lambda.Core;
 using DataInterface.Database;
-using Newtonsoft.Json;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.DatabaseManager;
-using ReportBuilderAPI.Handlers.RequestHandler;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Net;
 
-/* 
- <copyright file="AuthenticationRepository.cs">
-    Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author>Shoba Eswar</author>
- <date>10-10-2018</date>
- <summary> 
-    Repository that helps to authenticate the user(s), login the user(s) into the app 
-    and handle the session(s).
- </summary>
-*/
+
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
@@ -33,26 +20,27 @@ namespace ReportBuilderAPI.Repository
     public class AuthenticationRepository : IAuthentication
     {
         /// <summary>
-        ///     Login API to create session in cognito for valid user(s)
+        /// Login API to create session in cognito for valid user(s)
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse Login(APIGatewayProxyRequest request)
+        /// <param name="userRequest"></param>
+        /// <param name="context"></param>
+        /// <returns>UserResponse</returns>
+        public UserResponse Login(UserRequest userRequest, ILambdaContext context)
         {
             SessionGenerator sessionGenerator = new SessionGenerator();
-            UserResponse userResponse;
+            UserResponse userResponse = new UserResponse();
             try
             {
-                //Read username and password from gatewayrequest
-                UserRequest userRequest = RequestReader.GetRequestBody(request);
                 //Generate Access token for valid user 
-                Amazon.Extensions.CognitoAuthentication.AuthFlowResponse authResponse = sessionGenerator.GenerateAccessToken(userRequest);
-                //Generate response depends upon the authResponse
+                AuthFlowResponse authResponse = sessionGenerator.GenerateAccessToken(userRequest);
+                //Creates response for the depends upon the Challenge Name
                 if (authResponse != null && authResponse.AuthenticationResult == null)
                 {
                     string message = sessionGenerator.CheckChallenge(authResponse.ChallengeName);
-                    return ResponseBuilder.UnAuthorized(message);
+                    userResponse.Error = ResponseBuilder.UnAuthorized(message);
+                    return userResponse;
                 }
+                //Creates success response for the valid username and password
                 else if (authResponse != null && authResponse.AuthenticationResult != null)
                 {
                     userResponse = new UserResponse
@@ -64,20 +52,26 @@ namespace ReportBuilderAPI.Repository
                         CompanyId = Convert.ToInt32(GetCompanyId(userRequest.UserName)),
                         UserName = GetUserName(userRequest.UserName)
                     };
-                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
+                    return userResponse;
                 }
+                //Create the Error Response for the invalid user
                 else
                 {
-                    return ResponseBuilder.BadRequest("Username and Password");
+                    userResponse.Error = ResponseBuilder.BadRequest("Username and Password");
+                    return userResponse;
                 }
             }
             catch (Exception loginException)
             {
                 LambdaLogger.Log(loginException.ToString());
-                return ResponseBuilder.InternalError();
+                //Send error response if any invalid error occured
+                userResponse.Error = ResponseBuilder.InternalError();
+                return userResponse;
             }
         }
 
+
+        #region Temp method to get the username, userId and companyId (It will be retrieved from LMS as JWT token in future)
         /// <summary>
         ///     Get companyId from database
         /// </summary>
@@ -115,10 +109,12 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read employee name using user email
-                SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM [User] WHERE Email='" + email + "'", new Dictionary<string, string>());
-                if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
+                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM dbo.[User] WHERE Email='" + email + "'", new Dictionary<string, string>()))
                 {
-                    userName = Convert.ToString(sqlDataReader["employeeName"]);
+                    if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
+                    {
+                        userName = Convert.ToString(sqlDataReader["employeeName"]);
+                    }
                 }
                 return userName;
             }
@@ -160,26 +156,30 @@ namespace ReportBuilderAPI.Repository
             }
         }
 
+        #endregion
 
         /// <summary>
-        ///     API to handle the silent Auth using refresh token
+        ///  API to handle the silent Auth using refresh token
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns>APIGatewayProxyResponse</returns>
-        public APIGatewayProxyResponse SilentAuth(APIGatewayProxyRequest request)
+        /// <param name="userRequest"></param>
+        /// <returns>UserResponse</returns>
+        public UserResponse SilentAuth(UserRequest userRequest)
         {
-
             SessionGenerator sessionGenerator = new SessionGenerator();
-            UserResponse userResponse;
+            UserResponse userResponse = new UserResponse();
             try
             {
                 //Generate Id token from the refresh token
-                Amazon.Extensions.CognitoAuthentication.AuthFlowResponse authResponse = sessionGenerator.ProcessRefreshToken(RequestReader.GetRequestBody(request));
+                AuthFlowResponse authResponse = sessionGenerator.ProcessRefreshToken(userRequest);
+                
+                //Check if user having any challenges 
                 if (authResponse != null && authResponse.AuthenticationResult == null)
                 {
                     string message = sessionGenerator.CheckChallenge(authResponse.ChallengeName);
-                    return ResponseBuilder.UnAuthorized(message);
+                    userResponse.Error = ResponseBuilder.UnAuthorized(message);
+                    return userResponse;
                 }
+                //Create user response for valid token
                 else if (authResponse != null && authResponse.AuthenticationResult != null)
                 {
                     userResponse = new UserResponse
@@ -187,17 +187,20 @@ namespace ReportBuilderAPI.Repository
                         AccessToken = authResponse.AuthenticationResult.AccessToken,
                         IdentityToken = authResponse.AuthenticationResult.IdToken
                     };
-                    return ResponseBuilder.GatewayProxyResponse((int)HttpStatusCode.OK, JsonConvert.SerializeObject(userResponse), 0);
+                    return userResponse;
                 }
+                //Send bad request if user name is invalid
                 else
                 {
-                    return ResponseBuilder.BadRequest("Username and Password");
+                    userResponse.Error = ResponseBuilder.BadRequest("Username");
+                    return userResponse;
                 }
             }
-            catch (Exception exception)
+            catch (Exception silentAuthException)
             {
-                LambdaLogger.Log(exception.ToString());
-                return ResponseBuilder.InternalError();
+                LambdaLogger.Log(silentAuthException.ToString());
+                userResponse.Error = ResponseBuilder.InternalError();
+                return userResponse;
             }
         }
     }

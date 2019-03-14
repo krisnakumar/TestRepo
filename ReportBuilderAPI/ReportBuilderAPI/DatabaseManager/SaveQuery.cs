@@ -12,10 +12,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string ReadQueryId(string queryName, int userId)
         {
-            return "SELECT q.Id FROM Query q JOIN UserQuery uq on uq.queryId=q.Id where q.Name='" + queryName + "' and uq.UserId=" + userId;
+            return "SELECT q.Id FROM dbo.Query q JOIN dbo.UserQuery uq ON uq.queryId=q.Id WHERE q.Name='" + queryName + "' AND uq.UserId=" + userId;
         }
 
         /// <summary>
@@ -25,20 +25,20 @@ namespace ReportBuilderAPI.Queries
         /// <param name="queryName"></param>
         /// <param name="requestBody"></param>
         /// <param name="query"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string InsertQuery(Guid guid, string queryName, string requestBody, string query)
         {
-            return "INSERT INTO QUERY(QueryId,Name, QUeryJson, QuerySQL, CreatedDate,LastModified) VALUES('" + guid + "','" + queryName + "','" + requestBody.Replace("'", "''") + "','" + query.Replace("'", "''") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "')";
+            return "INSERT INTO dbo.QUERY(QueryId,Name, QUeryJson, QuerySQL, CreatedDate,LastModified) VALUES('" + guid + "','" + queryName + "','" + requestBody.Replace("'", "''") + "','" + query.Replace("'", "''") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "','" + DateTime.UtcNow.ToString("MM/dd/yyyy") + "')";
         }
 
         /// <summary>
         /// Read use role details
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string GetRoleId(int userId)
         {
-            return "SELECT roleId FROM UserRole WHERE  userId=" + userId;
+            return "SELECT roleId FROM dbo.UserRole WHERE  userId=" + userId;
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace ReportBuilderAPI.Queries
         /// <param name="userId"></param>
         /// <param name="companyId"></param>
         /// <param name="roleId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string InsertUserQuery(int queryId, int userId, int companyId, int roleId)
         {
-            return "INSERT INTO UserQuery(QueryId, UserId, CompanyId, Role) VALUES (" + queryId + "," + userId + "," + companyId + "," + roleId + ")";
+            return "INSERT INTO dbo.UserQuery(QueryId, UserId, CompanyId, Role) VALUES (" + queryId + "," + userId + "," + companyId + "," + roleId + ")";
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="companyId"></param>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string GetUserQueries(int companyId, int userId)
         {
-            return "SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId;
+            return "SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId;
         }
 
         /// <summary>
@@ -70,10 +70,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="queryId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string UpdateQueryName(string queryName, string queryId)
         {
-            return "UPDATE Query SET name='" + queryName + "' WHERE QueryId='" + queryId + "'";
+            return "UPDATE dbo.Query SET name='" + queryName + "' WHERE QueryId='" + queryId + "'";
         }
 
 
@@ -82,10 +82,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="queryId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string ReadQuery(string queryId)
         {
-            return "SELECT ID FROM Query WHERE QueryId='" + queryId + "'";
+            return "SELECT ID FROM dbo.Query WHERE QueryId='" + queryId + "'";
         }
 
         /// <summary>
@@ -93,10 +93,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="queryId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string DeleteQuery(string queryId)
         {
-            return "DELETE FROM Query WHERE QueryId='" + queryId + "'";
+            return "DELETE FROM dbo.Query WHERE QueryId='" + queryId + "'";
         }
 
         /// <summary>
@@ -104,10 +104,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="queryId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string DeleteUserQuery(int queryId)
         {
-            return "DELETE FROM UserQuery WHERE QueryId='" + queryId + "'";
+            return "DELETE FROM dbo.UserQuery WHERE QueryId='" + queryId + "'";
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace ReportBuilderAPI.Queries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="queryId"></param>
-        /// <returns></returns>
+        /// <returns>Query</returns>
         public static string GetUserQueries(int companyId, string queryId)
         {
-            return "SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM Query q JOIN UserQuery uq on uq.QueryId=q.Id JOIN dbo.[User] u on u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " and q.QueryId='" + queryId
+            return "SELECT q.*,  (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq ON uq.QueryId=q.Id JOIN dbo.[User] u ON u.Id=uq.UserId WHERE uq.CompanyId=" + companyId + " AND q.QueryId='" + queryId
                 + "'";
         }
 

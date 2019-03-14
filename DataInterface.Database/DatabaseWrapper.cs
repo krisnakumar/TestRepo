@@ -5,19 +5,6 @@ using System.Data;
 using System.Data.SqlClient;
 
 
-/*
- <copyright file="DatabaseWrapper.cs">
-    Copyright (c) 2018 All Rights Reserved
- </copyright>
- <author>Shoba Eswar</author>
- <date>17-07-2018</date>
- <summary>
-    This wrapper class handles the database connection(s) for the app
-    - Execcute the query(ies)
-    - closes the connection(s)
- </summary>
-*/
-
 namespace DataInterface.Database
 {
     /// <summary>
@@ -25,17 +12,16 @@ namespace DataInterface.Database
     /// </summary>
     public class DatabaseWrapper : IDatabaseWrapper
     {
-        private static string connectionString = string.Empty;
+        public static string _connectionString = string.Empty;
         private SqlConnection sqlConnection = null;
 
+
         /// <summary>
-        ///     Contructor to get the sql connection string 
+        ///     Constructor to get the sql connection string 
         /// </summary>
         public DatabaseWrapper()
         {
-            connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
-            sqlConnection = new SqlConnection(string.Format(connectionString));
-
+            sqlConnection = new SqlConnection(string.Format(_connectionString));
         }
 
         /// <summary>
@@ -47,7 +33,7 @@ namespace DataInterface.Database
         {
             try
             {
-                sqlConnection = new SqlConnection(string.Format(connectionString));
+                sqlConnection = new SqlConnection(string.Format(_connectionString));
                 int rowsaffected = 0;
                 SqlTransaction sqlTransaction = null;
 
@@ -152,7 +138,7 @@ namespace DataInterface.Database
         /// <returns>A SqlDataReader object.</returns>
         public SqlDataReader ExecuteReader(string command, Dictionary<string, string> parameters)
         {
-            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays=string.Empty;
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty;
             try
             {
                 SqlDataReader sqlDataReader;
@@ -175,6 +161,7 @@ namespace DataInterface.Database
                         parameters.TryGetValue("companyId", out companyId);
                         parameters.TryGetValue("workbookId", out workbookId);
                         parameters.TryGetValue("duedays", out dueDays);
+                        parameters.TryGetValue("role", out roleId);
                         if (!string.IsNullOrEmpty(userId))
                         {
                             sqlCommand.Parameters.AddWithValue("@userId", userId);
@@ -194,6 +181,11 @@ namespace DataInterface.Database
                         {
                             sqlCommand.Parameters.AddWithValue("@duedays", dueDays);
                         }
+
+                        if (!string.IsNullOrEmpty(roleId))
+                        {
+                            sqlCommand.Parameters.AddWithValue("@roleId", roleId);
+                        }
                     }
                     //Gets or sets the wait time before terminating the attempt to execute a command and generating an error.
                     sqlCommand.CommandTimeout = 60;
@@ -206,7 +198,7 @@ namespace DataInterface.Database
             }
             catch (Exception executeReaderException)
             {
-                LambdaLogger.Log(executeReaderException.ToString());
+                LambdaLogger.Log((_connectionString + " \n" + executeReaderException.ToString()));
                 return null;
             }
         }

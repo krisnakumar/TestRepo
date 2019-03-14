@@ -9,16 +9,6 @@ using ReportBuilderAPI.Utilities;
 using System;
 
 
-/*
- <copyright file = "SessionGenerator.cs" >
- Copyright(c) 2018 All Rights Reserved
- </copyright>
- <author> Shoba Eswar </author>
- <date>01-11-2018</date>
- <summary>
-    Repository that helps to generate token for the cognito
- </summary>
-*/
 namespace ReportBuilderAPI.Helpers
 {
     /// <summary>
@@ -76,9 +66,9 @@ namespace ReportBuilderAPI.Helpers
                 authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;
                 return authResponse;
             }
-            catch (Exception sessionGeneratorException)
+            catch (Exception processRefreshTokenException)
             {
-                LambdaLogger.Log(sessionGeneratorException.ToString());
+                LambdaLogger.Log(processRefreshTokenException.ToString());
                 return null;
             }
         }
@@ -108,7 +98,7 @@ namespace ReportBuilderAPI.Helpers
             catch (Exception checkChallengeException)
             {
                 LambdaLogger.Log(checkChallengeException.ToString());
-                return string.Empty;
+                return message;
             }
         }
     }
