@@ -14,5 +14,6 @@
     "template"      : "serverless.template",
     "s3-bucket"     : "reportbuilder-sandbox",
     "stack-name"    : "reportbuilder-dev",
-    "mode"          : "merge"
+    "mode"          : "merge",
+    "template-parameters" : "\"ConnectionString\"=\"Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True\""
 }
