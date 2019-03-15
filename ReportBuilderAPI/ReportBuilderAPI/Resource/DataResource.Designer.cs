@@ -79,7 +79,7 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Input!.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string CHECK_INPUT {
             get {
@@ -192,6 +192,33 @@ namespace ReportBuilderAPI.Resource {
         internal static string SYSTEM_ERROR {
             get {
                 return ResourceManager.GetString("SYSTEM_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserId.
+        /// </summary>
+        internal static string USER_ID {
+            get {
+                return ResourceManager.GetString("USER_ID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string USERNAME {
+            get {
+                return ResourceManager.GetString("USERNAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username and Password.
+        /// </summary>
+        internal static string USERNAME_PASSWORD {
+            get {
+                return ResourceManager.GetString("USERNAME_PASSWORD", resourceCulture);
             }
         }
     }

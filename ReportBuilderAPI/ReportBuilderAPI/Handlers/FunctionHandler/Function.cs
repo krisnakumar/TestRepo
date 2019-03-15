@@ -16,9 +16,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     /// </summary>
     public class Function
     {
-
-
-
         /// <summary>
         ///  Function that helps to validate the user using user name and password
         /// </summary>

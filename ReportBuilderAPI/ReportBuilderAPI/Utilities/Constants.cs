@@ -211,5 +211,10 @@ namespace ReportBuilderAPI.Utilities
 
         public const string YES = "YES";
         public const string NO = "NO";
+
+        public const string IS_NULL = " IS NULL";
+        public const string IS_NOT_NULL = " IS NOT NULL";
+
+        public const string DUE_DAYS_VALUE = "30";
     }
 }
