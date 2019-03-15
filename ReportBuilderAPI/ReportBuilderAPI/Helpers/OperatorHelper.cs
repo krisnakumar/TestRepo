@@ -56,16 +56,16 @@ namespace ReportBuilderAPI.Helpers
                     switch (operatorName.ToUpper())
                     {
                         case Constants.CONTAINS:
-                            queryString = " like '%" + value + "%'";
+                            queryString = " LIKE '%" + value + "%'";
                             break;
                         case Constants.DOES_NOT_CONTAINS:
-                            queryString = " not like '%" + value + "%'";
+                            queryString = " NOT LIKE '%" + value + "%'";
                             break;
                         case Constants.START_WITH:
-                            queryString = " like '" + value + "%'";
+                            queryString = " LIKE '" + value + "%'";
                             break;
                         case Constants.END_WITH:
-                            queryString = " like '%" + value + "'";
+                            queryString = " LIKE '%" + value + "'";
                             break;
                         case Constants.BETWEEN:
                             queryString = ProcessDateParameter(operatorName, value);
@@ -97,9 +97,9 @@ namespace ReportBuilderAPI.Helpers
             {
                 if (inputOperator.ToUpper() == Constants.BETWEEN)
                 {
-                    string[] dateList = value.Split("and");
-                    dateValue += " between '" + dateList[0] + "'";
-                    dateValue += " and '" + dateList[1] + "'";
+                    string[] dateList = value.Split("AND");
+                    dateValue += " BETWEEN '" + dateList[0] + "'";
+                    dateValue += " AND '" + dateList[1] + "'";
                 }
                 return dateValue;
             }

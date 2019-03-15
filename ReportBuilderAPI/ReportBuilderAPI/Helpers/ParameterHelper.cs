@@ -3,6 +3,8 @@ using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace ReportBuilderAPI.Helpers
@@ -35,7 +37,7 @@ namespace ReportBuilderAPI.Helpers
                 //Set default due days if its null
                 if (string.IsNullOrEmpty(dueDays))
                 {
-                    dueDays = "30";
+                    dueDays = Constants.DUE_DAYS_VALUE;
                 }
 
                 //Get the parameter dictionary
@@ -46,6 +48,54 @@ namespace ReportBuilderAPI.Helpers
             {
                 LambdaLogger.Log(getParameterException.ToString());
                 return parameterList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static SqlParameter[] CreateSqlParameter(Dictionary<string, string> parameters)
+        {
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty;
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+
+            try
+            {
+                if (parameters.Count > 0)
+                {
+                    parameters.TryGetValue("userId", out userId);
+                    parameters.TryGetValue("companyId", out companyId);
+                    parameters.TryGetValue("workbookId", out workbookId);
+                    parameters.TryGetValue("duedays", out dueDays);
+                    parameters.TryGetValue("role", out roleId);
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        sqlParameters.Add(new SqlParameter("@userId", SqlDbType.Int) { Value = userId });
+                    }
+                    if (!string.IsNullOrEmpty(companyId))
+                    {
+                        sqlParameters.Add(new SqlParameter("@companyId", SqlDbType.Int) { Value = companyId });
+                    }
+                    if (!string.IsNullOrEmpty(workbookId))
+                    {
+                        sqlParameters.Add(new SqlParameter("@workbookId", SqlDbType.Int) { Value = workbookId });
+                    }
+                    if (!string.IsNullOrEmpty(dueDays))
+                    {
+                        sqlParameters.Add(new SqlParameter("@duedays", SqlDbType.Int) { Value = dueDays });
+                    }
+                    if (!string.IsNullOrEmpty(roleId))
+                    {
+                        sqlParameters.Add(new SqlParameter("@roleId", SqlDbType.Int) { Value = workbookId });
+                    }
+                }
+                return sqlParameters.ToArray();
+            }
+            catch (Exception createSqlParameterException)
+            {
+                LambdaLogger.Log(createSqlParameterException.ToString());
+                return sqlParameters.ToArray();
             }
         }
     }
