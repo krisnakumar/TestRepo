@@ -123,9 +123,9 @@ class App extends Component {
   */
   componentWillMount() {
     const { cookies } = this.props;
-    let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
+    let token = cookies.get('IdentityToken') || "",                 // Get Identity token from browser cookie
       isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
-      isBasePath = window.location.pathname == '/' ? true : false;  // Checking it is base path or not
+      isBasePath = window.location.pathname == '/' ? true : false,  // Checking it is base path or not
       isMockBasePath = true;  
 
     // Checking that the Identity token is available and it is not app base path
