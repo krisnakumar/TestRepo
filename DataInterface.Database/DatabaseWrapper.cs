@@ -1,9 +1,7 @@
 ﻿using Amazon.Lambda.Core;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-
 
 namespace DataInterface.Database
 {
@@ -12,7 +10,7 @@ namespace DataInterface.Database
     /// </summary>
     public class DatabaseWrapper : IDatabaseWrapper
     {
-        public static string _connectionString = string.Empty;
+        public static string _connectionString { get; set; }
         private SqlConnection sqlConnection = null;
 
 
@@ -136,9 +134,8 @@ namespace DataInterface.Database
         /// </summary>
         /// <param name="command">Transact-SQL statement</param>
         /// <returns>A SqlDataReader object.</returns>
-        public SqlDataReader ExecuteReader(string command, Dictionary<string, string> parameters)
+        public SqlDataReader ExecuteReader(string command, SqlParameter[] sqlParameters)
         {
-            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty;
             try
             {
                 SqlDataReader sqlDataReader;
@@ -155,37 +152,9 @@ namespace DataInterface.Database
 
                     //Gets or sets the Transact-SQL statement, table name or stored procedure to execute at the data source.
                     sqlCommand.CommandText = command;
-                    if (parameters.Count > 0)
+                    if (sqlParameters != null && sqlParameters.Length > 0)
                     {
-                        parameters.TryGetValue("userId", out userId);
-                        parameters.TryGetValue("companyId", out companyId);
-                        parameters.TryGetValue("workbookId", out workbookId);
-                        parameters.TryGetValue("duedays", out dueDays);
-                        parameters.TryGetValue("role", out roleId);
-                        if (!string.IsNullOrEmpty(userId))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@userId", userId);
-                        }
-
-                        if (!string.IsNullOrEmpty(companyId))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@companyId", companyId);
-                        }
-
-                        if (!string.IsNullOrEmpty(workbookId))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@workbookId", workbookId);
-                        }
-
-                        if (!string.IsNullOrEmpty(dueDays))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@duedays", dueDays);
-                        }
-
-                        if (!string.IsNullOrEmpty(roleId))
-                        {
-                            sqlCommand.Parameters.AddWithValue("@roleId", roleId);
-                        }
+                        sqlCommand.Parameters.AddRange(sqlParameters);
                     }
                     //Gets or sets the wait time before terminating the attempt to execute a command and generating an error.
                     sqlCommand.CommandTimeout = 60;

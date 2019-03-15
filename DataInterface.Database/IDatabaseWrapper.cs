@@ -10,7 +10,7 @@ namespace DataInterface.Database
     {
         int ExecuteQuery(string command);
         int ExecuteQuery(string[] Commands);
-        SqlDataReader ExecuteReader(string command, Dictionary<string, string> parameters);
+        SqlDataReader ExecuteReader(string command, SqlParameter[] sqlParameters);
 
         DataSet ExecuteAdapter(string command);
 
