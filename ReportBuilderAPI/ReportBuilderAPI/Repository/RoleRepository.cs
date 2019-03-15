@@ -29,7 +29,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read the roles from DB
-                using (SqlDataReader sqldatareader = databaseWrapper.ExecuteReader(Role.GetRole(roleRequest.CompanyId), new Dictionary<string, string>()))
+                using (SqlDataReader sqldatareader = databaseWrapper.ExecuteReader(Role.GetRole(roleRequest.CompanyId), null))
                 {
                     if (sqldatareader != null)
                     {

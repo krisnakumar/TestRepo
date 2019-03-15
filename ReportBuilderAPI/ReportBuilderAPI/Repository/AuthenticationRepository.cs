@@ -7,6 +7,7 @@ using ReportBuilderAPI.DatabaseManager;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Resource;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -57,7 +58,7 @@ namespace ReportBuilderAPI.Repository
                 //Create the Error Response for the invalid user
                 else
                 {
-                    userResponse.Error = ResponseBuilder.BadRequest("Username and Password");
+                    userResponse.Error = ResponseBuilder.BadRequest(DataResource.USERNAME_PASSWORD);
                     return userResponse;
                 }
             }
@@ -109,7 +110,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read employee name using user email
-                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM dbo.[User] WHERE Email='" + email + "'", new Dictionary<string, string>()))
+                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM dbo.[User] WHERE Email='" + email + "'", null))
                 {
                     if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
                     {
@@ -192,7 +193,7 @@ namespace ReportBuilderAPI.Repository
                 //Send bad request if user name is invalid
                 else
                 {
-                    userResponse.Error = ResponseBuilder.BadRequest("Username");
+                    userResponse.Error = ResponseBuilder.BadRequest(DataResource.USERNAME);
                     return userResponse;
                 }
             }

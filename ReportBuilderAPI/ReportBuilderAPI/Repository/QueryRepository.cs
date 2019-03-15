@@ -110,7 +110,7 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    queryResponse.Error = ResponseBuilder.BadRequest("UserId");
+                    queryResponse.Error = ResponseBuilder.BadRequest(DataResource.USER_ID);
                 }
                 return queryResponse;
             }
@@ -142,7 +142,7 @@ namespace ReportBuilderAPI.Repository
                 userId = queryBuilderRequest.UserId;
                 if (userId > 0)
                 {
-                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(Queries.SaveQuery.GetUserQueries(queryBuilderRequest.CompanyId, userId), new Dictionary<string, string> { }))
+                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(Queries.SaveQuery.GetUserQueries(queryBuilderRequest.CompanyId, userId), null))
                     {
                         if (sqlDataReader != null && sqlDataReader.HasRows)
                         {
@@ -165,7 +165,7 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    queryResponse.Error = ResponseBuilder.BadRequest("UserId");
+                    queryResponse.Error = ResponseBuilder.BadRequest(DataResource.USER_ID);
                     return queryResponse;
                 }
             }
@@ -299,7 +299,7 @@ namespace ReportBuilderAPI.Repository
             {
                 if (!string.IsNullOrEmpty(queryBuilderRequest.QueryId))
                 {
-                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(Queries.SaveQuery.GetUserQueries(queryBuilderRequest.CompanyId, queryBuilderRequest.QueryId), new Dictionary<string, string> { }))
+                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(Queries.SaveQuery.GetUserQueries(queryBuilderRequest.CompanyId, queryBuilderRequest.QueryId), null))
                     {
                         if (sqlDataReader != null && sqlDataReader.HasRows)
                         {

@@ -14,7 +14,7 @@ namespace ReportBuilderAPI.DatabaseManager
     /// <summary>
     ///     Class that creates queries for the employee operations
     /// </summary>
-    public class Employee
+    public static class Employee
     {
         
         /// <summary>
