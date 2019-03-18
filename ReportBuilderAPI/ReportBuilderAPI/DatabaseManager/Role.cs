@@ -9,10 +9,10 @@
         /// Get list of roles based on the companyId
         /// </summary>
         /// <param name="companyId"></param>
-        /// <returns></returns>
+        /// <returns>string</returns>
         public static string GetRole(int companyId)
         {
-            return "SELECT Name, Id FROM dbo.Role WHERE CompanyId=" + companyId + " AND IsShared=1";
+            return "SELECT Name, Id FROM dbo.Role WHERE CompanyId=" + companyId + " AND IsShared=1 AND IsEnabled=1";
         }
     }
 }
