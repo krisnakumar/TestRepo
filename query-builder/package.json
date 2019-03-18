@@ -2,7 +2,7 @@
   "name": "OnBoardLMS",
   "version": "0.9.190222.6841",
   "private": true,
-  "homepage": "http://www.its-training.com/",
+  "homepage": ".",
   "dependencies": {
     "@material-ui/core": "^3.0.3",
     "@mdi/font": "^2.2.43",

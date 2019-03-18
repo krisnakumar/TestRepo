@@ -2,7 +2,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import MainWrapper from './MainWrapper';
-import Login from '../account/log_in/index';
 import WorkbookDashboard from '../workbook_dashboard/index';
 import QueryBuilder from '../query_builder/index';
  import OQDashboard from '../oq_contractor_dashboard/index';
@@ -29,11 +28,6 @@ const Router = () => (
         </div>
       </div>
       <Switch>
-       {/* <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
-         <Route exact path="/EmployeeReports" component={WorkbookDashboard} />
-        <Route exact path="/QueryBuilder" component={QueryBuilder} />
-        <Route exact path="/OQDashboard" component={OQDashboard} />
-        <Route exact path="/CTDashboard" component={CTDashboard} /> */}
         <Route exact path={`${process.env.PUBLIC_URL}/EmployeeReports`} component={WorkbookDashboard} />
         <Route exact path={`${process.env.PUBLIC_URL}/QueryBuilder`} component={QueryBuilder} /> 
         <Route exact path={`${process.env.PUBLIC_URL}/OQDashboard`} component={OQDashboard} />
