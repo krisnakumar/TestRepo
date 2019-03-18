@@ -1,405 +1,470 @@
-{  
-   "AWSTemplateFormatVersion":"2010-09-09",
-   "Transform":"AWS::Serverless-2016-10-31",
-   "Description":"An AWS Serverless Application.",
-   "Parameters":{  
-      "ConnectionString":{  
-         "Type":"String",
-         "Description":"Connection string Which help to read the data from SQL",
-         "Default":"Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True"
+{
+   "AWSTemplateFormatVersion": "2010-09-09",
+   "Transform": "AWS::Serverless-2016-10-31",
+   "Description": "An AWS Serverless Application.",
+   "Parameters": {
+      "ConnectionString": {
+         "Type": "String",
+         "Description": "Connection string Which help to read the data from SQL",
+         "Default": "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True"
+      },
+      "LambdaMemory": {
+         "Type": "String",
+         "Description": "Memory size that allocated for each Lambda function(s)",
+         "Default": "256"
+      },
+      "LambdaTimeout": {
+         "Type": "String",
+         "Description": "Time out for each lambda fucntions",
+         "Default": "30"
+      },
+      "CognitoPoolId": {
+         "Type": "String",
+         "Description": "Pool Id to check user session",
+         "Default": "us-west-2_nrrZaoTAs"
+      },
+      "CognitoClientId": {
+         "Type": "String",
+         "Description": "Pool Id to check user session",
+         "Default": "4efougb8nqj7f72ku183rudmqm"
       }
    },
-   "Resources":{  
-      "ReportBuilderAPI":{  
-         "Type":"AWS::Serverless::Api",
-         "Properties":{  
-            "Name":"ReportBuilder-dev",
-            "StageName":"dev",
-            "DefinitionUri":"s3://reportbuilder-sandbox/RB-dev.json"
+   "Resources": {
+      "ReportBuilderAPI": {
+         "Type": "AWS::Serverless::Api",
+         "Properties": {
+            "Name": "ReportBuilder-dev",
+            "StageName": "dev",
+            "DefinitionUri": "s3://reportbuilder-sandbox/RB-dev.json"
          }
       },
-      "Login":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-            "FunctionName":"Login-RB-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "Login": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
+            "FunctionName": "Login-RB-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
+                  },
+                  "CognitoPoolId": {
+                     "Ref": "CognitoPoolId"
+                  },
+                  "CognitoClientId": {
+                     "Ref": "CognitoClientId"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/login",
-                     "Method":"POST"
+                     "Path": "/login",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "GetEmployeesDetails":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQueryBuilder",
-            "FunctionName":"Employees-RB-query-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetEmployeesDetails": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQueryBuilder",
+            "FunctionName": "Employees-RB-query-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/employees",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/employees",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "GetWorkbookQueryDetails":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQueryBuilder",
-            "FunctionName":"workbooks-RB-query-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetWorkbookQueryDetails": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQueryBuilder",
+            "FunctionName": "workbooks-RB-query-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/workbooks",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/workbooks",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "GetTaskQueryDetails":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQueryBuilder",
-            "FunctionName":"tasks-RB-query-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetTaskQueryDetails": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQueryBuilder",
+            "FunctionName": "tasks-RB-query-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/tasks",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/tasks",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "SilentAuth":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-            "FunctionName":"SilentAuth-RB-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "SilentAuth": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
+            "FunctionName": "SilentAuth-RB-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
+                  },
+				  "CognitoClientId": {
+                     "Ref": "CognitoClientId"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/login/refresh",
-                     "Method":"POST"
+                     "Path": "/login/refresh",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "SaveQuery":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SaveQuery",
-            "FunctionName":"SaveQuery-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "SaveQuery": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SaveQuery",
+            "FunctionName": "SaveQuery-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/query/save",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/query/save",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "GetQuery":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQuery",
-            "FunctionName":"GetQuery-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetQuery": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQuery",
+            "FunctionName": "GetQuery-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/query",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/query",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "RenameQuery":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
-            "FunctionName":"RenameQuery-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "RenameQuery": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
+            "FunctionName": "RenameQuery-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/query/rename",
-                     "Method":"PUT"
+                     "Path": "/company/{companyId}/query/rename",
+                     "Method": "PUT"
                   }
                }
             }
          }
       },
-      "DeleteQuery":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
-            "FunctionName":"DeleteQuery-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "DeleteQuery": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
+            "FunctionName": "DeleteQuery-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/query/delete",
-                     "Method":"DELETE"
+                     "Path": "/company/{companyId}/query/delete",
+                     "Method": "DELETE"
                   }
                }
             }
          }
       },
-      "GetQueries":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQueries",
-            "FunctionName":"GetQueries-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Description":"2",
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetQueries": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQueries",
+            "FunctionName": "GetQueries-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/savedqueries",
-                     "Method":"POST"
+                     "Path": "/company/{companyId}/savedqueries",
+                     "Method": "POST"
                   }
                }
             }
          }
       },
-      "GetRoles":{  
-         "Type":"AWS::Serverless::Function",
-         "Properties":{  
-            "Handler":"ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetRoles",
-            "FunctionName":"GetRoles-dev",
-            "Runtime":"dotnetcore2.1",
-            "CodeUri":"",
-            "MemorySize":256,
-            "Timeout":30,
-            "Role":null,
-            "Policies":[  
+      "GetRoles": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetRoles",
+            "FunctionName": "GetRoles-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
                "AWSLambdaFullAccess"
             ],
-            "Environment":{  
-               "Variables":{  
-                  "ConnectionString":{  
-                     "Ref":"ConnectionString"
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
                   }
                }
             },
-            "Events":{  
-               "PutResource":{  
-                  "Type":"Api",
-                  "Properties":{  
-                     "RestApiId":{  
-                        "Ref":"ReportBuilderAPI"
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
                      },
-                     "Path":"/company/{companyId}/roles",
-                     "Method":"GET"
+                     "Path": "/company/{companyId}/roles",
+                     "Method": "GET"
                   }
                }
             }
          }
       }
    },
-   "Outputs":{  
-
-   }
+   "Outputs": {}
 }

@@ -5,7 +5,6 @@ using Amazon.Lambda.Core;
 using Amazon.Runtime;
 using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Resource;
-using ReportBuilderAPI.Utilities;
 using System;
 
 
@@ -26,14 +25,14 @@ namespace ReportBuilderAPI.Helpers
             AuthFlowResponse authResponse;
             try
             {
-                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(DataResource.ACCESS_KEY, DataResource.SECRET_KEY, RegionEndpoint.USWest2);
-                CognitoUserPool userPool = new CognitoUserPool(Constants.COGNITO_USERPOOLID, Constants.COGNITO_USERPOOL_CLIENTID, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider);                
+                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
+                CognitoUserPool userPool = new CognitoUserPool(userRequest.CognitoPoolId, userRequest.CognitoClientId, provider);
+                CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider);
                 InitiateSrpAuthRequest authRequest = new InitiateSrpAuthRequest()
                 {
                     Password = userRequest.Password
                 };
-                authResponse = user.StartWithSrpAuthAsync(authRequest).Result;                
+                authResponse = user.StartWithSrpAuthAsync(authRequest).Result;
                 return authResponse;
             }
             catch (Exception sessionGeneratorException)
@@ -55,8 +54,8 @@ namespace ReportBuilderAPI.Helpers
             try
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
-                CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", Constants.COGNITO_USERPOOL_CLIENTID, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, Constants.COGNITO_USERPOOL_CLIENTID, userPool, provider) { SessionTokens = new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
+                CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", userRequest.CognitoClientId, provider);
+                CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider) { SessionTokens = new CognitoUserSession(null, null, userRequest.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
 
 
                 InitiateRefreshTokenAuthRequest authRequest = new InitiateRefreshTokenAuthRequest()
