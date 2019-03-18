@@ -29,15 +29,7 @@ const Router = () => (
         </div>
       </div>
       <Switch>
-       {/* <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
-         <Route exact path="/EmployeeReports" component={WorkbookDashboard} />
-        <Route exact path="/QueryBuilder" component={QueryBuilder} />
-        <Route exact path="/OQDashboard" component={OQDashboard} />
-        <Route exact path="/CTDashboard" component={CTDashboard} /> */}
-        <Route exact path={`${process.env.PUBLIC_URL}/EmployeeReports`} component={WorkbookDashboard} />
-        <Route exact path={`${process.env.PUBLIC_URL}/QueryBuilder`} component={QueryBuilder} /> 
-        <Route exact path={`${process.env.PUBLIC_URL}/OQDashboard`} component={OQDashboard} />
-        <Route exact path={`${process.env.PUBLIC_URL}/CTDashboard`} component={CTDashboard} /> 
+       <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
       </Switch>
     </main>
   </MainWrapper>

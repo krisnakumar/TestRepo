@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 /query-builder/node_modules
+/workbooks-dashboard/node_modules
+/contractor-oq-dashboard/node_modules
+/contractor-training-dashboard/node_modules
 
 # testing
 /coverage
@@ -14,6 +17,9 @@
 # production
 /build
 /query-builder/build
+/workbooks-dashboard/build
+/contractor-oq-dashboard/build
+/contractor-training-dashboard/build
 
 # misc
 .DS_Store
