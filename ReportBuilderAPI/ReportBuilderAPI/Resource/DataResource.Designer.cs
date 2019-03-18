@@ -61,15 +61,6 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AKIAJHS5M3WOIIVH4V3A.
-        /// </summary>
-        internal static string ACCESS_KEY {
-            get {
-                return ResourceManager.GetString("ACCESS_KEY", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Account doesn’t have login permission.
         /// </summary>
         internal static string ACCOUNT_NOT_HAVING_PERMISSION {
@@ -165,15 +156,6 @@ namespace ReportBuilderAPI.Resource {
         internal static string SAVE_QUERY_SUCCESS_MESSAGE {
             get {
                 return ResourceManager.GetString("SAVE_QUERY_SUCCESS_MESSAGE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd.
-        /// </summary>
-        internal static string SECRET_KEY {
-            get {
-                return ResourceManager.GetString("SECRET_KEY", resourceCulture);
             }
         }
         

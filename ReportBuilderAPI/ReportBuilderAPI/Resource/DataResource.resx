@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ACCESS_KEY" xml:space="preserve">
-    <value>AKIAJHS5M3WOIIVH4V3A</value>
-  </data>
   <data name="ACCOUNT_NOT_HAVING_PERMISSION" xml:space="preserve">
     <value>Account doesn’t have login permission</value>
   </data>
@@ -152,9 +149,6 @@
   </data>
   <data name="SAVE_QUERY_SUCCESS_MESSAGE" xml:space="preserve">
     <value>Query has been saved successfully!</value>
-  </data>
-  <data name="SECRET_KEY" xml:space="preserve">
-    <value>pKsSMLppfeRwNyqLVcPovQYSrfKAr6PvtN/jC1Zd</value>
   </data>
   <data name="SERVER_ERROR" xml:space="preserve">
     <value>Internal error</value>
