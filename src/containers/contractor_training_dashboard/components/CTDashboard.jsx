@@ -149,7 +149,7 @@ class CTDashboard extends PureComponent {
    * @returns none
   */
   componentDidMount() {
-    this.getRoles();
+    // this.getRoles();
   };
 
   /**

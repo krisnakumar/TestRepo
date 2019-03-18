@@ -12,7 +12,7 @@ import React from 'react';
 import LogInForm from './components/LogInForm';
 
 const LogIn = () => (
-  <div className="loginLogo">
+  <div className="login-Logo">
     {/* <img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/logo_big.png?v=2" title="OnBoard Learning Management System" alt="logo" id="logo_top"></img>
     <div className="account">
       <div className="account__wrapper">

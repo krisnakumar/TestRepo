@@ -13,7 +13,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input } from 'reactstrap';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-
+import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
@@ -22,6 +22,28 @@ const bigList = [];
 for (var i = 1; i <= 100; i++) {
     bigList.push({ value: i, label: `Item ${i}` });
 }
+
+const roleList = [
+    {
+        "text": "Admin",
+        "id": "1"
+    }, {
+        "text": "Contractor",
+        "id": "2"
+    }, {
+        "text": "Manager",
+        "id": "3"
+    }, {
+        "text": "Section Manager",
+        "id": "4"
+    }, {
+        "text": "Supervisor",
+        "id": "5"
+    }, {
+        "text": "Student",
+        "id": "6"
+    }
+];
 
 class FilterModal extends React.Component {
 
@@ -37,15 +59,17 @@ class FilterModal extends React.Component {
             title: this.props.title || "",
             multi: true,
             multiValue: [],
-            options: bigList,
+            options: roleList,
             value: null,
             arrayValue: [],
-            filterSearchValue: ""
+            filterSearchValue: "",
+            tags: []
         };
         this.toggle = this.toggle.bind(this);
         this.selectMultipleOption = this.selectMultipleOption.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     /**
@@ -109,18 +133,16 @@ class FilterModal extends React.Component {
 
     handleOnChange(value) {
         this.setState({ multiValue: value });
-        console.log("this is new", value);
     }
 
     selectMultipleOption(value) {
-        console.count('onChange')
-        console.log("Val", value);
-        this.setState({ arrayValue: value });
+        this.setState({ arrayValue: value, tags: value });
     }
 
     refreshList() {
         this.setState({
-            arrayValue: []
+            arrayValue: [],
+            tags: []
         });
     };
 
@@ -132,18 +154,25 @@ class FilterModal extends React.Component {
      * @returns none
     */
     handleInputChange(event) {
-        debugger; 
         event.preventDefault();
         let name = event.target.name;
         let value = event.target.value;
         this.setState({ [name]: value });
     }
 
+    handleDelete(i) {
+        const { tags, arrayValue } = this.state;
+        this.setState({
+            tags: tags.filter((tag, index) => index !== i),
+            arrayValue: arrayValue.filter((tag, index) => index !== i),
+        });
+    }
+
     render() {
         const { title } = this.state;
         let titleText = title || "";
 
-        let { multi, multiValue, options, filterSearchValue } = this.state;
+        let { multi, multiValue, options, filterSearchValue, tags } = this.state;
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-filter">
@@ -156,21 +185,30 @@ class FilterModal extends React.Component {
                             <Col sm={{ size: 4 }}><Input value={filterSearchValue} name="filterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
                             <Col sm={{ size: 2 }}><button className="btn-as-text" onClick={this.refreshList} >Refresh List</button></Col>
                         </Row>
+                        <div className="row">
+                            <div className="col">
+                                <ReactTags
+                                    tags={tags}
+                                    handleDelete={this.handleDelete}
+                                    handleDrag={console.log()}
+                                />
+                            </div>
+                        </div>
                         <div className="grid-container">
                             <div className="row">
                                 <div className="col">
                                     <Picky
                                         className="custom-picky"
                                         value={this.state.arrayValue}
-                                        options={bigList}
+                                        options={options}
                                         onChange={this.selectMultipleOption}
                                         open={true}
                                         keepOpen={true}
-                                        valueKey="value"
-                                        labelKey="label"
+                                        valueKey="id"
+                                        labelKey="text"
                                         multiple={true}
                                         includeSelectAll={false}
-                                        includeFilter={true}
+                                        includeFilter={false}
                                         dropdownHeight={250}
                                     />
                                 </div>

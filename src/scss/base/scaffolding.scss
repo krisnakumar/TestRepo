@@ -937,7 +937,6 @@ div#queryResultSet {
 .padding-rt-2p{
   padding-right: 2% !important;
 }
-
 .grid-filter-section {
   background: #e8e9ea;
   margin: 1% 0 1% 0;
@@ -975,7 +974,6 @@ button.grid-filter-go-btn {
   border: none;
   margin-bottom: 10px;
 }
-
 .center.modal-header .modal-title{
   margin: 0rem 0rem 0rem auto;
 }
@@ -1003,4 +1001,34 @@ button.grid-filter-go-btn {
   .picky__input{
     display: none !important;
   }
+}
+.ReactTags__tagInput {
+  display: none;
+}
+.picky__dropdown{
+  border: none !important;
+  overflow-y: auto !important;
+}
+.picky__dropdown .option.selected, .picky__dropdown li.selected {
+  display: none;
+}
+.picky__dropdown .option, .picky__dropdown li {
+  border-bottom: none !important;
+}
+.ReactTags__remove {
+  cursor: pointer !important;
+  padding: 5px;
+}
+.tag-wrapper.ReactTags__tag {
+  width: fit-content;
+  height: 20px;
+  padding: 10px;
+  cursor: default !important;
+}
+.custom-modal-filter-body.modal-body .grid-container {
+  min-height: 250px;
+}
+.ReactTags__tags.react-tags-wrapper {
+  border: 1px solid #aaaaaa;
+  border-radius: 5px;
 }
