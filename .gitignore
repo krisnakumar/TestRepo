@@ -2,12 +2,18 @@
 
 # dependencies
 /node_modules
+/query-builder/node_modules
 
 # testing
 /coverage
+/query-builder/coverage
+/workbooks-dashboard/coverage
+/contractor-oq-dashboard/coverage
+/contractor-training-dashboard/coverage
 
 # production
 /build
+/query-builder/build
 
 # misc
 .DS_Store

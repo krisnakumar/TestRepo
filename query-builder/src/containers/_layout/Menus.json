@@ -1,0 +1,114 @@
+[
+    {
+        "name": "Learn",
+        "subMenu": [
+            {
+                "name": "My Assignments",
+                "href": "/MyAssignments.aspx"
+            },
+            {
+                "name": "My Transcript",
+                "href": "/Transcript.aspx"
+            },
+            {
+                "name": "My Downloads",
+                "href": "/MyDownloads.aspx"
+            },
+            {
+                "name": "Purchase",
+                "href": "/CourseLibrary.aspx"
+            }
+        ],
+        "iconUrl": "https://d2vkqsz7y0fh3j.cloudfront.net/img/topnav_learn.png?v=2",
+        "href": "/LearnLanding.aspx"
+    },
+    {
+        "name": "Manage",
+        "subMenu": [
+            {
+                "name": "Course Assignments",
+                "href": "/CourseAssignmentLanding.aspx"
+            },
+            {
+                "name": "Users",
+                "href": "/Users.aspx#u=m"
+            },
+            {
+                "name": "Company",
+                "href": "/Company.aspx"
+            },
+            {
+                "name": "Tasks",
+                "href": "/Tasks.aspx"
+            },
+            {
+                "name": "Events",
+                "href": "/Events.aspx"
+            }
+        ],
+        "iconUrl": "https://d2vkqsz7y0fh3j.cloudfront.net/img/topnav_manage.png?v=2",
+        "href": "/ManageLanding.aspx"
+    },
+    {
+        "name": "Reports",
+        "subMenu": [
+            {
+                "name": "Qualifications",
+                "href": "/TranscriptLanding.aspx"
+            },
+            {
+                "name": "Course Usage",
+                "href": "/CourseUsageLanding.aspx"
+            },
+            {
+                "name": "Exception Reports",
+                "href": "/ExceptionReportsLanding.aspx"
+            },
+            {
+                "name": "Custom Reports",
+                "href": "/MyReports.aspx"
+            },
+            {
+                "name": "Workbook Dashboard",
+                "href": "/EmployeeReports",
+                "isRedirect":false
+            },
+            {
+                "name": "Contractor OQ Dashboard",
+                "href": "/OQDashboard",
+                "isRedirect":false
+            },
+            {
+                "name": "Contractor Training Dashboard",
+                "href": "/CTDashboard",
+                "isRedirect":false
+            },
+            {
+                "name": "Query Builder",
+                "href": "/QueryBuilder",
+                "isRedirect":false
+            }
+        ],
+        "iconUrl": "https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2",
+        "href": "/ReportsLanding.aspx"
+    },
+    {
+        "name": "Settings",
+        "subMenu": [
+            {
+                "name": "My Profile",
+                "href": "/UserProfile.aspx#u=m"
+            },
+            {
+                "name": "Change Password",
+                "href": "UserProfile.aspx#change=pass"
+            },
+            {
+                "name": "Change Username",
+                "href": "/UserProfile.aspx#change=username"
+            }
+        ],
+        "iconUrl": "https://d2tqbrn06t95pa.cloudfront.net/img/topnav_settings.png?v=2",
+        "href": "/SettingsLanding.aspx"
+    }
+]
