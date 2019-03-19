@@ -24,7 +24,7 @@ namespace ReportBuilderAPI.DatabaseManager
         /// <returns>Query</returns>
         public static string GetUserId(string email)
         {
-            return "SELECT Id FROM dbo.[USER] WHERE Email='" + email + "' AND IsEnabled=1";
+            return "SELECT Id FROM dbo.[UserDetails] WHERE Email='" + email + "' AND IsEnabled=1";
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace ReportBuilderAPI.DatabaseManager
         /// <returns>Query</returns>
         public static string GetCompanyId(string email)
         {
-            return "SELECT uc.companyId FROM dbo.[USER] u JOIN dbo.UserCompany uc on uc.UserId=u.Id WHERE Email='" + email + "'  AND u.IsEnabled=1 AND uc.IsEnabled=1";
+            return "SELECT uc.companyId FROM dbo.[UserDetails] u JOIN dbo.UserCompany uc on uc.UserId=u.Id WHERE Email='" + email + "'  AND u.IsEnabled=1 AND uc.IsEnabled=1";
         }
     }
 }
