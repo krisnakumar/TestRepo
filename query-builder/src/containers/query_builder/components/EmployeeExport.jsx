@@ -12,14 +12,13 @@ componentWillReceiveProps(newProps)
 */
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
-//import XLSX from 'xlsx';
 import * as moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
 import FieldData from './../data';
 
-//const ExcelFile = ReactExport.ExcelFile;
-//const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-//const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 class EmployeeExport extends Component {
     constructor(props) {
