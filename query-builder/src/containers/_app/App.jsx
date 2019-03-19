@@ -125,10 +125,11 @@ class App extends Component {
     const { cookies } = this.props;
     let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
       isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
-      isBasePath = window.location.pathname == '/' ? true : false;  // Checking it is base path or not
+      isBasePath = window.location.pathname == '/' ? true : false, 
+      isMockBasePath = true;  // Checking it is base path or not
 
     // Checking that the Identity token is available and it is not app base path
-    if (!isTokenAvailable && !isBasePath) {
+    if (!isTokenAvailable && !isMockBasePath) {
       // If there is no Identity token from browser cookie on loading app other than base domain setting state 'isValid' to false and doing re-direct
       this.setState({ isValid: false });
       window.location = window.location.origin;
