@@ -19,6 +19,7 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import { WithContext as ReactTags } from 'react-tag-input';
 import * as API from '../../../shared/utils/APIUtils';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
 import FilterModal from './FilterModal';
@@ -72,7 +73,7 @@ class CTDashboard extends PureComponent {
         cellClass: "text-right last-column padding-rt-2p"
       }
     ];
-
+    this.roleFilter = React.createRef();
     this.state = {
       rows: this.createRows([]),
       isInitial: false,
@@ -82,10 +83,12 @@ class CTDashboard extends PureComponent {
       collapse: false,
       collapseText: "More Options",
       isFilterModal: false,
-      filterModalTitle: "Role"
+      filterModalTitle: "Role",
+      filteredRoles: []
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
+    this.handleRoleDelete = this.handleRoleDelete.bind(this);
 
   }
 
@@ -333,9 +336,33 @@ class CTDashboard extends PureComponent {
     this.setState(state => ({ isFilterModal: true }));
   }
 
+  /**
+   * @method
+   * @name - updateSelectedData
+   * This method will update the modal window state of parent
+   * @param selectedData
+   * @returns none
+  */
+  updateSelectedData = (selectedData) => {
+    this.setState({
+      filteredRoles: selectedData
+    });
+  };
+
+
+  handleRoleDelete(i) {
+    let { filteredRoles } = this.state;
+    filteredRoles = filteredRoles.filter((tag, index) => index !== i)
+    this.setState({
+      filteredRoles: filteredRoles,
+    });
+    this.roleFilter.current.selectMultipleOption(filteredRoles);
+  }
+
   render() {
-    const { rows, collapseText, collapse } = this.state;
-    let collapseClassName = (collapse ? "show" : "hide");
+    const { rows, collapseText, collapse, filteredRoles } = this.state;
+    let collapseClassName = (collapse ? "show" : "hide"),
+      filteredRolesLength = filteredRoles.length;
     return (
       <CardBody>
         <ContractorCompanyDetail
@@ -345,9 +372,11 @@ class CTDashboard extends PureComponent {
           companyDetails={this.state.companyDetails}
           title={this.state.selectedRole}
         />
-         <FilterModal
+        <FilterModal
+          ref={this.roleFilter}
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
+          updateSelectedData={this.updateSelectedData.bind(this)}
           modal={this.state.isFilterModal}
           title={this.state.filterModalTitle}
         />
@@ -362,14 +391,21 @@ class CTDashboard extends PureComponent {
           <Collapse className="grid-filter-collapse-body" isOpen={collapse}>
             <Row className="collapse-body-row">
               <Col xs="1"><label>Role:</label></Col>
-              <Col xs="auto"><input value="ALL" disabled className="text-center" /></Col>
+              <Col xs="auto">
+                {
+                  filteredRolesLength <= 0 && <input value="ALL" disabled className="text-center" />
+
+                  ||
+
+                  <ReactTags
+                    tags={filteredRoles}
+                    handleDelete={this.handleRoleDelete}
+                    handleDrag={console.log()}
+                  />
+                }
+              </Col>
               <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
-            </Row>
-            <Row className="collapse-body-row">
-              <Col xs="1"><label>Company:</label></Col>
-              <Col xs="auto"><input value="ALL" disabled className="text-center" /></Col>
-              <Col xs="1"><button className="btn-as-text" onClick={console.log(this)} >Change</button></Col>
-            </Row>
+            </Row>           
             <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>
               <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={console.log(this)} >Go</button></Col>

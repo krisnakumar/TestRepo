@@ -632,8 +632,8 @@ class QuerySection extends PureComponent {
             </Col>
             <Col xs="auto">
                {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} columnOptions={this.state.empColumnList} />}
-              {/* {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} columnOptions={this.state.workbookColumnList} />}
-              {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} columnOptions={this.state.taskColumnList} />} */}
+              {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} columnOptions={this.state.workbookColumnList} />}
+              {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} columnOptions={this.state.taskColumnList} />}
             </Col>
           </Row>
         </div>

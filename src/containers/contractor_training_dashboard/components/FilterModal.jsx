@@ -17,12 +17,6 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
-const bigList = [];
-
-for (var i = 1; i <= 100; i++) {
-    bigList.push({ value: i, label: `Item ${i}` });
-}
-
 const roleList = [
     {
         "text": "Admin",
@@ -57,19 +51,20 @@ class FilterModal extends React.Component {
         this.state = {
             modal: this.props.modal,
             title: this.props.title || "",
-            multi: true,
-            multiValue: [],
             options: roleList,
-            value: null,
             arrayValue: [],
             filterSearchValue: "",
-            tags: []
+            tags: [],
+            lastSelectedValue: []
         };
+
         this.toggle = this.toggle.bind(this);
         this.selectMultipleOption = this.selectMultipleOption.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.passSelectedData = this.passSelectedData.bind(this);
+        this.resetSelectedData = this.resetSelectedData.bind(this);
     }
 
     /**
@@ -131,10 +126,6 @@ class FilterModal extends React.Component {
         this.props.updateState("isFilterModal");
     };
 
-    handleOnChange(value) {
-        this.setState({ multiValue: value });
-    }
-
     selectMultipleOption(value) {
         this.setState({ arrayValue: value, tags: value });
     }
@@ -168,15 +159,43 @@ class FilterModal extends React.Component {
         });
     }
 
+    /**
+     * @method
+     * @name - passSelectedData
+     * This method will update the current of modal window
+     * @param none
+     * @returns none
+    */
+    passSelectedData() {
+        let selectedData = this.state.tags;
+        this.setState({ lastSelectedValue: selectedData });
+        this.props.updateSelectedData(selectedData);
+        this.toggle();
+    };
+
+    /**
+     * @method
+     * @name - resetSelectedData
+     * This method will update the current of modal window
+     * @param none
+     * @returns none
+    */
+    resetSelectedData() {
+        let lastSelectedValue = this.state.lastSelectedValue;
+        this.setState({ arrayValue: lastSelectedValue, tags: lastSelectedValue });
+        this.props.updateSelectedData(lastSelectedValue);
+        this.toggle();
+    };
+
     render() {
         const { title } = this.state;
         let titleText = title || "";
 
-        let { multi, multiValue, options, filterSearchValue, tags } = this.state;
+        let { options, filterSearchValue, tags, arrayValue } = this.state;
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-filter">
-                    <ModalHeader className="center" toggle={this.toggle}>
+                    <ModalHeader className="center" toggle={this.resetSelectedData}>
                         {titleText}
                     </ModalHeader>
                     <ModalBody className="custom-modal-filter-body">
@@ -199,7 +218,7 @@ class FilterModal extends React.Component {
                                 <div className="col">
                                     <Picky
                                         className="custom-picky"
-                                        value={this.state.arrayValue}
+                                        value={arrayValue}
                                         options={options}
                                         onChange={this.selectMultipleOption}
                                         open={true}
@@ -216,8 +235,8 @@ class FilterModal extends React.Component {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <button color="primary" className="custom-modal-filter-btn" onClick={this.toggle}>OK</button>{' '}
-                        <button color="secondary" className="custom-modal-filter-btn" onClick={this.toggle}>Cancel</button>
+                        <button color="primary" className="custom-modal-filter-btn" onClick={this.passSelectedData}>OK</button>{' '}
+                        <button color="secondary" className="custom-modal-filter-btn" onClick={this.resetSelectedData}>Cancel</button>
                     </ModalFooter>
                 </Modal>
             </div>

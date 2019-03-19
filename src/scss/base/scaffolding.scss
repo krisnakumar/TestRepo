@@ -1018,11 +1018,19 @@ button.grid-filter-go-btn {
 .ReactTags__remove {
   cursor: pointer !important;
   padding: 5px;
+  margin: 0rem 0rem 0rem auto;
+  background: #bc0202;
+  width: 20px;
+  color: #fff !important;
+  height: 21px;
+  padding: 1px 5px 1px 5px;
+  margin-left: 10px;
+  text-transform: uppercase !important;
 }
 .tag-wrapper.ReactTags__tag {
   width: fit-content;
   height: 20px;
-  padding: 10px;
+  padding: 5px;
   cursor: default !important;
 }
 .custom-modal-filter-body.modal-body .grid-container {
@@ -1031,4 +1039,22 @@ button.grid-filter-go-btn {
 .ReactTags__tags.react-tags-wrapper {
   border: 1px solid #aaaaaa;
   border-radius: 5px;
+  padding: 1%;
+}
+.tag-wrapper.ReactTags__tag  {
+  background: url(https://d2vkqsz7y0fh3j.cloudfront.net/img/item_container_middle.png) repeat-x;
+  width: auto;
+  vertical-align: middle;
+  text-align: left;
+  height: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  margin-right: 7px;
+}
+.picky__dropdown .option input[type='checkbox'], .picky__dropdown .option input[type='radio'], .picky__dropdown li input[type='checkbox'], .picky__dropdown li input[type='radio'] {
+  margin-right: 5px;
+}
+.collapse-body-row{
+  margin-top: 10px;
 }
