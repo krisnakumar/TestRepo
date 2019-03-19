@@ -327,11 +327,25 @@ class CTDashboard extends PureComponent {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+  /**
+  * @method
+  * @name - toggle
+  * This method will used show or hide the modal popup
+  * @param none
+  * @returns none
+  */
   toggle() {
     let collapseText = this.state.collapse ? "More Options" : "Less Options";
     this.setState(state => ({ collapse: !state.collapse, collapseText: collapseText }));
   }
 
+  /**
+  * @method
+  * @name - toggleFilter
+  * This method will used show or hide the filter modal popup
+  * @param none
+  * @returns none
+  */
   toggleFilter() {
     this.setState(state => ({ isFilterModal: true }));
   }
@@ -339,7 +353,7 @@ class CTDashboard extends PureComponent {
   /**
    * @method
    * @name - updateSelectedData
-   * This method will update the modal window state of parent
+   * This method will update the selected role on state
    * @param selectedData
    * @returns none
   */
@@ -350,6 +364,13 @@ class CTDashboard extends PureComponent {
   };
 
 
+  /**
+  * @method
+  * @name - handleRoleDelete
+  * This method will delete the selected roles and update it on state
+  * @param i
+  * @returns none
+  */
   handleRoleDelete(i) {
     let { filteredRoles } = this.state;
     filteredRoles = filteredRoles.filter((tag, index) => index !== i)
@@ -405,7 +426,7 @@ class CTDashboard extends PureComponent {
                 }
               </Col>
               <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
-            </Row>           
+            </Row>
             <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>
               <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={console.log(this)} >Go</button></Col>

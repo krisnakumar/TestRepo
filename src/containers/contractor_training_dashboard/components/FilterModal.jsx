@@ -82,7 +82,6 @@ class FilterModal extends React.Component {
         console.log(error, info);
     }
 
-
     /**
      * @method
      * @name - componentWillReceiveProps
@@ -126,14 +125,29 @@ class FilterModal extends React.Component {
         this.props.updateState("isFilterModal");
     };
 
+    /**
+    * @method
+    * @name - selectMultipleOption
+    * This method will update selected multiple role state
+    * @param value
+    * @returns none
+    */
     selectMultipleOption(value) {
         this.setState({ arrayValue: value, tags: value });
     }
 
+    /**
+     * @method
+     * @name - refreshList
+     * This method will update search filter based on search query
+     * @param none
+     * @returns none
+    */
     refreshList() {
+        let element = document.getElementById('filterSearchInput'),
+            value = element.value || "";
         this.setState({
-            arrayValue: [],
-            tags: []
+            filterSearchValue: value.trim()
         });
     };
 
@@ -151,6 +165,13 @@ class FilterModal extends React.Component {
         this.setState({ [name]: value });
     }
 
+     /**
+     * @method
+     * @name - handleDelete
+     * his method will delete the selected roles and update it on state
+     * @param i
+     * @returns none
+    */
     handleDelete(i) {
         const { tags, arrayValue } = this.state;
         this.setState({
@@ -162,7 +183,7 @@ class FilterModal extends React.Component {
     /**
      * @method
      * @name - passSelectedData
-     * This method will update the current of modal window
+     * This method will update the current of selected roles and pass it to parent component
      * @param none
      * @returns none
     */
@@ -176,7 +197,7 @@ class FilterModal extends React.Component {
     /**
      * @method
      * @name - resetSelectedData
-     * This method will update the current of modal window
+     * This method will reset the current of selected roles and pass it to parent component
      * @param none
      * @returns none
     */
@@ -187,11 +208,30 @@ class FilterModal extends React.Component {
         this.toggle();
     };
 
+    /**
+     * @method
+     * @name - filterOptions
+     * This method will generate the possible suggestions options based on filter text value
+     * @param textInputValue
+     * @param possibleSuggestionsArray
+     * @returns none
+    */
+    filterOptions(textInputValue, possibleSuggestionsArray) {
+        let lowerCaseQuery = textInputValue.toLowerCase().trim();
+
+        return possibleSuggestionsArray.filter(function (suggestion) {
+            return suggestion.text.toLowerCase().includes(lowerCaseQuery)
+        })
+    };
+
     render() {
         const { title } = this.state;
         let titleText = title || "";
 
         let { options, filterSearchValue, tags, arrayValue } = this.state;
+
+        let possibleOptionsArray = this.filterOptions(filterSearchValue, options);
+
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-filter">
@@ -201,7 +241,7 @@ class FilterModal extends React.Component {
                     <ModalBody className="custom-modal-filter-body">
                         <Row className="custom-modal-filter-search">
                             <Col sm={{ size: 1, offset: 3 }}><label>Search</label></Col>
-                            <Col sm={{ size: 4 }}><Input value={filterSearchValue} name="filterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
+                            <Col sm={{ size: 4 }}><Input value={filterSearchValue} id="filterSearchInput" name="filterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
                             <Col sm={{ size: 2 }}><button className="btn-as-text" onClick={this.refreshList} >Refresh List</button></Col>
                         </Row>
                         <div className="row">
@@ -219,7 +259,7 @@ class FilterModal extends React.Component {
                                     <Picky
                                         className="custom-picky"
                                         value={arrayValue}
-                                        options={options}
+                                        options={possibleOptionsArray}
                                         onChange={this.selectMultipleOption}
                                         open={true}
                                         keepOpen={true}
