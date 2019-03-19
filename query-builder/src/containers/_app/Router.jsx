@@ -3,10 +3,6 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import MainWrapper from './MainWrapper';
 import Login from '../account/log_in/index';
-import WorkbookDashboard from '../workbook_dashboard/index';
-import QueryBuilder from '../query_builder/index';
- import OQDashboard from '../oq_contractor_dashboard/index';
- import CTDashboard from '../contractor_training_dashboard/index';
 
 /**
  * @method

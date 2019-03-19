@@ -22,7 +22,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import Menus from '../../../_layout/Menus.json';
 import * as Constants from '../../../../shared/constants';
 
-import Index from '../../../query_builder/index';
+import QueryBuilder from '../../../query_builder/index';
 
 class LogInForm extends PureComponent {
   static propTypes = {
@@ -131,12 +131,8 @@ class LogInForm extends PureComponent {
   render() {
     const { handleSubmit } = this.props;
 
-    // if (this.state.toDashboard === true) {
-    //   return <Redirect to='/EmployeeReports' />
-    // }
-
     if (this.state.hasSessionCookie) {
-      return <Index/>;
+      return <QueryBuilder />;
     } else {
       return (<div className={`load`}>
         <div className="load__icon-wrap">

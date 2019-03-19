@@ -152,7 +152,7 @@ class CTDashboard extends PureComponent {
    * @returns none
   */
   componentDidMount() {
-    // this.getRoles();
+    this.getRoles();
   };
 
   /**
@@ -182,7 +182,7 @@ class CTDashboard extends PureComponent {
     const postData = {
       "Fields": [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }],
       "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE']
-    }
+    };
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
