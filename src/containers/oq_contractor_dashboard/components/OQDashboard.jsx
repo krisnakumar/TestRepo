@@ -138,7 +138,8 @@ class OQDashboard extends PureComponent {
       collapseText: "More Options",
       isFilterModal: false,
       filterModalTitle: "Role",
-      filteredRoles: []
+      filteredRoles: [],
+      filterOptionsRoles: []
     };
 
     this.toggle = this.toggle.bind(this);
@@ -182,11 +183,13 @@ class OQDashboard extends PureComponent {
    * @param none
    * @returns none
   */
-  componentDidMount() {
+  async componentDidMount() {
     // Do API call for loading initial table view
     const { cookies } = this.props;
-    let userId = cookies.get('UserId');
-    this.getQualifications(userId);
+    let userId = cookies.get('UserId'),
+      roles = [];
+    await this.getFilterOptions();
+    this.getQualifications(userId, roles);
   };
 
   /**
@@ -375,18 +378,43 @@ class OQDashboard extends PureComponent {
   };
 
   /**
+ * @method
+ * @name - getFilterOptions
+ * This method will used to get Filter Options
+ * @param none
+ * @returns none
+ */
+  async getFilterOptions() {
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/roles",
+      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+    Object.keys(response).map(function (i) { response[i].id = response[i].id.toString() });
+    this.setState({ filterOptionsRoles: response });
+  };
+
+  /**
    * @method
    * @name - getQualifications
    * This method will used to get Qualifications details
    * @param userId
    * @returns none
    */
-  async getQualifications(userId) {
+  async getQualifications(userId, roles) {
     const { cookies } = this.props;
+    let rolesLength = roles.length,
+        fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }];
+    if (rolesLength > 0) {
+      let roleIds = roles.join();
+      let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
+      fields.push(roleField);
+    }
     const payLoad = {
-      "Fields": [
-        { "Name": "USER_ID", "Value": userId, "Operator": "=" }
-      ],
+      "Fields": fields,
       "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS
 
     };
@@ -678,6 +706,22 @@ class OQDashboard extends PureComponent {
     this.roleFilter.current.selectMultipleOption(filteredRoles);
   }
 
+  /**
+  * @method
+  * @name - filterGoAction
+  * This method will update the selected role on state
+  * @param none
+  * @returns none
+ */
+  filterGoAction = () => {
+    const { cookies } = this.props;
+    let userId = cookies.get('UserId');
+    let filteredRoles = this.state.filteredRoles,
+      roles = [];
+    Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
+    this.getQualifications(userId, roles);
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -691,6 +735,7 @@ class OQDashboard extends PureComponent {
           updateSelectedData={this.updateSelectedData.bind(this)}
           modal={this.state.isFilterModal}
           title={this.state.filterModalTitle}
+          filterOptionsRoles={this.state.filterOptionsRoles}
         />
         <EmployeeView
           backdropClassName={"backdrop"}
@@ -760,7 +805,7 @@ class OQDashboard extends PureComponent {
             </Row>
             <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>
-              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={console.log(this)} >Go</button></Col>
+              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={this.filterGoAction} >Go</button></Col>
               <Col xs="1"></Col>
             </Row>
           </Collapse>

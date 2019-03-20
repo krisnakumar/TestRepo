@@ -146,26 +146,15 @@ class CTDashboard extends PureComponent {
 
   /**
    * @method
-   * @name - componentWillMount
-   * This method will invoked before the component mount
-   *  is update to this component class
-   * @param none
-   * @returns none
-  */
-  componentWillMount() {
-    this.getFilterOptions();
-  };
-
-  /**
-   * @method
    * @name - componentDidMount
    * This method will invoked whenever the component is mounted
    *  is update to this component class
    * @param none
    * @returns none
   */
-  componentDidMount() {
+  async componentDidMount() {
     let roles = [];
+    await this.getFilterOptions();
     this.getRoles(roles);
   };
 
