@@ -64,13 +64,14 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             window.location =window.location.origin;
         } else {
             document.getElementById("loader-layer").classList.remove("loader-show");
-            document.getElementById("loader-layer").classList.add("loader-hide");
+            document.getElementById("loader-layer").classList.add("loader-hide");            
             return response.json();
         }       
     }).then(function(json) { 
         document.getElementById("loader-layer").classList.remove("loader-show");
         document.getElementById("loader-layer").classList.add("loader-hide");
-        return json;
+        let responseObject = Object.values(json)[0];
+        return responseObject;
     }).catch(function(ex) {
         document.getElementById("loader-layer").classList.remove("loader-show");
         document.getElementById("loader-layer").classList.add("loader-hide");

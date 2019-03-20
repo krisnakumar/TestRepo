@@ -363,7 +363,6 @@ class CTDashboard extends PureComponent {
     });
   };
 
-
   /**
   * @method
   * @name - handleRoleDelete
