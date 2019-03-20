@@ -26,5 +26,9 @@ namespace ReportBuilder.Models.Request
         public string RefreshToken { get; set; }
 
         public int CompanyId { get; set; }
+
+        public string CognitoPoolId { get; set; }
+
+        public string CognitoClientId { get; set; }
     }
 }
