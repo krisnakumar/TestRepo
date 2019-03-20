@@ -19,7 +19,7 @@ import ScrollToTop from './containers/_app/ScrollToTop';
 
 render(
   <Provider store={store}>
-    <BrowserRouter basename="/contractor-management/reports/training-dashboard ">
+    <BrowserRouter basename="/contractor-management/reports/training-dashboard">
       <I18nextProvider i18n={i18next}>
         <ScrollToTop>
           <CookiesProvider>
