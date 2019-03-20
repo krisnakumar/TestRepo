@@ -84,7 +84,8 @@ class CTDashboard extends PureComponent {
       collapseText: "More Options",
       isFilterModal: false,
       filterModalTitle: "Role",
-      filteredRoles: []
+      filteredRoles: [],
+      filterOptionsRoles: [],
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
@@ -145,6 +146,18 @@ class CTDashboard extends PureComponent {
 
   /**
    * @method
+   * @name - componentWillMount
+   * This method will invoked before the component mount
+   *  is update to this component class
+   * @param none
+   * @returns none
+  */
+  componentWillMount() {
+    this.getFilterOptions();
+  };
+
+  /**
+   * @method
    * @name - componentDidMount
    * This method will invoked whenever the component is mounted
    *  is update to this component class
@@ -152,7 +165,8 @@ class CTDashboard extends PureComponent {
    * @returns none
   */
   componentDidMount() {
-    this.getRoles();
+    let roles = [];
+    this.getRoles(roles);
   };
 
   /**
@@ -174,13 +188,20 @@ class CTDashboard extends PureComponent {
   * @method
   * @name - getEmployees
   * This method will used to get Employees details
-  * @param none
+  * @param roles
   * @returns none
   */
-  async getRoles() {
+  async getRoles(roles) {
     const { cookies } = this.props;
+    let rolesLength = roles.length,
+      fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }];
+    if (rolesLength > 0) {
+      let roleIds = roles.join();
+      let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
+      fields.push(roleField);
+    }
     const postData = {
-      "Fields": [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }],
+      "Fields": fields,
       "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE']
     };
 
@@ -192,6 +213,26 @@ class CTDashboard extends PureComponent {
       isInitial = true;
 
     this.setState({ rows: rows, isInitial: isInitial });
+  };
+
+  /**
+  * @method
+  * @name - getFilterOptions
+  * This method will used to get Filter Options
+  * @param none
+  * @returns none
+  */
+  async getFilterOptions() {
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/roles",
+      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+    Object.keys(response).map(function (i) { response[i].id = response[i].id.toString() });
+    this.setState({ filterOptionsRoles: response });
   };
 
   /**
@@ -379,6 +420,20 @@ class CTDashboard extends PureComponent {
     this.roleFilter.current.selectMultipleOption(filteredRoles);
   }
 
+  /**
+  * @method
+  * @name - filterGoAction
+  * This method will update the selected role on state
+  * @param none
+  * @returns none
+ */
+  filterGoAction = () => {
+    let filteredRoles = this.state.filteredRoles,
+        roles = [];
+    Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
+    this.getRoles(roles);
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -399,6 +454,7 @@ class CTDashboard extends PureComponent {
           updateSelectedData={this.updateSelectedData.bind(this)}
           modal={this.state.isFilterModal}
           title={this.state.filterModalTitle}
+          filterOptionsRoles={this.state.filterOptionsRoles}
         />
         <div className="card__title">
           <div className="pageheader">
@@ -428,7 +484,7 @@ class CTDashboard extends PureComponent {
             </Row>
             <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>
-              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={console.log(this)} >Go</button></Col>
+              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={this.filterGoAction} >Go</button></Col>
               <Col xs="1"></Col>
             </Row>
           </Collapse>

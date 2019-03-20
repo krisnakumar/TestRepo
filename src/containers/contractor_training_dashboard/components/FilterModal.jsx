@@ -51,7 +51,7 @@ class FilterModal extends React.Component {
         this.state = {
             modal: this.props.modal,
             title: this.props.title || "",
-            options: roleList,
+            options: this.props.filterOptionsRoles || roleList,
             arrayValue: [],
             filterSearchValue: "",
             tags: [],
@@ -92,6 +92,7 @@ class FilterModal extends React.Component {
      */
     componentWillReceiveProps(newProps) {
         this.setState({
+            options: newProps.filterOptionsRoles,
             modal: newProps.modal,
             title: newProps.title || ""
         });
@@ -133,7 +134,7 @@ class FilterModal extends React.Component {
     * @returns none
     */
     selectMultipleOption(value) {
-        this.setState({ arrayValue: value, tags: value });
+        this.setState({ arrayValue: value, tags: value, lastSelectedValue: value });
     }
 
     /**
