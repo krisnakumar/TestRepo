@@ -378,12 +378,12 @@ class OQDashboard extends PureComponent {
   };
 
   /**
- * @method
- * @name - getFilterOptions
- * This method will used to get Filter Options
- * @param none
- * @returns none
- */
+   * @method
+   * @name - getFilterOptions
+   * This method will used to get Filter Options
+   * @param none
+   * @returns none
+   */
   async getFilterOptions() {
     const { cookies } = this.props;
 
@@ -407,7 +407,7 @@ class OQDashboard extends PureComponent {
   async getQualifications(userId, roles) {
     const { cookies } = this.props;
     let rolesLength = roles.length,
-        fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }];
+      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
