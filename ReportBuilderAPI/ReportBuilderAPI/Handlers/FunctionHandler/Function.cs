@@ -16,21 +16,26 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     /// </summary>
     public class Function
     {
+
+        public Function()
+        {
+            DatabaseWrapper._connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
+        }
         /// <summary>
         ///  Function that helps to validate the user using user name and password
         /// </summary>
         /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns>UserResponse</returns>
-        public UserResponse Login(UserRequest request, ILambdaContext context = null)
+        public UserResponse Login(UserRequest userRequest, ILambdaContext context = null)
         {
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
             UserResponse userResponse = new UserResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
-                LambdaLogger.Log(DatabaseWrapper._connectionString);
-                return authenticationRepository.Login(request, context);
+                userRequest.CognitoPoolId = "us-west-2_nrrZaoTAs";
+                userRequest.CognitoClientId = "4efougb8nqj7f72ku183rudmqm";
+                return authenticationRepository.Login(userRequest, context);
             }
             catch (Exception loginException)
             {
@@ -51,6 +56,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             UserResponse userResponse = new UserResponse();
             try
             {
+                userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
                 return authenticationRepository.SilentAuth(userRequest);
             }
             catch (Exception silentAuthException)
@@ -75,7 +81,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             EmployeeResponse employeeResponse = new EmployeeResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
             }
             catch (Exception getEmployeesException)
@@ -97,7 +102,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             WorkbookResponse workbookResponse = new WorkbookResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
             }
             catch (Exception getWorkbookQueryBuilderException)
@@ -120,7 +124,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             TaskResponse taskResponse = new TaskResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
             }
             catch (Exception getTaskQueryBuilderException)
@@ -144,7 +147,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             QueryResponse queryResponse = new QueryResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return queryRepository.SaveQuery(queryBuilderRequest);
             }
             catch (Exception saveQueryException)
@@ -168,7 +170,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             QueryResponse queryResponse = new QueryResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return queryRepository.GetUserQueries(queryBuilderRequest);
             }
             catch (Exception getQueriesException)
@@ -191,7 +192,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             QueryResponse queryResponse = new QueryResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return queryRepository.RenameQuery(queryBuilderRequest);
             }
             catch (Exception renameQueryException)
@@ -214,7 +214,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             QueryResponse queryResponse = new QueryResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return queryRepository.DeleteQuery(queryBuilderRequest);
             }
             catch (Exception deleteQueryException)
@@ -238,7 +237,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             QueryResponse queryResponse = new QueryResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return queryRepository.GetUserQuery(queryBuilderRequest);
             }
             catch (Exception getQueryException)
@@ -261,7 +259,6 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             RoleResponse roleResponse = new RoleResponse();
             try
             {
-                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
                 return roleRepository.GetRoles(roleRequest);
             }
             catch (Exception getRolesException)

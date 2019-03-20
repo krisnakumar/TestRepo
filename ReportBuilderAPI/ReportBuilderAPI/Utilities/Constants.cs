@@ -46,6 +46,10 @@ namespace ReportBuilderAPI.Utilities
 
         public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";
         public const string ROLE = "ROLE";
+
+        public const string ROLES = "ROLES";
+
+
         public const string CAN_CERTIFY = "CAN_CERTIFY";
         
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";

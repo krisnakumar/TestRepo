@@ -9,7 +9,6 @@ using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Resource;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 
 
@@ -110,7 +109,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read employee name using user email
-                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT (ISNULL(NULLIF(FName, '') + ' ', '') + Lname)  as employeeName FROM dbo.[User] WHERE Email='" + email + "'", null))
+                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT Full_Name_Format1  as employeeName FROM dbo.[UserDetails] WHERE Email='" + email + "'", null))
                 {
                     if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
                     {

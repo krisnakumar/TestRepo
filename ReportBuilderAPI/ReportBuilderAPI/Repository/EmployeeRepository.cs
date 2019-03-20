@@ -22,23 +22,23 @@ namespace ReportBuilderAPI.Repository
     public class EmployeeRepository : IEmployee
     {
         /// <summary>
-        ///     Dictionary having Column list for the employee details.
+        ///     Dictionary having Column list for the employee details.300
         ///     Based on column name, query is being formed/updated
         /// </summary>
         private readonly Dictionary<string, string> columnList = new Dictionary<string, string>()
         {
-                { Constants.EMPLOYEE_NAME, ", (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  AS employeeName " },
+                { Constants.EMPLOYEE_NAME, ", Full_Name_Format1  AS employeeName " },
                 { Constants.ROLE, ", r.Name AS Role "},
                 { Constants.USERNAME, ", u.UserName" },
                 { Constants.ALTERNATE_USERNAME, ", u.UserName2" },
-                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.id) AS employeeCount" },
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.User_Id) AS employeeCount" },
                 { Constants.EMAIL, ", u.Email" },
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
-                { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[User] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.Id WHERE s.userId=u.Id) AS supervisorName" },
+                { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[UserDetails] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.Id WHERE s.userId=u.User_Id) AS supervisorName" },
                 { Constants.USER_CREATED_DATE, ", u.DateCreated" },
                 { Constants.USERID, ", u. Id AS userId" },
-                { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM dbo.Supervisor s WHERE userId=u.Id) AS supervisorId" }
+                { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM dbo.Supervisor s WHERE userId=u.User_Id) AS supervisorId" }
 
         };
 
@@ -48,7 +48,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, string> employeeFields = new Dictionary<string, string>()
         {
-            {Constants.USERID, "u.ID" },
+            {Constants.USERID, "u.User_Id" },
             {Constants.USERNAME, "u.UserName" },
             {Constants.USERNAME2, "u.UserName2" },
             {Constants.USER_CREATED_DATE, "u.DateCreated" },
@@ -67,16 +67,16 @@ namespace ReportBuilderAPI.Repository
             {Constants.QR_CODE, "u.BarcodeHash " },
             {Constants.DEPARTMENT, "d.Name " },
             {Constants.SUPERVISOR_ID, "s.SupervisorId " },
-            {Constants.ME, "u.Id in (@currentuserId)" },
-            {Constants.ME_AND_DIRECT_SUBORDINATES, "u.Id IN(SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
-            {Constants.ME_AND_ALL_SUBORDINATES, " u.Id IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
-            {Constants.DIRECT_SUBORDINATES, "u.Id IN(SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
-            {Constants.ALL_SUBORDINATES, " u.Id IN (SELECT * FROM getchildUsers(@currentuserId))  " },
-            {Constants.NOT_ME, "u.Id NOT IN (@currentuserId)" },
-            {Constants.NOT_ME_AND_DIRECT_SUBORDINATES, "u.Id NOT IN (SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
-            {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.Id NOT IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
-            {Constants.NOT_DIRECT_SUBORDINATES, "u.Id NOT IN (SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
-            {Constants.NOT_ALL_SUBORDINATES, " u.Id NOT IN (SELECT * FROM getchildUsers(@currentuserId))  " }
+            {Constants.ME, "u.User_Id in (@currentuserId)" },
+            {Constants.ME_AND_DIRECT_SUBORDINATES, "u.User_Id IN(SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
+            {Constants.ME_AND_ALL_SUBORDINATES, " u.User_Id IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.DIRECT_SUBORDINATES, "u.User_Id IN(SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
+            {Constants.ALL_SUBORDINATES, " u.User_Id IN (SELECT * FROM getchildUsers(@currentuserId))  " },
+            {Constants.NOT_ME, "u.User_Id NOT IN (@currentuserId)" },
+            {Constants.NOT_ME_AND_DIRECT_SUBORDINATES, "u.User_Id NOT IN (SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
+            {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.User_Id NOT IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.NOT_DIRECT_SUBORDINATES, "u.User_Id NOT IN (SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
+            {Constants.NOT_ALL_SUBORDINATES, " u.User_Id NOT IN (SELECT * FROM getchildUsers(@currentuserId))  " }
         };
 
 
@@ -85,9 +85,9 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            { " LEFT JOIN dbo.UserRole ur ON ur.UserId=u.Id LEFT JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
-            { " LEFT JOIN dbo.Supervisor s ON s.userId=u.Id", new List<string> {Constants.SUPERVISOR_ID, Constants.REPORTING} },
-            { " LEFT JOIN dbo.UserDepartment ud ON ud.userId=u.Id LEFT JOIN dbo.Department d on d.Id=ud.DepartmentId ", new List<string> {Constants.DEPARTMENT} }
+            { " LEFT JOIN dbo.UserRole ur ON ur.UserId=u.User_Id LEFT JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { " LEFT JOIN dbo.Supervisor s ON s.userId=u.User_Id", new List<string> {Constants.SUPERVISOR_ID, Constants.REPORTING} },
+            { " LEFT JOIN dbo.UserDepartment ud ON ud.userId=u.User_Id LEFT JOIN dbo.Department d on d.Id=ud.DepartmentId ", new List<string> {Constants.DEPARTMENT} }
         };
 
         /// <summary>
@@ -107,14 +107,14 @@ namespace ReportBuilderAPI.Repository
                 selectQuery = "SELECT  ";
 
                 //getting column List
-                query = string.Join("", (from column in columnList
+                query = string.Join("", (from column in columnList  
                                          where employeeRequest.ColumnList.Any(x => x == column.Key)
                                          select column.Value));
                 query = query.TrimStart(',');
                 query = selectQuery + query;
 
                 //Append the user query with select statement
-                query += " FROM dbo.[User] u  LEFT JOIN dbo.UserCompany uc on uc.UserId=u.Id ";
+                query += " FROM dbo.[UserDetails] u  LEFT JOIN dbo.UserCompany uc on uc.UserId=u.User_Id ";
 
                 //get table joins
                 fieldList = employeeRequest.ColumnList.ToList();

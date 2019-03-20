@@ -28,13 +28,13 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, string> workbookColumnList = new Dictionary<string, string>()
         {
-                { Constants.EMPLOYEE_NAME, ", (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname)  AS employeeName" },
+                { Constants.EMPLOYEE_NAME, ", Full_Name_Format1  AS employeeName" },
                 { Constants.WORKBOOK_NAME, ",  wb.name AS workbookName" },
                 { Constants.DESCRIPTION, ", wb.Description"},
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.UserName FROM dbo.[User] us WHERE us.Id=wb.Createdby) AS Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.Createdby) AS Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                 { Constants.DUE_DATE, ", DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded) AS DueDate"},
                 { Constants.USERNAME, ", u.UserName"},
@@ -48,25 +48,33 @@ namespace ReportBuilderAPI.Repository
                 { Constants.STATE, ", u.State"},
                 { Constants.ZIP, ", u.Zip"},
                 { Constants.PHONE, ", u.phone"},
-                { Constants.USERID, ", u.Id as userId"},
+                { Constants.USERID, ", u.User_Id as userId"},
                 { Constants.ENTITY_COUNT, ", (SELECT COUNT(DISTINCT EntityId) FROM dbo.WorkbookProgress WHERE WorkbookId=wb.Id) AS entityCount"},
                 { Constants.USER_COUNT, ", (SELECT COUNT(DISTINCT UserId) FROM dbo.UserWorkbook WHERE WorkbookId=wb.Id) AS userCount"},
-                { Constants.ASSIGNED_WORKBOOK, ", (SELECT COUNT(DISTINCT uwt.WorkBookId)  FROM dbo.UserWorkBook uwt  LEFT JOIN dbo.UserCompany uc ON uc.UserId= uwt.UserId  WHERE uc.companyId=@companyId AND uwt.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwt.IsEnabled=1) AS AssignedWorkbooks"},
-                { Constants.PAST_DUE_WORKBOOK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwb.IsEnabled=1 AND    ABS(DATEDIFF(DAY,GETDATE(),CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101))) < @duedays AND wb.DaysToComplete <= ABS(DATEDIFF(DAY,  GETDATE(), DateAdded)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0))  AS PastDueWorkbooks"},
-                { Constants.WORKBOOK_DUE, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId  JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE  uc.companyId=@companyId AND   ABS(DATEDIFF(DAY,GETDATE(),CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101))) < @duedays AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND uwb.IsEnabled=1 AND wb.DaysToComplete >= ABS(DATEDIFF(DAY,  GETDATE(), DateAdded)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS InDueWorkbooks"},          
-                { Constants.INCOMPLETE_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND wbs.WorkBookId=wb.id GROUP BY wbt.WorkBookId HAVING (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId )),0)) AS InCompletedWorkbooks"},
-                { Constants.TOTAL_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND wbs.WorkBookId=wb.id ),0)) AS TotalWorkbooks"},
-                { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((u.Id)) AND wbs.WorkBookId=wb.id ),0)) AS TotalTasks"},
-                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId = u.Id and uc.companyId=@companyId) AS TotalEmployees"},
-                { Constants.COMPLETED_WORKBOOK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((SELECT u.Id UNION SELECT * FROM getChildUsers (u.Id))) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedWorkbooks"},
-                { Constants.COMPLETED_TASK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN dbo.UserCompany uc ON uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((u.Id)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedTasks"},
+                { Constants.ASSIGNED_WORKBOOK, ", (SELECT COUNT(DISTINCT uwt.WorkBookId)  FROM dbo.UserWorkBook uwt  LEFT JOIN dbo.UserCompany uc ON uc.UserId= uwt.UserId  WHERE uc.companyId=@companyId AND uwt.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND uwt.IsEnabled=1) AS AssignedWorkbooks"},
+
+                { Constants.PAST_DUE_WORKBOOK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND uwb.IsEnabled=1 AND    ABS(DATEDIFF(DAY,GETDATE(),CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101))) < @duedays AND wb.DaysToComplete <= ABS(DATEDIFF(DAY,  GETDATE(), DateAdded)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0))  AS PastDueWorkbooks"},
+
+                { Constants.WORKBOOK_DUE, ", (SELECT ISNULL((SELECT COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId  JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE  uc.companyId=@companyId AND   ABS(DATEDIFF(DAY,GETDATE(),CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101))) < @duedays AND  wbs.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND uwb.IsEnabled=1 AND wb.DaysToComplete >= ABS(DATEDIFF(DAY,  GETDATE(), DateAdded)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS InDueWorkbooks"},          
+
+                { Constants.INCOMPLETE_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND wbs.WorkBookId=wb.id GROUP BY wbt.WorkBookId HAVING (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId )),0)) AS InCompletedWorkbooks"},
+
+                { Constants.TOTAL_WORKBOOK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND wbs.WorkBookId=wb.id ),0)) AS TotalWorkbooks"},
+
+                { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId     LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND  wbs.UserId IN ((u.User_Id)) AND wbs.WorkBookId=wb.id ),0)) AS TotalTasks"},
+
+                { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId = u.User_Id and uc.companyId=@companyId) AS TotalEmployees"},
+
+                { Constants.COMPLETED_WORKBOOK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT uwb.WorkBookId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN dbo.UserCompany uc on uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((SELECT u.User_Id UNION SELECT * FROM getChildUsers (u.User_Id))) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedWorkbooks"},
+
+                { Constants.COMPLETED_TASK, ",  (SELECT ISNULL((SELECT  COUNT(DISTINCT wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  LEFT JOIN dbo.UserCompany uc ON uc.UserId= uwb.UserId JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId WHERE uc.companyId=@companyId AND uwb.IsEnabled=1 AND  wbs.UserId IN ((u.User_Id)) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedTasks"},
                 { Constants.ROLE, ", r.Name AS Role "},
                 { Constants.NUMBER_COMPLETED, ", wbp.NumberCompleted"},
                 { Constants.LAST_ATTEMPT_DATE, ", (SELECT  MAX(LastAttemptDate) FROM dbo.WorkBookProgress WHERE WorkBookId=wbp.WorkBookId) AS LastAttemptDate"},
                 { Constants.FIRST_ATTEMPT_DATE, ", wbp.FirstAttemptDate"},
                 { Constants.REPETITIONS, ", wbc.Repetitions"},
                 { Constants.WORKBOOK_ASSIGNED_DATE, ", uwb.DateAdded"},
-                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.UserName FROM dbo.[User] us WHERE us.Id=wbp.LastSignOffBy) AS LastSignOffBy"}
+                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wbp.LastSignOffBy) AS LastSignOffBy"}
         };
 
         /// <summary>
@@ -76,11 +84,11 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
             {Constants.WORKBOOK_ID, "wb.ID " },
-            {Constants.SUPERVISOR_ID, " u.Id IN (SELECT * FROM getChildUsers (@userId))  " },
-            {Constants.NOT_SUPERVISORID, " u.Id NOT IN (SELECT * FROM getChildUsers (@userId))  " },
-            {Constants.SUPERVISOR_USER, " u.Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.SUPERVISOR_ID, " u.User_Id IN (SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.NOT_SUPERVISORID, " u.User_Id NOT IN (SELECT * FROM getChildUsers (@userId))  " },
+            {Constants.SUPERVISOR_USER, " u.User_Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
             {Constants.SUPERVISOR_SUB, " s.supervisorId " },
-            {Constants.USERID, " u.Id " },
+            {Constants.USERID, " u.User_Id " },
             {Constants.WORKBOOK_NAME, "wb.Name " },
             {Constants.DESCRIPTION, "wb.Description" },
             {Constants.WORKBOOK_CREATED, "CONVERT(DATE,wb.DateCreated,101)" },
@@ -88,9 +96,9 @@ namespace ReportBuilderAPI.Repository
             {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete" },
             {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" },
             {Constants.DATE_ADDED, "uwb.DateAdded" },
-            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.UserName FROM dbo.[User] us WHERE us.Id=wb.createdby) " },
+            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.createdby) " },
             {Constants.ASSIGNED_TO, "uwb.UserId" },
-            {Constants.ASSIGNED, " u.Id IN (SELECT * FROM getChildUsers (@userId)) " },
+            {Constants.ASSIGNED, " u.User_Id IN (SELECT * FROM getChildUsers (@userId)) " },
             {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
             {Constants.PAST_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) AND CONVERT(date,GETDATE())  AND  (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
             {Constants.COMPLETED, " uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
@@ -103,11 +111,11 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
 
-            { " FULL OUTER JOIN dbo.[user] u ON u.Id=uc.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID, Constants.CREATED_BY } },
-            { " FULL OUTER JOIN dbo.Supervisor s ON s.UserId=u.Id ", new List<string> {Constants.SUPERVISOR_ID} },
+            { " FULL OUTER JOIN dbo.[UserDetails] u ON u.User_Id=uc.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID, Constants.CREATED_BY } },
+            { " FULL OUTER JOIN dbo.Supervisor s ON s.UserId=u.User_Id ", new List<string> {Constants.SUPERVISOR_ID} },
             { " FULL OUTER JOIN dbo.WorkbookProgress wbp ON wbp.WorkbookId=wb.Id ", new List<string> {Constants.NUMBER_COMPLETED, Constants.LAST_ATTEMPT_DATE, Constants.FIRST_ATTEMPT_DATE, Constants.LAST_SIGNOFF_BY, Constants.DATE_ADDED} },
             { " FULL OUTER JOIN dbo.WorkbookContent wbc ON wbc.WorkbookId=wb.Id ", new List<string> {Constants.REPETITIONS, Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID } },
-            { "FULL OUTER JOIN dbo.UserRole ur ON ur.UserId=u.Id LEFT JOIN Role r ON r.Id=ur.roleId " , new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { "FULL OUTER JOIN dbo.UserRole ur ON ur.UserId=u.User_Id LEFT JOIN Role r ON r.Id=ur.roleId " , new List<string> {Constants.ROLEID, Constants.ROLE} },
         };
 
         /// <summary>

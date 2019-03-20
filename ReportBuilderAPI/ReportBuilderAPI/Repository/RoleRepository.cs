@@ -1,21 +1,21 @@
 ﻿using Amazon.Lambda.Core;
-using DataInterface.Database;
+using OnBoardLMS.WebAPI.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.IRepository;
-using ReportBuilderAPI.Queries;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Linq;
+
 
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
     /// Class that manages the role
     /// </summary>
-    public class RoleRepository :IRole
+    public class RoleRepository : IRole
     {
+
         /// <summary>
         /// Get shared roles based on the companyId
         /// </summary>
@@ -24,35 +24,20 @@ namespace ReportBuilderAPI.Repository
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
             RoleResponse roleResponse = new RoleResponse();
-            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            List<RoleModel> roleList = new List<RoleModel>();
             try
             {
-                //Read the roles from DB
-                using (SqlDataReader sqldatareader = databaseWrapper.ExecuteReader(Role.GetRole(roleRequest.CompanyId), null))
+                using (DBEntity context = new DBEntity())
                 {
-                    if (sqldatareader != null)
-                    {
-                        if (sqldatareader.HasRows)
-                        {
-                            while (sqldatareader.Read())
-                            {
-                                RoleModel roleModel = new RoleModel
-                                {
-                                    RoleId = Convert.ToInt32(sqldatareader["Id"]),
-                                    Role = Convert.ToString(sqldatareader["Name"])
-                                };
-                                roleList.Add(roleModel);
-                            }
-                        }
-                        roleResponse.Roles = roleList;
-                    }
-                    else
-                    {
-                        roleResponse.Error = ResponseBuilder.InternalError();
-                    }
-                }
-                return roleResponse;
+                    roleResponse.Roles = (from r in context.Role
+                                             where r.CompanyId == roleRequest.CompanyId
+                                             && r.IsShared && r.IsEnabled==true  
+                                             select new RoleModel
+                                             {
+                                                 RoleId = Convert.ToInt32(r.Id),
+                                                 Role = Convert.ToString(r.Name)
+                                             }).ToList();
+                    return roleResponse;
+                }                               
             }
             catch (Exception getRolesException)
             {
