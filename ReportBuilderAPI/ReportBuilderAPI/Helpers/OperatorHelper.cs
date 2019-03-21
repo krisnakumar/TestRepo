@@ -35,7 +35,8 @@ namespace ReportBuilderAPI.Helpers
             Constants.NOT_ME_AND_ALL_SUBORDINATES,
             Constants.NOT_ME_AND_DIRECT_SUBORDINATES,
             Constants.NOT_ALL_SUBORDINATES,
-            Constants.NOT_DIRECT_SUBORDINATES
+            Constants.NOT_DIRECT_SUBORDINATES,
+            Constants.ROLES
         };
 
         /// <summary>

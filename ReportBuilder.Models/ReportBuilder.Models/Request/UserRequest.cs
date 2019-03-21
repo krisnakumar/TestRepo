@@ -13,7 +13,7 @@
 */
 namespace ReportBuilder.Models.Request
 {
-    public class UserRequest
+    public class UserRequest : AuthorizorRequest
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string UserName { get; set; }
@@ -30,5 +30,9 @@ namespace ReportBuilder.Models.Request
         public string CognitoPoolId { get; set; }
 
         public string CognitoClientId { get; set; }
+
+        public string IdToken { get; set; }
+
+        public string AccessToken { get; set; }
     }
 }

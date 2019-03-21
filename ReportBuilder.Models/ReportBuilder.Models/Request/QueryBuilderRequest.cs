@@ -15,7 +15,7 @@ using System.Collections.Generic;
 */
 namespace ReportBuilder.Models.Request
 {
-    public class QueryBuilderRequest
+    public class QueryBuilderRequest : AuthorizorRequest
     {
         public List<EmployeeModel> Fields { get; set; }
         public string[] ColumnList { get; set; }

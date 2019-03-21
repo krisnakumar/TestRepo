@@ -3,6 +3,7 @@ using OnBoardLMS.WebAPI.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
+using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
 using System;
 using System.Linq;
@@ -24,8 +25,9 @@ namespace ReportBuilderAPI.Repository
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
             RoleResponse roleResponse = new RoleResponse();
+
             try
-            {
+            {                
                 using (DBEntity context = new DBEntity())
                 {
                     roleResponse.Roles = (from r in context.Role
@@ -34,7 +36,8 @@ namespace ReportBuilderAPI.Repository
                                              select new RoleModel
                                              {
                                                  RoleId = Convert.ToInt32(r.Id),
-                                                 Role = Convert.ToString(r.Name)
+                                                 Role = Convert.ToString(r.Name),
+                                                 UserName= roleRequest.UserName
                                              }).ToList();
                     return roleResponse;
                 }                               

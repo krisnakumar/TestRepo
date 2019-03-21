@@ -3,6 +3,7 @@ using DataInterface.Database;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
+using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.Repository;
 using System;
 
@@ -16,10 +17,9 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     /// </summary>
     public class Function
     {
-
         public Function()
         {
-            DatabaseWrapper._connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
+            DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString(); ;
         }
         /// <summary>
         ///  Function that helps to validate the user using user name and password
@@ -33,9 +33,10 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             UserResponse userResponse = new UserResponse();
             try
             {
-                userRequest.CognitoPoolId = "us-west-2_nrrZaoTAs";
-                userRequest.CognitoClientId = "4efougb8nqj7f72ku183rudmqm";
+                userRequest.CognitoPoolId = Environment.GetEnvironmentVariable("CognitoPoolId").ToString();
+                userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
                 return authenticationRepository.Login(userRequest, context);
+
             }
             catch (Exception loginException)
             {
@@ -54,10 +55,19 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
             UserResponse userResponse = new UserResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
-                return authenticationRepository.SilentAuth(userRequest);
+                if (authorizer.ValidateUser(userRequest.UserId, userRequest.CompanyId) != null)
+                {
+                    userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
+                    return authenticationRepository.SilentAuth(userRequest);
+                }
+                else
+                {
+                    userResponse.Error = ResponseBuilder.Forbidden();
+                    return userResponse;
+                }
             }
             catch (Exception silentAuthException)
             {
@@ -79,9 +89,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             EmployeeRepository employeeRepository = new EmployeeRepository();
             EmployeeResponse employeeResponse = new EmployeeResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
+                }
+                else
+                {
+                    employeeResponse.Error = ResponseBuilder.Forbidden();
+                    return employeeResponse;
+                }
             }
             catch (Exception getEmployeesException)
             {
@@ -100,9 +119,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             WorkbookRepository workbookRepository = new WorkbookRepository();
             WorkbookResponse workbookResponse = new WorkbookResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
+                }
+                else
+                {
+                    workbookResponse.Error = ResponseBuilder.Forbidden();
+                    return workbookResponse;
+                }
             }
             catch (Exception getWorkbookQueryBuilderException)
             {
@@ -122,9 +150,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             TaskRepository taskRepository = new TaskRepository();
             TaskResponse taskResponse = new TaskResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
+                }
+                else
+                {
+                    taskResponse.Error = ResponseBuilder.Forbidden();
+                    return taskResponse;
+                }
             }
             catch (Exception getTaskQueryBuilderException)
             {
@@ -145,9 +182,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             QueryRepository queryRepository = new QueryRepository();
             QueryResponse queryResponse = new QueryResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return queryRepository.SaveQuery(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return queryRepository.SaveQuery(queryBuilderRequest);
+                }
+                else
+                {
+                    queryResponse.Error = ResponseBuilder.Forbidden();
+                    return queryResponse;
+                }
             }
             catch (Exception saveQueryException)
             {
@@ -168,9 +214,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             QueryRepository queryRepository = new QueryRepository();
             QueryResponse queryResponse = new QueryResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return queryRepository.GetUserQueries(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return queryRepository.GetUserQueries(queryBuilderRequest);
+                }
+                else
+                {
+                    queryResponse.Error = ResponseBuilder.Forbidden();
+                    return queryResponse;
+                }
             }
             catch (Exception getQueriesException)
             {
@@ -190,9 +245,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             QueryRepository queryRepository = new QueryRepository();
             QueryResponse queryResponse = new QueryResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return queryRepository.RenameQuery(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return queryRepository.RenameQuery(queryBuilderRequest);
+                }
+                else
+                {
+                    queryResponse.Error = ResponseBuilder.Forbidden();
+                    return queryResponse;
+                }
             }
             catch (Exception renameQueryException)
             {
@@ -212,9 +276,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             QueryRepository queryRepository = new QueryRepository();
             QueryResponse queryResponse = new QueryResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return queryRepository.DeleteQuery(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return queryRepository.DeleteQuery(queryBuilderRequest);
+                }
+                else
+                {
+                    queryResponse.Error = ResponseBuilder.Forbidden();
+                    return queryResponse;
+                }
             }
             catch (Exception deleteQueryException)
             {
@@ -235,9 +308,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             QueryRepository queryRepository = new QueryRepository();
             QueryResponse queryResponse = new QueryResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return queryRepository.GetUserQuery(queryBuilderRequest);
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                {
+                    return queryRepository.GetUserQuery(queryBuilderRequest);
+                }
+                else
+                {
+                    queryResponse.Error = ResponseBuilder.Forbidden();
+                    return queryResponse;
+                }
             }
             catch (Exception getQueryException)
             {
@@ -257,15 +339,55 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             RoleRepository roleRepository = new RoleRepository();
             RoleResponse roleResponse = new RoleResponse();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                return roleRepository.GetRoles(roleRequest);
+                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
+                {
+                    return roleRepository.GetRoles(roleRequest);
+                }
+                else
+                {
+                    roleResponse.Error = ResponseBuilder.Forbidden();
+                    return roleResponse;
+                }
             }
             catch (Exception getRolesException)
             {
                 LambdaLogger.Log(getRolesException.ToString());
                 roleResponse.Error = ResponseBuilder.InternalError();
                 return roleResponse;
+            }
+        }
+
+        /// <summary>
+        ///  Get the list of companies based on the userId
+        /// </summary>
+        /// <param name="companyRequest"></param>
+        /// <param name="context"></param>
+        /// <returns>CompanyResponse</returns>
+        public CompanyResponse GetCompany(CompanyRequest companyRequest, ILambdaContext context = null)
+        {
+            CompanyRepository companyRepository = new CompanyRepository();
+            CompanyResponse companyResponse = new CompanyResponse();
+            Authorizer authorizer = new Authorizer();
+            try
+            {
+                if (authorizer.ValidateUser(companyRequest.UserId, companyRequest.CompanyId) != null)
+                {
+                    return companyRepository.GetCompany(companyRequest);
+                }
+                else
+                {
+                    companyResponse.Error = ResponseBuilder.Forbidden();
+                    return companyResponse;
+                }
+            }
+            catch (Exception getCompanyException)
+            {
+                LambdaLogger.Log(getCompanyException.ToString());
+                companyResponse.Error = ResponseBuilder.InternalError();
+                return companyResponse;
             }
         }
     }

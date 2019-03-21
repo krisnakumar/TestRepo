@@ -464,6 +464,44 @@
                }
             }
          }
+      },
+	   "GetCompanies": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompany",
+            "FunctionName": "GetCompany-dev",
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": null,
+            "Policies": [
+               "AWSLambdaFullAccess"
+            ],
+            "Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
+                  }
+               }
+            },
+            "Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
+                     },
+                     "Path": "/companies",
+                     "Method": "GET"
+                  }
+               }
+            }
+         }
       }
    },
    "Outputs": {}

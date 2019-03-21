@@ -42,7 +42,7 @@ namespace ReportBuilderAPI.Helpers
                 }
 
                 //Get the parameter dictionary
-                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(queryRequest.CompanyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) }, { "role", Convert.ToString(role) }, { "roles", Convert.ToString(role) } };
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(queryRequest.CompanyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) }, { "role", Convert.ToString(role) }, { "roles", Convert.ToString(roles) } };
                 return parameterList;
             }
             catch (Exception getParameterException)
@@ -70,6 +70,8 @@ namespace ReportBuilderAPI.Helpers
                     parameters.TryGetValue("workbookId", out workbookId);
                     parameters.TryGetValue("duedays", out dueDays);
                     parameters.TryGetValue("role", out roleId);
+                    parameters.TryGetValue("roles", out roles);
+
                     if (!string.IsNullOrEmpty(userId))
                     {
                         sqlParameters.Add(new SqlParameter("@userId", SqlDbType.Int) { Value = userId });
@@ -88,7 +90,7 @@ namespace ReportBuilderAPI.Helpers
                     }
                     if (!string.IsNullOrEmpty(roleId))
                     {
-                        sqlParameters.Add(new SqlParameter("@roleId", SqlDbType.Int) { Value = workbookId });
+                        sqlParameters.Add(new SqlParameter("@roleId", SqlDbType.Int) { Value = roleId });
                     }
                     if (!string.IsNullOrEmpty(roles))
                     {

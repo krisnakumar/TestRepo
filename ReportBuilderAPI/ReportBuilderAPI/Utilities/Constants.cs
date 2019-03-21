@@ -116,6 +116,8 @@ namespace ReportBuilderAPI.Utilities
         public const string COMPLETED_TASK = "COMPLETED_TASK";
 
         public const string DUE_DATE = "DUE_DATE";
+
+
         public const string ASSIGNED_TO = "ASSIGNED_TO";
         public const string DATE_ADDED = "DATE_ADDED";
 

@@ -4,9 +4,7 @@ using System.Text;
 
 namespace ReportBuilder.Models.Request
 {
-    public class RoleRequest : AuthorizorRequest
+    public class CompanyRequest :AuthorizorRequest
     {
-      
-        
     }
 }
