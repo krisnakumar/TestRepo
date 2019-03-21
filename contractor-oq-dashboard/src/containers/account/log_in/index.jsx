@@ -7,7 +7,6 @@
 * Prerequisites: React and babel
 */
 
-
 import React from 'react';
 import LogInForm from './components/LogInForm';
 
