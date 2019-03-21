@@ -21,6 +21,7 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import Export from './CTDashboardExport';
 
 /**
  * UserTaskDetailEmptyRowsView Class defines the React component to render
@@ -253,6 +254,11 @@ class UserTaskDetail extends React.Component {
             <p className="section-info-description">This level will display the contractors training tasks and their respective status</p>
             <p className="section-info-description"> </p>
           </ModalHeader>
+          <Export 
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={titleText}
+          />
           <ModalBody>
           <div className="grid-container">
               <div className="table">

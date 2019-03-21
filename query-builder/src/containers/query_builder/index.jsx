@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import React, { PureComponent } from 'react';
 import { Card, Col, Row, Container } from 'reactstrap';
 import { connect } from 'react-redux';

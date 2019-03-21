@@ -24,6 +24,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import WorkBookRepetition from './WorkBookRepetition';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import Export from './WorkBookDashboardExport';
 
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
@@ -408,6 +409,11 @@ class WorkBookProgress extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Total Tasks and Completed Percentage"}
+          />
           <ModalBody>
             <div className="grid-description">
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>

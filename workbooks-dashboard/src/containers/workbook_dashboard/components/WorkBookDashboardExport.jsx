@@ -1,8 +1,8 @@
 /* eslint-disable */
 /*
-* CTDashboardExport.jsx
+* WorkBookDashboardExport.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render CTDashboardExport details into xlsx file
+* This javascript file will used render CTDashboard details into xlsx file
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -19,7 +19,7 @@ const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-class CTDashboardExport extends Component {
+class WorkBookDashboardExport extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -110,11 +110,11 @@ class CTDashboardExport extends Component {
                 <div className="export-menu-right">
                     <a href="javascript:void(0);" id="ctl00_exportExcel" className="exportExcel"><img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/excel_icon.jpg" />Excel</a>  
                 </div>
-                    } filename={"Industrial Training Services, Inc. Training Dashboard " + date} fileExtension="xlsx">
+                    } filename={"Industrial Training Services, Inc. Workbook Dashboard " + date} fileExtension="xlsx">
                 <ExcelSheet dataSet={excelData} name={sheetName} />
             </ExcelFile>
         );
     }
 }
 
-export default withCookies(CTDashboardExport);
+export default withCookies(WorkBookDashboardExport);

@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import UserTaskDetail from './UserTaskDetail';
+import Export from './CTDashboardExport';
 
 /**
  * CompanyUserDetailEmptyRowsView Class defines the React component to render
@@ -383,6 +384,11 @@ class CompanyUserDetail extends React.Component {
             <p className="section-info-description">This level will display the contractor's training progress required by the role</p>
             <p className="section-info-description"> </p>
           </ModalHeader>
+          <Export 
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={titleText}
+          />
           <ModalBody>
             <div className="grid-container">
               <div className="table">

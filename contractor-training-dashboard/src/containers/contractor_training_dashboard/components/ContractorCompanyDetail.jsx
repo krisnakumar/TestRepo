@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import CompanyUserDetail from './CompanyUserDetail';
+import Export from './CTDashboardExport';
 
 /**
  * ContractorCompanyDetailEmptyRowsView Class defines the React component to render
@@ -382,6 +383,11 @@ class ContractorCompanyDetail extends React.Component {
             <p className="section-info-description">Completed Users shows number of users who have completed all tasks in the role, over the total users in the role</p>
             <p className="section-info-description">% Complete shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
           </ModalHeader>
+          <Export 
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={titleText}
+          />
           <ModalBody>
             <div className="grid-container">
               <div className="table">

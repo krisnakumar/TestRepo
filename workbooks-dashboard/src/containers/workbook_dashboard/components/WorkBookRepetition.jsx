@@ -21,6 +21,7 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import Export from './WorkBookDashboardExport';
 
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
@@ -250,6 +251,11 @@ class WorkBookRepetition extends React.Component {
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Workbook Repetition"}
+          />
           <ModalBody>
             <div className="grid-description">
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>

@@ -450,6 +450,7 @@ class CTDashboard extends PureComponent {
           <Export 
             data={this.state.rows}
             heads={this.heads}
+            sheetName={"OnBoard LMS Training Dashboard"}
           />
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard

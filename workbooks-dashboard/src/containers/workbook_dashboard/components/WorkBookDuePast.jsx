@@ -24,6 +24,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import WorkBookProgress from './WorkBookProgress';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import Export from './WorkBookDashboardExport';
 
 /**
  * WorkBookDuePastEmptyRowsView Class defines the React component to render
@@ -366,6 +367,11 @@ class WorkBookDuePast extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Past Due Workbooks</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Past Due Workbooks"}
+          />
           <ModalBody>
           <div className="grid-container">
               <div className="table">
