@@ -30,9 +30,10 @@ import * as Constants from '../constants';
 * @returns json
 */
 export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
-    document.getElementById("loader-layer").classList.remove("loader-hide");
-    document.getElementById("loader-layer").classList.add("loader-show");
-
+    if(document.getElementById("loader-layer")){
+        document.getElementById("loader-layer").classList.remove("loader-hide");
+        document.getElementById("loader-layer").classList.add("loader-show");
+    }
     let request = {},
         url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
 
@@ -63,17 +64,24 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             deleteAllCookies();
             window.location =window.location.origin;
         } else {
-            document.getElementById("loader-layer").classList.remove("loader-show");
-            document.getElementById("loader-layer").classList.add("loader-hide");
+            if(document.getElementById("loader-layer")){
+                document.getElementById("loader-layer").classList.remove("loader-show");
+                document.getElementById("loader-layer").classList.add("loader-hide"); 
+            }         
             return response.json();
         }       
     }).then(function(json) { 
-        document.getElementById("loader-layer").classList.remove("loader-show");
-        document.getElementById("loader-layer").classList.add("loader-hide");
-        return json;
+        if(document.getElementById("loader-layer")){
+            document.getElementById("loader-layer").classList.remove("loader-show");
+            document.getElementById("loader-layer").classList.add("loader-hide");     
+        }       
+        let responseObject = Object.values(json)[0];
+        return responseObject;
     }).catch(function(ex) {
-        document.getElementById("loader-layer").classList.remove("loader-show");
-        document.getElementById("loader-layer").classList.add("loader-hide");
+        if(document.getElementById("loader-layer")){
+            document.getElementById("loader-layer").classList.remove("loader-show");
+            document.getElementById("loader-layer").classList.add("loader-hide");     
+        }        
         // Handle API Exception here
         console.log('parsing failed', ex);
     });
