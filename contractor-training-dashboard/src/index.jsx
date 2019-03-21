@@ -5,7 +5,6 @@
 * Template: React PureComponent
 * Prerequisites: BrowserRouter, CookiesProvider, Provider, React and babel
 */
-
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
