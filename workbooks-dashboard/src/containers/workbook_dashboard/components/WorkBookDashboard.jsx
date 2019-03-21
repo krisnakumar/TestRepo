@@ -22,12 +22,13 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
-import { CardBody } from 'reactstrap';
+import { CardBody, Collapse, Row, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import { WithContext as ReactTags } from 'react-tag-input';
 import MyEmployees from './MyEmployees';
 import AssignedWorkBook from './AssignedWorkBook';
 import WorkBookDuePast from './WorkBookDuePast';
@@ -35,6 +36,7 @@ import WorkBookComingDue from './WorkBookComingDue';
 import WorkBookCompleted from './WorkBookCompleted';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import FilterModal from './FilterModal';
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -123,7 +125,7 @@ class WorkBookDashboard extends PureComponent {
     ];
 
     this.employees = [];
-
+    this.roleFilter = React.createRef();
     this.state = {
       rows: this.createRows(this.employees),
       pageOfItems: [],
@@ -141,8 +143,17 @@ class WorkBookDashboard extends PureComponent {
       fakeState: false,
       level: 0,
       supervisorNames: [],
-      isInitial: false
+      isInitial: false,
+      collapse: false,
+      collapseText: "More Options",
+      isFilterModal: false,
+      filterModalTitle: "Role",
+      filteredRoles: []
     };
+
+    this.toggle = this.toggle.bind(this);
+    this.toggleFilter = this.toggleFilter.bind(this);
+    this.handleRoleDelete = this.handleRoleDelete.bind(this);
 
   }
 
@@ -299,11 +310,35 @@ class WorkBookDashboard extends PureComponent {
    * @param none
    * @returns none
   */
-  componentDidMount() {
+  async componentDidMount() {
     const { cookies } = this.props;
     let companyId = cookies.get('CompanyId'),
-      userId = cookies.get('UserId');
-    this.getEmployees(companyId, userId);
+      userId = cookies.get('UserId'),
+      roles = [];
+
+    await this.getFilterOptions();
+    this.getEmployees(companyId, userId, roles);
+  };
+
+
+  /**
+   * @method
+   * @name - getFilterOptions
+   * This method will used to get Filter Options
+   * @param none
+   * @returns none
+   */
+  async getFilterOptions() {
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/roles",
+      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+    this.setState({ filterOptionsRoles: response });
   };
 
   /**
@@ -313,10 +348,17 @@ class WorkBookDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getEmployees(companyId, userId) {
+  async getEmployees(companyId, userId, roles) {
     const { cookies } = this.props;
+    let rolesLength = roles.length,
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }];
+    if (rolesLength > 0) {
+      let roleIds = roles.join();
+      let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
+      fields.push(roleField);
+    }
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
     let token = cookies.get('IdentityToken'),
@@ -398,7 +440,7 @@ class WorkBookDashboard extends PureComponent {
   async getPastDueWorkbooks(userId) {
     const { cookies } = this.props;
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise":"and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise":"and" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
@@ -624,10 +666,90 @@ class WorkBookDashboard extends PureComponent {
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
+  /**
+  * @method
+  * @name - toggle
+  * This method will used show or hide the modal popup
+  * @param none
+  * @returns none
+  */
+  toggle() {
+    let collapseText = this.state.collapse ? "More Options" : "Less Options";
+    this.setState(state => ({ collapse: !state.collapse, collapseText: collapseText }));
+  }
+
+  /**
+  * @method
+  * @name - toggleFilter
+  * This method will used show or hide the filter modal popup
+  * @param none
+  * @returns none
+  */
+  toggleFilter() {
+    this.setState(state => ({ isFilterModal: true }));
+  }
+
+  /**
+   * @method
+   * @name - updateSelectedData
+   * This method will update the selected role on state
+   * @param selectedData
+   * @returns none
+  */
+  updateSelectedData = (selectedData) => {
+    this.setState({
+      filteredRoles: selectedData
+    });
+  };
+
+  /**
+  * @method
+  * @name - handleRoleDelete
+  * This method will delete the selected roles and update it on state
+  * @param i
+  * @returns none
+  */
+  handleRoleDelete(i) {
+    let { filteredRoles } = this.state;
+    filteredRoles = filteredRoles.filter((tag, index) => index !== i)
+    this.setState({
+      filteredRoles: filteredRoles,
+    });
+    this.roleFilter.current.selectMultipleOption(filteredRoles);
+  };
+
+  /**
+  * @method
+  * @name - filterGoAction
+  * This method will update the selected role on state
+  * @param none
+  * @returns none
+ */
+  filterGoAction = () => {   
+    const { cookies } = this.props;
+    let companyId = cookies.get('CompanyId'),
+      userId = cookies.get('UserId');
+    let filteredRoles = this.state.filteredRoles,
+        roles = [];
+    Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
+    this.getEmployees(companyId, userId, roles);
+  };
+
   render() {
-    const { rows } = this.state;
+    const { rows, collapseText, collapse, filteredRoles } = this.state;
+    let collapseClassName = (collapse ? "show" : "hide"),
+      filteredRolesLength = filteredRoles.length;
     return (
       <CardBody>
+        <FilterModal
+          ref={this.roleFilter}
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          updateSelectedData={this.updateSelectedData.bind(this)}
+          modal={this.state.isFilterModal}
+          title={this.state.filterModalTitle}
+          filterOptionsRoles={this.state.filterOptionsRoles}
+        />
         <MyEmployees
           backdropClassName={"backdrop"}
           fakeState={this.state.fakeState}
@@ -668,6 +790,33 @@ class WorkBookDashboard extends PureComponent {
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Workbook Dashboard
             </div>
           <p className="card__description">View list of workbooks assigned, completed and due for employees</p>
+        </div>
+        <div className="grid-filter-section">
+          <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>
+          <Collapse className="grid-filter-collapse-body" isOpen={collapse}>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label>Role:</label></Col>
+              <Col xs="auto">
+                {
+                  filteredRolesLength <= 0 && <input value="ALL" disabled className="text-center" />
+
+                  ||
+
+                  <ReactTags
+                    tags={filteredRoles}
+                    handleDelete={this.handleRoleDelete}
+                    handleDrag={console.log()}
+                  />
+                }
+              </Col>
+              <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
+            </Row>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label></label></Col>
+              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={this.filterGoAction} >Go</button></Col>
+              <Col xs="1"></Col>
+            </Row>
+          </Collapse>
         </div>
         <div className="grid-container">
           <div className="table has-total-row is-table-page-view">

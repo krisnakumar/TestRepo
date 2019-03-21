@@ -26,6 +26,7 @@ import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import Export from './OQDashboardExport';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -599,6 +600,11 @@ class EmployeeView extends PureComponent {
                 />
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
                     <ModalHeader toggle={this.toggle}>Employee View{contractorsName}</ModalHeader>
+                    <Export
+                        data={this.state.rows}
+                        heads={this.heads}
+                        sheetName={"Employee View"}
+                    />
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">

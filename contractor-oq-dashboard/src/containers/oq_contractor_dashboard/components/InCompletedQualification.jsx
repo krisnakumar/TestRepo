@@ -18,6 +18,7 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import Export from './OQDashboardExport';
 
 /**
  * InCompletedQualificationEmptyRowsView Class defines the React component to render
@@ -221,6 +222,11 @@ class InCompletedQualification extends PureComponent {
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
                     <ModalHeader toggle={this.toggle}>Disqualifications</ModalHeader>
+                    <Export
+                        data={this.state.rows}
+                        heads={this.heads}
+                        sheetName={"Disqualifications"}
+                    />
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">

@@ -13,11 +13,12 @@ handleGridRowsUpdated(fromRow, toRow, updated)
 handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
-import { CardBody, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { CardBody, Collapse, Row, Col } from 'reactstrap';
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import { WithContext as ReactTags } from 'react-tag-input';
 import EmployeeView from '../components/EmployeeView';
 import AssignedQualification from '../components/AssignedQualification';
 import CompletedQualification from '../components/CompletedQualification';
@@ -26,6 +27,8 @@ import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import FilterModal from './FilterModal';
+import Export from './OQDashboardExport';
 
 /**
  * OQDashboardEmptyRowsView Class defines the React component to render
@@ -114,7 +117,7 @@ class OQDashboard extends PureComponent {
     ];
 
     this.tasks = [];
-
+    this.roleFilter = React.createRef();
     this.state = {
       rows: this.createRows(this.tasks),
       level: 0,
@@ -131,8 +134,18 @@ class OQDashboard extends PureComponent {
       inCompletedQualifications: {},
       pastDueQualifications: {},
       comingDueQualifications: {},
-      contractorsNames: []
+      contractorsNames: [],
+      collapse: false,
+      collapseText: "More Options",
+      isFilterModal: false,
+      filterModalTitle: "Role",
+      filteredRoles: [],
+      filterOptionsRoles: []
     };
+
+    this.toggle = this.toggle.bind(this);
+    this.toggleFilter = this.toggleFilter.bind(this);
+    this.handleRoleDelete = this.handleRoleDelete.bind(this);
   }
 
   /**
@@ -171,11 +184,13 @@ class OQDashboard extends PureComponent {
    * @param none
    * @returns none
   */
-  componentDidMount() {
+  async componentDidMount() {
     // Do API call for loading initial table view
     const { cookies } = this.props;
-    let userId = cookies.get('UserId');
-    this.getQualifications(userId);
+    let userId = cookies.get('UserId'),
+      roles = [];
+    await this.getFilterOptions();
+    this.getQualifications(userId, roles);
   };
 
   /**
@@ -294,8 +309,9 @@ class OQDashboard extends PureComponent {
       );
     } else {
       return (
-        <span onClick={e => { 
-          e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+        <span onClick={e => {
+          e.preventDefault(); this.handleCellClick(type, props.dependentValues);
+        }} className={"text-clickable"}>
           {props.value}
         </span>
       );
@@ -329,16 +345,16 @@ class OQDashboard extends PureComponent {
       companyId = args.companyId || 0;
     switch (type) {
       case "company":
-      case "total":      
+      case "total":
         let isEmployeeView = this.state.isEmployeeView,
-            employeeQualifications = {},
-            employeesQualificationsArray = [],
-            contractorsNames = this.state.contractorsNames;
+          employeeQualifications = {},
+          employeesQualificationsArray = [],
+          contractorsNames = this.state.contractorsNames;
         isEmployeeView = true;
         contractorsNames = [];
         contractorsNames.push({ 'name': args.company, 'column': "NONE", 'order': "NONE" });
         this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray, contractorsNames });
-        this.getEmployeeQualifications(userId, companyId);        
+        this.getEmployeeQualifications(userId, companyId);
         break;
       case "assignedQualification":
         this.getAssignedQualifications(userId, companyId);
@@ -364,17 +380,42 @@ class OQDashboard extends PureComponent {
 
   /**
    * @method
+   * @name - getFilterOptions
+   * This method will used to get Filter Options
+   * @param none
+   * @returns none
+   */
+  async getFilterOptions() {
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/roles",
+      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+    this.setState({ filterOptionsRoles: response });
+  };
+
+  /**
+   * @method
    * @name - getQualifications
    * This method will used to get Qualifications details
    * @param userId
    * @returns none
    */
-  async getQualifications(userId) {
+  async getQualifications(userId, roles) {
     const { cookies } = this.props;
+    let rolesLength = roles.length,
+      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }];
+    if (rolesLength > 0) {
+      let roleIds = roles.join();
+      let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
+      fields.push(roleField);
+    }
     const payLoad = {
-      "Fields": [
-        { "Name": "USER_ID", "Value": userId, "Operator": "=" }
-      ],
+      "Fields": fields,
       "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS
 
     };
@@ -547,31 +588,31 @@ class OQDashboard extends PureComponent {
      * @param userId
      * @returns none
     */
-   async getEmployeeQualifications(userId, companyId) {
+  async getEmployeeQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
-        "Fields": [
-            { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
-        ],
-        "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
+      "Fields": [
+        { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
+      ],
+      "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
     };
 
     let isEmployeeView = this.state.isEmployeeView,
-        employeeQualifications = {},
-        employeesQualificationsArray = [];
+      employeeQualifications = {},
+      employeesQualificationsArray = [];
 
     isEmployeeView = true;
     this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray });
 
     let token = cookies.get('IdentityToken'),
-        url = "/company/" + companyId + "/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     employeeQualifications = response;
     employeesQualificationsArray.push(employeeQualifications);
     isEmployeeView = true;
     this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
-};
+  };
 
   /**
      * @method
@@ -587,7 +628,7 @@ class OQDashboard extends PureComponent {
       contractorsLength = contractorsNames.length;
 
     if (contractorsLength > 0)
-        contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE" });
+      contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE" });
 
     employeesQualificationsArray.push(qualifications);
     this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });
@@ -614,10 +655,89 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });
   };
 
+  /**
+  * @method
+  * @name - toggle
+  * This method will used show or hide the modal popup
+  * @param none
+  * @returns none
+  */
+  toggle() {
+    let collapseText = this.state.collapse ? "More Options" : "Less Options";
+    this.setState(state => ({ collapse: !state.collapse, collapseText: collapseText }));
+  }
+
+  /**
+  * @method
+  * @name - toggleFilter
+  * This method will used show or hide the filter modal popup
+  * @param none
+  * @returns none
+  */
+  toggleFilter() {
+    this.setState(state => ({ isFilterModal: true }));
+  }
+
+  /**
+   * @method
+   * @name - updateSelectedData
+   * This method will update the selected role on state
+   * @param selectedData
+   * @returns none
+  */
+  updateSelectedData = (selectedData) => {
+    this.setState({
+      filteredRoles: selectedData
+    });
+  };
+
+  /**
+  * @method
+  * @name - handleRoleDelete
+  * This method will delete the selected roles and update it on state
+  * @param i
+  * @returns none
+  */
+  handleRoleDelete(i) {
+    let { filteredRoles } = this.state;
+    filteredRoles = filteredRoles.filter((tag, index) => index !== i)
+    this.setState({
+      filteredRoles: filteredRoles,
+    });
+    this.roleFilter.current.selectMultipleOption(filteredRoles);
+  }
+
+  /**
+  * @method
+  * @name - filterGoAction
+  * This method will update the selected role on state
+  * @param none
+  * @returns none
+ */
+  filterGoAction = () => {
+    const { cookies } = this.props;
+    let userId = cookies.get('UserId');
+    let filteredRoles = this.state.filteredRoles,
+      roles = [];
+    Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
+    this.getQualifications(userId, roles);
+  };
+
   render() {
-    const { rows } = this.state;
+    const { rows, collapseText, collapse, filteredRoles } = this.state;
+    let collapseClassName = (collapse ? "show" : "hide"),
+      filteredRolesLength = filteredRoles.length;
     return (
       <CardBody>
+        <FilterModal
+          ref={this.roleFilter}
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          updateSelectedData={this.updateSelectedData.bind(this)}
+          modal={this.state.isFilterModal}
+          title={this.state.filterModalTitle}
+          filterOptionsRoles={this.state.filterOptionsRoles}
+        />
         <EmployeeView
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -659,10 +779,42 @@ class OQDashboard extends PureComponent {
           comingDueQualifications={this.state.comingDueQualifications}
         />
         <div className="card__title">
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Contractor OQ Dashboard"}
+          />
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
             </div>
           <p className="card__description">Contractor Operator Qualifications</p>
+        </div>
+        <div className="grid-filter-section">
+          <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>
+          <Collapse className="grid-filter-collapse-body" isOpen={collapse}>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label>Role:</label></Col>
+              <Col xs="auto">
+                {
+                  filteredRolesLength <= 0 && <input value="ALL" disabled className="text-center" />
+
+                  ||
+
+                  <ReactTags
+                    tags={filteredRoles}
+                    handleDelete={this.handleRoleDelete}
+                    handleDrag={console.log()}
+                  />
+                }
+              </Col>
+              <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
+            </Row>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label></label></Col>
+              <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={this.filterGoAction} >Go</button></Col>
+              <Col xs="1"></Col>
+            </Row>
+          </Collapse>
         </div>
         <div className="grid-container">
           <div className="table has-total-row">
