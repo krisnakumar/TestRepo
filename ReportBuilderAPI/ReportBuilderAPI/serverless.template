@@ -27,6 +27,18 @@
          "Type": "String",
          "Description": "Pool Id to check user session",
          "Default": "4efougb8nqj7f72ku183rudmqm"
+      },
+      "VPCSecurityGroupIDs": {
+         "Description": "An comma-delimited list of strings - the security groups that your Lambda function should be in",
+         "Type": "CommaDelimitedList"
+      },
+      "VPCSubnetIDs": {
+         "Description": "An comma-delimited list of strings - the subnet IDs that your Lambda function should be assigned to",
+         "Type": "CommaDelimitedList"
+      },
+      "LambdaExecutionRoleArn" : {
+		"Description": "The Arn of the role that the lambda functions will execute as.",
+		"Type" : "String"
       }
    },
    "Resources": {
@@ -51,10 +63,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
