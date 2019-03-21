@@ -108,10 +108,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -146,10 +147,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -184,10 +186,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -222,10 +225,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -263,10 +267,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -301,10 +306,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -339,10 +345,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -377,10 +384,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -415,10 +423,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -453,10 +462,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -491,10 +501,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
