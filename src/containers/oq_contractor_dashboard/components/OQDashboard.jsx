@@ -28,6 +28,7 @@ import ComingDueQualification from '../components/ComingDueQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
+import Export from './OQDashboardExport';
 
 /**
  * OQDashboardEmptyRowsView Class defines the React component to render
@@ -393,7 +394,7 @@ class OQDashboard extends PureComponent {
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
-    Object.keys(response).map(function (i) { response[i].id = response[i].id.toString() });
+    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
   };
 
@@ -778,6 +779,11 @@ class OQDashboard extends PureComponent {
           comingDueQualifications={this.state.comingDueQualifications}
         />
         <div className="card__title">
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Contractor OQ Dashboard"}
+          />
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
             </div>
