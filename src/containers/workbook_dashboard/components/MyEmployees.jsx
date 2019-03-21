@@ -31,6 +31,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import Export from './WorkBookDashboardExport';
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -614,6 +615,11 @@ class MyEmployees extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>My Employees{supervisorName}</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"My Employees"}
+          />
           <ModalBody>
             <div className="grid-container">
               <div className="table has-total-row">

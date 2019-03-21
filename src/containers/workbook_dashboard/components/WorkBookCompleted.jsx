@@ -19,6 +19,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
+import Export from './WorkBookDashboardExport';
 
 /**
  * WorkBookCompletedEmptyRowsView Class defines the React component to render
@@ -227,6 +228,11 @@ class WorkBookCompleted extends React.Component {
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Workbook Completed"}
+          />
           <ModalBody>
           <div className="grid-container">
               <div className="table">

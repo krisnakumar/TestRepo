@@ -24,13 +24,14 @@ import * as API from '../../../shared/utils/APIUtils';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
+import Export from './WorkBookDashboardExport';
 
 /**
  * AssignedWorkBookEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react data grid module.
  */
-class AssignedWorkBookEmptyRowsView extends React.Component{
+class AssignedWorkBookEmptyRowsView extends React.Component {
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
@@ -101,7 +102,7 @@ class AssignedWorkBook extends React.Component {
     this.employees = [];
 
     this.state = {
-      modal: this.props.modal,      
+      modal: this.props.modal,
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isWorkBookProgressModal: false,
@@ -135,7 +136,7 @@ class AssignedWorkBook extends React.Component {
    * @param workBookId
    * @returns none
    */
-  async getWorkBookProgress(userId, workBookId){
+  async getWorkBookProgress(userId, workBookId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
@@ -143,43 +144,43 @@ class AssignedWorkBook extends React.Component {
     };
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
-    workBooksProgress = {};
+      workBooksProgress = {};
     isWorkBookProgressModal = true;
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
-        url = "/company/"+companyId+"/tasks",
-        response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBooksProgress = response;        
+    workBooksProgress = response;
     isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
-   /**
-   * @method
-   * @name - createRows
-   * This method will format the input data
-   * for Data Grid
-   * @param employees
-   * @returns rows
-   */
+  /**
+  * @method
+  * @name - createRows
+  * This method will format the input data
+  * for Data Grid
+  * @param employees
+  * @returns rows
+  */
   createRows = (employees) => {
-    const rows = [], 
-          length = employees ? employees.length : 0;
-    for (let i = 0; i < length; i++) { 
-        let dueDate = employees[i].DueDate ? employees[i].DueDate.split("T")[0] : "";
+    const rows = [],
+      length = employees ? employees.length : 0;
+    for (let i = 0; i < length; i++) {
+      let dueDate = employees[i].DueDate ? employees[i].DueDate.split("T")[0] : "";
       rows.push({
-        userId:  employees[i].UserId || 0,
+        userId: employees[i].UserId || 0,
         workBookId: employees[i].WorkBookId,
         workbookName: employees[i].WorkBookName,
         role: employees[i].Role,
         employee: employees[i].EmployeeName,
-        completedTasks: employees[i].CompletedTasks +"/"+ employees[i].TotalTasks,
-        percentageCompleted: (employees[i].CompletedTasks / employees[i].TotalTasks  * 100) + "%",
+        completedTasks: employees[i].CompletedTasks + "/" + employees[i].TotalTasks,
+        percentageCompleted: (employees[i].CompletedTasks / employees[i].TotalTasks * 100) + "%",
         dueDate: dueDate
-      });      
+      });
     }
 
     return rows;
@@ -194,14 +195,14 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks),
-          isArray = Array.isArray(newProps.assignedWorkBooks),
-          isInitial = isArray;
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        isInitial: isInitial
-      });
+    let rows = this.createRows(newProps.assignedWorkBooks),
+      isArray = Array.isArray(newProps.assignedWorkBooks),
+      isInitial = isArray;
+    this.setState({
+      modal: newProps.modal,
+      rows: rows,
+      isInitial: isInitial
+    });
   }
 
   /**
@@ -271,7 +272,7 @@ class AssignedWorkBook extends React.Component {
       }
     };
 
-    const percentageComparer = (a, b) => { 
+    const percentageComparer = (a, b) => {
       if (sortDirection === 'ASC') {
         return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
       } else if (sortDirection === 'DESC') {
@@ -280,11 +281,11 @@ class AssignedWorkBook extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
 
     let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
-    if(isPercentage)
+    if (isPercentage)
       rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
 
     this.setState({ rows });
@@ -300,30 +301,30 @@ class AssignedWorkBook extends React.Component {
    */
   handleCellClick = (type, args) => {
     let userId = 0,
-        workBookId = 0;
-        
+      workBookId = 0;
+
     this.state.selectedWorkbook = args;
-    switch(type) {
+    switch (type) {
       case "percentageCompleted":
       case "completedTasks":
-          userId = args.userId;
-          workBookId = args.workBookId;
-          if(userId && workBookId)
-            this.getWorkBookProgress(userId, workBookId); 
-          break;
+        userId = args.userId;
+        workBookId = args.workBookId;
+        if (userId && workBookId)
+          this.getWorkBookProgress(userId, workBookId);
+        break;
       default:
-          break;
+        break;
     }
     this.refs.reactDataGrid.deselect();
   };
 
-   /**
-   * @method
-   * @name - cellFormatter
-   * This method will format the cell column other than workbooks Data Grid
-   * @param props
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - cellFormatter
+  * This method will format the cell column other than workbooks Data Grid
+  * @param props
+  * @returns none
+  */
   cellFormatter = (props) => {
     return (
       <span>{props.value}</span>
@@ -339,19 +340,19 @@ class AssignedWorkBook extends React.Component {
    * @returns none
    */
   workbookFormatter = (type, props) => {
-    if(props.dependentValues.employee == "Total"){
+    if (props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
     } else {
       return (
-       <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>    
-        {props.value}
-      </span>
+        <span onClick={e => { e.preventDefault(); this.handleCellClick(type, props.dependentValues); }} className={"text-clickable"}>
+          {props.value}
+        </span>
       );
     }
   };
-  
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
@@ -366,24 +367,29 @@ class AssignedWorkBook extends React.Component {
           workBooksProgress={this.state.workBooksProgress}
           selectedWorkbook={this.state.selectedWorkbook}
         />
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Assigned Workbook</ModalHeader>
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Assigned Workbook"}
+          />
           <ModalBody>
-          <div className="grid-container">
+            <div className="grid-container">
               <div className="table">
-                  <ReactDataGrid
-                      ref={'reactDataGrid'}
-                      onGridSort={this.handleGridSort}
-                      enableCellSelect={false}
-                      enableCellAutoFocus={false}
-                      columns={this.heads}
-                      rowGetter={this.rowGetter}
-                      rowsCount={rows.length}
-                      onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={35}
-                      minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView} 
-                  />
+                <ReactDataGrid
+                  ref={'reactDataGrid'}
+                  onGridSort={this.handleGridSort}
+                  enableCellSelect={false}
+                  enableCellAutoFocus={false}
+                  columns={this.heads}
+                  rowGetter={this.rowGetter}
+                  rowsCount={rows.length}
+                  onGridRowsUpdated={this.handleGridRowsUpdated}
+                  rowHeight={35}
+                  minColumnWidth={100}
+                  emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView}
+                />
               </div>
             </div>
           </ModalBody>

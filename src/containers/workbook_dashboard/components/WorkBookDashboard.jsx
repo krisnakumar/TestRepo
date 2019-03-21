@@ -37,6 +37,7 @@ import WorkBookCompleted from './WorkBookCompleted';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
+import Export from './WorkBookDashboardExport';
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -725,12 +726,12 @@ class WorkBookDashboard extends PureComponent {
   * @param none
   * @returns none
  */
-  filterGoAction = () => {   
+  filterGoAction = () => {
     const { cookies } = this.props;
     let companyId = cookies.get('CompanyId'),
       userId = cookies.get('UserId');
     let filteredRoles = this.state.filteredRoles,
-        roles = [];
+      roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
     this.getEmployees(companyId, userId, roles);
   };
@@ -786,6 +787,11 @@ class WorkBookDashboard extends PureComponent {
           assignedWorkBooks={this.state.workBookCompleted}
         />
         <div className="card__title">
+          <Export
+            data={this.state.rows}
+            heads={this.heads}
+            sheetName={"Workbook Dashboard"}
+          />
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Workbook Dashboard
             </div>
