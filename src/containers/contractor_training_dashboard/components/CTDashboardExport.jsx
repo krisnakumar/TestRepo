@@ -2,7 +2,7 @@
 /*
 * CTDashboardExport.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render CTDashboard details into xlsx file
+* This javascript file will used render CTDashboardExport details into xlsx file
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -24,7 +24,8 @@ class CTDashboardExport extends Component {
         super(props);
         this.state = {
             data: this.formatData(this.props.data, this.props.heads),
-            heads: this.props.heads,
+            heads: this.props.heads || [],
+            sheetName: this.props.sheetName || "",
         };
         this.formatData = this.formatData.bind(this);
     };
@@ -39,8 +40,9 @@ class CTDashboardExport extends Component {
     */
     componentWillReceiveProps(newProps) {
         this.setState({
+            sheetName: newProps.sheetName || "",
             data: this.formatData(newProps.data, newProps.heads),
-            heads: newProps.heads
+            heads: newProps.heads || []
         });
     };
 
@@ -53,8 +55,7 @@ class CTDashboardExport extends Component {
     */
     formatData(data, heads) {
         const { cookies } = this.props;
-        let fieldDataColumns = [],
-            runByUser = cookies.get('UserName') || "",
+        let runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
@@ -99,7 +100,7 @@ class CTDashboardExport extends Component {
     };
 
     render() {
-        let { entity } = this.state,
+        let { sheetName } = this.state,
             excelData = this.state.data,
             hasExcelData = excelData[1].data.length > 0 ? true : false,
             date = moment().format('MM.DD.YYYY');
@@ -110,7 +111,7 @@ class CTDashboardExport extends Component {
                     <a href="javascript:void(0);" id="ctl00_exportExcel" className="exportExcel"><img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/excel_icon.jpg" />Excel</a>  
                 </div>
                     } filename={"Industrial Training Services, Inc. Training Dashboard " + date} fileExtension="xlsx">
-                <ExcelSheet dataSet={excelData} name="OnBoard LMS Training Dashboard" />
+                <ExcelSheet dataSet={excelData} name={sheetName} />
             </ExcelFile>
         );
     }
