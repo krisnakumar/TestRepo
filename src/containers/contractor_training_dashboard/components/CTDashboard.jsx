@@ -23,6 +23,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import * as API from '../../../shared/utils/APIUtils';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
 import FilterModal from './FilterModal';
+import Export from './CTDashboardExport';
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -446,6 +447,10 @@ class CTDashboard extends PureComponent {
           filterOptionsRoles={this.state.filterOptionsRoles}
         />
         <div className="card__title">
+          <Export 
+            data={this.state.rows}
+            heads={this.heads}
+          />
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard
             </div>

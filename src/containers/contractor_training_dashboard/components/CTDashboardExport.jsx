@@ -1,8 +1,8 @@
 /* eslint-disable */
 /*
-* EmployeeExport.jsx
+* CTDashboardExport.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render Employee Export details to list the Employees 
+* This javascript file will used render CTDashboard details into xlsx file
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -14,19 +14,17 @@ import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import * as moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
-import FieldData from './../data';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-class EmployeeExport extends Component {
+class CTDashboardExport extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            employees: this.formatData(this.props.employees),
-            entity: this.props.entity,
-            columnOptions: this.props.columnOptions
+            data: this.formatData(this.props.data, this.props.heads),
+            heads: this.props.heads,
         };
         this.formatData = this.formatData.bind(this);
     };
@@ -41,9 +39,8 @@ class EmployeeExport extends Component {
     */
     componentWillReceiveProps(newProps) {
         this.setState({
-            employees: this.formatData(newProps.employees),
-            entity: newProps.entity,
-            columnOptions: newProps.columnOptions
+            data: this.formatData(newProps.data, newProps.heads),
+            heads: newProps.heads
         });
     };
 
@@ -54,10 +51,9 @@ class EmployeeExport extends Component {
      * @param employeeData
      * @returns multiDataSet
     */
-    formatData(employeeData) {
+    formatData(data, heads) {
         const { cookies } = this.props;
-        let fieldDataColumns = FieldData.columns.employees;
-        let employees = employeeData || [],
+        let fieldDataColumns = [],
             runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
@@ -75,27 +71,21 @@ class EmployeeExport extends Component {
             }
         ];
 
-        if (employees.length > 0) {
+        if (data.length > 0) {
 
-            let columns = [],
+            let columnKeys = [],
                 columnNames = [],
-                dataSet = [],
-                currentColumnOptions = this.state.columnOptions;
+                dataSet = [];
 
-            currentColumnOptions.forEach(function (column, empIndex) {
-                fieldDataColumns.forEach(function (value, index) {
-                    if(column == value.fields){
-                        columns.push(value.id);
-                        columnNames.push(value.label);
-                    }
-                    return;
-                });
+            heads.forEach(function (column, empIndex) {
+                columnNames.push(column.name);
+                columnKeys.push(column.key);
             });
 
-            employees.forEach(function (empValue, empIndex) {
+            data.forEach(function (value, index) {
                 let tempDataSet = [];
-                columns.forEach(function (value, index) {
-                    tempDataSet.push(employees[empIndex][value]);
+                columnKeys.forEach(function (keyValue, keyIndex) {
+                    tempDataSet.push(data[index][keyValue]);
                     return;
                 });
                 dataSet.push(tempDataSet);
@@ -110,21 +100,20 @@ class EmployeeExport extends Component {
 
     render() {
         let { entity } = this.state,
-            excelData = this.state[entity],
+            excelData = this.state.data,
             hasExcelData = excelData[1].data.length > 0 ? true : false,
             date = moment().format('MM.DD.YYYY');
 
         return (
             hasExcelData && <ExcelFile element={
-                <button className="query-section-button" size="sm" >
-                    <span aria-hidden className="fa-icon-size" ><i className="fa fa-file-excel-o"></i></span>
-                    <span className="fa-text-align">Export</span>
-                </button>
-            } filename={"Industrial Training Services, Inc. Employee Report " + date} fileExtension="xlsx">
-                <ExcelSheet dataSet={excelData} name="OnBoard LMS Employee Report" />
+                <div className="export-menu-right">
+                    <a href="javascript:void(0);" id="ctl00_exportExcel" className="exportExcel"><img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/excel_icon.jpg" />Excel</a>  
+                </div>
+                    } filename={"Industrial Training Services, Inc. Training Dashboard " + date} fileExtension="xlsx">
+                <ExcelSheet dataSet={excelData} name="OnBoard LMS Training Dashboard" />
             </ExcelFile>
         );
     }
 }
 
-export default withCookies(EmployeeExport);
+export default withCookies(CTDashboardExport);
