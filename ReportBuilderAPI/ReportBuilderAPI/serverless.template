@@ -47,7 +47,7 @@
          "Properties": {
             "Name": "ReportBuilder-dev",
             "StageName": "dev",
-            "DefinitionUri": "s3://reportbuilder-sandbox/RB-dev.json"
+            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
       },
       "Login": {
