@@ -187,6 +187,7 @@ class CTDashboard extends PureComponent {
   async componentDidMount() {
     let roles = [],
       companies = [];
+    this.getCompanyFilterOptions();
     await this.getFilterOptions();
     this.getRoles(roles, companies);
   };
@@ -275,9 +276,9 @@ class CTDashboard extends PureComponent {
 
     let token = cookies.get('IdentityToken'),
       companyId = cookies.get('CompanyId'),
-      url = "/company/" + companyId + "/roles",
+      url = "/companies/",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
-    response = JSON.parse(JSON.stringify(response).split('"Company":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
     response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsCompanies: response });

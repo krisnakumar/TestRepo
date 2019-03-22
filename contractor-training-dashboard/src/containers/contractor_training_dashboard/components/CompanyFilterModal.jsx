@@ -259,7 +259,7 @@ class CompanyFilterModal extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="grid-container">
+                        <div className="grid-container border-none">
                             <div className="row">
                                 <div className="col">
                                     <Picky

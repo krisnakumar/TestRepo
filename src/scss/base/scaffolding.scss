@@ -945,7 +945,7 @@ div#queryResultSet {
 .btn-as-text{
   background:none;
   border:none;
-  font-size: smaller;
+  font-size: small;
   margin:0 !important;
   padding:0 !important;
   cursor: pointer !important;
@@ -1037,7 +1037,6 @@ button.grid-filter-go-btn {
   min-height: 250px;
 }
 .ReactTags__tags.react-tags-wrapper {
-  border: 1px solid #aaaaaa;
   border-radius: 5px;
   padding: 1%;
 }
@@ -1064,4 +1063,16 @@ button.grid-filter-go-btn {
   width: inherit;
   margin: 0rem 0rem 0rem auto;
   padding-right: 10px;
+}
+.exportExcel{
+  font-size: 14px;
+
+  img{
+    margin-right: 3px;
+    margin-bottom: 3px;
+  }
+  
+}
+.border-none{
+  border-radius: 0 !important
 }

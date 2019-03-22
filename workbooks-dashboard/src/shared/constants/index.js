@@ -1,9 +1,11 @@
 /* eslint-disable */
 /* Constants for API Requests */
 
-// export const API_DOMAIN = 'https://xoh0nwh4ba.execute-api.us-west-2.amazonaws.com/'; 
-// export const API_DOMAIN = 'https://sctbemsy2k.execute-api.us-west-2.amazonaws.com/';
-export const API_DOMAIN = 'https://7rdbivaudf.execute-api.us-west-2.amazonaws.com/';
+/* Endpoint API for Sysvine Dev */
+// export const API_DOMAIN = 'https://6y9xjjv40j.execute-api.us-west-2.amazonaws.com/';
+
+/* Endpoint API for ITS Dev */
+export const API_DOMAIN = 'https://cvyf80gu2f.execute-api.us-west-2.amazonaws.com/';
 export const API_STAGE_NAME = 'dev';
 
 /* Constants for Validations */
