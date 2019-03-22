@@ -1,6 +1,6 @@
 /* eslint-disable */
 /*
-* FilterModal.jsx
+* CompanyFilterModal.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
 * This javascript file will used show the filter section
 * Template: React.Component
@@ -17,29 +17,29 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
-const roleList = [
+const companiesList = [
     {
-        "text": "Admin",
+        "text": "Company 1",
         "id": "1"
     }, {
-        "text": "Contractor",
+        "text": "Company 2",
         "id": "2"
     }, {
-        "text": "Manager",
+        "text": "Company 3",
         "id": "3"
     }, {
-        "text": "Section Manager",
+        "text": "Company 4",
         "id": "4"
     }, {
-        "text": "Supervisor",
+        "text": "Company 5",
         "id": "5"
     }, {
-        "text": "Student",
+        "text": "Company 6",
         "id": "6"
     }
 ];
 
-class FilterModal extends React.Component {
+class CompanyFilterModal extends React.Component {
 
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
@@ -51,9 +51,9 @@ class FilterModal extends React.Component {
         this.state = {
             modal: this.props.modal,
             title: this.props.title || "",
-            options: this.props.filterOptionsRoles || roleList,
+            options: this.props.filterOptionsCompanies || companiesList,
             arrayValue: [],
-            filterSearchValue: "",
+            companyFilterSearchValue: "",
             tags: [],
             lastSelectedValue: []
         };
@@ -92,7 +92,7 @@ class FilterModal extends React.Component {
      */
     componentWillReceiveProps(newProps) {
         this.setState({
-            options: newProps.filterOptionsRoles || [],
+            options: newProps.filterOptionsCompanies,
             modal: newProps.modal,
             title: newProps.title || ""
         });
@@ -123,7 +123,7 @@ class FilterModal extends React.Component {
         this.setState({
             modal: !this.state.modal
         });
-        this.props.updateState("isFilterModal");
+        this.props.updateState("isCompanyFilterModal");
     };
 
     /**
@@ -150,10 +150,10 @@ class FilterModal extends React.Component {
      * @returns none
     */
     refreshList() {
-        let element = document.getElementById('filterSearchInput'),
+        let element = document.getElementById('companyFilterSearchInput'),
             value = element.value || "";
         this.setState({
-            filterSearchValue: value.trim()
+            companyFilterSearchValue: value.trim()
         });
     };
 
@@ -196,7 +196,7 @@ class FilterModal extends React.Component {
     passSelectedData() {
         let selectedData = this.state.tags;
         this.setState({ lastSelectedValue: selectedData });
-        this.props.updateSelectedData(selectedData);
+        this.props.updateCompanySelectedData(selectedData);
         this.toggle();
     };
 
@@ -210,7 +210,7 @@ class FilterModal extends React.Component {
     resetSelectedData() {
         let lastSelectedValue = this.state.lastSelectedValue;
         this.setState({ arrayValue: lastSelectedValue, tags: lastSelectedValue });
-        this.props.updateSelectedData(lastSelectedValue);
+        this.props.updateCompanySelectedData(lastSelectedValue);
         this.toggle();
     };
 
@@ -234,9 +234,9 @@ class FilterModal extends React.Component {
         const { title } = this.state;
         let titleText = title || "";
 
-        let { options, filterSearchValue, tags, arrayValue } = this.state;
+        let { options, companyFilterSearchValue, tags, arrayValue } = this.state;
 
-        let possibleOptionsArray = this.filterOptions(filterSearchValue, options);
+        let possibleOptionsArray = this.filterOptions(companyFilterSearchValue, options);
 
         return (
             <div>
@@ -247,7 +247,7 @@ class FilterModal extends React.Component {
                     <ModalBody className="custom-modal-filter-body">
                         <Row className="custom-modal-filter-search">
                             <Col sm={{ size: 1, offset: 3 }}><label>Search</label></Col>
-                            <Col sm={{ size: 4 }}><Input value={filterSearchValue} id="filterSearchInput" name="filterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
+                            <Col sm={{ size: 4 }}><Input value={companyFilterSearchValue} id="companyFilterSearchInput" name="companyFilterSearchValue" onChange={event => this.handleInputChange(event)} /></Col>
                             <Col sm={{ size: 2 }}><button className="btn-as-text" onClick={this.refreshList} >Refresh List</button></Col>
                         </Row>
                         <div className="row">
@@ -266,7 +266,7 @@ class FilterModal extends React.Component {
                                         className="custom-picky"
                                         value={arrayValue}
                                         options={possibleOptionsArray}
-                                        onChange={this.selectMultipleOption.bind(false, this)}
+                                        onChange={this.selectMultipleOption.bind(this, false)}
                                         open={true}
                                         keepOpen={true}
                                         valueKey="id"
@@ -290,4 +290,4 @@ class FilterModal extends React.Component {
     }
 }
 
-export default withCookies(FilterModal);
+export default withCookies(CompanyFilterModal);

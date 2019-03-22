@@ -23,6 +23,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import * as API from '../../../shared/utils/APIUtils';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
 import FilterModal from './FilterModal';
+import CompanyFilterModal from './CompanyFilterModal';
 import Export from './CTDashboardExport';
 
 /**
@@ -35,6 +36,29 @@ class DataTableEmptyRowsView extends React.Component {
     return (<div className="no-records-found">Sorry, no records</div>)
   }
 };
+
+const companiesList = [
+  {
+    "text": "Company 1",
+    "id": "1"
+  }, {
+    "text": "Company 2",
+    "id": "2"
+  }, {
+    "text": "Company 3",
+    "id": "3"
+  }, {
+    "text": "Company 4",
+    "id": "4"
+  }, {
+    "text": "Company 5",
+    "id": "5"
+  }, {
+    "text": "Company 6",
+    "id": "6"
+  }
+];
+
 class CTDashboard extends PureComponent {
 
   static propTypes = {
@@ -75,6 +99,7 @@ class CTDashboard extends PureComponent {
       }
     ];
     this.roleFilter = React.createRef();
+    this.companyFilter = React.createRef();
     this.state = {
       rows: this.createRows([]),
       isInitial: false,
@@ -87,10 +112,16 @@ class CTDashboard extends PureComponent {
       filterModalTitle: "Role",
       filteredRoles: [],
       filterOptionsRoles: [],
+      isCompanyFilterModal: false,
+      companyFilterTitle: "Company",
+      filteredCompanies: [],
+      filterOptionsCompanies: companiesList,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
+    this.toggleCompanyFilter = this.toggleCompanyFilter.bind(this);
+    this.handleCompanyDelete = this.handleCompanyDelete.bind(this);
 
   }
 
@@ -154,9 +185,10 @@ class CTDashboard extends PureComponent {
    * @returns none
   */
   async componentDidMount() {
-    let roles = [];
+    let roles = [],
+      companies = [];
     await this.getFilterOptions();
-    this.getRoles(roles);
+    this.getRoles(roles, companies);
   };
 
   /**
@@ -181,14 +213,20 @@ class CTDashboard extends PureComponent {
   * @param roles
   * @returns none
   */
-  async getRoles(roles) {
+  async getRoles(roles, companies) {
     const { cookies } = this.props;
     let rolesLength = roles.length,
+      companiesLength = companies.length,
       fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
       fields.push(roleField);
+    }
+    if (companiesLength > 0) {
+      let companyIds = companies.join();
+      let companyField = { "Name": "COMPANIES", "Value": companyIds, "Operator": "=", "Bitwise": "AND" };
+      fields.push(companyField);
     }
     const postData = {
       "Fields": fields,
@@ -223,6 +261,26 @@ class CTDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
+  };
+
+  /**
+  * @method
+  * @name - getCompanyFilterOptions
+  * This method will used to get Filter Options
+  * @param none
+  * @returns none
+  */
+  async getCompanyFilterOptions() {
+    const { cookies } = this.props;
+
+    let token = cookies.get('IdentityToken'),
+      companyId = cookies.get('CompanyId'),
+      url = "/company/" + companyId + "/roles",
+      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    response = JSON.parse(JSON.stringify(response).split('"Company":').join('"text":'));
+    response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
+    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+    this.setState({ filterOptionsCompanies: response });
   };
 
   /**
@@ -372,13 +430,25 @@ class CTDashboard extends PureComponent {
 
   /**
   * @method
-  * @name - toggleFilter
+  * @name - toggleFilter toggleCompanyFilter
   * This method will used show or hide the filter modal popup
   * @param none
   * @returns none
   */
   toggleFilter() {
     this.setState(state => ({ isFilterModal: true }));
+  }
+
+
+  /**
+  * @method
+  * @name - toggleCompanyFilter 
+  * This method will used show or hide the filter modal popup
+  * @param none
+  * @returns none
+  */
+  toggleCompanyFilter() {
+    this.setState(state => ({ isCompanyFilterModal: true }));
   }
 
   /**
@@ -391,6 +461,20 @@ class CTDashboard extends PureComponent {
   updateSelectedData = (selectedData) => {
     this.setState({
       filteredRoles: selectedData
+    });
+  };
+
+
+  /**
+   * @method
+   * @name - updateCompanySelectedData
+   * This method will update the selected role on state
+   * @param selectedData
+   * @returns none
+  */
+  updateCompanySelectedData = (selectedData) => {
+    this.setState({
+      filteredCompanies: selectedData
     });
   };
 
@@ -407,10 +491,26 @@ class CTDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(filteredRoles);
+    this.roleFilter.current.selectMultipleOption(true, filteredRoles);
   }
 
   /**
+  * @method
+  * @name - handleCompanyDelete
+  * This method will delete the selected company and update it on state
+  * @param i
+  * @returns none
+  */
+  handleCompanyDelete(i) {
+    let { filteredCompanies } = this.state;
+    filteredCompanies = filteredCompanies.filter((tag, index) => index !== i)
+    this.setState({
+      filteredCompanies: filteredCompanies,
+    });
+    this.companyFilter.current.selectMultipleOption(true, filteredCompanies);
+  }
+
+  /** handleCompanyDelete
   * @method
   * @name - filterGoAction
   * This method will update the selected role on state
@@ -419,15 +519,19 @@ class CTDashboard extends PureComponent {
  */
   filterGoAction = () => {
     let filteredRoles = this.state.filteredRoles,
-        roles = [];
+      filteredCompanies = this.state.filteredCompanies,
+      roles = [],
+      companies = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
-    this.getRoles(roles);
+    Object.keys(filteredCompanies).map(function (i) { companies.push(filteredCompanies[i].id) });
+    this.getRoles(roles, companies);
   };
 
   render() {
-    const { rows, collapseText, collapse, filteredRoles } = this.state;
+    const { rows, collapseText, collapse, filteredRoles, filteredCompanies } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
-      filteredRolesLength = filteredRoles.length;
+      filteredRolesLength = filteredRoles.length,
+      filteredCompaniesLength = filteredCompanies.length;
     return (
       <CardBody>
         <ContractorCompanyDetail
@@ -446,8 +550,17 @@ class CTDashboard extends PureComponent {
           title={this.state.filterModalTitle}
           filterOptionsRoles={this.state.filterOptionsRoles}
         />
+        <CompanyFilterModal
+          ref={this.companyFilter}
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          updateCompanySelectedData={this.updateCompanySelectedData.bind(this)}
+          modal={this.state.isCompanyFilterModal}
+          title={this.state.companyFilterTitle}
+          filterOptionsCompanies={this.state.filterOptionsCompanies}
+        />
         <div className="card__title">
-          <Export 
+          <Export
             data={this.state.rows}
             heads={this.heads}
             sheetName={"OnBoard LMS Training Dashboard"}
@@ -476,6 +589,23 @@ class CTDashboard extends PureComponent {
                 }
               </Col>
               <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
+            </Row>
+            <Row className="collapse-body-row">
+              <Col xs="1"><label>Company:</label></Col>
+              <Col xs="auto">
+                {
+                  filteredCompaniesLength <= 0 && <input value="ALL" disabled className="text-center" />
+
+                  ||
+
+                  <ReactTags
+                    tags={filteredCompanies}
+                    handleDelete={this.handleCompanyDelete}
+                    handleDrag={console.log()}
+                  />
+                }
+              </Col>
+              <Col xs="1"><button className="btn-as-text" onClick={this.toggleCompanyFilter} >Change</button></Col>
             </Row>
             <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>

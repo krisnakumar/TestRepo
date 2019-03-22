@@ -130,11 +130,16 @@ class FilterModal extends React.Component {
     * @method
     * @name - selectMultipleOption
     * This method will update selected multiple role state
+    * @param isParentUpdate
     * @param value
     * @returns none
     */
-    selectMultipleOption(value) {
-        this.setState({ arrayValue: value, tags: value, lastSelectedValue: value });
+    selectMultipleOption(isParentUpdate, value) {
+        if(isParentUpdate){
+            this.setState({ arrayValue: value, tags: value, lastSelectedValue: value });
+        } else {
+            this.setState({ arrayValue: value, tags: value });
+        }
     }
 
     /**
@@ -261,7 +266,7 @@ class FilterModal extends React.Component {
                                         className="custom-picky"
                                         value={arrayValue}
                                         options={possibleOptionsArray}
-                                        onChange={this.selectMultipleOption}
+                                        onChange={this.selectMultipleOption.bind(this, false)}
                                         open={true}
                                         keepOpen={true}
                                         valueKey="id"

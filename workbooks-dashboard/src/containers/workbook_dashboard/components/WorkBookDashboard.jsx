@@ -716,7 +716,7 @@ class WorkBookDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(filteredRoles);
+    this.roleFilter.current.selectMultipleOption(true, filteredRoles);
   };
 
   /**
