@@ -339,18 +339,19 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             RoleRepository roleRepository = new RoleRepository();
             RoleResponse roleResponse = new RoleResponse();
-            Authorizer authorizer = new Authorizer();
+            //Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
-                {
-                    return roleRepository.GetRoles(roleRequest);
-                }
-                else
-                {
-                    roleResponse.Error = ResponseBuilder.Forbidden();
-                    return roleResponse;
-                }
+                //if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
+                //{
+                  //  return roleRepository.GetRoles(roleRequest);
+                //}
+                //else
+                //{
+                  //  roleResponse.Error = ResponseBuilder.Forbidden();
+                    //return roleResponse;
+                //}
+                return roleRepository.GetRoles(roleRequest);
             }
             catch (Exception getRolesException)
             {
