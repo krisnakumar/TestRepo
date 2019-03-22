@@ -713,7 +713,7 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "httpMethod": "GET",
+          "httpMethod": "POST",
            "requestTemplates": {
             "application/json": "{\r\n    \"CompanyId\" : \"$input.params('companyId')\"\r\n}"
           },
