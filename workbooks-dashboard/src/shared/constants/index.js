@@ -5,7 +5,7 @@
 // export const API_DOMAIN = 'https://6y9xjjv40j.execute-api.us-west-2.amazonaws.com/';
 
 /* Endpoint API for ITS Dev */
-export const API_DOMAIN = 'https://cvyf80gu2f.execute-api.us-west-2.amazonaws.com/';
+export const API_DOMAIN = 'https://r6sya9tny6.execute-api.us-west-2.amazonaws.com/';
 
 export const API_STAGE_NAME = 'dev';
 
