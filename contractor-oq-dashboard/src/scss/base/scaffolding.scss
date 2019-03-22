@@ -954,16 +954,17 @@ div#queryResultSet {
 .grid-filter-collapse {
   font-size: initial;
   font-weight: bold;
-  margin: 1%;
+  // margin: 1%;
 }
 .grid-filter-collapse.hide {
-  padding: 1% 0% 1% 0%;
+  padding: 1% 0% 1% 1%;
 }
 .grid-filter-collapse.show {
-  padding: 1% 0% 0% 0%;
+  padding: 1% 0% 0% 1%;
 }
 .grid-filter-collapse-body {
-  margin: 1%;
+  // margin: 1%;
+  padding: 0% 0% 0% 1%;
 }
 button.grid-filter-go-btn {
   padding: 5px 20px !important;
@@ -1067,6 +1068,8 @@ button.grid-filter-go-btn {
 }
 .exportExcel{
   font-size: 14px;
+  color: #04395e;
+  text-decoration: underline;
 
   img{
     margin-right: 3px;
@@ -1075,5 +1078,9 @@ button.grid-filter-go-btn {
   
 }
 .border-none{
-  border-radius: 0 !important
+  border-radius: 0 !important;
+}
+a:hover {
+  text-decoration: none !important;
+  color: #04395e !important;
 }
