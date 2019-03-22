@@ -1,39 +1,36 @@
 {
    "AWSTemplateFormatVersion": "2010-09-09",
    "Transform": "AWS::Serverless-2016-10-31",
-   "Description": "An AWS Serverless Application.",
+   "Description": "OnBoardLMS Contractor management, training (OJT) and query builder microservices.",
    "Parameters": {
       "ConnectionString": {
          "Type": "String",
-         "Description": "Connection string Which help to read the data from SQL",
-         "Default": "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True"
+         "Description": "Connection string to the database",
       },
       "LambdaMemory": {
          "Type": "String",
-         "Description": "Memory size that allocated for each Lambda function(s)",
+         "Description": "How much memory (MB) is assigned to each lambda function.",
          "Default": "256"
       },
       "LambdaTimeout": {
          "Type": "String",
-         "Description": "Time out for each lambda fucntions",
+         "Description": "Time in seconds (s) that a lambda function will run before timing out.",		    
          "Default": "30"
       },
       "CognitoPoolId": {
          "Type": "String",
          "Description": "Pool Id to check user session",
-         "Default": "us-west-2_nrrZaoTAs"
       },
       "CognitoClientId": {
          "Type": "String",
          "Description": "Pool Id to check user session",
-         "Default": "4efougb8nqj7f72ku183rudmqm"
       },
       "VPCSecurityGroupIDs": {
-         "Description": "An comma-delimited list of strings - the security groups that your Lambda function should be in",
+         "Description": "A comma-delimited list of strings - the security groups that your Lambda function should be in",
          "Type": "CommaDelimitedList"
       },
       "VPCSubnetIDs": {
-         "Description": "An comma-delimited list of strings - the subnet IDs that your Lambda function should be assigned to",
+         "Description": "A comma-delimited list of strings - the subnet IDs that your Lambda function should be assigned to",
          "Type": "CommaDelimitedList"
       },
       "LambdaExecutionRoleArn" : {
@@ -45,8 +42,8 @@
       "ReportBuilderAPI": {
          "Type": "AWS::Serverless::Api",
          "Properties": {
-            "Name": "ReportBuilder-dev",
-            "StageName": "dev",
+            "Name": "OnBoardLMS-ReportBuilder",
+            "StageName": "DEV",
             "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
       },
@@ -54,7 +51,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-            "FunctionName": "Login-RB-dev",
+            "FunctionName": "OnBoardLMS_RB_Login",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -99,7 +96,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQueryBuilder",
-            "FunctionName": "Employees-RB-query-dev",
+            "FunctionName": "OnBoardLMS_RB_GetEmployeesQueryBuilder",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -138,7 +135,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQueryBuilder",
-            "FunctionName": "workbooks-RB-query-dev",
+            "FunctionName": "OnBoardLMS_RB_GetWorkbookQueryBuilder",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -177,7 +174,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQueryBuilder",
-            "FunctionName": "tasks-RB-query-dev",
+            "FunctionName": "OnBoardLMS_RB_GetTasks",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -216,7 +213,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-            "FunctionName": "SilentAuth-RB-dev",
+            "FunctionName": "OnBoardLMS_RB_SilentAuth",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -258,7 +255,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SaveQuery",
-            "FunctionName": "SaveQuery-dev",
+            "FunctionName": "OnBoardLMS_RB_SaveQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -297,7 +294,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQuery",
-            "FunctionName": "GetQuery-dev",
+            "FunctionName": "OnBoardLMS_RB_GetQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -336,7 +333,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
-            "FunctionName": "RenameQuery-dev",
+            "FunctionName": "OnBoardLMS_RB_RenameQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -375,7 +372,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
-            "FunctionName": "DeleteQuery-dev",
+            "FunctionName": "OnBoardLMS_RB_DeleteQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -414,7 +411,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQueries",
-            "FunctionName": "GetQueries-dev",
+            "FunctionName": "OnBoardLMS_RB_GetQueries",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -453,7 +450,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetRoles",
-            "FunctionName": "GetRoles-dev",
+            "FunctionName": "OnBoardLMS_RB_GetRoles",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -492,7 +489,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompany",
-            "FunctionName": "GetCompany-dev",
+            "FunctionName": "OnBoardLMS_RB_GetCompanies",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
