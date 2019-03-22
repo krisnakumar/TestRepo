@@ -138,7 +138,7 @@ class OQDashboard extends PureComponent {
       collapse: false,
       collapseText: "More Options",
       isFilterModal: false,
-      filterModalTitle: "Role",
+      filterModalTitle: "Roles",
       filteredRoles: [],
       filterOptionsRoles: []
     };

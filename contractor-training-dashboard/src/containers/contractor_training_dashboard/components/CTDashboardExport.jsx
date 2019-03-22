@@ -33,7 +33,7 @@ class CTDashboardExport extends Component {
     /**
      * @method
      * @name - componentWillReceiveProps
-     * This method will invoked whenever the props or state
+     * This method will be invoked whenever the props or state
      *  is update to this component class
      * @param newProps
      * @returns none

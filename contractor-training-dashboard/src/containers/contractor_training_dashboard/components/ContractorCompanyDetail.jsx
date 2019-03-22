@@ -172,7 +172,7 @@ class ContractorCompanyDetail extends React.Component {
   /**
   * @method
   * @name - getUserDetails
-  * This method will used to get Companies User details
+  * This method will be used to get Companies User details
   * @param company
   * @param companyId
   * @returns none
@@ -300,7 +300,7 @@ class ContractorCompanyDetail extends React.Component {
   /**
    * @method
    * @name - handleCellClick
-   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * This method will trigger the event of APIs respective to cell clicked Data Grid
    * @param type
    * @param args
    * @returns none

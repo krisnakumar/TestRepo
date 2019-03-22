@@ -1040,7 +1040,7 @@ button.grid-filter-go-btn {
 .ReactTags__tags.react-tags-wrapper {
   border-radius: 5px;
   padding: 1%;
-  height: 40px;
+  min-height: 40px;
 }
 .tag-wrapper.ReactTags__tag  {
   background: url(https://d2vkqsz7y0fh3j.cloudfront.net/img/item_container_middle.png) repeat-x;

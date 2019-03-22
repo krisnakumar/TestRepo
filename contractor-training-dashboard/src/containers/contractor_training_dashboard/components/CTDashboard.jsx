@@ -2,7 +2,7 @@
 /*
 * CTDashboard.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
-* This javascript file will used render Workbook details to list the workbooks 
+* This javascript file will be used to render Contractor Training Dashboard
 * Template: React.Component
 * Prerequisites: React and babel
 
@@ -109,11 +109,11 @@ class CTDashboard extends PureComponent {
       collapse: false,
       collapseText: "More Options",
       isFilterModal: false,
-      filterModalTitle: "Role",
+      filterModalTitle: "Roles",
       filteredRoles: [],
       filterOptionsRoles: [],
       isCompanyFilterModal: false,
-      companyFilterTitle: "Company",
+      companyFilterTitle: "Companies",
       filteredCompanies: [],
       filterOptionsCompanies: companiesList,
     };

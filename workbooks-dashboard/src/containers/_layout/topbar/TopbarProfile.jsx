@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Collapse } from 'reactstrap';
 import TopbarMenuLink from './TopbarMenuLink';
 
-const Ava = "";
+const Ava = "img/ava.png";
 
 export default class TopbarProfile extends PureComponent {
   constructor() {

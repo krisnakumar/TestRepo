@@ -115,7 +115,7 @@ class CompanyFilterModal extends React.Component {
     /**
      * @method
      * @name - toggle
-     * This method will update the current of modal window
+     * This method will update the current parent of modal window
      * @param workbooks
      * @returns none
      */
@@ -174,7 +174,7 @@ class CompanyFilterModal extends React.Component {
      /**
      * @method
      * @name - handleDelete
-     * his method will delete the selected roles and update it on state
+     * This method will delete the selected roles and update it on state
      * @param i
      * @returns none
     */

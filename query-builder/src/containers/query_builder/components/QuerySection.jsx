@@ -624,12 +624,12 @@ class QuerySection extends PureComponent {
                 <span className="fa-text-align">Column Options</span>
               </button>
             </Col>
-            <Col xs="auto">
+            {/* <Col xs="auto">
               <button onClick={this.onSaveQueryClick} className="query-section-button" size="sm" >
                 <span aria-hidden className="fa-icon-size" ><i className="fa fa-save"></i></span>
                 <span className="fa-text-align">Save Query</span>
               </button>
-            </Col>
+            </Col> */}
             <Col xs="auto">
                {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} columnOptions={this.state.empColumnList} />}
               {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} columnOptions={this.state.workbookColumnList} />}

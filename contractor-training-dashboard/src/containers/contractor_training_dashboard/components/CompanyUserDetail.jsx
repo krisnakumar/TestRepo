@@ -153,7 +153,7 @@ class CompanyUserDetail extends React.Component {
   /**
    * @method
    * @name - componentWillReceiveProps
-   * This method will invoked whenever the props or state
+   * This method will be invoked whenever the props or state
    * is update to this component class
    * @param newProps
    * @returns none
@@ -259,7 +259,7 @@ class CompanyUserDetail extends React.Component {
   /**
   * @method
   * @name - getUserTaskDetails
-  * This method will used to get Companies User details
+  * This method will be used to get Companies User details
   * @param company
   * @param companyId
   * @returns none
@@ -302,7 +302,7 @@ class CompanyUserDetail extends React.Component {
   /**
    * @method
    * @name - handleCellClick
-   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * This method will trigger the event of APIs respective to cell clicked Data Grid
    * @param type
    * @param args
    * @returns none
@@ -363,7 +363,7 @@ class CompanyUserDetail extends React.Component {
     }
   };
 
-  // This method is used to setting the row data in react data grid
+  // This method is used to set the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {

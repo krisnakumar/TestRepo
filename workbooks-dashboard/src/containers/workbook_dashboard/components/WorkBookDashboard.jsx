@@ -148,7 +148,7 @@ class WorkBookDashboard extends PureComponent {
       collapse: false,
       collapseText: "More Options",
       isFilterModal: false,
-      filterModalTitle: "Role",
+      filterModalTitle: "Roles",
       filteredRoles: []
     };
 
@@ -157,7 +157,7 @@ class WorkBookDashboard extends PureComponent {
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
 
   }
-
+  
   /**
   * @method
   * @name - cellFormatter
