@@ -34,15 +34,15 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.Createdby) AS Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.Createdby) AS Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                 { Constants.DUE_DATE, ", DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded) AS DueDate"},
-                { Constants.USERNAME, ", u.UserName"},
-                { Constants.USERNAME2, ", u.UserName2"},
-                { Constants.USER_CREATED_DATE, ", u.DateCreated"},
-                { Constants.FIRSTNAME, ", u.FName"},
-                { Constants.MIDDLENAME, ", u.MName"},
-                { Constants.LASTNAME, ", u.LName"},
+                { Constants.USERNAME, ", u.User_Name AS UserName"},
+                { Constants.USERNAME2, ", u.Alternate_User_Name AS UserName2"},
+                { Constants.USER_CREATED_DATE, ", u.Date_Created AS DateCreated"},
+                { Constants.FIRSTNAME, ", u.First_Name AS FName"},
+                { Constants.MIDDLENAME, ", u.Middle_Name AS MName"},
+                { Constants.LASTNAME, ", u.Last_Name AS LName"},
                 { Constants.EMAIL, ", u.Email"},
                 { Constants.CITY, ", u.City"},
                 { Constants.STATE, ", u.State"},
@@ -74,7 +74,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.FIRST_ATTEMPT_DATE, ", wbp.FirstAttemptDate"},
                 { Constants.REPETITIONS, ", wbc.Repetitions"},
                 { Constants.WORKBOOK_ASSIGNED_DATE, ", uwb.DateAdded"},
-                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wbp.LastSignOffBy) AS LastSignOffBy"}
+                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wbp.LastSignOffBy) AS LastSignOffBy"}
         };
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete" },
             {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" },
             {Constants.DATE_ADDED, "uwb.DateAdded" },
-            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.createdby) " },
+            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.createdby) " },
             {Constants.ASSIGNED_TO, "uwb.UserId" },
             {Constants.ASSIGNED, " u.User_Id IN (SELECT * FROM getChildUsers (@userId)) " },
             {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
@@ -183,7 +183,7 @@ namespace ReportBuilderAPI.Repository
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
                 //Add the where condition for the company
-                companyQuery = (" WHERE  uc.CompanyId=" + queryRequest.CompanyId);
+                companyQuery = (" WHERE  uc.status=1 AND uc.CompanyId=" + queryRequest.CompanyId);
 
 
                 if (queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))

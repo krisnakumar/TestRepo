@@ -11,7 +11,6 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<WorkbookModel> Workbooks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-
         public ErrorResponse Error { get; set; }
     }   
 }

@@ -24,15 +24,17 @@ namespace ReportBuilderAPI.Helpers
                     UserCompany userCompany = (from uc in context.UserCompany
                                                where uc.CompanyId == companyId
                                                && uc.IsEnabled && uc.Status == 1
+                                               && uc.UserId==userId
                                                select uc).FirstOrDefault();
-                    if (userCompany.CompanyPerms == 1 && userCompany.UserPerms == 1)
-                    {
-                        return userCompany;
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    //if (userCompany.CompanyPerms == 1 && userCompany.UserPerms == 1)
+                    //{
+                    //    return userCompany;
+                    //}
+                    //else
+                    //{
+                    //    return null;
+                    //}
+                    return userCompany;
                 }
             }
             catch (Exception validateUserException)

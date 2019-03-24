@@ -48,6 +48,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ROLE = "ROLE";
 
         public const string ROLES = "ROLES";
+        public const string COMPANIES = "COMPANIES";
 
 
         public const string CAN_CERTIFY = "CAN_CERTIFY";

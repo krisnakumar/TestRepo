@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 namespace ReportBuilderAPI.Repository
 {
+    /// <summary>
+    /// Class that manages the Companies
+    /// </summary>
     public class CompanyRepository
     {
         /// <summary>

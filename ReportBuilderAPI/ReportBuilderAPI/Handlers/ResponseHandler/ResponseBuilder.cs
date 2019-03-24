@@ -21,6 +21,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
+                    Status=500,
                     Code = 33,
                     Message = DataResource.SYSTEM_ERROR
                 };              
@@ -44,6 +45,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
+                    Status=400,
                     Code = 1,
                     Message = DataResource.INVALID_INPUT +": "+ fieldName
                 };               
@@ -67,6 +69,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
+                    Status=403,
                     Code = 14,
                     Message = DataResource.PERMISSION_DENIED
                 };              
@@ -91,6 +94,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
+                    Status=401,
                     Code = 13,
                     Message = message
                 };              
@@ -117,7 +121,8 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             try
             {
                 SuccessResponse successResponse = new SuccessResponse
-                {                    
+                {            
+                    
                     Message = Messgae
                 };
                 return successResponse;

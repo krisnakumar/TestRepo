@@ -20,6 +20,9 @@ namespace ReportBuilder.Models.Response
     public class ErrorResponse
     {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int Status { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Code { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }

@@ -23,7 +23,8 @@ namespace ReportBuilderAPI.Helpers
         public static Dictionary<string, string> Getparameters(QueryBuilderRequest queryRequest)
         {
             //Parameters which used to create query
-            string supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty, dueDays = string.Empty, role = string.Empty, roles = string.Empty; Dictionary<string, string> parameterList = new Dictionary<string, string> { };
+            string supervisorId = string.Empty, workbookId = string.Empty, taskId = string.Empty, dueDays = string.Empty, role = string.Empty, roles = string.Empty, companies = string.Empty;
+            Dictionary<string, string> parameterList = new Dictionary<string, string> { };
             try
             {
                 //Get the list of Id details
@@ -34,6 +35,7 @@ namespace ReportBuilderAPI.Helpers
                 role = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ROLE_ID).Select(x => x.Value).FirstOrDefault());
 
                 roles = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ROLES).Select(x => x.Value).FirstOrDefault());
+                companies = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.COMPANIES).Select(x => x.Value).FirstOrDefault());
 
                 //Set default due days if its null
                 if (string.IsNullOrEmpty(dueDays))
@@ -42,7 +44,7 @@ namespace ReportBuilderAPI.Helpers
                 }
 
                 //Get the parameter dictionary
-                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(queryRequest.CompanyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) }, { "role", Convert.ToString(role) }, { "roles", Convert.ToString(roles) } };
+                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(queryRequest.CompanyId) }, { "workbookId", Convert.ToString(workbookId) }, { "taskId", Convert.ToString(taskId) }, { "duedays", Convert.ToString(dueDays) }, { "role", Convert.ToString(role) }, { "roles", Convert.ToString(roles) }, { "companies", Convert.ToString(companies) } };
                 return parameterList;
             }
             catch (Exception getParameterException)
@@ -58,7 +60,7 @@ namespace ReportBuilderAPI.Helpers
         /// <param name="parameters"></param>
         public static SqlParameter[] CreateSqlParameter(Dictionary<string, string> parameters)
         {
-            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty, roles = string.Empty;
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty, roles = string.Empty, companies=string.Empty;
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
 
             try
@@ -71,7 +73,7 @@ namespace ReportBuilderAPI.Helpers
                     parameters.TryGetValue("duedays", out dueDays);
                     parameters.TryGetValue("role", out roleId);
                     parameters.TryGetValue("roles", out roles);
-
+                    parameters.TryGetValue("companies", out companies);
                     if (!string.IsNullOrEmpty(userId))
                     {
                         sqlParameters.Add(new SqlParameter("@userId", SqlDbType.Int) { Value = userId });
@@ -95,6 +97,10 @@ namespace ReportBuilderAPI.Helpers
                     if (!string.IsNullOrEmpty(roles))
                     {
                         sqlParameters.Add(new SqlParameter("@roles", SqlDbType.VarChar) { Value = roles });
+                    }
+                    if (!string.IsNullOrEmpty(companies))
+                    {
+                        sqlParameters.Add(new SqlParameter("@companies", SqlDbType.VarChar) { Value = companies });
                     }
                 }
                 return sqlParameters.ToArray();

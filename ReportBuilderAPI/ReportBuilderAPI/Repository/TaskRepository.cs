@@ -73,7 +73,7 @@ namespace ReportBuilderAPI.Repository
                 whereQuery = string.Join("", from employee in queryBuilderRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (taskFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
-                whereQuery = !queryBuilderRequest.ColumnList.Contains(Constants.COMPANY_NAME) ? ((!string.IsNullOrEmpty(whereQuery)) ? (" WHERE ucs.CompanyId=" + companyId + " AND  (" + whereQuery + ")") : (" WHERE ucs.CompanyId=" + companyId)) : (" WHERE (" + whereQuery + ")");
+                whereQuery = !queryBuilderRequest.ColumnList.Contains(Constants.COMPANY_NAME) ? ((!string.IsNullOrEmpty(whereQuery)) ? (" WHERE ucs.CompanyId IN (" + companyId + ") AND  (" + whereQuery + ")") : (" WHERE ucs.CompanyId=" + companyId)) : (" WHERE (" + whereQuery + ")");
 
                 if (queryBuilderRequest.Fields.Count == 1 && queryBuilderRequest.Fields.Where(x => x.Value == Constants.SUPERVISOR).ToList().Count > 0)
                 {
@@ -228,8 +228,8 @@ namespace ReportBuilderAPI.Repository
                 { Constants.TASK_ID, ", t.Id AS taskId"},
                 { Constants.STATUS, ", ss.[desc] AS status"},
                 { Constants.DATE_EXPIRED, ", sa.DateExpired"},
-                { Constants.EVALUATOR_NAME, ", (SELECT (ISNULL(NULLIF(u.LName, '') + ', ', '') + u.Fname) AS evaluatorName FROM dbo.[UserDetails] usr WHERE usr.Id=sa.Evaluator) AS evaluatorName"},
-                { Constants.ASSIGNED_TO, ",  (SELECT usr.UserName FROM dbo.[UserDetails] usr WHERE usr.Id=sa.UserId) AS assignee"},
+                { Constants.EVALUATOR_NAME, ", (SELECT Full_Name_Format1 FROM dbo.[UserDetails] usr WHERE usr.User_Id=sa.Evaluator) AS evaluatorName"},
+                { Constants.ASSIGNED_TO, ",  (SELECT usr.User_Name AS UserName FROM dbo.[UserDetails] usr WHERE usr.User_Id=sa.UserId) AS assignee"},
                 { Constants.IP, ", sam.IP"},
                 { Constants.LOCATION, ",   concat((CASE WHEN sam.street IS NOT NULL THEN (sam.street + ',') ELSE '' END),   (CASE WHEN sam.City IS NOT NULL THEN (sam.city+ ',') ELSE '' END), (CASE WHEN sam.State IS NOT NULL THEN (sam.State + ',') ELSE '' END),   (CASE WHEN sam.Zip IS NOT NULL THEN (sam.Zip + ',') ELSE '' END),  sam.country) AS location"},
                 { Constants.DURATION, ", sam.duration"},
@@ -239,8 +239,8 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_ID, ", wbc.workbookId"},
                 { Constants.COMPLETION_DATE, ", u.DateCreated"},
                 { Constants.LAST_ATTEMPT_DATE, ", sa.DateTaken AS lastAttemptDate"},
-                { Constants.CREATED_BY, ", (SELECT us.Username FROM dbo.[UserDetails] us WHERE us.Id=sa.Createdby) AS CreatedBy"},
-                { Constants.DELETED_BY, ", (SELECT us.Username FROM dbo.[UserDetails] us WHERE us.Id=sa.deletedby) AS DeletedBy"},
+                { Constants.CREATED_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.Createdby) AS CreatedBy"},
+                { Constants.DELETED_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.deletedby) AS DeletedBy"},
                 { Constants.PARENT_TASK_NAME, ", u.Email"},
                 { Constants.CHILD_TASK_NAME, ", u.City"},
                 { Constants.NUMBER_OF_ATTEMPTS, ", sa.Attempt"},
@@ -248,11 +248,11 @@ namespace ReportBuilderAPI.Repository
                 { Constants.COMMENTS, ", sam.Payload AS Comments"},
                 { Constants.TASK_CODE, ", t.Code"},
 
-                { Constants.COMPLETED_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  us.Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id AND ss.[desc]='COMPLETED'),0)) AS CompletedTasks"},
+                { Constants.COMPLETED_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  us.Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id AND ss.[desc]='COMPLETED'),0)) AS CompletedTasks"},
 
-                { Constants.INCOMPLETE_TASK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT tk.Id) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  u.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND tk.Id=t.Id AND wbc.WorkBookId=@workbookId AND ss.[desc]='FAILED'),0))  AS InCompleteTask"},
+                { Constants.INCOMPLETE_TASK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT tk.Id) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  u.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND tk.Id=t.Id AND wbc.WorkBookId=@workbookId AND ss.[desc]='FAILED'),0))  AS InCompleteTask"},
 
-                { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON  uwb.UserId=us.Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id WHERE  us.Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id),0)) AS TotalTasks"},
+                { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails] us LEFT JOIN dbo.UserWorkBook uwb ON  uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id WHERE  us.Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id),0)) AS TotalTasks"},
                 { Constants.ASSIGNED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId In (SELECT u.User_Id UNION SELECT * FROM getchildUsers(u.User_Id)) AND cs.CompanyId=@companyId ) ,0)) AS  AssignedQualification" },
                 { Constants.COMPLETED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE() AND ts.User_Id In (SELECT u.User_Id UNION SELECT * FROM getchildUsers(u.User_Id)) AND ts.CompanyId=@companyId  ) ,0)) AS  CompletedQualification" },
                 { Constants.IN_COMPLETE_QUALIFICATION,",  (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE  Knowledge_Cert_Status IN (3, 2,0,4, 255) AND  ts.User_Id IN (SELECT u.User_Id UNION SELECT * FROM getchildUsers(u.User_Id)) AND ts.CompanyId=@companyId ) ,0)) AS IncompleteQualification" },
@@ -291,7 +291,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.ATTEMPT_DATE, "CONVERT(DATE,sa.dateTaken,101)" },
             {Constants.DATE_TAKEN, "sa.dateTaken" },
             {Constants.STATUS, "ss.[desc] " },
-            {Constants.EVALUATOR_NAME, " (SELECT usr.UserName AS evaluatorName FROM dbo.[UserDetails] usr WHERE usr.User_Id=sa.Evaluator) " },
+            {Constants.EVALUATOR_NAME, " (SELECT usr.User_Name  AS evaluatorName FROM dbo.[UserDetails] usr WHERE usr.User_Id=sa.Evaluator) " },
             {Constants.CITY, "sam.City" },
             {Constants.USERID, "u.User_Id" },
             {Constants.STATE, "sam.State" },
@@ -300,8 +300,8 @@ namespace ReportBuilderAPI.Repository
             {Constants.IP, "sam.IP" },
             {Constants.DATECREATED, "CONVERT(DATE,t.DateCreated,101)" },
             {Constants.ISENABLED, "t.isenabled" },
-            {Constants.CREATED_BY, " (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.Createdby) " },
-            {Constants.DELETED_BY, " (SELECT us.UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.Deletedby) " },
+            {Constants.CREATED_BY, " (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.Createdby) " },
+            {Constants.DELETED_BY, " (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=sa.Deletedby) " },
             {Constants.ASSIGNED_TO, " sa.userId" },
             {Constants.REPETITIONS_COUNT, "" },
             {Constants.SUPERVISOR_ID, " u.User_Id IN ((SELECT @userId UNION SELECT * FROM getChildUsers (@userId))) " },
@@ -318,7 +318,8 @@ namespace ReportBuilderAPI.Repository
             {Constants.SUPERVISOR_USER, " u.User_Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
             { Constants.IS_SHARED, " r.IsShared"},
             { Constants.ROLE_ID, " r.Id"}, 
-            { Constants.ROLES, " r.Id IN (@roles)"}
+            { Constants.ROLES, " r.Id IN (Select * from dbo.split(@roles))"},
+            { Constants.COMPANIES, " cy.Id IN (Select * from dbo.split(@companies))"}
         };
 
 

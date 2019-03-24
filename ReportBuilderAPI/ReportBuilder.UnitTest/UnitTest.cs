@@ -32,13 +32,16 @@ namespace ReportBuilder.UnitTest
             //Assert.AreEqual(200, userResponse.StatusCode);
         }
 
+       
+
         [TestMethod]
         public void GetRoles()
         {
             Function function = new Function();
             RoleRequest userRequest = new RoleRequest
             {
-                CompanyId =6
+               
+                CompanyId=6
             };
             APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
             {
@@ -57,7 +60,9 @@ namespace ReportBuilder.UnitTest
             {
                 UserName = "devtester@its-training.com",
 
-                RefreshToken = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.IUJmjYXRBVr40WXOehJtU6LDVAOtMCKxegZXxxhYIcOuGwk7hqgGCMYYnhtDPK5QiDG82ijTRkYsbF9cL0EbSsb2QRuqhiId2mpuDnU7bLSBHW_xmlSKK4l4LKxPdJVzjV9WF6yWSJ6DXMaE6MJd11bhZJMKn-Tg2uR7CQBXjeA3JJCVAEBfUZJ87EDPdwexhdnziHSZjT1Xrwbye43FJaN3lcTBfHdohEYVRJjmCynR3SETxA35JLvXI0YNZngIr-an814ZdzAWdIVA6w0FUAlKcQ3b1OY4adZdViTA189_Am6hFMkmAvld4FO9xxKmJzXbc60RtmGn_19SO6AChg.7lUVWNv_w-QzbpJC.rIzxKUXEN1j46tTWv3SOYWrrzOBb9is0RoA-qU3NOB7vIkcpnwyXaFxyTt07xtVf7HSvN2vK7tZkLVnBOE1w33ZuszlZVxvm_WypHdBjr0ET_xMVJDB8Kknz2NqmiD3t2xBegLqFZP2G1lfTV1rdLtfkF5CV5ccInMDdB9nhnbUgq560ZNTz_eDGYsGHLWg44ddH-GbKzJCxnBYzYE1OfwsD2Y_GOP2ish_9fr4Esg2IqJx-gMBOgZF3ysU2X0ijFh2NqyhGZsn2Ln-_of-uLUHz6ngHt6F6MHEUYRw7q4yA8-r0A8go2jhU9vhZZL9LeQo8GMMBUt1sur93hK4-FAzVGxcgMUjgXfBN4ctkKHGQCfHFpineZNHcJOJ-60nHQaxtAp1TXH35mCRlCY7tfbVtUp-k_r5L3Uncw3M6NDGfZctnocM1wnNvwEloBnrlTMQH09AfRo6B_4bHWo2eQcXnVBdMQyIy0UOTsM_-J2f9gMsuWh52EXJs2zkuGspsbIwyWmL0r71lpH7YUL2w5ot2nZnamUg8gbUa4830ikhZQjJm42rIWZHZ3lxYLiqkr7rlNwP9zHWA4ptcLrN07sniMWzcPj2NOhjptYwkuu_zlJ6A8er29XKch42onO-tmxkU5koc-56qY4aHxML0B20MEGNeDc5xdTEEjIVCwqGJRpRcySAIioHEdm4chkP8Z7WI8QMtmqA3UXvHxW10TYDlR9pJ9VFYhgrSA1CfmZA3_2ZNz6lpvUMQq79OgF9opQz_780NsMS3f_JalMjT5ubIV_VY33JoIei10_bza8cOkf3dS4LutlZrcAkARwnNtKrG_HwHVz9LA6MqrA76gUsCA90UNAYyBYCmhohQGEbvL2RDczJ6vpEtxUAUHgW6xjMBPWOgpnT6CPHvy69Lw883rj4crUp_CVARgsRh9P6QU3NpWlLXWWQYvTUmvLgh6H7una41LMqEvcS3R3jN-HG86GpBxdICsz7n4ekGKrB_OpJc66get9EinUpCutYaoTNPgRMBlLg46Ehg7htsWvqffSzVF20FWI1nrjcit_QKcDhG3_PppSPIK_at7s7NCZxk-qW7UIQkKcbKsfxtzmf680jsrJ_SiFq7OLuCu16p1oR5B-NiD9swHP9JRWI80blD1PPnJOHHsH3UX8f32bAZJ665y3y55mY7O81-MUU6kWLVL-4x2QUB0gW9jVS9xY7LjAzwgV_EHaUD9dO_kENbmNUEEEpUbjnOLP0r69HiP3ax51ms-z8ShEcayDrMFbV_Km56s5jUGiQxciy5K6iTtWRxtTmYtrAiY1C17-52zjQ831fFRZN8hHM.mEie4VpsVJ2QRf9KRYKZsg"
+                IdToken = "eyJraWQiOiJIbWRVVUFybjRQbWxVRDAyQUw0ZTJtRm5kTzBWN1V5ZzJFSTdpeW1iTUh3PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJlZGUyMTQ3ZS0wNmNhLTQ2YmEtODE3Ni1iZmVhNjI3ZGM2ODIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfbnJyWmFvVEFzIiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjp0cnVlLCJjb2duaXRvOnVzZXJuYW1lIjoiZWRlMjE0N2UtMDZjYS00NmJhLTgxNzYtYmZlYTYyN2RjNjgyIiwiYXVkIjoiNGVmb3VnYjhucWo3Zjcya3UxODNydWRtcW0iLCJldmVudF9pZCI6ImFmNGVmOWFjLTRiMGMtMTFlOS1iMjVhLTNmOTY3ZjNhYTdiYiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNTUzMDg1MzQ2LCJwaG9uZV9udW1iZXIiOiIrOTE5OTYyMDg1ODQ2IiwiZXhwIjoxNTUzMDg4OTQ2LCJpYXQiOjE1NTMwODUzNDYsImVtYWlsIjoiZGV2dGVzdGVyQGl0cy10cmFpbmluZy5jb20ifQ.dbK9FCfC1f7gUtwGDakHcnqC5O3Q0Lf7oFMCNR9DQJB05HmfiVnRPmWnBssRpV5gTXyNsKfgjlmeW2u7VUNoB6hkQMOdlJpVYuh8zB1qvPBjJknFOBovConL-pIUZ_ngBqOIQVpo9WtOvK4YeHtpDIyv6tWlCGM1rQrcRcsjpNd5tHE8wdFteB4TfEBa1EijOYVFpf3ecmTbAvcXBLyReBato75oC9h26E2Oldf4pkkCeZi9l2ILD3dUumIYTjF-C3ZcS2Si91lscDdOH6SyVeRJyE2YBdhyIqpgHiCBvb9WvSePOey2waXxBoY75ucpDqgKD9IaDiArGN1vSUS94w",
+                AccessToken= "eyJraWQiOiJoanBkbzVTeDkxTDcyUkYxajRJQVFiQmI3cGJwbEFlYjRYRWJJVXdmTUlBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJlZGUyMTQ3ZS0wNmNhLTQ2YmEtODE3Ni1iZmVhNjI3ZGM2ODIiLCJldmVudF9pZCI6ImFmNGVmOWFjLTRiMGMtMTFlOS1iMjVhLTNmOTY3ZjNhYTdiYiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NTMwODUzNDYsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX25yclphb1RBcyIsImV4cCI6MTU1MzA4ODk0NiwiaWF0IjoxNTUzMDg1MzQ2LCJqdGkiOiIyY2ZhNmNhZC1lN2FmLTQxZjctYjNkNS0xNDhjYzNmMmI0NTciLCJjbGllbnRfaWQiOiI0ZWZvdWdiOG5xajdmNzJrdTE4M3J1ZG1xbSIsInVzZXJuYW1lIjoiZWRlMjE0N2UtMDZjYS00NmJhLTgxNzYtYmZlYTYyN2RjNjgyIn0.y_F8Xazreu95Y9OzcsRsDc-R92X1LtTrzpkNGl-MIak9mQ819_iiwhNfgYytVxSFEmlkbRRArGv_ggM_EPTmi1G_JNH6TL9er3Cefrpk1YsNWqehBlxdgwRAn0AXkyIXujGIKbg8uVqDvZG4rgYn3O7ObedmaTfzodkh3IN7c8DAOtOt2rqY0-kejK_wdnzs8NMo5z0v1QvzlAqBEBfCytyfLnOp6QddPn9BeUX333NRjOPw7PhsUsEsjwylvkTlUcrT6-9GMeJtP9v5DegMIcdvt7TPurADPEmsHdkqnXBfkJVFRJbztLj3T2s3h7WKS2Z-oTsbVEjL8Oor9vRB3w",
+                RefreshToken="eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.HaGQKOq68qK-e_cFbjc2T0tlm_SEsEwl1RD23syp43b494J2c6xovnqP3LBujXWDBj8x4Z7Ifqt-1d9Sv8QTAn_df-s91yh5NEZnrn_6pdsTzXnVm3N9q6m-sC2OiotBspNBa7muJMi8xXzt2aKgYLldtl9OypGAYF_zcu4fystBBU9iD3WH3GGf95KuwLPrbA0_AmrVOqfyI4dOXh3Qc_TLMBdEgs-RUUfN_NYHd9Z8JJdmSM5NVf0OuPwSIKsBUETcq42pJY13tmCX6mOaSgoyK4qbBXo57Ayhl7uWK7VBsKWBVDj2ZSc55iyDAEhicwAJgoXwKZjqrpeivERtbg.CoNWujtjCc49gH1T.mo0lnj5mqKlqnISaT_u1zaYK26GOVRuyJ028XjctLpQ3FtlMfkoUj2M47nL2uMnRmgIZeKeJ_Ub88Hm0mIXLi0TjQ6GYxXRGlPqoNGxpvxJL0FHbi4kh86fKHlUJOaBHpZkEXPQ6ESM8H_UXPWDdOt42owdjfbyX_SzOm8RiT4wa5j6eaTkzmLqt4X5SlbfPWNfhMQ_Ais5HRYKgSlzidd94_cUjW5fUrFH_MJzb63re862o56xIUR4dGza6Au__jCxFnPkXiVJrd6NwtsACdkMQy0TbQghh3I_vy4sNvL1KVyOxbWwNYCnyfBILR8bwGA6Sopf3bvSizeaHM4v9yYSkcWq-Eqt93kR6jHCZSD5ShXM3tBWHbR366aumnrrN5U88L3xtrn8JN8e4VOwdvvsWgswtG4SVLE2Phi89-m2Jn-sYmsHpIcDYTb8GOadhGYhPqHALcAqzfdqtSBVQv_RlYc_tDeLCegIlPtjqAg_WlTP-Nj1CBMpbWqjLwIDqGINjYLjYclTrftpoIgE4Y_p1iCv6pHtyqqoZ7yEk23P-nymFHJSzwhRR9TEN5R7dZcQZQta8zBy6RShwZM1s8vltUA01Uxu9cgIDPq1FCL7vVOqr0ejYAbQ5XnDUAbcskvl6wpTxo4MK0P7CxQ_ONQYW6s_ychHRXPfbas73jznIBY56EWbZ6J5cf--EfR3i1W4cV120KUUdyEMyPaJraspYwGzeHMKlHkVBeDu8BhlPn7fwU_eqVTlU4V9u6L9S1Y_n_EbX9-YcY89O9Mc1Ddrc5Kq2bvTnRdIYk0FOlp_PakhOjkDHX6Oh2GCPW-ZxabcLuZQC_BICbLH-FmpytcmEptP1k_kpMQW4Z_WdCpleyqDyQkxriGhR_x13g7oJB2UXEyRzfeFweWWYDxMG087biUoiDTGeGMsFyn8HHeYag2_BWUxJQlrL3gj-gUTVR1d9Wqw4BMN4U7IW0BXWwqrBENFC8Xp3mVpwIpHduj5d11w6T_kLUhmFYjZ1zwa3D2vJZjAx3EzL1WbjZ-Ab-wLYarTuBLOcdXBBTIr2RiEe5Suip-K_XRcVnhjYt4xzin-9wUHFj3p2v8YRF9ZZXrKuwygdLvElcRVyT9iWP4Zdw_9tSh6zcqChYd9XoX_MZjjmeX1HLALB7tc4dReA6xFvMDaVVEv69OTpZ4N6jHk7hc6uGb6RQJSyRIcyhdzS2mgmcoOQ6W92Hu-c_Z6XLoROp1mKYIoKQ67QqqW_AbmzboOfHm-ETanXjOFhYFIcKcwjTMuJkn-IJz8xr6nt2A9ZlgHFXokrbuIXOTegF8C-k7-UeJh8PtWtkP0.aqvR-vZ2vxMv-w8O7maHPg"
             };
          
             var userResponse = function.SilentAuth(userRequest, null);
@@ -225,9 +230,9 @@ namespace ReportBuilder.UnitTest
                 PathParameters = pathValues
             };
 
-            var rr = " {    \"CompanyId\" : \"6\",    \"Payload\" : {\"Fields\":[{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"USER_ID\",\"Bitwise\":\"\"}],\"ColumnList\":[\"EMPLOYEE_NAME\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"EMAIL\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\"]}}";
+            var rr = " {    \"CompanyId\" : \"6\",    \"Payload\" : {\"Fields\":[{\"Value\":\"e\",\"Operator\":\"contains\",\"Name\":\"WORKBOOK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"WORKBOOK_ID\",\"WORKBOOK_NAME\",\"DESCRIPTION\",\"WORKBOOK_CREATED_BY\",\"DAYS_TO_COMPLETE\"]},    \"UserName\" :  \"\",    \"UserId\":\"6\"}";
             aPIGatewayProxyRequest.Body = "{\"Fields\":[{\"Value\":\"ME_AND_DIRECT_SUBORDINATES\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"\"},{\"Value\":\"6\",\"Operator\":\"=\",\"Name\":\"CURRENT_USER\",\"BitWise\":\"AND\"},{\"Value\":\"Sheila136\",\"Operator\":\"=\",\"Name\":\"USERNAME\",\"Bitwise\":\"or\"}],\"ColumnList\":[\"USER_CREATED_DATE\",\"ROLE\",\"USER_ID\",\"USERNAME\",\"EMAIL\",\"ALTERNATE_USERNAME\",\"TOTAL_EMPLOYEES\"]}";
-            var userResponse = function.GetEmployeesQueryBuilder(JsonConvert.DeserializeObject<QueryBuilderRequest>(rr), null);
+            var userResponse = function.GetWorkbookQueryBuilder(JsonConvert.DeserializeObject<QueryBuilderRequest>(rr), null);
 
         //    Assert.AreEqual(200, userResponse.StatusCode);
         }
@@ -293,47 +298,47 @@ namespace ReportBuilder.UnitTest
 
 
 
-        ///// </summary>
-        //[TestMethod]
-        //public void GetTaskQueryDetails()
-        //{
-        //    List<EmployeeModel> employeeList = new List<EmployeeModel>();
+        /// </summary>
+        [TestMethod]
+        public void GetTaskQueryDetails()
+        {
+            List<EmployeeModel> employeeList = new List<EmployeeModel>();
 
-        //    Function function = new Function();
-
-
-
-        //    QueryBuilderRequest employeeRequest = new QueryBuilderRequest
-        //    {
-        //        ColumnList = new string[] { Constants.COMPANY_ID, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.COMPANY_NAME },
-        //        Fields = employeeList
-        //    };
-        //    EmployeeModel employeeModel = new EmployeeModel
-        //    {
-        //        Name = Constants.USERID,
-        //        Value = "6",
-        //        Operator = "="
-        //    };
+            Function function = new Function();
 
 
 
-        //    employeeList.Add(employeeModel);
-        //    Dictionary<string, string> pathValues = new Dictionary<string, string>
-        //    {
-        //        { "companyId", "6" }
+            QueryBuilderRequest employeeRequest = new QueryBuilderRequest
+            {
+                ColumnList = new string[] { Constants.COMPANY_ID, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.COMPANY_NAME },
+                Fields = employeeList
+            };
+            EmployeeModel employeeModel = new EmployeeModel
+            {
+                Name = Constants.USERID,
+                Value = "6",
+                Operator = "="
+            };
 
-        //    };
 
-        //    APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-        //    {
-        //        Body = JsonConvert.SerializeObject(employeeRequest),
-        //        PathParameters = pathValues
-        //    };
 
-        //    aPIGatewayProxyRequest.Body = "{\"Fields\":[],\"ColumnList\":[\"USER_ID\",\"EMPLOYEE_NAME\",\"ASSIGNED_COMPANY_QUALIFICATION\",\"COMPLETED_COMPANY_QUALIFICATION\",\"IN_COMPLETE_COMPANY_QUALIFICATION\"]}";
-        //    APIGatewayProxyResponse userResponse = function.GetTaskQuerBuilder(aPIGatewayProxyRequest, null);
-        //    Assert.AreEqual(200, userResponse.StatusCode);
-        //}
+            employeeList.Add(employeeModel);
+            Dictionary<string, string> pathValues = new Dictionary<string, string>
+            {
+                { "companyId", "6" }
+
+            };
+
+            APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
+            {
+                Body = JsonConvert.SerializeObject(employeeRequest),
+                PathParameters = pathValues
+            };
+
+            var req = "{    \"CompanyId\" : \"6\",    \"Payload\" : {\"Fields\":[{\"Value\":\"a\",\"Operator\":\"contains\",\"Name\":\"TASK_NAME\",\"Bitwise\":\"\"}],\"ColumnList\":[\"TASK_ID\",\"TASK_NAME\",\"ASSIGNED_TO\",\"EVALUATOR_NAME\",\"EXPIRATION_DATE\"]},    \"UserName\" :  \"\",    \"UserId\":\"6\"}";
+            var userResponse = function.GetTaskQueryBuilder(JsonConvert.DeserializeObject<QueryBuilderRequest>(req), null);
+            //Assert.AreEqual(200, userResponse.StatusCode);
+        }
 
         //[TestMethod]
         //public void GetEmployeesWithMultipleFields()

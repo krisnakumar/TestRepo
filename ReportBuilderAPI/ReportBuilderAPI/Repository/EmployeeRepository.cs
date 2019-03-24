@@ -29,15 +29,15 @@ namespace ReportBuilderAPI.Repository
         {
                 { Constants.EMPLOYEE_NAME, ", Full_Name_Format1  AS employeeName " },
                 { Constants.ROLE, ", r.Name AS Role "},
-                { Constants.USERNAME, ", u.UserName" },
-                { Constants.ALTERNATE_USERNAME, ", u.UserName2" },
+                { Constants.USERNAME, ", u.User_Name AS UserName" },
+                { Constants.ALTERNATE_USERNAME, ", u.Alternate_User_Name AS UserName2" },
                 { Constants.TOTAL_EMPLOYEES, ", (SELECT COUNT(*) FROM dbo.Supervisor WHERE SupervisorId=u.User_Id) AS employeeCount" },
                 { Constants.EMAIL, ", u.Email" },
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
-                { Constants.SUPERVISOR_NAME, ", (SELECT (ISNULL(NULLIF(usr.LName, '') + ', ', '') + usr.Fname) FROM dbo.[UserDetails] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.Id WHERE s.userId=u.User_Id) AS supervisorName" },
-                { Constants.USER_CREATED_DATE, ", u.DateCreated" },
-                { Constants.USERID, ", u. Id AS userId" },
+                { Constants.SUPERVISOR_NAME, ", (SELECT Full_Name_Format1 FROM dbo.[UserDetails] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.User_Id WHERE s.userId=u.User_Id) AS supervisorName" },
+                { Constants.USER_CREATED_DATE, ", u.Date_Created" },
+                { Constants.USERID, ", u.User_Id AS userId" },
                 { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM dbo.Supervisor s WHERE userId=u.User_Id) AS supervisorId" }
 
         };
@@ -49,12 +49,12 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> employeeFields = new Dictionary<string, string>()
         {
             {Constants.USERID, "u.User_Id" },
-            {Constants.USERNAME, "u.UserName" },
-            {Constants.USERNAME2, "u.UserName2" },
-            {Constants.USER_CREATED_DATE, "u.DateCreated" },
-            {Constants.FIRSTNAME, "u.FName" },
-            {Constants.LASTNAME, "u.LName" },
-            {Constants.MIDDLENAME, "u.MName" },
+            {Constants.USERNAME, "u.User_Name" },
+            {Constants.USERNAME2, "u.Alternate_User_Name" },
+            {Constants.USER_CREATED_DATE, "u.Date_Created" },
+            {Constants.FIRSTNAME, "u.First_Name" },
+            {Constants.LASTNAME, "u.Last_Name" },
+            {Constants.MIDDLENAME, "u.Middle_Name" },
             {Constants.EMAIL, "u.Email" },
             {Constants.CITY, "u.City" },
             {Constants.STATE, "u.State" },
@@ -143,7 +143,7 @@ namespace ReportBuilderAPI.Repository
                         OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name) + CheckValues(employee.Value, employee.Operator)) : string.Empty));
 
                 //Append the company query
-                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + employeeRequest.CompanyId + " and  (" + whereQuery) : string.Empty;
+                whereQuery = (!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId=" + employeeRequest.CompanyId + " AND uc.status=1 AND (" + whereQuery) : string.Empty;
 
                 whereQuery = whereQuery.Replace("@currentuserId", currentUserId);
                 //Create the final query that helps to retrieve the data
