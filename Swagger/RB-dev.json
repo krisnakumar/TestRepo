@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Workbook API's for Report Builder",
+    "description": "Report Builder API",
     "version": "1.0",
-    "title": "ReportBuilder-test"
+    "title": "Report Builder API"
   },
   "x-amazon-apigateway-minimum-compression-size": 10,
   "tags": [
@@ -59,7 +59,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:Login-RB-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_Login/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -143,7 +143,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:SilentAuth-RB-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SilentAuth/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -277,7 +277,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:Employees-RB-query-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetEmployeesQueryBuilder/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -419,7 +419,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:workbooks-RB-query-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetWorkbookQueryBuilder/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -561,7 +561,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:tasks-RB-query-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetTasks/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -703,7 +703,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:GetRoles-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetRoles/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -713,7 +713,7 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "httpMethod": "GET",
+          "httpMethod": "POST",
            "requestTemplates": {
             "application/json": "{\r\n    \"CompanyId\" : \"$input.params('companyId')\"\r\n}"
           },
@@ -854,7 +854,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:SaveQuery-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SaveQuery/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -1008,7 +1008,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:RenameQuery-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_RenameQuery/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -1167,7 +1167,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:DeleteQuery-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_DeleteQuery/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -1323,7 +1323,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:GetQueries-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQueries/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -1474,7 +1474,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:GetQuery-dev/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQuery/invocations",
           "responses": {
             "default": {
               "statusCode": "200",
@@ -1546,7 +1546,7 @@
       "x-amazon-apigateway-authtype": "COGNITO_USER_POOLS",
       "x-amazon-apigateway-authorizer": {
         "providerARNs": [
-          "arn:aws:cognito-idp:us-west-2:708144412513:userpool/us-west-2_nrrZaoTAs"
+          "arn:aws:cognito-idp:us-west-2:059147590818:userpool/us-west-2_F54j6m3T2"
         ],
         "type": "cognito_user_pools"
       }
