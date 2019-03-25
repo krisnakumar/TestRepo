@@ -56,9 +56,12 @@ class EmployeeExport extends Component {
     */
     formatData(employeeData) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        let runByUser = contractorManagementDetails.User.FullName || "";
         let fieldDataColumns = FieldData.columns.employees;
         let employees = employeeData || [],
-            runByUser = cookies.get('UserName') || "",
+            // runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 

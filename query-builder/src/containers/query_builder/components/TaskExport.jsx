@@ -56,8 +56,11 @@ class TaskExport extends Component {
     formatData(taskData) {
         const { cookies } = this.props;
         let fieldDataColumns = FieldData.columns.tasks;
+        let { contractorManagementDetails } = sessionStorage || {};
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        let runByUser = contractorManagementDetails.User.FullName || "";
         let tasks = taskData || [],
-            runByUser = cookies.get('UserName') || "",
+            // runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 

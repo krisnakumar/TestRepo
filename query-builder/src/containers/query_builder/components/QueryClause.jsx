@@ -482,10 +482,13 @@ class QueryClause extends PureComponent {
                 }
 
                 queryClause.push(queryObj);
-
+                let { contractorManagementDetails } = sessionStorage || '{}';
+                    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+                let userId = contractorManagementDetails.User.Id || 0;
                 if (_self.state.formattedData[index].fieldsSelected.smartParam == "user" && (queryObj.Value == "ME" || queryObj.Value == "ME_AND_DIRECT_SUBORDINATES" || queryObj.Value == "DIRECT_SUBORDINATES")) {
                     let queryObjUser = {};
-                    queryObjUser.Value = cookies.get('UserId');
+                    // queryObjUser.Value = cookies.get('UserId');
+                    queryObjUser.Value = userId;
                     queryObjUser.Operator = "=";
                     queryObjUser.Name = "CURRENT_USER";
                     queryObjUser.BitWise = "AND";
@@ -643,13 +646,23 @@ class QueryClause extends PureComponent {
         const { cookies } = this.props;
         const { empColumnList } = this.state;
 
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
         let payLoad = {
             "Fields": requestData,
             "ColumnList": empColumnList
         };
 
-        let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+        let { contractorManagementDetails } = sessionStorage || '{}';
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        let companyId = contractorManagementDetails.Company.Id || 0;
+
+
+        // let token = cookies.get('IdentityToken'),
+        let token = idToken,
+            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/employees",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -668,10 +681,19 @@ class QueryClause extends PureComponent {
         const { cookies } = this.props;
         const { workbookColumnList } = this.state;
 
+        let { dashboardAPIToken } = sessionStorage || {};
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
         let payLoad = { "Fields": requestData, "ColumnList": workbookColumnList };
 
-        let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+        let { contractorManagementDetails } = sessionStorage || '{}';
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        let companyId = contractorManagementDetails.Company.Id || 0;
+
+        // let token = cookies.get('IdentityToken'),
+        let token = idToken,
+            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/workbooks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -690,10 +712,19 @@ class QueryClause extends PureComponent {
         const { cookies } = this.props;
         const { taskColumnList } = this.state;
 
+        let { dashboardAPIToken } = sessionStorage || {};
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
         let payLoad = { "Fields": requestData, "ColumnList": taskColumnList };
 
-        let token = cookies.get('IdentityToken'),
-            companyId = cookies.get('CompanyId'),
+        let { contractorManagementDetails } = sessionStorage || '{}';
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        let companyId = contractorManagementDetails.Company.Id || 0;
+
+         // let token = cookies.get('IdentityToken'),
+         let token = idToken,
+            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

@@ -8,6 +8,8 @@ import IdleTimer from 'react-idle-timer'
 import { withCookies, Cookies } from 'react-cookie';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
+import * as API from '../../shared/utils/APIUtils';
+var jwt = require('jsonwebtoken');
 
 /**
  * App Class defines the React component to render
@@ -123,8 +125,14 @@ class App extends Component {
   */
   componentWillMount() {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    // get the decoded payload and header
+    let decoded = jwt.decode(idToken, {complete: true});
     let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
-      isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
+      // isTokenAvailable = token ? true : false,  
+      isTokenAvailable = idToken ? true : false,                      // Checking Identity token is available or not
       isBasePath = window.location.pathname == '/' ? true : false, 
       isMockBasePath = true;  // Checking it is base path or not
 

@@ -119,26 +119,30 @@ function deleteAllCookies() {
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh",
-        userName = decodeURIComponent(getCookie("UserName")),
-        refreshToken = getCookie("RefreshToken");
-    
+    let _self= this;
+    let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh";
+    let { dashboardAPIToken } = sessionStorage || {};
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = getCookie("IdentityToken");//dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let refreshToken = getCookie("RefreshToken");//dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
     return fetch(url, {
      method: "POST",
      headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
-         "Authorization": token
+         "Authorization": idToken
        },
     body: JSON.stringify({
-         "RefreshToken": refreshToken,
-         "UserName": userName     
+         "RefreshToken": refreshToken 
         })
      }).then(function(response) {
-         console.log("response",response);
          return response.json();        
      }).then(function(json) { 
-         console.log("json",json);
+         let { dashboardAPIToken } = sessionStorage || {};
+         dashboardAPIToken = JSON.parse(dashboardAPIToken);
+         dashboardAPIToken.AccessToken = json.AccessToken || "";
+         dashboardAPIToken.IdToken = json.IdentityToken || "";
+         sessionStorage.dashboardAPIToken = JSON.stringify(dashboardAPIToken);
          return json;
      }).catch(function(ex) {
          // Handle API Exception here       
