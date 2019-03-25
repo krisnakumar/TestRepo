@@ -374,15 +374,16 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(companyRequest.UserId, companyRequest.CompanyId) != null)
-                {
-                    return companyRepository.GetCompany(companyRequest);
-                }
-                else
-                {
-                    companyResponse.Error = ResponseBuilder.Forbidden();
-                    return companyResponse;
-                }
+                //if (authorizer.ValidateUser(companyRequest.UserId, companyRequest.CompanyId) != null)
+                //{
+                //    return companyRepository.GetCompany(companyRequest);
+                //}
+                //else
+                //{
+                //    companyResponse.Error = ResponseBuilder.Forbidden();
+                //    return companyResponse;
+                //}
+                return companyRepository.GetCompany(companyRequest);
             }
             catch (Exception getCompanyException)
             {
