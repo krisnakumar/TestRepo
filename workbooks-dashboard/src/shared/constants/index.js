@@ -2,7 +2,7 @@
 /* Constants for API Requests */
 
 /* Endpoint API for Sysvine Dev */
-export const API_DOMAIN = 'https://uzdpzdi722.execute-api.us-west-2.amazonaws.com/';
+export const API_DOMAIN = 'https://m8dqprxss5.execute-api.us-west-2.amazonaws.com/';
 
 /* Endpoint API for ITS Dev */
 // export const API_DOMAIN = 'https://r6sya9tny6.execute-api.us-west-2.amazonaws.com/';
