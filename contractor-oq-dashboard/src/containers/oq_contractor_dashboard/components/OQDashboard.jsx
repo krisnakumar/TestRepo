@@ -186,9 +186,12 @@ class OQDashboard extends PureComponent {
   */
   async componentDidMount() {
     // Do API call for loading initial table view
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // let userId = contractorManagementDetails.User.Id || 0;
     const { cookies } = this.props;
-    let userId = cookies.get('UserId'),
-      roles = [];
+    let userId = contractorManagementDetails.User.Id || 0,// cookies.get('UserId'),
+    roles = [];
     await this.getFilterOptions();
     this.getQualifications(userId, roles);
   };
@@ -388,8 +391,16 @@ class OQDashboard extends PureComponent {
   async getFilterOptions() {
     const { cookies } = this.props;
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+    let token = idToken,//cookies.get('IdentityToken'),
+      //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
@@ -420,8 +431,16 @@ class OQDashboard extends PureComponent {
 
     };
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+    let token = idToken,// cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
       rows = this.createRows(response),
@@ -451,7 +470,11 @@ class OQDashboard extends PureComponent {
     isAssignedQualificationView = true;
     this.setState({ isAssignedQualificationView, assignedQualifications });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     assignedQualifications = response;
@@ -482,7 +505,11 @@ class OQDashboard extends PureComponent {
     isCompletedQualificationView = true;
     this.setState({ isCompletedQualificationView, completedQualifications });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     completedQualifications = response;
@@ -512,7 +539,11 @@ class OQDashboard extends PureComponent {
     isInCompletedQualificationView = true;
     this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     inCompletedQualifications = response;
@@ -542,7 +573,11 @@ class OQDashboard extends PureComponent {
     isPastDueQualificationView = true;
     this.setState({ isPastDueQualificationView, pastDueQualifications });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
     pastDueQualifications = response;
@@ -572,7 +607,11 @@ class OQDashboard extends PureComponent {
     isComingDueQualificationView = true;
     this.setState({ isComingDueQualificationView, comingDueQualifications });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -604,7 +643,11 @@ class OQDashboard extends PureComponent {
     isEmployeeView = true;
     this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray });
 
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -716,7 +759,10 @@ class OQDashboard extends PureComponent {
  */
   filterGoAction = () => {
     const { cookies } = this.props;
-    let userId = cookies.get('UserId');
+    // let userId = cookies.get('UserId');
+    let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let userId = contractorManagementDetails.User.Id || 0;
     let filteredRoles = this.state.filteredRoles,
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });

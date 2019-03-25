@@ -55,7 +55,10 @@ class OQDashboardExport extends Component {
     */
     formatData(data, heads) {
         const { cookies } = this.props;
-        let runByUser = cookies.get('UserName') || "",
+        let { contractorManagementDetails } = sessionStorage || '{}';
+            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+            
+        let runByUser = contractorManagementDetails.User.FullName || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 

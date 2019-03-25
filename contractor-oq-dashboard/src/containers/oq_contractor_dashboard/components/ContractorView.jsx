@@ -389,6 +389,7 @@ class ContractorView extends PureComponent {
     */
     async getEmployeeQualifications(userId, companyId) {
         const { cookies } = this.props;
+        
         const payLoad = {
             "Fields": [
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
@@ -403,7 +404,11 @@ class ContractorView extends PureComponent {
         isEmployeeView = true;
         this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -433,8 +438,11 @@ class ContractorView extends PureComponent {
             assignedQualifications = {};
         isAssignedQualificationView = true;
         this.setState({ isAssignedQualificationView, assignedQualifications });
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = cookies.get('IdentityToken'),
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
@@ -464,7 +472,11 @@ class ContractorView extends PureComponent {
         isCompletedQualificationView = true;
         this.setState({ isCompletedQualificationView, completedQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
@@ -494,7 +506,11 @@ class ContractorView extends PureComponent {
         isInCompletedQualificationView = true;
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
@@ -524,7 +540,11 @@ class ContractorView extends PureComponent {
         isPastDueQualificationView = true;
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
@@ -554,7 +574,11 @@ class ContractorView extends PureComponent {
         isComingDueQualificationView = true;
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;

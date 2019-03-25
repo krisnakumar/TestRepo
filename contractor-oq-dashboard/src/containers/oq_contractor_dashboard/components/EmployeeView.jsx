@@ -405,7 +405,11 @@ class EmployeeView extends PureComponent {
             "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
         };
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
             myEmployees = response;
@@ -434,7 +438,11 @@ class EmployeeView extends PureComponent {
         isAssignedQualificationView = true;
         this.setState({ isAssignedQualificationView, assignedQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
@@ -464,7 +472,11 @@ class EmployeeView extends PureComponent {
         isCompletedQualificationView = true;
         this.setState({ isCompletedQualificationView, completedQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
@@ -494,7 +506,11 @@ class EmployeeView extends PureComponent {
         isInCompletedQualificationView = true;
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
@@ -524,7 +540,11 @@ class EmployeeView extends PureComponent {
         isPastDueQualificationView = true;
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
@@ -554,7 +574,11 @@ class EmployeeView extends PureComponent {
         isComingDueQualificationView = true;
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
-        let token = cookies.get('IdentityToken'),
+        let { dashboardAPIToken } = sessionStorage || '{}';
+            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,//cookies.get('IdentityToken'),
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;
