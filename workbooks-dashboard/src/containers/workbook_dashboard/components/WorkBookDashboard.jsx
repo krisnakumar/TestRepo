@@ -313,8 +313,10 @@ class WorkBookDashboard extends PureComponent {
   */
   async componentDidMount() {
     const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId'),
-      userId = cookies.get('UserId'),
+    // let companyId = cookies.get('CompanyId'),
+    //   userId = cookies.get('UserId'),
+      let companyId = localStorage.getItem('CompanyId') || 0,
+      userId = localStorage.getItem('UserId') || "",
       roles = [];
 
     await this.getFilterOptions();
@@ -331,9 +333,12 @@ class WorkBookDashboard extends PureComponent {
    */
   async getFilterOptions() {
     const { cookies } = this.props;
-
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      companyId = localStorage.getItem('CompanyId');
+    let token = idToken,//cookies.get('IdentityToken'),
+      //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
@@ -351,6 +356,10 @@ class WorkBookDashboard extends PureComponent {
    */
   async getEmployees(companyId, userId, roles) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+      //companyId = localStorage.getItem('CompanyId');
     let rolesLength = roles.length,
       fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }];
     if (rolesLength > 0) {
@@ -362,7 +371,7 @@ class WorkBookDashboard extends PureComponent {
       "Fields": fields,
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
-    let token = cookies.get('IdentityToken'),
+    let token = idToken,//cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
@@ -380,13 +389,17 @@ class WorkBookDashboard extends PureComponent {
    */
   async getMyEmployees(userId) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const postData = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+      //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response,
@@ -411,6 +424,10 @@ class WorkBookDashboard extends PureComponent {
    */
   async getAssignedWorkbooks(userId) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
@@ -421,8 +438,8 @@ class WorkBookDashboard extends PureComponent {
     isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+      //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -440,6 +457,10 @@ class WorkBookDashboard extends PureComponent {
   */
   async getPastDueWorkbooks(userId) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
@@ -450,8 +471,8 @@ class WorkBookDashboard extends PureComponent {
     isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken, //cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -469,6 +490,10 @@ class WorkBookDashboard extends PureComponent {
    */
   async getComingDueWorkbooks(userId) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
@@ -479,8 +504,8 @@ class WorkBookDashboard extends PureComponent {
     isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -498,6 +523,10 @@ class WorkBookDashboard extends PureComponent {
    */
   async getCompletedWorkbooks(userId) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
@@ -508,8 +537,8 @@ class WorkBookDashboard extends PureComponent {
     isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -728,8 +757,10 @@ class WorkBookDashboard extends PureComponent {
  */
   filterGoAction = () => {
     const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId'),
-      userId = cookies.get('UserId');
+    // let companyId = cookies.get('CompanyId'),
+    //   userId = cookies.get('UserId');
+    let companyId = localStorage.getItem('CompanyId') || 0,
+        userId = localStorage.getItem('UserId') || "";
     let filteredRoles = this.state.filteredRoles,
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });

@@ -185,6 +185,10 @@ class WorkBookProgress extends React.Component {
    */
   async getWorkbookRepetitions(userId, workBookId, taskId, status) {
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [
         { "Name": "USER_ID", "Value": userId, "Operator": "=" },
@@ -200,8 +204,8 @@ class WorkBookProgress extends React.Component {
     isWorkBookRepetitionModal = true;
     this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
 
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+      //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

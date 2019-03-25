@@ -139,6 +139,10 @@ class WorkBookDuePast extends React.Component {
    */
   async getWorkBookProgress(userId, workBookId){
     const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
@@ -149,8 +153,8 @@ class WorkBookDuePast extends React.Component {
     isWorkBookProgressModal = true;
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
-    let token = cookies.get('IdentityToken'),
-        companyId = cookies.get('CompanyId'),
+    let token = idToken,//cookies.get('IdentityToken'),
+        //companyId = cookies.get('CompanyId'),
         url = "/company/"+companyId+"/tasks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         
