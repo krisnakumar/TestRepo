@@ -315,8 +315,12 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     // let companyId = cookies.get('CompanyId'),
     //   userId = cookies.get('UserId'),
-      let companyId = localStorage.getItem('CompanyId') || 0,
-      userId = localStorage.getItem('UserId') || "",
+      // Company Id get from session storage
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+      let companyId = contractorManagementDetails.Company.Id || 0;
+      // let companyId = localStorage.getItem('CompanyId') || 0,
+      let userId = contractorManagementDetails.User.Id || 0,//localStorage.getItem('UserId') || "",
       roles = [];
 
     await this.getFilterOptions();
@@ -335,8 +339,12 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+      // companyId = localStorage.getItem('CompanyId');
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+      let companyId = contractorManagementDetails.Company.Id || 0;
+
     let token = idToken,//cookies.get('IdentityToken'),
       //companyId = cookies.get('CompanyId'),
       url = "/company/" + companyId + "/roles",
@@ -391,12 +399,15 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const postData = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let token = idToken,//cookies.get('IdentityToken'),
       //companyId = cookies.get('CompanyId'),
@@ -426,12 +437,15 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isAssignedModal = this.state.isAssignedModal,
       assignedWorkBooks = {};
@@ -459,12 +473,15 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isPastDueModal = this.state.isPastDueModal,
       workBookDuePast = {};
@@ -492,12 +509,15 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isComingDueModal = this.state.isComingDueModal,
       workBookComingDue = {};
@@ -525,12 +545,15 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isCompletedModal = this.state.isCompletedModal,
       workBookCompleted = {};
@@ -759,8 +782,11 @@ class WorkBookDashboard extends PureComponent {
     const { cookies } = this.props;
     // let companyId = cookies.get('CompanyId'),
     //   userId = cookies.get('UserId');
-    let companyId = localStorage.getItem('CompanyId') || 0,
-        userId = localStorage.getItem('UserId') || "";
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0,
+    //let companyId = localStorage.getItem('CompanyId') || 0,
+        userId = contractorManagementDetails.User.Id || 0;//localStorage.getItem('UserId') || "";
     let filteredRoles = this.state.filteredRoles,
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });

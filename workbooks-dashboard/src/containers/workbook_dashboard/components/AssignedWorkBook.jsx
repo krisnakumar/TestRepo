@@ -139,12 +139,17 @@ class AssignedWorkBook extends React.Component {
   async getWorkBookProgress(userId, workBookId) {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
-      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
     };
+
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
       workBooksProgress = {};
@@ -152,7 +157,7 @@ class AssignedWorkBook extends React.Component {
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = idToken,//cookies.get('IdentityToken'),
-      companyId = localStorage.getItem("CompanyId"),//cookies.get('CompanyId'),
+      //companyId = localStorage.getItem("CompanyId"),//cookies.get('CompanyId'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

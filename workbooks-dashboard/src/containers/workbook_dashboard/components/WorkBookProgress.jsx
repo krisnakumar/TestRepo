@@ -187,8 +187,12 @@ class WorkBookProgress extends React.Component {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
     const payLoad = {
       "Fields": [
         { "Name": "USER_ID", "Value": userId, "Operator": "=" },

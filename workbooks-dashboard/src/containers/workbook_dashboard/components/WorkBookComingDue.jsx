@@ -140,12 +140,17 @@ class WorkBookComingDue extends React.Component {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+     // companyId = localStorage.getItem('CompanyId');
     const payLoad = {
       "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
     };
+
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
         workBooksProgress = {};

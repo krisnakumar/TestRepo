@@ -226,8 +226,14 @@ class MyEmployees extends React.Component {
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
+      // Company Id get from session storage
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+
     let token = idToken,//cookies.get('IdentityToken'),
-      companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response;
@@ -252,13 +258,19 @@ class MyEmployees extends React.Component {
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
+      // Company Id get from session storage
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+
     let isPastDueModal = this.state.isPastDueModal,
       workBookDuePast = {};
     isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = idToken,//cookies.get('IdentityToken'),
-      companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -289,8 +301,14 @@ class MyEmployees extends React.Component {
     isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
+      // Company Id get from session storage
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+
     let token = idToken,//cookies.get('IdentityToken'),
-      companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -311,12 +329,16 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
+
+      // Company Id get from session storage
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isCompletedModal = this.state.isCompletedModal,
       workBookCompleted = {};
@@ -344,12 +366,16 @@ class MyEmployees extends React.Component {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      companyId = localStorage.getItem('CompanyId');
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
+
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isAssignedModal = this.state.isAssignedModal,
       assignedWorkBooks = {};
