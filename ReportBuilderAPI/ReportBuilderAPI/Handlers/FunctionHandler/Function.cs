@@ -55,19 +55,10 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             AuthenticationRepository authenticationRepository = new AuthenticationRepository();
             UserResponse userResponse = new UserResponse();
-            Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(userRequest.UserId, userRequest.CompanyId) != null)
-                {
-                    userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
-                    return authenticationRepository.SilentAuth(userRequest);
-                }
-                else
-                {
-                    userResponse.Error = ResponseBuilder.Forbidden();
-                    return userResponse;
-                }
+                userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
+                return authenticationRepository.SilentAuth(userRequest);
             }
             catch (Exception silentAuthException)
             {

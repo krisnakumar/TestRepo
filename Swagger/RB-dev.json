@@ -161,7 +161,7 @@
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"$input.json('$')"
+                  "application/json": "{\r\n    \"Payload\" : $input.json('$'),\r\n    \"UserName\" :  \"$context.authorizer.claims['cognito:username']\"\r\n}"
                },
                "type":"aws"
             }

@@ -15,8 +15,7 @@ namespace ReportBuilder.Models.Request
 {
     public class UserRequest : AuthorizorRequest
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string UserName { get; set; }
+       
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Password { get; set; }
@@ -24,8 +23,7 @@ namespace ReportBuilder.Models.Request
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RefreshToken { get; set; }
-
-        public int CompanyId { get; set; }
+    
 
         public string CognitoPoolId { get; set; }
 
@@ -34,5 +32,7 @@ namespace ReportBuilder.Models.Request
         public string IdToken { get; set; }
 
         public string AccessToken { get; set; }
+
+        public UserRequest Payload { get; set; }
     }
 }
