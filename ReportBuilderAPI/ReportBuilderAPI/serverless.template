@@ -1,48 +1,57 @@
 {
    "AWSTemplateFormatVersion": "2010-09-09",
    "Transform": "AWS::Serverless-2016-10-31",
-   "Description": "An AWS Serverless Application.",
+   "Description": "OnBoardLMS Contractor management, training (OJT) and query builder microservices.",
    "Parameters": {
       "ConnectionString": {
          "Type": "String",
-         "Description": "Connection string Which help to read the data from SQL",
-         "Default": "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True"
+         "Description": "Connection string to the database"
       },
       "LambdaMemory": {
          "Type": "String",
-         "Description": "Memory size that allocated for each Lambda function(s)",
+         "Description": "How much memory (MB) is assigned to each lambda function.",
          "Default": "256"
       },
       "LambdaTimeout": {
          "Type": "String",
-         "Description": "Time out for each lambda fucntions",
+         "Description": "Time in seconds (s) that a lambda function will run before timing out.",		    
          "Default": "30"
       },
       "CognitoPoolId": {
          "Type": "String",
-         "Description": "Pool Id to check user session",
-         "Default": "us-west-2_nrrZaoTAs"
+         "Description": "Pool Id to check user session"
       },
       "CognitoClientId": {
          "Type": "String",
-         "Description": "Pool Id to check user session",
-         "Default": "4efougb8nqj7f72ku183rudmqm"
+         "Description": "Pool Id to check user session"
+      },
+      "VPCSecurityGroupIDs": {
+         "Description": "A comma-delimited list of strings - the security groups that your Lambda function should be in",
+         "Type": "CommaDelimitedList"
+      },
+      "VPCSubnetIDs": {
+         "Description": "A comma-delimited list of strings - the subnet IDs that your Lambda function should be assigned to",
+         "Type": "CommaDelimitedList"
+      },
+      "LambdaExecutionRoleArn" : {
+		"Description": "The Arn of the role that the lambda functions will execute as.",
+		"Type" : "String"
       }
    },
    "Resources": {
       "ReportBuilderAPI": {
          "Type": "AWS::Serverless::Api",
          "Properties": {
-            "Name": "ReportBuilder",
-            "StageName": "dev",
-            "DefinitionUri": "s3://reportbuilder-sandbox/RB.json"
+            "Name": "OnBoardLMS-ReportBuilder",
+            "StageName": "DEV",
+            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
       },
       "Login": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-            "FunctionName": "Login-RB",
+            "FunctionName": "OnBoardLMS_RB_Login",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -51,10 +60,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -86,7 +96,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQueryBuilder",
-            "FunctionName": "Employees-RB-query",
+            "FunctionName": "OnBoardLMS_RB_GetEmployeesQueryBuilder",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -95,10 +105,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -124,7 +135,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQueryBuilder",
-            "FunctionName": "workbooks-RB-query",
+            "FunctionName": "OnBoardLMS_RB_GetWorkbookQueryBuilder",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -133,10 +144,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -162,7 +174,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQueryBuilder",
-            "FunctionName": "tasks-RB-query",
+            "FunctionName": "OnBoardLMS_RB_GetTasks",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -171,10 +183,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -200,7 +213,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-            "FunctionName": "SilentAuth-RB",
+            "FunctionName": "OnBoardLMS_RB_SilentAuth",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -209,10 +222,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -241,7 +255,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SaveQuery",
-            "FunctionName": "SaveQuery",
+            "FunctionName": "OnBoardLMS_RB_SaveQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -250,10 +264,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -279,7 +294,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQuery",
-            "FunctionName": "GetQuery",
+            "FunctionName": "OnBoardLMS_RB_GetQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -288,10 +303,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -317,7 +333,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
-            "FunctionName": "RenameQuery",
+            "FunctionName": "OnBoardLMS_RB_RenameQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -326,10 +342,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -355,7 +372,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
-            "FunctionName": "DeleteQuery",
+            "FunctionName": "OnBoardLMS_RB_DeleteQuery",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -364,10 +381,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+           "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -393,7 +411,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQueries",
-            "FunctionName": "GetQueries",
+            "FunctionName": "OnBoardLMS_RB_GetQueries",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -402,10 +420,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -431,7 +450,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetRoles",
-            "FunctionName": "GetRoles",
+            "FunctionName": "OnBoardLMS_RB_GetRoles",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -440,10 +459,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -469,7 +489,7 @@
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompany",
-            "FunctionName": "GetCompany",
+            "FunctionName": "OnBoardLMS_RB_GetCompanies",
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -478,10 +498,11 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": null,
-            "Policies": [
-               "AWSLambdaFullAccess"
-            ],
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
             "Environment": {
                "Variables": {
                   "ConnectionString": {
