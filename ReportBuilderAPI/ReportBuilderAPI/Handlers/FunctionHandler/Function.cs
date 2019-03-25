@@ -339,19 +339,18 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             RoleRepository roleRepository = new RoleRepository();
             RoleResponse roleResponse = new RoleResponse();
-            //Authorizer authorizer = new Authorizer();
+            Authorizer authorizer = new Authorizer();
             try
             {
-                //if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
-                //{
-                  //  return roleRepository.GetRoles(roleRequest);
-                //}
-                //else
-                //{
-                  //  roleResponse.Error = ResponseBuilder.Forbidden();
-                    //return roleResponse;
-                //}
-                return roleRepository.GetRoles(roleRequest);
+                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
+                {
+                    return roleRepository.GetRoles(roleRequest);
+                }
+                else
+                {
+                    roleResponse.Error = ResponseBuilder.Forbidden();
+                    return roleResponse;
+                }
             }
             catch (Exception getRolesException)
             {
@@ -374,16 +373,15 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                //if (authorizer.ValidateUser(companyRequest.UserId, companyRequest.CompanyId) != null)
-                //{
-                //    return companyRepository.GetCompany(companyRequest);
-                //}
-                //else
-                //{
-                //    companyResponse.Error = ResponseBuilder.Forbidden();
-                //    return companyResponse;
-                //}
-                return companyRepository.GetCompany(companyRequest);
+                if (authorizer.ValidateUser(companyRequest.UserId, companyRequest.CompanyId) != null)
+                {
+                    return companyRepository.GetCompany(companyRequest);
+                }
+                else
+                {
+                    companyResponse.Error = ResponseBuilder.Forbidden();
+                    return companyResponse;
+                }
             }
             catch (Exception getCompanyException)
             {
