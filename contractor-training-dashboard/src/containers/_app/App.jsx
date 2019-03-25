@@ -123,10 +123,16 @@ class App extends Component {
   */
   componentWillMount() {
     const { cookies } = this.props;
+
+    let { dashboardAPIToken } = sessionStorage || {};
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
     let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
-      isTokenAvailable = token ? true : false,                      // Checking Identity token is available or not
+      // isTokenAvailable = token ? true : false,    
+      isTokenAvailable = idToken ? true : false,                     // Checking Identity token is available or not
       isBasePath = window.location.pathname == '/' ? true : false,  // Checking it is base path or not
-      isMockBasePath = true;
+      isMockBasePath = true;            
 
     // Checking that the Identity token is available and it is not app base path
     if (!isTokenAvailable && !isMockBasePath) {

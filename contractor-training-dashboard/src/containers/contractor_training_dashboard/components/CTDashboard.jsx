@@ -233,9 +233,12 @@ class CTDashboard extends PureComponent {
       "Fields": fields,
       "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE']
     };
-
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || {};
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,//cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
+      companyId = localStorage.getItem("CompanyId"),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
@@ -253,9 +256,12 @@ class CTDashboard extends PureComponent {
   */
   async getFilterOptions() {
     const { cookies } = this.props;
-
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || {};
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,//cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
+      companyId = localStorage.getItem("CompanyId"),
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
@@ -273,9 +279,12 @@ class CTDashboard extends PureComponent {
   */
   async getCompanyFilterOptions() {
     const { cookies } = this.props;
-
-    let token = cookies.get('IdentityToken'),
-      companyId = cookies.get('CompanyId'),
+    let { dashboardAPIToken } = sessionStorage || {};
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,//cookies.get('IdentityToken'),
+      // companyId = cookies.get('CompanyId'),
+      companyId = localStorage.getItem("CompanyId"),
       url = "/companies/",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
@@ -293,7 +302,8 @@ class CTDashboard extends PureComponent {
  */
   async getCompanyDetails(role, roleId, isCompleted) {
     const { cookies } = this.props;
-    let companyId = cookies.get('CompanyId'),
+    //let companyId = cookies.get('CompanyId'),
+      let companyId = localStorage.getItem("CompanyId"),
       fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }];
 
     if (isCompleted) {
@@ -312,8 +322,10 @@ class CTDashboard extends PureComponent {
       selectedRole = role;
     isCompanyDetailsModal = true;
     this.setState({ isCompanyDetailsModal, companyDetails, selectedRole });
-
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || {};
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 

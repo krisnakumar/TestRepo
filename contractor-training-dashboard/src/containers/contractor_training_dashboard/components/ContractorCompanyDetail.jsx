@@ -199,8 +199,10 @@ class ContractorCompanyDetail extends React.Component {
       selectedCompany = company;
     isUserDetailsModal = true;
     this.setState({ isUserDetailsModal, userDetails, selectedCompany });
-
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || {};
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 

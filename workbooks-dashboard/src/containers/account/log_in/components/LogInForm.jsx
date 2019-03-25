@@ -19,7 +19,6 @@ import { reduxForm } from 'redux-form';
 import { BrowserRouter as Redirect } from "react-router-dom";
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Menus from '../../../_layout/Menus.json';
 import * as Constants from '../../../../shared/constants';
 import WorkbookDashboard from '../../../workbook_dashboard/index'
 

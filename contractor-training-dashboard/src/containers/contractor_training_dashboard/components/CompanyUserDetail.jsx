@@ -288,8 +288,10 @@ class CompanyUserDetail extends React.Component {
     isTaskDetailsModal = true;
 
     this.setState({ isTaskDetailsModal, taskDetails, selectedEmployee });
-
-    let token = cookies.get('IdentityToken'),
+    let { dashboardAPIToken } = sessionStorage || {};
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 

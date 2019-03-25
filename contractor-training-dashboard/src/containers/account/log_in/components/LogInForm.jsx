@@ -19,7 +19,6 @@ import { reduxForm } from 'redux-form';
 import { BrowserRouter as Redirect } from "react-router-dom";
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Menus from '../../../_layout/Menus.json';
 import * as Constants from '../../../../shared/constants';
 
 import CTDashboard from '../../../contractor_training_dashboard/index';
@@ -50,14 +49,19 @@ class LogInForm extends PureComponent {
   componentWillMount() {
     const { cookies } = this.props;
     let token = cookies.get('IdentityToken');
-    if(token){
+    let { dashboardAPIToken } = sessionStorage || {};
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    // if(token){
+    if(idToken){
       this.setState({ toDashboard: true, hasSessionCookie: true });
     } else {
-      let userName = Constants.AUTH_USER_NAME;
-      let password = Constants.AUTH_PASSKEY;
-      if (userName && password) {
-        this.authenticate(userName, password);
-      }
+      // let userName = Constants.AUTH_USER_NAME;
+      // let password = Constants.AUTH_PASSKEY;
+      // if (userName && password) {
+      //   this.authenticate(userName, password);
+      // }
+      window.location =window.location.origin;
     }
   };
 
