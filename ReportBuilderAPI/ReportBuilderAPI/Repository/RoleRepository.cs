@@ -36,8 +36,7 @@ namespace ReportBuilderAPI.Repository
                                              select new RoleModel
                                              {
                                                  RoleId = Convert.ToInt32(r.Id),
-                                                 Role = Convert.ToString(r.Name),
-                                                 UserName= roleRequest.UserName
+                                                 Role = Convert.ToString(r.Name)
                                              }).ToList();
                     return roleResponse;
                 }                               

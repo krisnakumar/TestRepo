@@ -225,6 +225,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> taskColumnList = new Dictionary<string, string>()
         {
                 { Constants.TASK_NAME, ",  t.Name AS taskName" },
+                { Constants.TASK_NAME, ",  ca. AS taskName" },
                 { Constants.TASK_ID, ", t.Id AS taskId"},
                 { Constants.STATUS, ", ss.[desc] AS status"},
                 { Constants.DATE_EXPIRED, ", sa.DateExpired"},
@@ -273,6 +274,8 @@ namespace ReportBuilderAPI.Repository
                 { Constants.TOTAL_COMPLETED_COMPANY_USERS,",    (SELECT ISNULL(( SELECT COUNT(ts.UserId) FROM dbo.CourseAssignment ts  JOIN dbo.UserRole ur ON ur.UserId=ts.UserId WHERE ur.RoleId=@roleId AND companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6))  ,0)) AS TotalCompanyUsers" },
                 { Constants.ROLE,", r.Name as role, r.Id as roleId" },
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
+                {Constants.LOCK_OUT_REASON, ", ca.LockoutReason as LockoutReason " },
+
                 { Constants.COURSE_EXPIRATION_DATE, ", ca. ExpirationDate as DateExpired"},
                 {Constants.COMPANY_NAME, ", cy.Name as companyName  " },
                 { Constants.COMPANY_ID, ", cy.Id as companyId  " }
@@ -310,9 +313,16 @@ namespace ReportBuilderAPI.Repository
             {Constants.ROLE, " r.Name " },
             {Constants.CAN_CERTIFY, "  ca.IsEnabled=1 AND c.CanCertify " },
             {Constants.COMPLETED, "  Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE()" },
+
             {Constants.PAST_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate < GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),ca.ExpirationDate)) <=@duedays AND ca.FirstAccessed IS NULL " },
-            {Constants.IN_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate > GETDATE() AND   ABS(DATEDIFF(DAY,GETDATE(),ca.ExpirationDate)) <=@duedays  AND ca.FirstAccessed IS NULL " },
+
+            { Constants.IN_DUE, "  ca.IsEnabled = 1 	AND ca.Status = 0 AND ca.IsCurrent = 1 AND ca.ExpirationDate > GETDATE() AND   ABS(DATEDIFF(DAY,GETDATE(),ca.ExpirationDate)) <=@duedays  AND ca.FirstAccessed IS NULL " },
             {Constants.IN_COMPLETE, "  Knowledge_Cert_Status IN (3, 2,0,4, 255) " },
+
+            {Constants.SUSPENDED, "  Knowledge_Cert_Status IN (4) " },
+
+            {Constants.DISQUALIFIED, "  Knowledge_Cert_Status IN (2) " },
+
             {Constants.NOT_COMPLETED_COMPANY_USERS, "  ca.UserId IN(SELECT USERID FROM dbo.CourseAssignment ts WHERE companyId IN (SELECT ClientCompany FROM      dbo.companyClient WHERE ownerCompany=6) AND TaskversionId    NOT IN(SELECT TaskversionId FROM dbo.TranscriptSkillsDN t WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5    and CompanyId IN (Select ClientCompany from dbo.companyClient WHERE ownerCompany=6))) " },
             {Constants.COMPLETED_COMPANY_USERS, "  ca.UserId in(SELECT ts.UserId FROM dbo.CourseAssignment ts WHERE companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6)    GROUP BY ts.UserId, TaskversionId HAVING COUNT(TaskversionId)= (SELECT COUNT(TaskversionId) FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1    AND Knowledge_Status_Code = 5 and CompanyId   IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6))) " },
             {Constants.SUPERVISOR_USER, " u.User_Id IN (SELECT  @userId UNION SELECT * FROM getChildUsers (@userId))  " },
@@ -333,7 +343,7 @@ namespace ReportBuilderAPI.Repository
 
               { " JOIN dbo.CourseAssignment ca on ca.TaskversionId=tv.Id   JOIN  dbo.UserRole ur on ur.UserId=ca.UserId   JOIN dbo.Role r on r.Id=ur.roleId   JOIN dbo.UserCompanySeries ucs on ucs.UserId=ur.UserId     JOIN dbo.Company cy on cy.Id=ucs.CompanyId JOIN dbo.companyClient cc on cc.ownerCompany=ucs.companyId " , new List<string> {Constants.COMPLETED_ROLE_QUALIFICATION, Constants.NOT_COMPLETED_ROLE_QUALIFICATION, Constants.IS_SHARED, Constants.COMPLETED_COMPANY_USERS, Constants.NOT_COMPLETED_COMPANY_USERS, Constants.TOTAL_COMPLETED_COMPANY_USERS} },
 
-             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskversionId=tv.Id 	 LEFT JOIN dbo.CourseAssignment ca ON ca.taskversionId=ts.taskversionId  	  LEFT JOIN dbo.Course c on c.Id=ca.courseId LEFT JOIN dbo.transcriptSkillsDN tss on tss.taskId=t.Id       FULL OUTER JOIN dbo.userCompanySeries ucs ON ucs.userId=ca.userId  LEFT JOIN  dbo.Usercompany uc on uc.userId=ucs.userId    FULL OUTER JOIN dbo.[UserDetails] u ON u.User_Id=ucs.UserId FULL OUTER JOIN dbo.Supervisor s ON s.userId=u.User_Id    LEFT JOIN dbo.Company cy ON cy.Id=ucs.CompanyId  FULL OUTER JOIN dbo.UserRole ur ON ur.userId=u.User_Id FULL OUTER JOIN dbo.Role r ON r.Id=ur.RoleId " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION, Constants.EMPLOYEE_NAME , Constants.ASSIGNED_DATE, Constants.COURSE_EXPIRATION_DATE, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES} }
+             { " LEFT JOIN dbo.TaskSkill ts ON ts.TaskversionId=tv.Id 	 LEFT JOIN dbo.CourseAssignment ca ON ca.taskversionId=ts.taskversionId  	  LEFT JOIN dbo.Course c on c.Id=ca.courseId LEFT JOIN dbo.transcriptSkillsDN tss on tss.taskId=t.Id       FULL OUTER JOIN dbo.userCompanySeries ucs ON ucs.userId=ca.userId  LEFT JOIN  dbo.Usercompany uc on uc.userId=ucs.userId    FULL OUTER JOIN dbo.[UserDetails] u ON u.User_Id=ucs.UserId FULL OUTER JOIN dbo.Supervisor s ON s.userId=u.User_Id    LEFT JOIN dbo.Company cy ON cy.Id=ucs.CompanyId  FULL OUTER JOIN dbo.UserRole ur ON ur.userId=u.User_Id FULL OUTER JOIN dbo.Role r ON r.Id=ur.RoleId " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION, Constants.EMPLOYEE_NAME , Constants.ASSIGNED_DATE, Constants.COURSE_EXPIRATION_DATE, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.LOCK_OUT_REASON } }
         };
     }
 }

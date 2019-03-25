@@ -136,6 +136,12 @@ namespace ReportBuilderAPI.Utilities
         public const string DEPARTMENT = "DEPARTMENT";
         //Fields for tasks
         public const string TASK_NAME = "TASK_NAME";
+
+        public const string LOCK_OUT_REASON = "LOCK_OUT_REASON";
+
+        public const string DISQUALIFIED = "DISQUALIFIED";
+        public const string SUSPENDED = "SUSPENDED";
+
         public const string TASK_CODE = "TASK_CODE";
         public const string TASK_ID = "TASK_ID";
         public const string TASK_CREATED = "TASK_CREATED";
