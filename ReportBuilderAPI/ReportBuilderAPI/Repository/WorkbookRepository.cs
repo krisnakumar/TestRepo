@@ -104,7 +104,9 @@ namespace ReportBuilderAPI.Repository
             {Constants.ASSIGNED, " u.User_Id IN (@userId) " },
             {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
             {Constants.PAST_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) AND CONVERT(date,GETDATE())  AND  (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
-            {Constants.COMPLETED, " uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " }
+            {Constants.COMPLETED, " uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " },
+            { Constants.ROLES, " r.Id IN (Select * from dbo.split(@roles))"}
+
         };
 
 
@@ -186,7 +188,7 @@ namespace ReportBuilderAPI.Repository
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
                 //Add the where condition for the company
-                companyQuery = (" WHERE  uc.CompanyId=" + queryRequest.CompanyId);
+                companyQuery = (" WHERE  uc.status=1 AND  uc.CompanyId=" + queryRequest.CompanyId);
 
 
                 if (queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))
@@ -212,7 +214,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns>WorkbookResponse</returns>
         public WorkbookResponse GetWorkbookDetails(QueryBuilderRequest queryBuilderRequest)
         {
-            string query = string.Empty, supervisorId = string.Empty, dueDays = string.Empty;
+            string query = string.Empty;
             Dictionary<string, string> parameterList;
             WorkbookResponse workbookResponse = new WorkbookResponse();
             int companyId = 0;
@@ -225,22 +227,13 @@ namespace ReportBuilderAPI.Repository
                 //Assign the companyId to the new object
                 queryBuilderRequest.CompanyId = companyId;
 
-
-                //Read the Sqlparameters from the request
-                supervisorId = Convert.ToString(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID).Select(x => x.Value).FirstOrDefault());
-                dueDays = Convert.ToString(queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
-
                 query = CreateWorkbookQuery(queryBuilderRequest);
                 //Read the SQL Parameters value
 
-                //Set default due days as 30
-                if (string.IsNullOrEmpty(dueDays))
-                {
-                    dueDays = "30";
-                }
+               
 
                 //Create the dictionary to pass the parameter value
-                parameterList = new Dictionary<string, string>() { { "userId", Convert.ToString(supervisorId) }, { "companyId", Convert.ToString(queryBuilderRequest.CompanyId) }, { "duedays", Convert.ToString(dueDays) } };
+                parameterList = ParameterHelper.Getparameters(queryBuilderRequest);
 
                 workbookResponse.Workbooks = ReadWorkBookDetails(query, parameterList);
 
