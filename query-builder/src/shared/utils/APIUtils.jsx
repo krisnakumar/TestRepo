@@ -123,8 +123,8 @@ export async function LoginRefresh(requestPayload, token, isLoader) {
     let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh";
     let { dashboardAPIToken } = sessionStorage || {};
         dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = getCookie("IdentityToken");//dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    let refreshToken = getCookie("RefreshToken");//dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let refreshToken = dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
     return fetch(url, {
      method: "POST",
      headers: {

@@ -596,7 +596,7 @@ class WorkBookDashboard extends PureComponent {
     var pastDueWorkBooksCount = 0;
     var completedWorkBooksCount = 0;
     var totalEmpCount = 0;
-    const rows = [],
+    let rows = [],
       length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
       assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook);
@@ -615,7 +615,8 @@ class WorkBookDashboard extends PureComponent {
         total: parseInt(employees[i].TotalEmployees)
       });
     }
-
+    //debugger
+    rows = [...rows, ...rows];
     if (length > 0)
       rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
 

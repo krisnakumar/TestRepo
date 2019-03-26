@@ -10,6 +10,9 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
 import * as API from '../../shared/utils/APIUtils';
 var jwt = require('jsonwebtoken');
+var schedule = require('node-schedule');
+var rule = new schedule.RecurrenceRule();
+rule.minute = 1;
 
 /**
  * App Class defines the React component to render
@@ -113,6 +116,9 @@ class App extends Component {
     window.addEventListener('load', () => {
       this.setState({ loading: false });
       setTimeout(() => this.setState({ loaded: true }), 500);
+    });
+    var j = schedule.scheduleJob(rule, function(){
+      console.log('The answer to life, the universe, and everything!');
     });
   };
 
