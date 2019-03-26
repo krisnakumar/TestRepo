@@ -880,7 +880,7 @@
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n  \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{\r\n  \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
                },
                "type":"aws"
             }
