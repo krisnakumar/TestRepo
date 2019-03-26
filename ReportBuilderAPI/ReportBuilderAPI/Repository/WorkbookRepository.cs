@@ -115,7 +115,7 @@ namespace ReportBuilderAPI.Repository
         {
 
             { " FULL OUTER JOIN dbo.[UserDetails] u ON u.User_Id=uc.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID, Constants.CREATED_BY } },
-            { " FULL OUTER JOIN dbo.Supervisor s ON s.UserId=u.User_Id ", new List<string> {Constants.SUPERVISOR_ID} },
+            { " FULL OUTER JOIN dbo.Supervisor s ON s.UserId=u.User_Id  AND s.IsEnabled = 1 ", new List<string> {Constants.SUPERVISOR_ID} },
             { " FULL OUTER JOIN dbo.WorkbookProgress wbp ON wbp.WorkbookId=wb.Id ", new List<string> {Constants.NUMBER_COMPLETED, Constants.LAST_ATTEMPT_DATE, Constants.FIRST_ATTEMPT_DATE, Constants.LAST_SIGNOFF_BY, Constants.DATE_ADDED} },
             { " FULL OUTER JOIN dbo.WorkbookContent wbc ON wbc.WorkbookId=wb.Id ", new List<string> {Constants.REPETITIONS, Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID } },
             { "FULL OUTER JOIN dbo.UserRole ur ON ur.UserId=u.User_Id LEFT JOIN Role r ON r.Id=ur.roleId " , new List<string> {Constants.ROLEID, Constants.ROLE} },
@@ -143,7 +143,7 @@ namespace ReportBuilderAPI.Repository
                 query = selectQuery + query;
 
                 //Append the workbook tables with select statement
-                query += "  FROM dbo.Workbook wb FULL OUTER JOIN dbo.UserWorkBook uwb ON uwb.workbookId=wb.Id  FULL OUTER JOIN  dbo.UserCompany uc ON uc.UserId=uwb.UserId";
+                query += "  FROM dbo.Workbook wb FULL OUTER JOIN dbo.UserWorkBook uwb ON uwb.workbookId=wb.Id  FULL OUTER JOIN  dbo.UserCompany uc ON uc.UserId=uwb.UserId AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1";
 
                 //get table joins
                 fieldList = queryRequest.ColumnList.ToList();
@@ -186,7 +186,7 @@ namespace ReportBuilderAPI.Repository
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));
 
                 //Add the where condition for the company
-                companyQuery = (" WHERE uc.status=1 AND uc.CompanyId=" + queryRequest.CompanyId);
+                companyQuery = (" WHERE  uc.CompanyId=" + queryRequest.CompanyId);
 
 
                 if (queryRequest.ColumnList.Contains(Constants.WORKBOOK_NAME))
