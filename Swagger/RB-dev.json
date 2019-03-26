@@ -865,7 +865,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:708144412513:function:GetCompany/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetCompanies/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
