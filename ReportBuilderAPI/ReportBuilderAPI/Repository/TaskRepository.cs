@@ -225,7 +225,6 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> taskColumnList = new Dictionary<string, string>()
         {
                 { Constants.TASK_NAME, ",  t.Name AS taskName" },
-                { Constants.TASK_NAME, ",  ca. AS taskName" },
                 { Constants.TASK_ID, ", t.Id AS taskId"},
                 { Constants.STATUS, ", ss.[desc] AS status"},
                 { Constants.DATE_EXPIRED, ", sa.DateExpired"},
