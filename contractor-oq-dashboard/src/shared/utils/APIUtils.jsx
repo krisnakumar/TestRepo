@@ -30,12 +30,20 @@ import * as Constants from '../constants';
 * @returns json
 */
 export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
+    let _self = this;
+    let API_URL = Constants.API_CONFIG.API_URL || "";
+    if(API_URL == ""){
+        API_URL = await Constants.getAPIEndpoint();
+        Constants.API_CONFIG.API_URL = API_URL;
+    }
+
     if(document.getElementById("loader-layer")){
         document.getElementById("loader-layer").classList.remove("loader-hide");
         document.getElementById("loader-layer").classList.add("loader-show");
     }
     let request = {},
-        url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
+        // url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
+        url = API_URL + path;
 
     if(type == "POST"){
         request = {

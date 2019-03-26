@@ -1,6 +1,18 @@
 /* eslint-disable */
 /* Constants for API Requests */
 
+
+const getAPIEndpoint = async () => {
+    const data = await fetch('config/appsettings.json').then(response =>  response.json()
+    ).then((response) => {
+        return response.Apigateway.Endpoint + response.Apigateway.Stagename  || "";
+    });
+    return data;
+}
+export { getAPIEndpoint };
+
+export const API_CONFIG = {};
+
 /* Endpoint API for Sysvine Dev */
 export const API_DOMAIN = 'https://44x7tie9i9.execute-api.us-west-2.amazonaws.com/';
 
