@@ -615,8 +615,6 @@ class WorkBookDashboard extends PureComponent {
         total: parseInt(employees[i].TotalEmployees)
       });
     }
-    //debugger
-    rows = [...rows, ...rows];
     if (length > 0)
       rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
 

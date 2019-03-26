@@ -30,23 +30,32 @@ import * as Constants from '../constants';
 * @returns json
 */
 export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
-    if(document.getElementById("loader-layer")){
+    let _self = this;
+    let API_URL = Constants.API_DOMAIN_TEST.API_URL || "";
+
+    if(API_URL == ""){
+        API_URL = await Constants.getAPIEndpoint();
+        Constants.API_DOMAIN_TEST.API_URL = API_URL;
+    }
+        
+    if (document.getElementById("loader-layer")) {
         document.getElementById("loader-layer").classList.remove("loader-hide");
         document.getElementById("loader-layer").classList.add("loader-show");
     }
     let request = {},
-        url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
+        // url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
+        url = API_URL + path;
 
-    if(type == "POST"){
+    if (type == "POST") {
         request = {
             method: type,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 "Authorization": token
-              },          
+            },
             body: JSON.stringify(requestPayload)
-            };
+        };
     } else {
         request = {
             method: type,
@@ -54,34 +63,34 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 "Authorization": token
-              }  
-            };
+            }
+        };
     }
 
-   return fetch(url, request).then(function(response) {
-        if(response.status == 401){
+    return fetch(url, request).then(function (response) {
+        if (response.status == 401) {
             //LoginRefresh("", token, false)
             deleteAllCookies();
-            window.location =window.location.origin;
+            window.location = window.location.origin;
         } else {
-            if(document.getElementById("loader-layer")){
+            if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
-                document.getElementById("loader-layer").classList.add("loader-hide"); 
-            }         
+                document.getElementById("loader-layer").classList.add("loader-hide");
+            }
             return response.json();
-        }       
-    }).then(function(json) { 
-        if(document.getElementById("loader-layer")){
+        }
+    }).then(function (json) {
+        if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
-            document.getElementById("loader-layer").classList.add("loader-hide");     
-        }       
+            document.getElementById("loader-layer").classList.add("loader-hide");
+        }
         let responseObject = Object.values(json)[0];
         return responseObject;
-    }).catch(function(ex) {
-        if(document.getElementById("loader-layer")){
+    }).catch(function (ex) {
+        if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
-            document.getElementById("loader-layer").classList.add("loader-hide");     
-        }        
+            document.getElementById("loader-layer").classList.add("loader-hide");
+        }
         // Handle API Exception here
         console.log('parsing failed', ex);
     });
@@ -122,33 +131,33 @@ export async function LoginRefresh(requestPayload, token, isLoader) {
     let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh",
         userName = decodeURIComponent(getCookie("UserName")),
         refreshToken = getCookie("RefreshToken");
-    
+
     return fetch(url, {
-     method: "POST",
-     headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-         "Authorization": token
-       },
-    body: JSON.stringify({
-         "RefreshToken": refreshToken,
-         "UserName": userName     
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "Authorization": token
+        },
+        body: JSON.stringify({
+            "RefreshToken": refreshToken,
+            "UserName": userName
         })
-     }).then(function(response) {
-         console.log("response",response);
-         return response.json();        
-     }).then(function(json) { 
-         console.log("json",json);
-         return json;
-     }).catch(function(ex) {
-         // Handle API Exception here       
-         console.log('parsing failed', ex);
-     });
- };
+    }).then(function (response) {
+        console.log("response", response);
+        return response.json();
+    }).then(function (json) {
+        console.log("json", json);
+        return json;
+    }).catch(function (ex) {
+        // Handle API Exception here       
+        console.log('parsing failed', ex);
+    });
+};
 
 
- function getCookie(name) {
+function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
- };
+};
