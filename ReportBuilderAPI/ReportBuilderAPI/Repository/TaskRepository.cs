@@ -105,10 +105,10 @@ namespace ReportBuilderAPI.Repository
                 //Assign the request details to corresponding objects
                 companyId = Convert.ToInt32(queryBuilderRequest.CompanyId);
                 queryBuilderRequest = queryBuilderRequest.Payload;
-                
+
                 //Assign the companyId to the new object
                 queryBuilderRequest.CompanyId = companyId;
-                 
+
                 //Generates the query
                 query = CreateTaskQuery(queryBuilderRequest);
 
@@ -151,56 +151,63 @@ namespace ReportBuilderAPI.Repository
                 //Read the data from the database
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
-                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    if (sqlDataReader != null)
                     {
-                        while (sqlDataReader.Read())
+                        if (sqlDataReader.HasRows)
                         {
-                            DataTable dataTable = sqlDataReader.GetSchemaTable();
-                            //get the taskcomment from the payload
-                            TaskModel taskComment = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
-
-                            //Get the task details from the database
-                            TaskModel taskModel = new TaskModel
+                            while (sqlDataReader.Read())
                             {
-                                TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : null,
-                                TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : null,
-                                AssignedTo = (dataTable.Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,
-                                EvaluatorName = (dataTable.Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(sqlDataReader["evaluatorName"]) : null,
-                                Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
-                                ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : null,
-                                CompletedTasksCount = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (int?)sqlDataReader["CompletedTasks"] : null,
-                                TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)sqlDataReader["TotalTasks"] : null,
-                                IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (int?)sqlDataReader["InCompleteTask"] : null,
-                                UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : null,
-                                WorkbookId = (dataTable.Select("ColumnName = 'workbookId'").Count() == 1) ? (int?)sqlDataReader["workbookId"] : null,
-                                NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
-                                LastAttemptDate = (dataTable.Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
-                                Comments = taskComment?.Comment,
-                                EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
-                                Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : null,
-                                AssignedQualification = (dataTable.Select("ColumnName = 'AssignedQualification'").Count() == 1) ? (int?)sqlDataReader["AssignedQualification"] : null,
-                                CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (int?)sqlDataReader["CompletedQualification"] : null,
-                                InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (int?)sqlDataReader["InDueQualification"] : null,
-                                PastDueQualification = (dataTable.Select("ColumnName = 'PastDueQualification'").Count() == 1) ? (int?)sqlDataReader["PastDueQualification"] : null,
-                                IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (int?)sqlDataReader["IncompleteQualification"] : null,
-                                TotalEmployees = (dataTable.Select("ColumnName = 'TotalEmployees'").Count() == 1) ? (int?)sqlDataReader["TotalEmployees"] : null,
-                                AssignedDate = (dataTable.Select("ColumnName = 'AssignedDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["AssignedDate"])) ? Convert.ToDateTime(sqlDataReader["AssignedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                CompanyName = (dataTable.Select("ColumnName = 'companyName'").Count() == 1) ? Convert.ToString(sqlDataReader["companyName"]) : null,
-                                CompanyId = (dataTable.Select("ColumnName = 'companyId'").Count() == 1) ? (int?)(sqlDataReader["companyId"]) : null,
-                                Score = (dataTable.Select("ColumnName = 'score'").Count() == 1) ? Convert.ToString(sqlDataReader["score"]) : null,
-                                Duration = (dataTable.Select("ColumnName = 'Duration'").Count() == 1) ? Convert.ToString(sqlDataReader["Duration"]) : null,
-                                CompletedRoleQualification = (dataTable.Select("ColumnName = 'CompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["CompletedRoleQualification"] : null,
-                                InCompletedRoleQualification = (dataTable.Select("ColumnName = 'NotCompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["NotCompletedRoleQualification"] : null,
-                                RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (int?)sqlDataReader["roleId"] : null,
-                                CompletedCompanyQualification = (dataTable.Select("ColumnName = 'CompletedCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["CompletedCompanyUsers"] : null,
-                                InCompletedCompanyQualification = (dataTable.Select("ColumnName = 'NotCompletedCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["NotCompletedCompanyUsers"] : null,
-                                TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["TotalCompanyUsers"] : null
-                            };
-                            // Adding each task details in array list
-                            taskList.Add(taskModel);
+                                DataTable dataTable = sqlDataReader.GetSchemaTable();
+                                //get the taskcomment from the payload
+                                TaskModel taskComment = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
+
+                                //Get the task details from the database
+                                TaskModel taskModel = new TaskModel
+                                {
+                                    TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : null,
+                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : null,
+                                    AssignedTo = (dataTable.Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,
+                                    EvaluatorName = (dataTable.Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(sqlDataReader["evaluatorName"]) : null,
+                                    Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
+                                    ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : null,
+                                    CompletedTasksCount = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (int?)sqlDataReader["CompletedTasks"] : null,
+                                    TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)sqlDataReader["TotalTasks"] : null,
+                                    IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (int?)sqlDataReader["InCompleteTask"] : null,
+                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : null,
+                                    WorkbookId = (dataTable.Select("ColumnName = 'workbookId'").Count() == 1) ? (int?)sqlDataReader["workbookId"] : null,
+                                    NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
+                                    LastAttemptDate = (dataTable.Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
+                                    Comments = taskComment?.Comment,
+                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
+                                    Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : null,
+                                    AssignedQualification = (dataTable.Select("ColumnName = 'AssignedQualification'").Count() == 1) ? (int?)sqlDataReader["AssignedQualification"] : null,
+                                    CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (int?)sqlDataReader["CompletedQualification"] : null,
+                                    InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (int?)sqlDataReader["InDueQualification"] : null,
+                                    PastDueQualification = (dataTable.Select("ColumnName = 'PastDueQualification'").Count() == 1) ? (int?)sqlDataReader["PastDueQualification"] : null,
+                                    IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (int?)sqlDataReader["IncompleteQualification"] : null,
+                                    TotalEmployees = (dataTable.Select("ColumnName = 'TotalEmployees'").Count() == 1) ? (int?)sqlDataReader["TotalEmployees"] : null,
+                                    AssignedDate = (dataTable.Select("ColumnName = 'AssignedDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["AssignedDate"])) ? Convert.ToDateTime(sqlDataReader["AssignedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    CompanyName = (dataTable.Select("ColumnName = 'companyName'").Count() == 1) ? Convert.ToString(sqlDataReader["companyName"]) : null,
+                                    CompanyId = (dataTable.Select("ColumnName = 'companyId'").Count() == 1) ? (int?)(sqlDataReader["companyId"]) : null,
+                                    Score = (dataTable.Select("ColumnName = 'score'").Count() == 1) ? Convert.ToString(sqlDataReader["score"]) : null,
+                                    Duration = (dataTable.Select("ColumnName = 'Duration'").Count() == 1) ? Convert.ToString(sqlDataReader["Duration"]) : null,
+                                    CompletedRoleQualification = (dataTable.Select("ColumnName = 'CompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["CompletedRoleQualification"] : null,
+                                    InCompletedRoleQualification = (dataTable.Select("ColumnName = 'NotCompletedRoleQualification'").Count() == 1) ? (int?)sqlDataReader["NotCompletedRoleQualification"] : null,
+                                    RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (int?)sqlDataReader["roleId"] : null,
+                                    CompletedCompanyQualification = (dataTable.Select("ColumnName = 'CompletedCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["CompletedCompanyUsers"] : null,
+                                    InCompletedCompanyQualification = (dataTable.Select("ColumnName = 'NotCompletedCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["NotCompletedCompanyUsers"] : null,
+                                    TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (int?)sqlDataReader["TotalCompanyUsers"] : null
+                                };
+                                // Adding each task details in array list
+                                taskList.Add(taskModel);
+                            }
                         }
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 return taskList;
@@ -208,7 +215,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception readTaskDetailsException)
             {
                 LambdaLogger.Log(readTaskDetailsException.ToString());
-                return taskList;
+                return null;
             }
             finally
             {
@@ -326,7 +333,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.COMPLETED_COMPANY_USERS, "  ca.UserId in(SELECT ts.UserId FROM dbo.CourseAssignment ts WHERE companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6)    GROUP BY ts.UserId, TaskversionId HAVING COUNT(TaskversionId)= (SELECT COUNT(TaskversionId) FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1    AND Knowledge_Status_Code = 5 and CompanyId   IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6))) " },
             {Constants.SUPERVISOR_USER, " u.User_Id = @userId" },
             { Constants.IS_SHARED, " r.IsShared"},
-            { Constants.ROLE_ID, " r.Id"}, 
+            { Constants.ROLE_ID, " r.Id"},
             { Constants.ROLES, " r.Id IN (Select * from dbo.split(@roles))"},
             { Constants.COMPANIES, " cy.Id IN (Select * from dbo.split(@companies))"}
         };

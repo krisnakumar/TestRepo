@@ -107,7 +107,7 @@ namespace ReportBuilderAPI.Repository
                 selectQuery = "SELECT  ";
 
                 //getting column List
-                query = string.Join("", (from column in columnList  
+                query = string.Join("", (from column in columnList
                                          where employeeRequest.ColumnList.Any(x => x == column.Key)
                                          select column.Value));
                 query = query.TrimStart(',');
@@ -288,39 +288,46 @@ namespace ReportBuilderAPI.Repository
                 //Read the employee details from the DB
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
-                    if (sqlDataReader != null && sqlDataReader.HasRows)
+                    if (sqlDataReader != null)
                     {
-                        while (sqlDataReader.Read())
+                        if (sqlDataReader.HasRows)
                         {
-                            DataTable dataTable = sqlDataReader.GetSchemaTable();
-                            EmployeeQueryModel employeeResponse = new EmployeeQueryModel
+                            while (sqlDataReader.Read())
                             {
-                                UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
-                                SupervisorId = (dataTable.Select("ColumnName = 'supervisorId'").Count() == 1) ? (int?)sqlDataReader["supervisorId"] : null,
-                                TotalEmployees = (dataTable.Select("ColumnName = 'employeeCount'").Count() == 1) ? (int?)sqlDataReader["employeeCount"] : null,
-                                EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
-                                Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : null,
-                                UserName = (dataTable.Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : null,
-                                AlternateName = (dataTable.Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
-                                Email = (dataTable.Select("ColumnName = 'email'").Count() == 1) ? Convert.ToString(sqlDataReader["email"]) : null,
-                                Address = (dataTable.Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
-                                Phone = (dataTable.Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
-                                SupervisorName = (dataTable.Select("ColumnName = 'SupervisorName'").Count() == 1) ? Convert.ToString(sqlDataReader["SupervisorName"]) : null,
-                                UserCreatedDate = (dataTable.Select("ColumnName = 'DateCreated'").Count() == 1) ? Convert.ToString(sqlDataReader["DateCreated"]) : null,
-                                Userpermission = (dataTable.Select("ColumnName = 'UserPerms'").Count() == 1) ? (bool?)(sqlDataReader["UserPerms"]) : null,
-                                SettingsPermission = (dataTable.Select("ColumnName = 'settingsperms'").Count() == 1) ? (bool?)sqlDataReader["settingsperms"] : null,
-                                CoursePermission = (dataTable.Select("ColumnName = 'courseperms'").Count() == 1) ? (bool?)sqlDataReader["courseperms"] : null,
-                                TranscriptPermission = (dataTable.Select("ColumnName = 'Transcriptperms'").Count() == 1) ? (bool?)sqlDataReader["Transcriptperms"] : null,
-                                CompanyPermission = (dataTable.Select("ColumnName = 'companyperms'").Count() == 1) ? (bool?)sqlDataReader["companyperms"] : null,
-                                ForumPermission = (dataTable.Select("ColumnName = 'forumperms'").Count() == 1) ? (bool?)sqlDataReader["forumperms"] : null,
-                                ComPermission = (dataTable.Select("ColumnName = 'comperms'").Count() == 1) ? (bool?)sqlDataReader["comperms"] : null,
-                                ReportsPermission = (dataTable.Select("ColumnName = 'reportsperms'").Count() == 1) ? (bool?)sqlDataReader["reportsperms"] : null,
-                                AnnouncementPermission = (dataTable.Select("ColumnName = 'announcementperms'").Count() == 1) ? (bool?)sqlDataReader["announcementperms"] : null,
-                                SystemPermission = (dataTable.Select("ColumnName = 'systemperms'").Count() == 1) ? (bool?)sqlDataReader["systemperms"] : null
-                            };
-                            // Adding each employee details in array list
-                            employeeList.Add(employeeResponse);
+                                DataTable dataTable = sqlDataReader.GetSchemaTable();
+                                EmployeeQueryModel employeeResponse = new EmployeeQueryModel
+                                {
+                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (int?)sqlDataReader["userId"] : null,
+                                    SupervisorId = (dataTable.Select("ColumnName = 'supervisorId'").Count() == 1) ? (int?)sqlDataReader["supervisorId"] : null,
+                                    TotalEmployees = (dataTable.Select("ColumnName = 'employeeCount'").Count() == 1) ? (int?)sqlDataReader["employeeCount"] : null,
+                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
+                                    Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : null,
+                                    UserName = (dataTable.Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : null,
+                                    AlternateName = (dataTable.Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
+                                    Email = (dataTable.Select("ColumnName = 'email'").Count() == 1) ? Convert.ToString(sqlDataReader["email"]) : null,
+                                    Address = (dataTable.Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
+                                    Phone = (dataTable.Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
+                                    SupervisorName = (dataTable.Select("ColumnName = 'SupervisorName'").Count() == 1) ? Convert.ToString(sqlDataReader["SupervisorName"]) : null,
+                                    UserCreatedDate = (dataTable.Select("ColumnName = 'DateCreated'").Count() == 1) ? Convert.ToString(sqlDataReader["DateCreated"]) : null,
+                                    Userpermission = (dataTable.Select("ColumnName = 'UserPerms'").Count() == 1) ? (bool?)(sqlDataReader["UserPerms"]) : null,
+                                    SettingsPermission = (dataTable.Select("ColumnName = 'settingsperms'").Count() == 1) ? (bool?)sqlDataReader["settingsperms"] : null,
+                                    CoursePermission = (dataTable.Select("ColumnName = 'courseperms'").Count() == 1) ? (bool?)sqlDataReader["courseperms"] : null,
+                                    TranscriptPermission = (dataTable.Select("ColumnName = 'Transcriptperms'").Count() == 1) ? (bool?)sqlDataReader["Transcriptperms"] : null,
+                                    CompanyPermission = (dataTable.Select("ColumnName = 'companyperms'").Count() == 1) ? (bool?)sqlDataReader["companyperms"] : null,
+                                    ForumPermission = (dataTable.Select("ColumnName = 'forumperms'").Count() == 1) ? (bool?)sqlDataReader["forumperms"] : null,
+                                    ComPermission = (dataTable.Select("ColumnName = 'comperms'").Count() == 1) ? (bool?)sqlDataReader["comperms"] : null,
+                                    ReportsPermission = (dataTable.Select("ColumnName = 'reportsperms'").Count() == 1) ? (bool?)sqlDataReader["reportsperms"] : null,
+                                    AnnouncementPermission = (dataTable.Select("ColumnName = 'announcementperms'").Count() == 1) ? (bool?)sqlDataReader["announcementperms"] : null,
+                                    SystemPermission = (dataTable.Select("ColumnName = 'systemperms'").Count() == 1) ? (bool?)sqlDataReader["systemperms"] : null
+                                };
+                                // Adding each employee details in array list
+                                employeeList.Add(employeeResponse);
+                            }
                         }
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 return employeeList;
@@ -328,7 +335,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception readEmployeeDetailsException)
             {
                 LambdaLogger.Log(readEmployeeDetailsException.ToString());
-                return employeeList;
+                return null;
             }
             finally
             {
