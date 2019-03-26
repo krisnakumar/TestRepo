@@ -314,6 +314,7 @@ class CTDashboard extends PureComponent {
     const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // get the company Id from the session storage 
     let companyId = contractorManagementDetails.Company.Id || 0,
       fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }];
 
@@ -322,12 +323,6 @@ class CTDashboard extends PureComponent {
     } else {
       fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
-
-    const postData = {
-      "Fields": fields,
-      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID']
-    };
-
     let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
       companyDetails = {},
       selectedRole = role;
@@ -336,9 +331,13 @@ class CTDashboard extends PureComponent {
     let { dashboardAPIToken } = sessionStorage || {};
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    let token = idToken,// cookies.get('IdentityToken'),
-      url = "/company/" + companyId + "/tasks",
-      response = await API.ProcessAPI(url, postData, token, false, "POST", true);
+    const postData = {
+      "Fields": fields,
+      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID']
+    };
+    let token = idToken,
+    url = "/company/" + companyId + "/tasks",
+    response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
     companyDetails = response;
 
