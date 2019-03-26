@@ -3,9 +3,8 @@
 const getAPIEndpoint = async () => {
     const data = await fetch('config/appsettings.json').then(response =>  response.json()
     ).then((response) => {
-        return response.Apigateway.Endpoint + response.Apigateway.Stage  || "";
+        return response.Apigateway.Endpoint + response.Apigateway.Stagename  || "";
     });
-    console.log("data",data);
     return data;
 }
 
@@ -21,7 +20,6 @@ var obj = {
     }
   }
   
-console.log("obj",obj.latest);
 
 export const API_DOMAIN_TEST = {};
 
