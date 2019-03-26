@@ -70,7 +70,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.COMPLETED_TASK, ", (SELECT ISNULL((SELECT COUNT(wbt.EntityId) FROM  dbo.WorkBookProgress wbs JOIN dbo.UserWorkBook uwb ON uwb.UserId=wbs.UserId AND uwb.WorkBookId=wbs.WorkBookId  AND uwb.IsEnabled=1 JOIN dbo.Supervisor s ON uwb.UserId = s.UserId AND s.UserId IN(SELECT u.User_Id UNION SELECT UserID FROM Supervisor WHERE SupervisorId=u.User_Id) AND s.IsEnabled = 1 JOIN dbo.UserCompany uc on uc.UserId= s.UserId   AND uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 JOIN dbo.WorkBookContent wbt ON wbt.WorkBookId=wbs.WorkBookId JOIN dbo.WorkBook wb ON wb.Id=wbt.WorkBookId WHERE uc.companyId=@companyId AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbt.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbt.WorkBookId)),0)) AS CompletedTasks"},
 
-                { Constants.ROLE, ", (SELECT STUFF((SELECT ', ' + r.Name FROM dbo.UserRole ur JOIN dbo.Role r ON r.Id=ur.roleId  WHERE ur.UserId=u.User_Id FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)'), 1, 2, '')) As Role"},
+                { Constants.ROLE, ", (SELECT STUFF((SELECT DISTINCT ', ' + r.Name FROM dbo.UserRole ur JOIN dbo.Role r ON r.Id=ur.roleId  WHERE ur.UserId=u.User_Id FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)'), 1, 2, '')) As Role"},
 
                 { Constants.NUMBER_COMPLETED, ", wbp.NumberCompleted"},
                 { Constants.LAST_ATTEMPT_DATE, ", (SELECT  MAX(LastAttemptDate) FROM dbo.WorkBookProgress WHERE WorkBookId=wbp.WorkBookId) AS LastAttemptDate"},
