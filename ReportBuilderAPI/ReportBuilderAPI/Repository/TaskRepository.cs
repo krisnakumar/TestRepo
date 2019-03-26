@@ -334,8 +334,8 @@ namespace ReportBuilderAPI.Repository
             {Constants.SUPERVISOR_USER, " u.User_Id = @userId" },
             { Constants.IS_SHARED, " r.IsShared"},
             { Constants.ROLE_ID, " r.Id"},
-            { Constants.ROLES, " r.Id IN (Select * from dbo.split(@roles))"},
-            { Constants.COMPANIES, " cy.Id IN (Select * from dbo.split(@companies))"}
+            { Constants.ROLES, " r.Id IN (Select * from dbo.fnSplit_RB(@roles))"},
+            { Constants.COMPANIES, " cy.Id IN (Select * from dbo.fnSplit_RB(@companies))"}
         };
 
 
