@@ -35,7 +35,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.EMAIL, ", u.Email" },
                 { Constants.ADDRESS, ", CONCAT(CASE WHEN u.Street1 IS NOT NULL THEN (u.Street1 + ',') ELSE '' END, CASE WHEN u.Street2 IS NOT NULL THEN (u.Street2 + ',') ELSE '' END, CASE WHEN u.City IS NOT NULL THEN (u.city+ ',') ELSE '' END, CASE WHEN u.State IS NOT NULL THEN (u.State+ ',') ELSE '' END, CASE WHEN u.Zip IS NOT NULL THEN (u.Zip+ ',') ELSE '' END) as address " },
                 { Constants.PHONE, ", u.Phone" },
-                { Constants.SUPERVISOR_NAME, ", (SELECT Full_Name_Format1 FROM dbo.[UserDetails] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.User_Id WHERE s.userId=u.User_Id) AS supervisorName" },
+                { Constants.SUPERVISOR_NAME, ", (SELECT Full_Name_Format1 FROM dbo.[UserDetails_RB] usr LEFT JOIN dbo.Supervisor s ON s.SupervisorId=usr.User_Id WHERE s.userId=u.User_Id) AS supervisorName" },
                 { Constants.USER_CREATED_DATE, ", u.Date_Created" },
                 { Constants.USERID, ", u.User_Id AS userId" },
                 { Constants.SUPERVISOR_ID, ",(SELECT supervisorId FROM dbo.Supervisor s WHERE userId=u.User_Id) AS supervisorId" }
@@ -69,14 +69,14 @@ namespace ReportBuilderAPI.Repository
             {Constants.SUPERVISOR_ID, "s.SupervisorId " },
             {Constants.ME, "u.User_Id in (@currentuserId)" },
             {Constants.ME_AND_DIRECT_SUBORDINATES, "u.User_Id IN(SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
-            {Constants.ME_AND_ALL_SUBORDINATES, " u.User_Id IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.ME_AND_ALL_SUBORDINATES, " u.User_Id = @currentuserId " },
             {Constants.DIRECT_SUBORDINATES, "u.User_Id IN(SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
-            {Constants.ALL_SUBORDINATES, " u.User_Id IN (SELECT * FROM getchildUsers(@currentuserId))  " },
-            {Constants.NOT_ME, "u.User_Id NOT IN (@currentuserId)" },
+            {Constants.ALL_SUBORDINATES, " u.User_Id =@currentuserId " },
+            {Constants.NOT_ME, "u.User_Id != @currentuserId" },
             {Constants.NOT_ME_AND_DIRECT_SUBORDINATES, "u.User_Id NOT IN (SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
-            {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.User_Id NOT IN (SELECT @currentuserId UNION SELECT * FROM getchildUsers(@currentuserId)) " },
+            {Constants.NOT_ME_AND_ALL_SUBORDINATES, " u.User_Id != @currentuserId" },
             {Constants.NOT_DIRECT_SUBORDINATES, "u.User_Id NOT IN (SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId)  " },
-            {Constants.NOT_ALL_SUBORDINATES, " u.User_Id NOT IN (SELECT * FROM getchildUsers(@currentuserId))  " }
+            {Constants.NOT_ALL_SUBORDINATES, " u.User_Id = @currentuserId" }
         };
 
 
@@ -114,7 +114,7 @@ namespace ReportBuilderAPI.Repository
                 query = selectQuery + query;
 
                 //Append the user query with select statement
-                query += " FROM dbo.[UserDetails] u  LEFT JOIN dbo.UserCompany uc on uc.UserId=u.User_Id ";
+                query += " FROM dbo.[UserDetails_RB] u  LEFT JOIN dbo.UserCompany uc on uc.UserId=u.User_Id ";
 
                 //get table joins
                 fieldList = employeeRequest.ColumnList.ToList();

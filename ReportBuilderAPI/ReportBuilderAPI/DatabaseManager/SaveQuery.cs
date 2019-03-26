@@ -62,7 +62,7 @@ namespace ReportBuilderAPI.Queries
         /// <returns>Query</returns>
         public static string GetUserQueries(int companyId, int userId)
         {
-            return "SELECT q.*,  Full_Name_Format1  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq on uq.QueryId=q.Id JOIN dbo.[UserDetails] u on u.User_Id=uq.UserId JOIN dbo.[UserCompany] uc on uc.UserId=u.User_Id WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId + " AND uc.IsEnabled=1";
+            return "SELECT q.*,  Full_Name_Format1  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq on uq.QueryId=q.Id JOIN dbo.[UserDetails_RB] u on u.User_Id=uq.UserId JOIN dbo.[UserCompany] uc on uc.UserId=u.User_Id WHERE uq.CompanyId=" + companyId + " and uq.UserId=" + userId + " AND uc.IsEnabled=1";
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace ReportBuilderAPI.Queries
         /// <returns>Query</returns>
         public static string GetUserQueries(int companyId, string queryId)
         {
-            return "SELECT q.*,  Full_Name_Format1  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq ON uq.QueryId=q.Id JOIN dbo.[UserDetails] u ON u.User_Id=uq.UserId WHERE uq.CompanyId=" + companyId + " AND q.QueryId='" + queryId
+            return "SELECT q.*,  Full_Name_Format1  as employeeName FROM dbo.Query q JOIN dbo.UserQuery uq ON uq.QueryId=q.Id JOIN dbo.[UserDetails_RB] u ON u.User_Id=uq.UserId WHERE uq.CompanyId=" + companyId + " AND q.QueryId='" + queryId
                 + "'";
         }
 

@@ -34,7 +34,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.WORKBOOK_CREATED, ", wb.datecreated"},
                 { Constants.WORKBOOK_ISENABLED, ", wb.isEnabled"},
                 { Constants.WORKBOOK_ID, ", wb.Id"},
-                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.Createdby) AS Createdby"},
+                { Constants.WORKBOOK_CREATED_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails_RB] us WHERE us.User_Id=wb.Createdby) AS Createdby"},
                 { Constants.DAYS_TO_COMPLETE, ", wb.daystocomplete"},
                 { Constants.DUE_DATE, ", DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded) AS DueDate"},
                 { Constants.USERNAME, ", u.User_Name AS UserName"},
@@ -77,7 +77,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.FIRST_ATTEMPT_DATE, ", wbp.FirstAttemptDate"},
                 { Constants.REPETITIONS, ", wbc.Repetitions"},
                 { Constants.WORKBOOK_ASSIGNED_DATE, ", uwb.DateAdded"},
-                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wbp.LastSignOffBy) AS LastSignOffBy"}
+                { Constants.LAST_SIGNOFF_BY, ", (SELECT us.User_Name AS UserName FROM dbo.[UserDetails_RB] us WHERE us.User_Id=wbp.LastSignOffBy) AS LastSignOffBy"}
         };
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete" },
             {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded),101)" },
             {Constants.DATE_ADDED, "uwb.DateAdded" },
-            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.User_Name AS UserName FROM dbo.[UserDetails] us WHERE us.User_Id=wb.createdby) " },
+            { Constants.WORKBOOK_CREATED_BY, "(SELECT us.User_Name AS UserName FROM dbo.[UserDetails_RB] us WHERE us.User_Id=wb.createdby) " },
             {Constants.ASSIGNED_TO, "uwb.UserId" },
             {Constants.ASSIGNED, " u.User_Id IN (@userId) " },
             {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
@@ -116,7 +116,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
 
-            { " FULL OUTER JOIN dbo.[UserDetails] u ON u.User_Id=uc.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID, Constants.CREATED_BY } },
+            { " FULL OUTER JOIN dbo.[UserDetails_RB] u ON u.User_Id=uc.UserId ", new List<string> { Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID, Constants.CREATED_BY } },
             { " FULL OUTER JOIN dbo.Supervisor s ON s.UserId=u.User_Id  AND IsDirectReport=1 AND s.IsEnabled = 1 ", new List<string> {Constants.SUPERVISOR_ID} },
             { " FULL OUTER JOIN dbo.WorkbookProgress wbp ON wbp.WorkbookId=wb.Id ", new List<string> {Constants.NUMBER_COMPLETED, Constants.LAST_ATTEMPT_DATE, Constants.FIRST_ATTEMPT_DATE, Constants.LAST_SIGNOFF_BY, Constants.DATE_ADDED} },
             { " FULL OUTER JOIN dbo.WorkbookContent wbc ON wbc.WorkbookId=wb.Id ", new List<string> {Constants.REPETITIONS, Constants.USERNAME, Constants.USERNAME2, Constants.USER_CREATED_DATE, Constants.FIRSTNAME, Constants.MIDDLENAME, Constants.LASTNAME, Constants.EMAIL, Constants.CITY, Constants.STATE, Constants.ZIP, Constants.PHONE, Constants.ASSIGNED_WORKBOOK, Constants.PAST_DUE_WORKBOOK, Constants.INCOMPLETE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.ASSIGNED_TO, Constants.ROLEID, Constants.ROLE, Constants.USERID, Constants.EMPLOYEE_NAME, Constants.SUPERVISOR_ID } },

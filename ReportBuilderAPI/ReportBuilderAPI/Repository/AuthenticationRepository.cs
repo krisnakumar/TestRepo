@@ -109,7 +109,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read employee name using user email
-                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT Full_Name_Format1  as employeeName FROM dbo.[UserDetails] WHERE Email='" + email + "'", null))
+                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader("SELECT Full_Name_Format1  as employeeName FROM dbo.[UserDetails_RB] WHERE Email='" + email + "'", null))
                 {
                     if (sqlDataReader != null && sqlDataReader.HasRows && sqlDataReader.Read())
                     {

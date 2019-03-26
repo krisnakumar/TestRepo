@@ -1,7 +1,7 @@
 USE [lms]
 GO
 
-/****** Object:  View [dbo].[UserDetails]    Script Date: 25-03-2019 18:53:50 ******/
+/****** Object:  View [dbo].[UserDetails]    Script Date: 26-03-2019 18:05:17 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,7 +11,7 @@ GO
 
 
 
-ALTER VIEW [dbo].[UserDetails]
+CREATE VIEW [dbo].[UserDetails_RB]
 AS
 SELECT        Id AS User_Id, UserName2 AS Alternate_User_Name, UserName AS User_Name, IsEnabled, Password, DateCreated AS Date_Created, FName + ISNULL(' ' + MName, '') 
                          + ' ' + LName AS Full_Name, LName + ', ' + FName + ISNULL(' ' + MName, '') AS Full_Name_Format1, IsEnabled AS Is_Enabled, PrefAudio AS Preferred_Audio, 

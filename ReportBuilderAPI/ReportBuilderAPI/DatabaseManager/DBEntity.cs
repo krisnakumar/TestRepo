@@ -8,7 +8,8 @@ namespace OnBoardLMS.WebAPI.Models
            => optionsBuilder.UseSqlServer(DatabaseWrapper._connectionString);
       
         /// <summary>
-        /// DBset for to access the Roles
+        /// DBset for to access the 
+        /// 
         /// </summary>
         public  DbSet<Role> Role { get; set; }
 
