@@ -48,20 +48,16 @@ class LogInForm extends PureComponent {
 
   componentWillMount() {
     const { cookies } = this.props;
-    let token = cookies.get('IdentityToken');
-    let { dashboardAPIToken } = sessionStorage || {};
-        dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    // if(token){
-    if(idToken){
+    let { dashboardAPIToken } = sessionStorage,
+      idToken = '';
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }
+    if (idToken) {
       this.setState({ toDashboard: true, hasSessionCookie: true });
     } else {
-      // let userName = Constants.AUTH_USER_NAME;
-      // let password = Constants.AUTH_PASSKEY;
-      // if (userName && password) {
-      //   this.authenticate(userName, password);
-      // }
-      window.location =window.location.origin;
+      window.location = window.location.origin;
     }
   };
 

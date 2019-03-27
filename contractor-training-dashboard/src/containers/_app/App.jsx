@@ -68,7 +68,7 @@ class App extends Component {
   };
 
   autoLogout() {
-    window.location = "https://dev.its-training.com/Login.aspx"; //Need to be window.location.origin after integrating with LMS Site
+    window.location = window.location.origin + "/Login.aspx"; //Need to be window.location.origin after integrating with LMS Site
   };
 
   /**
@@ -123,16 +123,15 @@ class App extends Component {
   */
   componentWillMount() {
     const { cookies } = this.props;
-
-    let { dashboardAPIToken } = sessionStorage || {};
-        dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-
-    let token = cookies.get('IdentityToken'),                       // Get Identity token from browser cookie
-      // isTokenAvailable = token ? true : false,    
-      isTokenAvailable = idToken ? true : false,                     // Checking Identity token is available or not
-      isBasePath = window.location.pathname == '/' ? true : false,  // Checking it is base path or not
-      isMockBasePath = true;            
+    let { dashboardAPIToken } = sessionStorage,
+      idToken = '';
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }                     // Get Identity token from browser cookie
+    let isTokenAvailable = idToken ? true : false,                      // Checking Identity token is available or not
+      isBasePath = window.location.pathname == '/' ? true : false,
+      isMockBasePath = true;  // Checking it is base path or not
 
     // Checking that the Identity token is available and it is not app base path
     if (!isTokenAvailable && !isMockBasePath) {
