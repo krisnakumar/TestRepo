@@ -41,7 +41,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getCompanyException)
             {
                 LambdaLogger.Log(getCompanyException.ToString());
-                companyResponse.Error = ResponseBuilder.InternalError();
+                companyResponse.Error = ResponseBuilder.InternalError(getCompanyException.ToString());
                 return companyResponse;
             }
         }

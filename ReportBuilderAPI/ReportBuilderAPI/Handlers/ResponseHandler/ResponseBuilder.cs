@@ -15,7 +15,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         ///     Creates response for internal error
         /// </summary>
         /// <returns>ErrorResponse</returns>
-        public static ErrorResponse InternalError()
+        public static ErrorResponse InternalError(string message="")
         {
             try
             {
@@ -23,7 +23,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
                 {
                     Status=500,
                     Code = 33,
-                    Message = DataResource.SYSTEM_ERROR
+                    Message = message
                 };              
                 return errorResponse;
             }
