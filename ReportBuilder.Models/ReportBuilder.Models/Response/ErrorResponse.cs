@@ -25,18 +25,6 @@ namespace ReportBuilder.Models.Response
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Code { get; set; }
 
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string ConnectionString { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int UserId { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int CompanyId { get; set; }
-
-
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
     }

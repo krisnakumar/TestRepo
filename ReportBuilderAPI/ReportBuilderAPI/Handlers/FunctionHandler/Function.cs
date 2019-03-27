@@ -339,7 +339,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 }
                 else
                 {
-                    roleResponse.Error = ResponseBuilder.Forbidden(roleRequest.UserId, roleRequest.CompanyId, DatabaseWrapper._connectionString);
+                    roleResponse.Error = ResponseBuilder.Forbidden();
                     return roleResponse;
                 }
             }

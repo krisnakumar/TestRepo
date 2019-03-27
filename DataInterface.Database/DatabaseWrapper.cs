@@ -167,7 +167,7 @@ namespace DataInterface.Database
             }
             catch (Exception executeReaderException)
             {
-                LambdaLogger.Log((_connectionString + " \n" + executeReaderException.ToString()));
+                LambdaLogger.Log(executeReaderException.ToString());
                 return null;
             }
         }

@@ -21,10 +21,10 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
-                    Status = 500,
+                    Status=500,
                     Code = 33,
                     Message = DataResource.SYSTEM_ERROR
-                };
+                };              
                 return errorResponse;
             }
             catch (Exception systemErrorException)
@@ -45,10 +45,10 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
-                    Status = 400,
+                    Status=400,
                     Code = 1,
-                    Message = DataResource.INVALID_INPUT + ": " + fieldName
-                };
+                    Message = DataResource.INVALID_INPUT +": "+ fieldName
+                };               
                 return errorResponse;
             }
             catch (Exception badRequestException)
@@ -63,20 +63,16 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
         ///     Creates response for forbidden resources
         /// </summary>
         /// <returns>ErrorResponse</returns>
-        public static ErrorResponse Forbidden(int userId = 0, int companyId = 0, string connectionString = "")
+        public static ErrorResponse Forbidden()
         {
             try
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
-                    Status = 403,
+                    Status=403,
                     Code = 14,
-                    Message = DataResource.PERMISSION_DENIED,
-                    ConnectionString = connectionString,
-                    UserId = userId,
-                    CompanyId = companyId
-
-                };
+                    Message = DataResource.PERMISSION_DENIED
+                };              
                 return errorResponse;
             }
             catch (Exception forbiddenException)
@@ -98,10 +94,10 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             {
                 ErrorResponse errorResponse = new ErrorResponse
                 {
-                    Status = 401,
+                    Status=401,
                     Code = 13,
                     Message = message
-                };
+                };              
                 return errorResponse;
             }
             catch (Exception unAuthException)
@@ -111,7 +107,7 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             }
         }
 
-
+      
 
         /// <summary>
         ///     Creates success response
@@ -125,8 +121,8 @@ namespace ReportBuilderAPI.Handlers.ResponseHandler
             try
             {
                 SuccessResponse successResponse = new SuccessResponse
-                {
-
+                {            
+                    
                     Message = Messgae
                 };
                 return successResponse;
