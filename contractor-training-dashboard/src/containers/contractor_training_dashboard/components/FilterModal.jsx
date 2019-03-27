@@ -17,28 +17,6 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
-const roleList = [
-    {
-        "text": "Admin",
-        "id": "1"
-    }, {
-        "text": "Contractor",
-        "id": "2"
-    }, {
-        "text": "Manager",
-        "id": "3"
-    }, {
-        "text": "Section Manager",
-        "id": "4"
-    }, {
-        "text": "Supervisor",
-        "id": "5"
-    }, {
-        "text": "Student",
-        "id": "6"
-    }
-];
-
 class FilterModal extends React.Component {
 
     static propTypes = {
@@ -51,7 +29,7 @@ class FilterModal extends React.Component {
         this.state = {
             modal: this.props.modal,
             title: this.props.title || "",
-            options: this.props.filterOptionsRoles || roleList,
+            options: this.props.filterOptionsRoles || [],
             arrayValue: [],
             filterSearchValue: "",
             tags: [],
@@ -92,7 +70,7 @@ class FilterModal extends React.Component {
      */
     componentWillReceiveProps(newProps) {
         this.setState({
-            options: newProps.filterOptionsRoles,
+            options: newProps.filterOptionsRoles || [],
             modal: newProps.modal,
             title: newProps.title || ""
         });
@@ -236,7 +214,8 @@ class FilterModal extends React.Component {
         let titleText = title || "";
 
         let { options, filterSearchValue, tags, arrayValue } = this.state;
-
+        filterSearchValue = filterSearchValue || "";
+        options = options || [];
         let possibleOptionsArray = this.filterOptions(filterSearchValue, options);
 
         return (

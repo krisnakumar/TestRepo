@@ -37,28 +37,6 @@ class DataTableEmptyRowsView extends React.Component {
   }
 };
 
-const companiesList = [
-  {
-    "text": "Company 1",
-    "id": "1"
-  }, {
-    "text": "Company 2",
-    "id": "2"
-  }, {
-    "text": "Company 3",
-    "id": "3"
-  }, {
-    "text": "Company 4",
-    "id": "4"
-  }, {
-    "text": "Company 5",
-    "id": "5"
-  }, {
-    "text": "Company 6",
-    "id": "6"
-  }
-];
-
 class CTDashboard extends PureComponent {
 
   static propTypes = {
@@ -115,7 +93,7 @@ class CTDashboard extends PureComponent {
       isCompanyFilterModal: false,
       companyFilterTitle: "Companies",
       filteredCompanies: [],
-      filterOptionsCompanies: companiesList,
+      filterOptionsCompanies: [],
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
@@ -268,10 +246,10 @@ class CTDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    console.log(response);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
@@ -293,10 +271,10 @@ class CTDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
-      url = "/companies/",
+    let token = idToken,
+      url = "/companies",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
+    console.log(response);
     response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
     response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
