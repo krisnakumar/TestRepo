@@ -19,7 +19,7 @@ class Topbar extends PureComponent {
       <div className="topbar">
         <div className="topbar__wrapper">
           <div className="topbar__left">
-            <a className="topbar__left-logo" href={window.location.origin + "/Login.aspx"}>
+            <a className="topbar__left-logo" href={window.location.origin}>
               <img src={logo} alt="" />
             </a>
             <div className="comp">
