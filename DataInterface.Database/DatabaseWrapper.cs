@@ -37,6 +37,7 @@ namespace DataInterface.Database
 
                 //Creates and returns a SqlCommand object associated with the SqlConnection.
                 SqlCommand sqlCommand = sqlConnection.CreateCommand();
+                sqlCommand.CommandTimeout = 120;
 
                 //Check if SQL Connection is Open or Closed
                 if (sqlConnection != null && sqlConnection.State == ConnectionState.Closed)
