@@ -162,48 +162,6 @@
             }
          }
       },
-      "SilentAuth": {
-         "Type": "AWS::Serverless::Function",
-         "Properties": {
-            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
-            "FunctionName": "OnBoardLMS_RB_SilentAuth",
-            "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
-            "MemorySize": {
-               "Ref": "LambdaMemory"
-            },
-            "Timeout": {
-               "Ref": "LambdaTimeout"
-            },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
-            "Environment": {
-               "Variables": {
-                  "ConnectionString": {
-                     "Ref": "ConnectionString"
-                  },
-				  "CognitoClientId": {
-                     "Ref": "CognitoClientId"
-                  }
-               }
-            },
-            "Events": {
-               "PutResource": {
-                  "Type": "Api",
-                  "Properties": {
-                     "RestApiId": {
-                        "Ref": "ReportBuilderAPI"
-                     },
-                     "Path": "/login/refresh",
-                     "Method": "POST"
-                  }
-               }
-            }
-         }
-      },
       "SaveQuery": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
