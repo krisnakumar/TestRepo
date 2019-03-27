@@ -169,6 +169,10 @@ namespace ReportBuilderAPI.Utilities
         //Tasks for Qualification
         public const string ASSIGNED_QUALIFICATION = "ASSIGNED_QUALIFICATION";
         public const string COMPLETED_QUALIFICATION = "COMPLETED_QUALIFICATION";
+
+        public const string SUSPENDED_QUALIFICATION = "SUSPENDED_QUALIFICATION";
+        public const string DISQUALIFIED_QUALIFICATION = "DISQUALIFIED_QUALIFICATION";
+
         public const string IN_COMPLETE_QUALIFICATION = "IN_COMPLETE_QUALIFICATION";
         public const string IN_COMPLETE = "IN_COMPLETE";
 
