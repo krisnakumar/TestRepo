@@ -70,6 +70,11 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             //LoginRefresh("", token, false)
             deleteAllCookies();
             window.location =window.location.origin;
+        } else if(response.status == 500){
+            let errorResponse = {
+                "customError": []
+            };
+            return errorResponse;
         } else {
             if(document.getElementById("loader-layer")){
                 document.getElementById("loader-layer").classList.remove("loader-show");
