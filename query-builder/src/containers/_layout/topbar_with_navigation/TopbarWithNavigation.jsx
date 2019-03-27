@@ -59,7 +59,7 @@ export default class TopbarWithNavigation extends PureComponent {
                        nav_menus &&  
                         nav_menus.map(function(mainMenu, index) {                         
                           let menuName = mainMenu.name;
-                          let basePath = "https://dev.its-training.com";
+                          let basePath = window.location.origin;
                       
                           return (
                             <UncontrolledDropdown key={index} 
