@@ -17,14 +17,6 @@
          "Description": "Time in seconds (s) that a lambda function will run before timing out.",		    
          "Default": "30"
       },
-      "CognitoPoolId": {
-         "Type": "String",
-         "Description": "Pool Id to check user session"
-      },
-      "CognitoClientId": {
-         "Type": "String",
-         "Description": "Pool Id to check user session"
-      },
       "VPCSecurityGroupIDs": {
          "Description": "A comma-delimited list of strings - the security groups that your Lambda function should be in",
          "Type": "CommaDelimitedList"
@@ -36,6 +28,10 @@
       "LambdaExecutionRoleArn" : {
 		"Description": "The Arn of the role that the lambda functions will execute as.",
 		"Type" : "String"
+      },
+      "ITSEnvironment" : {
+		"Description": "The environment to which the application will be deployed.",
+		"Type" : "String"
       }
    },
    "Resources": {
@@ -43,55 +39,12 @@
          "Type": "AWS::Serverless::Api",
          "Properties": {
             "Name": "OnBoardLMS-ReportBuilder",
-            "StageName": "DEV",
+            "StageName": {
+               "Ref": "ITSEnvironment"
+            },
             "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
-      },
-      "Login": {
-         "Type": "AWS::Serverless::Function",
-         "Properties": {
-            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::Login",
-            "FunctionName": "OnBoardLMS_RB_Login",
-            "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
-            "MemorySize": {
-               "Ref": "LambdaMemory"
-            },
-            "Timeout": {
-               "Ref": "LambdaTimeout"
-            },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
-            "Environment": {
-               "Variables": {
-                  "ConnectionString": {
-                     "Ref": "ConnectionString"
-                  },
-                  "CognitoPoolId": {
-                     "Ref": "CognitoPoolId"
-                  },
-                  "CognitoClientId": {
-                     "Ref": "CognitoClientId"
-                  }
-               }
-            },
-            "Events": {
-               "PutResource": {
-                  "Type": "Api",
-                  "Properties": {
-                     "RestApiId": {
-                        "Ref": "ReportBuilderAPI"
-                     },
-                     "Path": "/login",
-                     "Method": "POST"
-                  }
-               }
-            }
-         }
-      },
+      }
       "GetEmployeesDetails": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
