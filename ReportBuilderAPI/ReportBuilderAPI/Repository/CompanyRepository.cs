@@ -27,9 +27,9 @@ namespace ReportBuilderAPI.Repository
                 using (DBEntity context = new DBEntity())
                 {
                     companyResponse.Companies = (from uc in context.UserCompany
-                                                 join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
-                                                 join c in context.Company on cc.ClientCompany equals c.Id
-                                                 where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && c.IsEnabled && uc.UserId == companyRequest.UserId && cc.ClientCompany!=uc.CompanyId
+                                                 //join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
+                                                 join c in context.Company on uc.CompanyId equals c.Id
+                                                 where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && c.IsEnabled && uc.UserId == companyRequest.UserId 
                                                  select new CompanyModels
                                                  {
                                                      CompanyId = Convert.ToInt32(c.Id),
