@@ -26,9 +26,10 @@ namespace ReportBuilderAPI.Repository
             {
                 using (DBEntity context = new DBEntity())
                 {
-                    companyResponse.Companies = (from c in context.Company
-                                                 join uc in context.UserCompany on c.Id equals uc.CompanyId
-                                                 where uc.Status == 1 && uc.IsEnabled && uc.UserId == companyRequest.UserId
+                    companyResponse.Companies = (from uc in context.UserCompany
+                                                 join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
+                                                 join c in context.Company on cc.ClientCompany equals c.Id
+                                                 where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && c.IsEnabled && uc.UserId == companyRequest.UserId
                                                  select new CompanyModels
                                                  {
                                                      CompanyId = Convert.ToInt32(c.Id),
@@ -37,9 +38,9 @@ namespace ReportBuilderAPI.Repository
                     return companyResponse;
                 }
             }
-            catch (Exception getRolesException)
+            catch (Exception getCompanyException)
             {
-                LambdaLogger.Log(getRolesException.ToString());
+                LambdaLogger.Log(getCompanyException.ToString());
                 companyResponse.Error = ResponseBuilder.InternalError();
                 return companyResponse;
             }

@@ -17,6 +17,8 @@ namespace OnBoardLMS.WebAPI.Models
 
         public DbSet<UserCompany> UserCompany { get; set; }
 
+        public DbSet<CompanyClient> CompanyClient { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -29,6 +31,11 @@ namespace OnBoardLMS.WebAPI.Models
 
             modelBuilder.Entity<UserCompany>().ToTable("UserCompany")
                 .HasKey(uc=> new { uc.CompanyId, uc.UserId });
+
+
+            modelBuilder.Entity<CompanyClient>().ToTable("CompanyClient")
+               .HasKey(cc => new { cc.OwnerCompany, cc.ClientCompany });
+
 
             base.OnModelCreating(modelBuilder);
 
