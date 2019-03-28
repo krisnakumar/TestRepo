@@ -51,7 +51,17 @@
             "StageName": {
                "Ref": "ITSEnvironment"
             },
-            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
+            "DefinitionUri": {
+                "Fn::Join": [
+                    "", [
+                    "s3://onboard-lms-ci/report-builder-api/swagger/RB-",
+                    {
+                        "Ref": "ITSEnvironment"
+                    },
+                    ".json"
+                    ]
+                ]
+                }
          }
       },
       "GetEmployeesDetails": {
