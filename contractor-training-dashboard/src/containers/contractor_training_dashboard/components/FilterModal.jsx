@@ -201,7 +201,6 @@ class FilterModal extends React.Component {
      * @returns none
     */
     filterOptions(textInputValue, possibleSuggestions) {
-        console.log(textInputValue, possibleSuggestions);
         let lowerCaseQuery = textInputValue.toLowerCase().trim(),
         possibleSuggestionsArray = possibleSuggestions || [];
         return possibleSuggestionsArray.filter(function (suggestion) {
