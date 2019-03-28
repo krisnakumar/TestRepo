@@ -8,9 +8,6 @@
    "x-amazon-apigateway-minimum-compression-size":10,
    "tags":[  
       {  
-         "name":"Login"
-      },
-      {  
          "name":"Employees"
       },
       {  
@@ -30,93 +27,6 @@
       "https"
    ],
    "paths":{  
-      "/login":{  
-         "post":{  
-            "tags":[  
-               "Login"
-            ],
-            "consumes":[  
-               "application/json"
-            ],
-            "parameters":[  
-               {  
-                  "in":"body",
-                  "name":"LoginRequest",
-                  "required":true,
-                  "schema":{  
-                     "$ref":"#/definitions/LoginRequest"
-                  }
-               }
-            ],
-            "responses":{  
-               "200":{  
-                  "description":"200 response",
-                  "headers":{  
-                     "Access-Control-Allow-Origin":{  
-                        "type":"string"
-                     }
-                  }
-               }
-            },
-            "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_Login/invocations",
-               "responses":{  
-                  "default":{  
-                     "statusCode":"200",
-                     "responseParameters":{  
-                        "method.response.header.Access-Control-Allow-Origin":"'*'"
-                     },
-                     "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
-                     }
-                  }
-               },
-               "passthroughBehavior":"when_no_match",
-               "httpMethod":"POST",
-               "requestTemplates":{  
-                  "application/json":"$input.json('$')"
-               },
-               "type":"aws"
-            }
-         },
-         "options":{  
-            "tags":[  
-               "PreflightRequest"
-            ],
-            "consumes":[  
-               "application/json"
-            ],
-            "responses":{  
-               "200":{  
-                  "description":"200 response",
-                  "headers":{  
-                     "Access-Control-Allow-Origin":{  
-                        "type":"string"
-                     },
-                     "Access-Control-Allow-Headers":{  
-                        "type":"string"
-                     }
-                  }
-               }
-            },
-            "x-amazon-apigateway-integration":{  
-               "responses":{  
-                  "default":{  
-                     "statusCode":"200",
-                     "responseParameters":{  
-                        "method.response.header.Access-Control-Allow-Headers":"'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                        "method.response.header.Access-Control-Allow-Origin":"'*'"
-                     }
-                  }
-               },
-               "requestTemplates":{  
-                  "application/json":"{\"statusCode\": 200}"
-               },
-               "passthroughBehavior":"when_no_match",
-               "type":"mock"
-            }
-         }
-      },
       "/login/refresh":{  
          "post":{  
             "tags":[  
@@ -279,7 +189,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -426,7 +336,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -573,7 +483,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -720,7 +630,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -859,7 +769,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1007,7 +917,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1166,7 +1076,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1330,7 +1240,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1491,7 +1401,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1647,7 +1557,7 @@
             },
             "security":[  
                {  
-                  "reportbuilder":[  
+                  "cognitoAuth":[  
 
                   ]
                }
@@ -1721,7 +1631,7 @@
       }
    },
    "securityDefinitions":{  
-      "reportbuilder":{  
+      "cognitoAuth":{  
          "type":"apiKey",
          "name":"Authorization",
          "in":"header",
