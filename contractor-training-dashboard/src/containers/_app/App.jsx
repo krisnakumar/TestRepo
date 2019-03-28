@@ -159,7 +159,7 @@ class App extends Component {
     let exp = new Date(decoded.payload.exp * 1000),
       tokenExp = exp.toLocaleString(),
       refreshTrigger = new Date(exp),
-      durationInMinutes = 59;
+      durationInMinutes = 5;
 
     refreshTrigger.setMinutes(exp.getMinutes() - durationInMinutes);
     let refreshYear = refreshTrigger.getFullYear(),
