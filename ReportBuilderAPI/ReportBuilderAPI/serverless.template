@@ -32,10 +32,6 @@
       "ITSEnvironment" : {
 		"Description": "The environment to which the application will be deployed.",
 		"Type" : "String"
-      }, 
-      "SwaggerDefinitionFullPath" : {
-		"Description": "The full s3 path to the environment-specific swagger definition file.",
-		"Type" : "String"
       }      
    },
    "Resources": {
@@ -55,7 +51,7 @@
             "StageName": {
                "Ref": "ITSEnvironment"
             },
-            "DefinitionUri": { "Ref" : "SwaggerDefinitionFullPath" }                
+            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
       },
       "GetEmployeesDetails": {
