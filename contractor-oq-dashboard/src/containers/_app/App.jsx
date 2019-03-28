@@ -8,6 +8,9 @@ import IdleTimer from 'react-idle-timer'
 import { withCookies, Cookies } from 'react-cookie';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
+import * as API from '../../shared/utils/APIUtils';
+import JWT from 'jsonwebtoken';
+import Schedule from 'node-schedule';
 
 /**
  * App Class defines the React component to render
@@ -121,7 +124,7 @@ class App extends Component {
    * @param none
    * @returns none
   */
-  componentWillMount() {
+  async componentWillMount() {
     const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage,
       idToken = '';
@@ -139,9 +142,39 @@ class App extends Component {
       this.setState({ isValid: false });
       window.location = window.location.origin;
     } else {
+      let refreshSession = await API.LoginRefresh();
+      this.updateSessionTokens(refreshSession);
       this.setState({ isValid: true });
     }
   };
+
+  async updateSessionTokens(refreshSession) {
+    let idToken = refreshSession.IdentityToken || "",
+      accessToken = refreshSession.AccessToken || "",
+      _self = this;
+
+    // get the decoded payload and header
+    let decoded = JWT.decode(idToken, { complete: true });
+
+    let exp = new Date(decoded.payload.exp * 1000),
+      tokenExp = exp.toLocaleString(),
+      refreshTrigger = new Date(exp),
+      durationInMinutes = 5;
+
+    refreshTrigger.setMinutes(exp.getMinutes() - durationInMinutes);
+    let refreshYear = refreshTrigger.getFullYear(),
+      refreshMonth = refreshTrigger.getMonth(),
+      refreshDay = refreshTrigger.getDate(),
+      refreshHour = refreshTrigger.getHours(),
+      refreshMinute = refreshTrigger.getMinutes(),
+      refreshSecond = refreshTrigger.getSeconds();
+
+    var date = new Date(refreshYear, refreshMonth, refreshDay, refreshHour, refreshMinute, refreshSecond);
+    let scheduleTask = Schedule.scheduleJob(date, async function () {
+      let refreshSession = await API.LoginRefresh();
+      _self.updateSessionTokens(refreshSession);
+    });
+  }
 
   render() {
     const { loaded, loading, isValid } = this.state,
@@ -156,7 +189,7 @@ class App extends Component {
             <button color="primary" onClick={this.cancelAutoLogout}>Cancel</button>{' '}
           </ModalFooter>
         </Modal>
-        { 
+        {
           !isBasePath && <IdleTimer
             ref={ref => { this.idleTimer = ref }}
             element={document}

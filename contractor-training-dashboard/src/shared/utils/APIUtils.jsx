@@ -41,7 +41,6 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
         document.getElementById("loader-layer").classList.add("loader-show");
     }
     let request = {},
-        // url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
         url = API_URL + path;
 
     if(type == "POST"){
@@ -67,7 +66,6 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
    return fetch(url, request).then(function(response) {
         if(response.status == 401){
-            //LoginRefresh("", token, false)
             deleteAllCookies();
             window.location =window.location.origin;
         } else if(response.status == 500){
@@ -131,36 +129,47 @@ function deleteAllCookies() {
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh",
-        userName = decodeURIComponent(getCookie("UserName")),
-        refreshToken = getCookie("RefreshToken");
-    
+    let _self = this;
+    let API_URL = Constants.API_CONFIG.API_URL || "";
+
+    let { dashboardAPIToken } = sessionStorage || '{}';
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let refreshToken = dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
+
+    if (API_URL == "") {
+        API_URL = await Constants.getAPIEndpoint();
+        Constants.API_CONFIG.API_URL = API_URL;
+    }
+
+    let url = API_URL + "/login/refresh";
     return fetch(url, {
-     method: "POST",
-     headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-         "Authorization": token
-       },
-    body: JSON.stringify({
-         "RefreshToken": refreshToken,
-         "UserName": userName     
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "RefreshToken": refreshToken
         })
-     }).then(function(response) {
-         console.log("response",response);
-         return response.json();        
-     }).then(function(json) { 
-         console.log("json",json);
-         return json;
-     }).catch(function(ex) {
-         // Handle API Exception here       
-         console.log('parsing failed', ex);
-     });
- };
+    }).then(function (response) {
+        return response.json();
+    }).then(function (json) {
+        if(json.AccessToken && json.IdentityToken){
+            dashboardAPIToken.dashboardAPIToken.AccessToken = json.AccessToken || "";
+            dashboardAPIToken.dashboardAPIToken.IdToken = json.IdentityToken || "";
+            dashboardAPIToken.dashboardAPIToken.IsUpdated = true;
+            sessionStorage.dashboardAPIToken = JSON.stringify(dashboardAPIToken);
+        }
+        return json;
+    }).catch(function (ex) {
+        // Handle API Exception here       
+        console.log('parsing failed', ex);
+    });
+};
 
 
- function getCookie(name) {
+function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
- };
+};
