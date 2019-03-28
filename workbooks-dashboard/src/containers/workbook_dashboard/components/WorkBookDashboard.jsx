@@ -149,7 +149,9 @@ class WorkBookDashboard extends PureComponent {
       collapseText: "More Options",
       isFilterModal: false,
       filterModalTitle: "Roles",
-      filteredRoles: []
+      filteredRoles: [],
+      userId: 0,
+      selectedUserId: 0
     };
 
     this.toggle = this.toggle.bind(this);
@@ -157,7 +159,7 @@ class WorkBookDashboard extends PureComponent {
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
 
   }
-  
+
   /**
   * @method
   * @name - cellFormatter
@@ -192,7 +194,7 @@ class WorkBookDashboard extends PureComponent {
             supervisorNames = this.state.supervisorNames;
 
           supervisorNames = [];
-          supervisorNames.push({ 'name': props.dependentValues.employee, 'column': "NONE", 'order': "NONE" });
+          supervisorNames.push({ 'name': props.dependentValues.employee, 'column': "NONE", 'order': "NONE", 'userId': props.dependentValues.userId  });
           this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
           this.getMyEmployees(props.dependentValues.userId);
         }}
@@ -270,13 +272,14 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   updateMyEmployeesArray = (employees, supervisor) => {
+    debugger
     let myEmployeesArray = this.state.myEmployeesArray,
       level = this.state.level + 1,
       supervisorNames = this.state.supervisorNames,
       employeesLength = employees.length;
 
     if (employeesLength > 0)
-      supervisorNames.push({ 'name': supervisor.employee, 'column': "NONE", 'order': "NONE" });
+      supervisorNames.push({ 'name': supervisor.employee, 'column': "NONE", 'order': "NONE", 'userId': supervisor.userId });
 
     myEmployeesArray.push(employees);
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames });
@@ -313,14 +316,10 @@ class WorkBookDashboard extends PureComponent {
   */
   async componentDidMount() {
     const { cookies } = this.props;
-    // let companyId = cookies.get('CompanyId'),
-    //   userId = cookies.get('UserId'),
-      // Company Id get from session storage
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
-      let companyId = contractorManagementDetails.Company.Id || 0;
-      // let companyId = localStorage.getItem('CompanyId') || 0,
-      let userId = contractorManagementDetails.User.Id || 0,//localStorage.getItem('UserId') || "",
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+    let userId = contractorManagementDetails.User.Id || 0,
       roles = [];
 
     await this.getFilterOptions();
@@ -340,13 +339,11 @@ class WorkBookDashboard extends PureComponent {
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-      // companyId = localStorage.getItem('CompanyId');
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
-      let companyId = contractorManagementDetails.Company.Id || 0;
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
@@ -364,12 +361,12 @@ class WorkBookDashboard extends PureComponent {
    */
   async getEmployees(companyId, userId, roles) {
     const { cookies } = this.props;
+    this.setState({ userId: userId });
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-      //companyId = localStorage.getItem('CompanyId');
     let rolesLength = roles.length,
-      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "CURRENT_USER", "Value": userId, "Operator": "=", "Bitwise": "AND" }];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
@@ -379,7 +376,7 @@ class WorkBookDashboard extends PureComponent {
       "Fields": fields,
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
-    let token = idToken,//cookies.get('IdentityToken'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
@@ -396,12 +393,13 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getMyEmployees(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+    loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
@@ -409,8 +407,7 @@ class WorkBookDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response,
@@ -434,12 +431,20 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getAssignedWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      loggedInUserId = this.state.userId || 0;
+
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
+    if (loggedInUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
+
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
@@ -452,8 +457,7 @@ class WorkBookDashboard extends PureComponent {
     isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -470,12 +474,18 @@ class WorkBookDashboard extends PureComponent {
   * @returns none
   */
   async getPastDueWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+        loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+    if (loggedInUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
@@ -488,8 +498,7 @@ class WorkBookDashboard extends PureComponent {
     isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
-    let token = idToken, //cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -506,12 +515,18 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getComingDueWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+        loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+    if (loggedInUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
@@ -524,8 +539,7 @@ class WorkBookDashboard extends PureComponent {
     isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -542,12 +556,18 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getCompletedWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+        loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }];
+    if (loggedInUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
@@ -560,8 +580,7 @@ class WorkBookDashboard extends PureComponent {
     isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -683,28 +702,25 @@ class WorkBookDashboard extends PureComponent {
   * @returns none
   */
   handleCellClick = (type, args) => {
-    let userId = 0;
+    let userId = args.userId || 0;
+    this.setState({ selectedUserId: userId });
     switch (type) {
       case "completedWorkBooks":
-        userId = args.userId;
         if (userId) {
           this.getCompletedWorkbooks(userId);
         }
         break;
       case "assignedWorkBooks":
-        userId = args.userId;
         if (userId) {
           this.getAssignedWorkbooks(userId);
         }
         break;
       case "pastDueWorkBooks":
-        userId = args.userId;
         if (userId) {
           this.getPastDueWorkbooks(userId);
         }
         break;
       case "inDueWorkBooks":
-        userId = args.userId;
         if (userId) {
           this.getComingDueWorkbooks(userId);
         }
@@ -779,13 +795,10 @@ class WorkBookDashboard extends PureComponent {
  */
   filterGoAction = () => {
     const { cookies } = this.props;
-    // let companyId = cookies.get('CompanyId'),
-    //   userId = cookies.get('UserId');
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0,
-    //let companyId = localStorage.getItem('CompanyId') || 0,
-        userId = contractorManagementDetails.User.Id || 0;//localStorage.getItem('UserId') || "";
+      userId = contractorManagementDetails.User.Id || 0;
     let filteredRoles = this.state.filteredRoles,
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
@@ -793,9 +806,11 @@ class WorkBookDashboard extends PureComponent {
   };
 
   render() {
-    const { rows, collapseText, collapse, filteredRoles } = this.state;
+    const { rows, collapseText, collapse, filteredRoles, supervisorNames } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
       filteredRolesLength = filteredRoles.length;
+    let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length,
+          currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     return (
       <CardBody>
         <FilterModal
@@ -808,6 +823,7 @@ class WorkBookDashboard extends PureComponent {
           filterOptionsRoles={this.state.filterOptionsRoles}
         />
         <MyEmployees
+          selectedUserId={currentUserId}
           backdropClassName={"backdrop"}
           fakeState={this.state.fakeState}
           level={this.state.level}

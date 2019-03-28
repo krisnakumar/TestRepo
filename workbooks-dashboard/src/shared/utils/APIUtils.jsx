@@ -31,19 +31,18 @@ import * as Constants from '../constants';
 */
 export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
     let _self = this;
-    let API_URL = Constants.API_DOMAIN_TEST.API_URL || "";
+    let API_URL = Constants.API_CONFIG.API_URL || "";
 
-    if(API_URL == ""){
+    if (API_URL == "") {
         API_URL = await Constants.getAPIEndpoint();
-        Constants.API_DOMAIN_TEST.API_URL = API_URL;
+        Constants.API_CONFIG.API_URL = API_URL;
     }
-        
+
     if (document.getElementById("loader-layer")) {
         document.getElementById("loader-layer").classList.remove("loader-hide");
         document.getElementById("loader-layer").classList.add("loader-show");
     }
     let request = {},
-        // url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + path;
         url = API_URL + path;
 
     if (type == "POST") {
@@ -69,7 +68,6 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
     return fetch(url, request).then(function (response) {
         if (response.status == 401) {
-            //LoginRefresh("", token, false)
             deleteAllCookies();
             window.location = window.location.origin;
         } else {
@@ -128,26 +126,37 @@ function deleteAllCookies() {
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    let url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login/refresh",
-        userName = decodeURIComponent(getCookie("UserName")),
-        refreshToken = getCookie("RefreshToken");
+    let _self = this;
+    let API_URL = Constants.API_CONFIG.API_URL || "";
 
+    let { dashboardAPIToken } = sessionStorage || '{}';
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let refreshToken = dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
+
+    if (API_URL == "") {
+        API_URL = await Constants.getAPIEndpoint();
+        Constants.API_CONFIG.API_URL = API_URL;
+    }
+
+    let url = API_URL + "/login/refresh";
     return fetch(url, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            "Authorization": token
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "RefreshToken": refreshToken,
-            "UserName": userName
+            "RefreshToken": refreshToken
         })
     }).then(function (response) {
-        console.log("response", response);
         return response.json();
     }).then(function (json) {
-        console.log("json", json);
+        if(json.AccessToken && json.IdentityToken){
+            dashboardAPIToken.dashboardAPIToken.AccessToken = json.AccessToken || "";
+            dashboardAPIToken.dashboardAPIToken.IdToken = json.IdentityToken || "";
+            dashboardAPIToken.dashboardAPIToken.IsUpdated = true;
+            sessionStorage.dashboardAPIToken = JSON.stringify(dashboardAPIToken);
+        }
         return json;
     }).catch(function (ex) {
         // Handle API Exception here       

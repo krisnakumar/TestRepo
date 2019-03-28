@@ -143,6 +143,7 @@ class MyEmployees extends React.Component {
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
+      selectedUserId: this.props.selectedUserId || 0
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -204,7 +205,6 @@ class MyEmployees extends React.Component {
       rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
     }
 
-
     return rows;
   };
 
@@ -217,23 +217,27 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getMyEmployees(userId, supervisor) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }, { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" }];
+    // if (currentUserId == userId) {
+    //   let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
+    //   fields.push(currentUserField);
+    // }
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }],
+      "Fields": fields,
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
-      // Company Id get from session storage
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response;
@@ -249,18 +253,25 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getPastDueWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      currentUserId = this.state.selectedUserId || 0;
+
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+    if (currentUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
     };
 
-      // Company Id get from session storage
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
 
@@ -269,8 +280,7 @@ class MyEmployees extends React.Component {
     isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -287,12 +297,18 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getComingDueWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+    if (currentUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
     };
 
@@ -301,14 +317,13 @@ class MyEmployees extends React.Component {
     isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
-      // Company Id get from session storage
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = localStorage.getItem('CompanyId'),//cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -326,18 +341,24 @@ class MyEmployees extends React.Component {
   * @returns none
   */
   async getCompletedWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }];
+    if (currentUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
     };
 
-      // Company Id get from session storage
-      let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isCompletedModal = this.state.isCompletedModal,
@@ -345,8 +366,7 @@ class MyEmployees extends React.Component {
     isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -363,18 +383,24 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getAssignedWorkbooks(userId) {
-    const { cookies } = this.props;
+    const { cookies } = this.props,
+      currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
+    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
+    if (currentUserId == userId) {
+      let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
+      fields.push(currentUserField);
+    }
     const payLoad = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }],
+      "Fields": fields,
       "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
     };
 
     // Company Id get from session storage
     let { contractorManagementDetails } = sessionStorage || '{}';
-        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isAssignedModal = this.state.isAssignedModal,
@@ -382,8 +408,7 @@ class MyEmployees extends React.Component {
     isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -418,6 +443,7 @@ class MyEmployees extends React.Component {
       this.state.level = newProps.level;
       this.state.supervisorNames = newProps.supervisorNames;
       this.state.isInitial = isInitial;
+      this.state.selectedUserId = newProps.selectedUserId
       this.handleGridSort(sortColumn, sortDirection);
     } else {
       this.setState({
@@ -425,7 +451,8 @@ class MyEmployees extends React.Component {
         rows: rows,
         level: newProps.level,
         supervisorNames: newProps.supervisorNames,
-        isInitial: isInitial
+        isInitial: isInitial,
+        selectedUserId: newProps.selectedUserId
       });
     }
   }
@@ -629,7 +656,8 @@ class MyEmployees extends React.Component {
   render() {
     const { rows, supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
-    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "";
+    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "",
+      currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     return (
       <div>
         <AssignedWorkBook

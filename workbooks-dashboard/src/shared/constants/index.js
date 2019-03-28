@@ -10,18 +10,7 @@ const getAPIEndpoint = async () => {
 
 export { getAPIEndpoint }
 
-var obj = {
-    privalue: null,
-    get latest() {
-      if (this.privalue == null) {
-         this.privalue = getAPIEndpoint()
-         return this.privalue;
-      }
-    }
-  }
-  
-
-export const API_DOMAIN_TEST = {};
+export const API_CONFIG = {};
 
 /* Endpoint API for Sysvine Dev */
 // export const API_DOMAIN = 'https://m8dqprxss5.execute-api.us-west-2.amazonaws.com/';
