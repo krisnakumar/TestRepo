@@ -148,7 +148,10 @@ namespace ReportBuilderAPI.Repository
                 query += "  FROM dbo.Workbook wb FULL OUTER JOIN dbo.UserWorkBook uwb ON uwb.workbookId=wb.Id  FULL OUTER JOIN  dbo.UserCompany uc ON uc.UserId=uwb.UserId AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1";
 
                 currentUserId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CURRENT_USER).Select(x => x.Value).FirstOrDefault();
-
+                if (!string.IsNullOrEmpty(currentUserId))
+                {
+                    currentUserId = "0";
+                }
                 //get table joins
                 fieldList = queryBuilderRequest.ColumnList.ToList();
 
@@ -184,10 +187,10 @@ namespace ReportBuilderAPI.Repository
                     queryBuilderRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
                 }
 
-                if ( queryBuilderRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).ToList().Count > 0)
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).ToList().Count > 0)
                 {
                     EmployeeModel userDetails = queryBuilderRequest.Fields.Where(x => x.Name == Constants.CURRENT_USER).FirstOrDefault();
-                    queryBuilderRequest.Fields.Remove(userDetails);                 
+                    queryBuilderRequest.Fields.Remove(userDetails);
                 }
 
                 //getting where conditions
