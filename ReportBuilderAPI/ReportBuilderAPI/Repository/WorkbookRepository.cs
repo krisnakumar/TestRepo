@@ -87,7 +87,7 @@ namespace ReportBuilderAPI.Repository
         private readonly Dictionary<string, string> workbookFields = new Dictionary<string, string>()
         {
             {Constants.WORKBOOK_ID, "wb.ID " },
-            {Constants.SUPERVISOR_ID, " u.User_Id IN (SELECT UserID FROM Supervisor WHERE SupervisorId=@userId)" },
+            {Constants.SUPERVISOR_ID, " u.User_Id IN (SELECT UserID FROM Supervisor WHERE SupervisorId=@userId AND SupervisorId <> @currentuserId)" },
             {Constants.NOT_SUPERVISORID, " u.User_Id NOT IN (SELECT UserID FROM Supervisor WHERE SupervisorId=@userId)  " },
             {Constants.SUPERVISOR_USER, " u.User_Id IN (SELECT @userId  UNION SELECT UserID FROM Supervisor WHERE SupervisorId=@userId)  " },
             {Constants.SUPERVISOR_SUB, " s.supervisorId " },
