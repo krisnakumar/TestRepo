@@ -32,7 +32,11 @@
       "ITSEnvironment" : {
 		"Description": "The environment to which the application will be deployed.",
 		"Type" : "String"
-      }      
+      },
+	  "CognitoClientId" : {
+		"Description": "Cognito client Id that helps to connect the cognito authorizer",
+		"Type" : "String"
+      }
    },
    "Resources": {
       "ReportBuilderAPI": {
@@ -529,6 +533,57 @@
                      },
                      "Path": "/companies",
                      "Method": "GET"
+                  }
+               }
+            }
+         }
+      },
+	  	  "SilentAuth": {
+         "Type": "AWS::Serverless::Function",
+         "Properties": {
+            "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
+            "FunctionName": {
+                "Fn::Join": [
+                    "", [
+                    "OnBoardLMS_RB_SilentAuth_",
+                    {
+                        "Ref": "ITSEnvironment"
+                    }
+                    ]
+                ]
+                },
+            "Runtime": "dotnetcore2.1",
+            "CodeUri": "",
+            "MemorySize": {
+               "Ref": "LambdaMemory"
+            },
+            "Timeout": {
+               "Ref": "LambdaTimeout"
+            },
+            "Role": { "Ref" : "LambdaExecutionRoleArn" },
+			"VpcConfig" : {
+					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
+					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
+			},
+			"Environment": {
+               "Variables": {
+                  "ConnectionString": {
+                     "Ref": "ConnectionString"
+                  },
+				  "CognitoClientId": {
+                     "Ref": "CognitoClientId"
+                  }
+               }
+            },            
+			"Events": {
+               "PutResource": {
+                  "Type": "Api",
+                  "Properties": {
+                     "RestApiId": {
+                        "Ref": "ReportBuilderAPI"
+                     },
+                     "Path": "/login/refresh",
+                     "Method": "POST"
                   }
                }
             }
