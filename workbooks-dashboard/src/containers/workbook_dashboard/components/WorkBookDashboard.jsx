@@ -438,7 +438,7 @@ class WorkBookDashboard extends PureComponent {
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
       fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
-    if (loggedInUserId == userId) {
+    if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
     }
@@ -480,7 +480,7 @@ class WorkBookDashboard extends PureComponent {
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
     fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
-    if (loggedInUserId == userId) {
+    if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
     }
@@ -521,7 +521,7 @@ class WorkBookDashboard extends PureComponent {
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
     fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
-    if (loggedInUserId == userId) {
+    if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
     }
@@ -562,7 +562,7 @@ class WorkBookDashboard extends PureComponent {
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
     fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }];
-    if (loggedInUserId == userId) {
+    if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
     }
