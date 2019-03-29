@@ -567,7 +567,7 @@ class CTDashboard extends PureComponent {
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor Training Dashboard
             </div>
-          <p className="card__description">This is the default level. Shows a list of all shared roles and the overall progress of the entire contractor fleet(all contractor companies).</p>
+          <p className="card__description">Displays contractors' training progress required by role (job function). This report displays current records for the contractor employee's task profile (if a training task is not in the employee task profile it is not counted on this report).</p>
         </div>
         <div className="grid-filter-section">
           <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>
