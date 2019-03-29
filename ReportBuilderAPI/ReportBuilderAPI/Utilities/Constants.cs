@@ -15,6 +15,8 @@ namespace ReportBuilderAPI.Utilities
         public const string PARAM = "PARAM";
 
 
+        public const string QUERY_BUILDER = "QUERY_BUILDER";
+
         public const string CONTAINS = "CONTAINS";
         public const string DOES_NOT_CONTAINS = "DOES NOT CONTAIN";
 
@@ -40,8 +42,8 @@ namespace ReportBuilderAPI.Utilities
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
-        
-            public const string SUPERVISOR = "SUPERVISOR";
+
+        public const string SUPERVISOR = "SUPERVISOR";
         public const string COMPANY_NAME = "COMPANY_NAME";
 
         public const string SUPERVISOR_SUB = "SUPERVISOR_SUB";
@@ -52,7 +54,7 @@ namespace ReportBuilderAPI.Utilities
 
 
         public const string CAN_CERTIFY = "CAN_CERTIFY";
-        
+
         public const string ISDIRECTREPORT = "ISDIRECTREPORT";
         public const string ISENABLED = "ISENABLED";
         public const string PHOTO = "PHOTO";
