@@ -205,9 +205,10 @@ namespace ReportBuilderAPI.Repository
                 {
                     whereQuery += "AND uwb.isEnabled=1";
                 }
-                query = query.Replace("@currentuserId", currentUserId);
+                
                 //Create the final query 
                 query += (!string.IsNullOrEmpty(whereQuery)) ? (companyQuery + " and (" + whereQuery) + ")" : string.Empty;
+                query = query.Replace("@currentuserId", currentUserId);
                 return query;
             }
             catch (Exception createWorkbookQueryException)
