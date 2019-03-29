@@ -112,7 +112,7 @@ class OQDashboard extends PureComponent {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.qualificationsFormatter("total", props),
-        cellClass: "text-right last-column"
+        cellClass: "text-right last-column padding-rt-2p"
       },
     ];
 
@@ -863,20 +863,30 @@ class OQDashboard extends PureComponent {
           </Collapse>
         </div>
         <div className="grid-container">
-          <div className="table has-total-row">
-            <ReactDataGrid
-              ref={'oQDashboardReactDataGrid'}
-              onGridSort={this.handleGridSort}
-              enableCellSelect={false}
-              enableCellAutoFocus={false}
-              columns={this.heads}
-              rowGetter={this.rowGetter}
-              rowsCount={rows.length}
-              onGridRowsUpdated={this.handleGridRowsUpdated}
-              rowHeight={35}
-              minColumnWidth={100}
-              emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
-            />
+          <div className="section-info-view">
+            <div className="section-info-title">
+              <div className="section-info-pageheader">COQ home level</div>
+              <p className="section-info-description">
+                Shows the list of companies and the progress of their qualifications<br/>
+                Qualifications show the count of completed qualifications<br/>
+                Disqualifications show the incomplete qualifications while Suspended shows the qualifications suspended by the admin/ evaluator<br/>
+              </p>
+            </div>
+            <div className="table has-section-view has-total-row">
+              <ReactDataGrid
+                ref={'oQDashboardReactDataGrid'}
+                onGridSort={this.handleGridSort}
+                enableCellSelect={false}
+                enableCellAutoFocus={false}
+                columns={this.heads}
+                rowGetter={this.rowGetter}
+                rowsCount={rows.length}
+                onGridRowsUpdated={this.handleGridRowsUpdated}
+                rowHeight={35}
+                minColumnWidth={100}
+                emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
+              />
+            </div>
           </div>
         </div>
       </CardBody>

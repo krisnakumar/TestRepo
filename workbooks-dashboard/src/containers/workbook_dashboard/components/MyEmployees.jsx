@@ -196,7 +196,7 @@ class MyEmployees extends React.Component {
         inDueWorkBooks: employees[i].InDueWorkBook,
         pastDueWorkBooks: employees[i].PastDueWorkBook,
         completedWorkBooks: employees[i].CompletedWorkbook,
-        total: employees[i].TotalEmployees
+        total:  parseInt(employees[i].TotalEmployees) || 0
       });
     }
 
@@ -384,7 +384,7 @@ class MyEmployees extends React.Component {
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
     if (currentUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
@@ -681,7 +681,10 @@ class MyEmployees extends React.Component {
           assignedWorkBooks={this.state.workBookCompleted}
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
-          <ModalHeader toggle={this.toggle}>My Employees{supervisorName}</ModalHeader>
+          <ModalHeader className="text-left" toggle={this.toggle}>
+            My Employees{supervisorName}
+            <p className="section-info-description">Shows the progress of the direct subordinates of employee</p>
+          </ModalHeader>
           <Export
             data={this.state.rows}
             heads={this.heads}

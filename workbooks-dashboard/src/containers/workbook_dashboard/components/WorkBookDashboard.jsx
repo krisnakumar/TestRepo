@@ -121,7 +121,7 @@ class WorkBookDashboard extends PureComponent {
         editable: false,
         getRowMetaData: row => row,
         formatter: this.employeeFormatter,
-        cellClass: "text-right last-column"
+        cellClass: "text-right last-column padding-rt-2p"
       },
     ];
 
@@ -631,7 +631,7 @@ class WorkBookDashboard extends PureComponent {
         inDueWorkBooks: parseInt(employees[i].InDueWorkBook),
         pastDueWorkBooks: parseInt(employees[i].PastDueWorkBook),
         completedWorkBooks: parseInt(employees[i].CompletedWorkbook),
-        total: parseInt(employees[i].TotalEmployees)
+        total: parseInt(employees[i].TotalEmployees) || 0
       });
     }
     if (length > 0)
@@ -897,20 +897,28 @@ class WorkBookDashboard extends PureComponent {
           </Collapse>
         </div>
         <div className="grid-container">
-          <div className="table has-total-row is-table-page-view">
-            <ReactDataGrid
-              ref={'reactDataGrid'}
-              onGridSort={this.handleGridSort}
-              enableCellSelect={false}
-              enableCellAutoFocus={false}
-              columns={this.heads}
-              rowGetter={this.rowGetter}
-              rowsCount={rows.length}
-              onGridRowsUpdated={this.handleGridRowsUpdated}
-              rowHeight={35}
-              minColumnWidth={100}
-              emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
-            />
+          <div className="section-info-view">
+            <div className="section-info-title">
+              <div className="section-info-pageheader">Workbook home level</div>
+              <p className="section-info-description">
+                View list of employees and the progress of their direct and indirect subordinates. Shows the workbooks assigned, completed and due.<br />
+              </p>
+            </div>
+            <div className="table has-section-view has-total-row ">
+              <ReactDataGrid
+                ref={'reactDataGrid'}
+                onGridSort={this.handleGridSort}
+                enableCellSelect={false}
+                enableCellAutoFocus={false}
+                columns={this.heads}
+                rowGetter={this.rowGetter}
+                rowsCount={rows.length}
+                onGridRowsUpdated={this.handleGridRowsUpdated}
+                rowHeight={35}
+                minColumnWidth={100}
+                emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
+              />
+            </div>
           </div>
         </div>
       </CardBody>

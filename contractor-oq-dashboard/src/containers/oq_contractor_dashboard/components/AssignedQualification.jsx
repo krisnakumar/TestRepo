@@ -207,7 +207,7 @@ class AssignedQualification extends PureComponent {
         };
 
         const sortRows = this.state.rows.slice(0),
-              rowsLength = this.state.rows.length || 0;
+            rowsLength = this.state.rows.length || 0;
         const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
         this.setState({ rows });
@@ -221,7 +221,10 @@ class AssignedQualification extends PureComponent {
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
-                    <ModalHeader toggle={this.toggle}>Assigned Qualifications</ModalHeader>
+                    <ModalHeader className="text-left" toggle={this.toggle}>
+                        Assigned Qualifications
+                    <p className="section-info-description">Shows the qualification detail of the chosen company</p>
+                    </ModalHeader>
                     <Export
                         data={this.state.rows}
                         heads={this.heads}
@@ -241,7 +244,7 @@ class AssignedQualification extends PureComponent {
                                     onGridRowsUpdated={this.handleGridRowsUpdated}
                                     rowHeight={35}
                                     minColumnWidth={100}
-                                    emptyRowsView={this.state.isInitial && AssignedQualificationEmptyRowsView} 
+                                    emptyRowsView={this.state.isInitial && AssignedQualificationEmptyRowsView}
                                 />
                             </div>
                         </div>
