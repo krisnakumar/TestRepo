@@ -142,8 +142,8 @@ class App extends Component {
       this.setState({ isValid: false });
       window.location = window.location.origin;
     } else {
-      let refreshSession = await API.LoginRefresh();
-      this.updateSessionTokens(refreshSession);
+      // let refreshSession = await API.LoginRefresh();
+      // this.updateSessionTokens(refreshSession);
       this.setState({ isValid: true });
     }
   };
