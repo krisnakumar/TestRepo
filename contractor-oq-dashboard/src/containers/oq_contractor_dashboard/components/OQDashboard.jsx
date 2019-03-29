@@ -191,7 +191,7 @@ class OQDashboard extends PureComponent {
     // let userId = contractorManagementDetails.User.Id || 0;
     const { cookies } = this.props;
     let userId = contractorManagementDetails.User.Id || 0,// cookies.get('UserId'),
-    roles = [];
+      roles = [];
     await this.getFilterOptions();
     this.getQualifications(userId, roles);
   };
@@ -761,7 +761,7 @@ class OQDashboard extends PureComponent {
     const { cookies } = this.props;
     // let userId = cookies.get('UserId');
     let { contractorManagementDetails } = sessionStorage || '{}';
-        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let userId = contractorManagementDetails.User.Id || 0;
     let filteredRoles = this.state.filteredRoles,
       roles = [];
@@ -833,7 +833,7 @@ class OQDashboard extends PureComponent {
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Contractor OQ Dashboard
             </div>
-          <p className="card__description">Contractor Operator Qualifications</p>
+          <p className="card__description">Displays an overview of contractor qualification records grouped by subordinate. This report displays current OQ's for the contractor employee's task profile (if an OQ is not in the employee task profile it is not counted on this report). Column counts show sum of the supervisor and subordinates' records</p>
         </div>
         <div className="grid-filter-section">
           <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>
