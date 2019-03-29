@@ -5,7 +5,9 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.Repository;
+using ReportBuilderAPI.Utilities;
 using System;
+using System.Linq;
 
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class
@@ -83,7 +85,10 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                //Validating the student details  
+                string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
+
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
                 {
                     return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
                 }
@@ -113,7 +118,10 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                //Validating the student details  
+                string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
+
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
                 {
                     return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
                 }
@@ -144,7 +152,10 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                //Validating the student details  
+                string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
+
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
                 {
                     return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
                 }
@@ -360,7 +371,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         public CompanyResponse GetCompany(CompanyRequest companyRequest, ILambdaContext context = null)
         {
             CompanyRepository companyRepository = new CompanyRepository();
-            CompanyResponse companyResponse = new CompanyResponse();            
+            CompanyResponse companyResponse = new CompanyResponse();
             try
             {
                 return companyRepository.GetCompany(companyRequest);

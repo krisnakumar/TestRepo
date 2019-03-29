@@ -96,7 +96,7 @@ namespace ReportBuilderAPI.Utilities
         public const string USERID = "USER_ID";
 
         public const string CURRENT_USER = "CURRENT_USER";
-
+        public const string STUDENT_DETAILS = "STUDENT_DETAILS";
         //Fields and Columns for the Employee Entity
         public const string DESCRIPTION = "DESCRIPTION";
         public const string WORKBOOK_CREATED = "WORKBOOK_CREATED";
