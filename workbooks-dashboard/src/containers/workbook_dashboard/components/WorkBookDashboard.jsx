@@ -194,7 +194,7 @@ class WorkBookDashboard extends PureComponent {
             supervisorNames = this.state.supervisorNames;
 
           supervisorNames = [];
-          supervisorNames.push({ 'name': props.dependentValues.employee, 'column': "NONE", 'order': "NONE", 'userId': props.dependentValues.userId  });
+          supervisorNames.push({ 'name': props.dependentValues.employee, 'column': "NONE", 'order': "NONE", 'userId': props.dependentValues.userId });
           this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
           this.getMyEmployees(props.dependentValues.userId);
         }}
@@ -394,12 +394,12 @@ class WorkBookDashboard extends PureComponent {
    */
   async getMyEmployees(userId) {
     const { cookies } = this.props,
-    loggedInUserId = this.state.userId || 0;
+      loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const postData = {
-      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" }],
+      "Fields": [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "CURRENT_USER", "Value": userId, "Operator": "=", "Bitwise": "AND" }],
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
     };
 
@@ -475,11 +475,11 @@ class WorkBookDashboard extends PureComponent {
   */
   async getPastDueWorkbooks(userId) {
     const { cookies } = this.props,
-        loggedInUserId = this.state.userId || 0;
+      loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
     if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
@@ -516,11 +516,11 @@ class WorkBookDashboard extends PureComponent {
    */
   async getComingDueWorkbooks(userId) {
     const { cookies } = this.props,
-        loggedInUserId = this.state.userId || 0;
+      loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "WORKBOOK_IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }];
     if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
@@ -557,11 +557,11 @@ class WorkBookDashboard extends PureComponent {
    */
   async getCompletedWorkbooks(userId) {
     const { cookies } = this.props,
-        loggedInUserId = this.state.userId || 0;
+      loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-    fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }];
     if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
@@ -810,7 +810,7 @@ class WorkBookDashboard extends PureComponent {
     let collapseClassName = (collapse ? "show" : "hide"),
       filteredRolesLength = filteredRoles.length;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length,
-          currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
+      currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     return (
       <CardBody>
         <FilterModal
@@ -867,7 +867,7 @@ class WorkBookDashboard extends PureComponent {
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Workbook Dashboard
             </div>
-          <p className="card__description">View list of workbooks assigned, completed and due for employees</p>
+          <p className="card__description">Displays an overview of operator qualification records grouped by subordinate. This report displays current OQ's for the employee's task profile (if an OQ is not in the employee task profile it is not counted on this report). Column counts show sum of the supervisor and subordinates' records</p>
         </div>
         <div className="grid-filter-section">
           <div className={"grid-filter-collapse " + collapseClassName}>Filters: <button className="btn-as-text" onClick={this.toggle} >{collapseText}</button></div>

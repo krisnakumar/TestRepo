@@ -222,11 +222,7 @@ class MyEmployees extends React.Component {
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }, { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" }];
-    // if (currentUserId == userId) {
-    //   let currentUserField = { "Name": "CURRENT_USER", "Value": currentUserId, "Operator": "=", "Bitwise": "AND" };
-    //   fields.push(currentUserField);
-    // }
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }, { "Name": "CURRENT_USER", "Value": userId, "Operator": "=", "Bitwise": "AND" }];
     const postData = {
       "Fields": fields,
       "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
