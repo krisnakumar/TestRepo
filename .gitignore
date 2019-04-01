@@ -3,20 +3,3 @@
 ################################################################################
 
 /DataInterface.Database/obj
-/DataInterface.Database/bin/Debug/netstandard2.0
-/DataInterface.Database/bin/Release/netstandard2.0
-/.vs
-/ReportBuilder.Models/.vs/ReportBuilder.Models
-/ReportBuilder.Models/ReportBuilder.Models/bin
-/ReportBuilder.Models/ReportBuilder.Models/obj
-/ReportBuilderAPI/.vs
-/ReportBuilderAPI/ReportBuilder.UnitTest/bin
-/ReportBuilderAPI/ReportBuilder.UnitTest/obj/Debug/netcoreapp2.1
-/ReportBuilderAPI/ReportBuilder.UnitTest/obj
-/ReportBuilderAPI/ReportBuilderAPI/bin
-/ReportBuilderAPI/ReportBuilderAPI/obj
-/ReportBuilderAPI/.scannerwork
-/Database
-/ReportBuilderAPI/ReportBuilder.UnitTest/TestResults
-/ReportBuilderAPI/ReportBuilder.UnitTest/lcov.info
-/ReportBuilderAPI/ReportBuilder.UnitTest/coverage.opencover.xml

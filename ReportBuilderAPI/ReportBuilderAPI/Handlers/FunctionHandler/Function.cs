@@ -21,7 +21,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     {
         public Function()
         {
-            DatabaseWrapper._connectionString = "Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True";
+            DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
         }
         /// <summary>
         ///  Function that helps to validate the user using user name and password
