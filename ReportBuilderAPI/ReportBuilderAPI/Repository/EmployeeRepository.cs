@@ -85,7 +85,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            //{ " LEFT JOIN dbo.UserRole ur ON ur.UserId=u.User_Id LEFT JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { " LEFT JOIN dbo.UserRole ur ON ur.UserId=u.User_Id LEFT JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
             { " LEFT JOIN dbo.Supervisor s ON s.userId=u.User_Id", new List<string> {Constants.SUPERVISOR_ID, Constants.REPORTING} },
             { " LEFT JOIN dbo.UserDepartment ud ON ud.userId=u.User_Id LEFT JOIN dbo.Department d on d.Id=ud.DepartmentId ", new List<string> {Constants.DEPARTMENT} }
         };
