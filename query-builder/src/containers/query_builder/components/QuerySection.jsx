@@ -554,7 +554,7 @@ class QuerySection extends PureComponent {
         break;
     }
     return (
-      <CardBody>
+      <CardBody className="query-builder-fixed-height">
         <div className="card__title">
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Query Builder
