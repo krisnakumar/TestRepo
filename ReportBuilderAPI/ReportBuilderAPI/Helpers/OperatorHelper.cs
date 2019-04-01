@@ -37,7 +37,8 @@ namespace ReportBuilderAPI.Helpers
             Constants.NOT_ALL_SUBORDINATES,
             Constants.NOT_DIRECT_SUBORDINATES,
             Constants.ROLES,
-            Constants.COMPANIES
+            Constants.COMPANIES,
+            Constants.COMPANY_USER_ID
         };
 
         /// <summary>

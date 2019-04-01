@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Helpers
             try
             {
                 //Get the list of Id details
-                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID || x.Name.ToUpper() == Constants.SUPERVISOR_SUB || x.Name.ToUpper() == Constants.SUPERVISOR_USER).Select(x => x.Value).FirstOrDefault();
+                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID || x.Name.ToUpper() == Constants.SUPERVISOR_SUB || x.Name.ToUpper() == Constants.SUPERVISOR_USER || x.Name.ToUpper() == Constants.COMPANY_USER_ID).Select(x => x.Value).FirstOrDefault();
                 workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
                 taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
                 dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
