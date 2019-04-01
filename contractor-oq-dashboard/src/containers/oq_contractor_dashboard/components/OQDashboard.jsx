@@ -865,7 +865,7 @@ class OQDashboard extends PureComponent {
         <div className="grid-container">
           <div className="section-info-view">
             <div className="section-info-title">
-              <div className="section-info-pageheader">COQ home level</div>
+              <div className="section-info-pageheader">Operator Qualifications</div>
               <p className="section-info-description">
                 Shows the list of companies and the progress of their qualifications<br/>
                 Qualifications show the count of completed qualifications<br/>

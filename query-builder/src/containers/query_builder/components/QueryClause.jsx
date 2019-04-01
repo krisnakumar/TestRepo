@@ -451,7 +451,8 @@ class QueryClause extends PureComponent {
         if (validation.isValid) {
             // handle actual form submission here
             let queryClause = [],
-                _self = this;
+                _self = this,
+                studentDetails = [];
 
             this.state.formattedData.forEach(function (element, index) {
                 let queryObj = {},
@@ -468,6 +469,9 @@ class QueryClause extends PureComponent {
                 }
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
                 queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
+                if(_self.state.formattedData[index].fieldsSelected.field == "USER_ID"){
+                    studentDetails.push(_self.state.formattedData[index].valueSelected);
+                }
                 if (fieldType == "date" && hasSmartParams) {
                     if (fieldValue.value == "today" || fieldValue.value == "yesterday") {
                         queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
@@ -494,7 +498,16 @@ class QueryClause extends PureComponent {
                     queryObjUser.BitWise = "AND";
                     queryClause.push(queryObjUser);
                 }
-            })
+            });
+            let studentDetailsLength = studentDetails.length;
+            if(studentDetailsLength > 0){
+                let queryObjUser = {};
+                queryObjUser.Value = studentDetails.join();
+                queryObjUser.Operator = "=";
+                queryObjUser.Name = "STUDENT_DETAILS";
+                queryObjUser.BitWise = "AND";
+                queryClause.push(queryObjUser);
+            }
             this.state.queryClause = queryClause;
             switch (this.state.entity) {
                 case 'employees':
@@ -650,19 +663,13 @@ class QueryClause extends PureComponent {
             dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let payLoad = {
-            "Fields": requestData,
-            "ColumnList": empColumnList
-        };
+        let payLoad = { "Fields": requestData, "ColumnList": empColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
             contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
-
-        // let token = cookies.get('IdentityToken'),
         let token = idToken,
-            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/employees",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -685,15 +692,13 @@ class QueryClause extends PureComponent {
             dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let payLoad = { "Fields": requestData, "ColumnList": workbookColumnList };
+        let payLoad = { "Fields": requestData, "ColumnList": workbookColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
             contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
-        // let token = cookies.get('IdentityToken'),
         let token = idToken,
-            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/workbooks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -716,15 +721,13 @@ class QueryClause extends PureComponent {
             dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let payLoad = { "Fields": requestData, "ColumnList": taskColumnList };
+        let payLoad = { "Fields": requestData, "ColumnList": taskColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
             contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
-         // let token = cookies.get('IdentityToken'),
          let token = idToken,
-            // companyId = cookies.get('CompanyId') || 0,
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 

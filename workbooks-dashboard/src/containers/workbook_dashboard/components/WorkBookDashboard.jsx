@@ -899,7 +899,7 @@ class WorkBookDashboard extends PureComponent {
         <div className="grid-container">
           <div className="section-info-view">
             <div className="section-info-title">
-              <div className="section-info-pageheader">Workbook home level</div>
+              <div className="section-info-pageheader">Employee Dashboard</div>
               <p className="section-info-description">
                 View list of employees and the progress of their direct and indirect subordinates. Shows the workbooks assigned, completed and due.<br />
               </p>
