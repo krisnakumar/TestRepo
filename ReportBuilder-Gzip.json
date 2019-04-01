@@ -1,0 +1,794 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Workbook API's for Report Builder",
+    "version": "1.0",
+    "title": "Report Builder"
+  },
+  "tags": [
+    {
+      "name": "Login"
+    },
+    {
+      "name": "Employees"
+    },
+    {
+      "name": "Assiged Workbooks"
+    },
+    {
+      "name": "Employee Dues"
+    },
+    {
+      "name": "Completed Workbooks"
+    },
+    {
+      "name": "Tasks"
+    },
+    {
+      "name": "Attempts"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "LoginRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/employees": {
+      "get": {
+        "tags": [
+          "Employees"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Section-Manager-List"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/workbooks/assigned": {
+      "get": {
+        "tags": [
+          "Assiged Workbooks"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Assigned-Workbooks-List"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/workbooks/pastdue": {
+      "get": {
+        "tags": [
+          "Employee Dues"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Assigned-Workbooks-List"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/workbooks/comingdue": {
+      "get": {
+        "tags": [
+          "Employee Dues"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Assigned-Workbooks-List",
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+  "/users/{userId}/workbooks/completed": {
+      "get": {
+        "tags": [
+          "Completed Workbooks"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Completed-Workbooks"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/assigned-workbooks/{workbookId}/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "workbookId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }  
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Task-Workbooks-List"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    },
+     "/users/{userId}/assigned-workbooks/{workbookId}/tasks/{taskId}/attempts": {
+      "get": {
+        "tags": [
+          "Attempts"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "workbookId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }  
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/Attempts-List"
+            }
+          },"401": {
+            "description": "Unauthorized",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "504": {
+            "description": "Bad gateway",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            },
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "user_test_pool": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "user_test_pool": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "x-amazon-apigateway-authtype": "COGNITO_USER_POOLS",
+      "x-amazon-apigateway-authorizer": {
+        "providerARNs": [
+          "arn:aws:cognito-idp:us-west-2:708144412513:userpool/us-west-2_yPiegAzkd"
+        ],
+        "type": "cognito_user_pools"
+      }
+    }
+  },
+  "definitions": {
+    "Section-Manager": {
+      "type": "object",
+      "properties": {
+        "EmployeeName": {
+          "type": "string"
+        },
+        "Role": {
+          "type": "string"
+        },
+        "AssignedWorkBooks": {
+          "type": "string"
+        },
+        "InDueWorkBooks": {
+          "type": "string"
+        },
+        "PastDueWorkBooks": {
+          "type": "string"
+        },
+        "CompletedWorkBooks": {
+          "type": "string"
+        },
+        "EmployeeCount": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Section-Manager-List": {
+      "type": "array",
+      "items": {
+          "$ref": "#/definitions/Section-Manager"
+      }
+    },
+    "Assigned-Workbooks": {
+      "type": "object",
+      "properties": {
+        "EmployeeName": {
+          "type": "string"
+        },
+        "Role": {
+          "type": "string"
+        },
+        "WorkbookName": {
+          "type": "string"
+        },
+        "Progress": {
+          "type": "string"
+        },
+        "PercentageCompleted": {
+          "type": "string"
+        },
+        "DueDate": {
+          "type": "string",
+          "format":"datetime"
+        }
+      }
+    },
+     "Completed-Workbooks": {
+      "type": "object",
+      "properties": {
+        "EmployeeName": {
+          "type": "string"
+        },
+        "Role": {
+          "type": "string"
+        },
+        "WorkbookName": {
+          "type": "string"
+        },
+        "CompletionDate": {
+          "type": "string",
+          "format":"datetime"
+        }
+      }
+    },
+    "Assigned-Workbooks-List": {
+      "type": "array",
+      "items": {
+          "$ref": "#/definitions/Assigned-Workbooks"
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "UserName": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "type": "string"
+        },
+        "Message": {
+          "type": "string"
+        }
+      }
+    },
+    "Workbook Tasks": {
+      "type": "object",
+      "properties": {
+        "TaskCode": {
+          "type": "string"
+        },
+        "TaskName": {
+          "type": "string"
+        },
+        "CompletedTaskCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "IncompletedTasksCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "TotalTasks": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "CompletionPrecentage": {
+          "type": "string"
+        }
+      }
+    },
+    "Task-Workbooks-List": {
+      "type": "array",
+      "items": {
+          "$ref": "#/definitions/Assigned-Workbooks"
+      }
+    },
+    "Attempts": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "string"
+        },
+        "DateTime": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "Location": {
+          "type": "string"
+        },
+        "Evaluator": {
+          "type": "string"
+        },
+        "Comments": {
+          "type": "string"
+        }
+      }
+    },
+    "Attempts-List": {
+      "type": "array",
+      "items": {
+          "$ref": "#/definitions/Attempts"
+      }
+    }  
+  }
+}
