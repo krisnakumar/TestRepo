@@ -306,7 +306,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.IN_DUE_COMPANY_QUALIFICATION,", SUM(dr.Qual_Count_30) AS InDueQualification" },
 
-                { Constants.TOTAL_COMPANY_EMPLOYEES,", ((SELECT COUNT(ss.UserId) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc ON uc.UserId = ss.UserId AND uc.IsEnabled = 1 AND IsDirectReport=1 AND uc.IsVisible = 1 AND uc.Status = 1 WHERE ss.SupervisorId = @userId AND ss.UserId <> @userId AND uc.CompanyId = @companyId AND ss.IsEnabled = 1 AND ss.SupervisorId <>  @userId ) AS TotalEmployees" },
+                { Constants.TOTAL_COMPANY_EMPLOYEES,", (SELECT COUNT(ss.UserId) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc ON uc.UserId = ss.UserId AND uc.IsEnabled = 1 AND IsDirectReport=1 AND uc.IsVisible = 1 AND uc.Status = 1 WHERE ss.SupervisorId = @userId AND ss.UserId <> @userId AND uc.CompanyId = @companyId AND ss.IsEnabled = 1 AND ss.SupervisorId <>  @userId ) AS TotalEmployees" },
 
                 { Constants.COMPLETED_ROLE_QUALIFICATION,", (SELECT ISNULL(( SELECT COUNT(DISTINCT companyId) FROM dbo.CourseAssignment ts JOIN dbo.UserRole ur ON ur.UserId=ts.UserId  WHERE  ur.RoleId=r.Id AND companyId IN (SELECT ClientCompany FROM  dbo.companyClient WHERE ownerCompany=@companyId)  GROUP by  TaskversionId HAVING COUNT(TaskversionId)= (SELECT COUNT(TaskversionId) FROM  dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 and CompanyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId))) ,0)) AS CompletedRoleQualification" },
 
