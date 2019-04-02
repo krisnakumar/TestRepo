@@ -67,6 +67,7 @@ namespace ReportBuilderAPI.Repository
             {Constants.QR_CODE, "u.BarcodeHash " },
             {Constants.DEPARTMENT, "d.Name " },
             {Constants.SUPERVISOR_ID, "s.SupervisorId " },
+            {Constants.SUPERVISOR_ID_HANDLER, "s.SupervisorId " },
             {Constants.ME, "u.User_Id in (@currentuserId)" },
             {Constants.ME_AND_DIRECT_SUBORDINATES, "u.User_Id IN(SELECT @currentuserId UNION SELECT userId FROM dbo.supervisor WHERE supervisorId=@currentuserId) " },
             {Constants.ME_AND_ALL_SUBORDINATES, " u.User_Id = @currentuserId " },
@@ -136,6 +137,11 @@ namespace ReportBuilderAPI.Repository
 
                     employeeRequest.Fields.Select(x => (UsernameSmartParameters.Contains(x.Name) && x.Operator == "!=") ? x.Name = "NOT_" + x.Name : x.Name).ToList();
                 }
+                //handles the Supervisor Id depends upon the Request
+                if (employeeRequest.Fields.Where(x => x.Name == Constants.SUPERVISOR_ID).ToList().Count > 0)
+                {
+                    employeeRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_ID_HANDLER : x.Name).ToList();
+                }
 
                 //getting where conditions
                 whereQuery = string.Join("", from employee in employeeRequest.Fields
@@ -165,20 +171,21 @@ namespace ReportBuilderAPI.Repository
         public EmployeeResponse GetEmployeeDetails(QueryBuilderRequest queryBuilderRequest)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            string query = string.Empty, userId = string.Empty;
+            string query = string.Empty; //, userId = string.Empty;
 
             EmployeeResponse employeeResponse = new EmployeeResponse();
             Dictionary<string, string> parameterList;
-            int companyId = 0;
+            int companyId = 0, userId = 0;
             try
             {
                 //Assign the request details to corresponding objects
                 companyId = Convert.ToInt32(queryBuilderRequest.CompanyId);
+                userId = Convert.ToInt32(queryBuilderRequest.UserId);
                 queryBuilderRequest = queryBuilderRequest.Payload;
                 queryBuilderRequest.CompanyId = companyId;
 
                 //Read sql parameters from the DB
-                userId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
+                //userId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
 
 
                 //Create the query based on the input fields
