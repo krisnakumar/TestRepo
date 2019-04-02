@@ -42,6 +42,7 @@ namespace ReportBuilderAPI.Utilities
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
+        public const string SUPERVISOR_ID_HANDLER = "SUPERVISOR_ID_HANDLER";
 
         public const string SUPERVISOR = "SUPERVISOR";
         public const string COMPANY_NAME = "COMPANY_NAME";
@@ -142,6 +143,8 @@ namespace ReportBuilderAPI.Utilities
         public const string TASK_NAME = "TASK_NAME";
 
         public const string LOCK_OUT_REASON = "LOCK_OUT_REASON";
+        public const string EMPLOYEE_LOCK_OUT_COUNT = "EMPLOYEE_LOCK_OUT_COUNT";
+        public const string COMPANY_LOCK_OUT_COUNT = "COMPANY_LOCK_OUT_COUNT";
 
         public const string DISQUALIFIED = "DISQUALIFIED";
         public const string SUSPENDED = "SUSPENDED";
