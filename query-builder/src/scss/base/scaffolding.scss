@@ -667,7 +667,7 @@ button.query-action-btn.delete:disabled {
   white-space: pre-wrap;
 }
 .is-table-page-view .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
-   height: auto !important;
+   // height: auto !important;
 }
 
 .react-grid-Grid {
@@ -935,7 +935,7 @@ div#queryResultSet {
   }
 }
 .padding-rt-2p{
-  padding-right: 2% !important;
+  padding-right: 3% !important;
 }
 .grid-filter-section {
   background: #e8e9ea;
@@ -1091,4 +1091,8 @@ button.grid-filter-go-btn {
 }
 .query-builder-fixed-height{ 
   min-height: 520px !important;
+}
+
+.react-grid-Row {
+  margin-right: 2px !important;
 }
