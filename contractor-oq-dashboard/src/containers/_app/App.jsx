@@ -149,7 +149,7 @@ class App extends Component {
   };
 
   async updateSessionTokens(refreshSession) {
-    let idToken = refreshSession.IdentityToken || "",
+    let idToken = refreshSession.IdToken || "",
       accessToken = refreshSession.AccessToken || "",
       _self = this;
 

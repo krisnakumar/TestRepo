@@ -935,7 +935,7 @@ div#queryResultSet {
   }
 }
 .padding-rt-2p{
-  padding-right: 2% !important;
+  padding-right: 3% !important;
 }
 .grid-filter-section {
   background: #e8e9ea;
@@ -1103,4 +1103,7 @@ button.grid-filter-go-btn {
     vertical-align:middle;
     margin-right: 5px;
   }
+}
+.react-grid-Row {
+  margin-right: 2px !important;
 }

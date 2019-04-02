@@ -20,7 +20,7 @@ const Footer = () => (
               Industrial Training Services, Inc.
             </a>
             <br />
-            <a href="/bz_business">Business</a>
+            <a href="/bz_business.aspx">Business</a>
           </div>
         </Col>
       </Row>
