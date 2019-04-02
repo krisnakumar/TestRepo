@@ -79,10 +79,10 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                 {
-                    queryBuilderRequest.Fields.Select(x => x.Name == Constants.USERID ? x.Name = Constants.COMPANY_USER_ID: x.Name).ToList();
+                    queryBuilderRequest.Fields.Select(x => x.Name == Constants.USERID ? x.Name = Constants.COMPANY_USER_ID : x.Name).ToList();
                 }
 
-                    if (!queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                if (!queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                 {
                     //getting where conditions
                     whereQuery = string.Join("", from employee in queryBuilderRequest.Fields
@@ -293,7 +293,8 @@ namespace ReportBuilderAPI.Repository
                 { Constants.PAST_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate < GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS PastDueQualification" },
 
                 { Constants.IN_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate > GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS InDueQualification" },
-                { Constants.TOTAL_EMPLOYEES,", (SELECT COUNT(*) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc on uc.UserId=ss.UserId   WHERE ss.SupervisorId = u.User_Id and uc.companyId=@companyId) AS TotalEmployees" },
+
+                { Constants.TOTAL_EMPLOYEES,", (SELECT COUNT(ss.UserId) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc ON uc.UserId = ss.UserId AND uc.IsEnabled = 1 AND IsDirectReport=1 AND uc.IsVisible = 1 AND uc.Status = 1 WHERE ss.SupervisorId = @userId AND ss.UserId <> @userId AND uc.CompanyId = @companyId AND ss.IsEnabled = 1 AND ss.SupervisorId <> 2) AS TotalEmployees" },
 
                 { Constants.ASSIGNED_COMPANY_QUALIFICATION,", SUM(dr.Assigned_Qual_Count) AS AssignedQualification" },
 
@@ -311,9 +312,13 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.NOT_COMPLETED_ROLE_QUALIFICATION,", (SELECT ISNULL(( SELECT COUNT(DISTINCT companyId) FROM dbo.CourseAssignment ts JOIN dbo.UserRole ur ON ur.UserId=ts.UserId  WHERE  ur.RoleId=r.Id AND companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId) AND TaskversionId NOT IN(SELECT TaskversionId FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND CompanyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId)) ) ,0)) as NotCompletedRoleQualification" },
                 { Constants.EMPLOYEE_NAME,", Full_Name_Format1  as employeeName" },
+
                 { Constants.COMPLETED_COMPANY_USERS,",  (SELECT ISNULL(( SELECT COUNT(ts.UserId) FROM dbo.CourseAssignment ts  JOIN dbo.UserRole ur ON ur.UserId=ts.UserId WHERE ur.RoleId=@roleId AND companyId IN (Select ClientCompany from dbo.companyClient WHERE ownerCompany=@companyId)  GROUP BY  TaskversionId HAVING COUNT(TaskversionId)= (SELECT COUNT(TaskversionId) FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 and CompanyId   IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId))) ,0)) AS CompletedCompanyUsers" },
+
                 { Constants.NOT_COMPLETED_COMPANY_USERS,", (SELECT ISNULL(( SELECT COUNT(ts.UserId) FROM dbo.CourseAssignment ts JOIN dbo.UserRole ur ON ur.UserId=ts.UserId WHERE ur.RoleId=@roleId AND  companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId) AND TaskversionId    NOT IN(SELECT TaskversionId FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5    AND CompanyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId)) ) ,0)) AS NotCompletedCompanyUsers" },
+
                 { Constants.TOTAL_COMPLETED_COMPANY_USERS,",    (SELECT ISNULL(( SELECT COUNT(ts.UserId) FROM dbo.CourseAssignment ts  JOIN dbo.UserRole ur ON ur.UserId=ts.UserId WHERE ur.RoleId=@roleId AND companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=6))  ,0)) AS TotalCompanyUsers" },
+
                 { Constants.ROLE,", r.Name As Role, r.Id as roleId" },
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
                 {Constants.LOCK_OUT_REASON, ", ca.LockoutReason as LockoutReason " },
