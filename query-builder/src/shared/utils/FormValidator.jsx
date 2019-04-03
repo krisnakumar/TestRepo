@@ -55,10 +55,16 @@ class FormValidator {
             if(date_range != ""){
               date_range = date_range.split('and');
               if (date_range[0].trim() == "Invalid date" && date_range[1].trim() == "Invalid date") {
+                isValid = false;
+                validation.isValid = isValid;
                 message = rule.message + "|both";
               } else if (date_range[0].trim() == "Invalid date") {
+                isValid = false;
+                validation.isValid = isValid;
                 message = rule.message + "|from";
               }  else if (date_range[1].trim() == "Invalid date") {
+                isValid = false;
+                validation.isValid = isValid;
                 message = rule.message + "|to";
               } else {
                 isValid = true;
@@ -66,11 +72,11 @@ class FormValidator {
               }
             } else {
               isValid = false;
+              validation.isValid = isValid;
               message = rule.message + "|both";
             }
   
             validation[position] = { isInvalid: !isValid, message: message }
-            validation.isValid = isValid;
           }
 
         } else {

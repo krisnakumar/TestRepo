@@ -41,6 +41,45 @@ import { formatDate, parseDate } from "react-day-picker/moment";
 import { Container, Row, Col, Button, ButtonGroup } from 'reactstrap';
 import * as moment from 'moment';
 
+const currentYear = new Date().getFullYear();
+const currentMonth = new Date().getMonth();
+const currentYearMonth = new Date(currentYear, currentMonth);
+const fromMonth = new Date(1920, 0);
+const toMonth = new Date(2200, 11);
+
+function YearMonthForm({ date, localeUtils, onChange }) {
+    const months = localeUtils.getMonths();
+
+    const years = [];
+    for (let i = 1920; i <= 2200; i += 1) {
+        years.push(i);
+    }
+
+    const handleChange = function handleChange(e) {
+        const { year, month } = e.target.form;
+        onChange(new Date(year.value, month.value));
+    };
+
+    return (
+        <form className="DayPicker-Caption">
+            <select name="month" onChange={handleChange} value={date.getMonth()}>
+                {months.map((month, i) => (
+                    <option key={month} value={i}>
+                        {month}
+                    </option>
+                ))}
+            </select>
+            <select name="year" onChange={handleChange} value={date.getFullYear()}>
+                {years.map(year => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
+            </select>
+        </form>
+    );
+}
+
 class QueryClause extends PureComponent {
 
     static propTypes = {
@@ -75,7 +114,9 @@ class QueryClause extends PureComponent {
             queryClause: {},
             empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "EMAIL", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES"],
             workbookColumnList: ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"],
-            taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"]
+            taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"],
+            monthF: [],
+            monthT: [],
         };
 
         this.submitted = false;
@@ -94,6 +135,22 @@ class QueryClause extends PureComponent {
         this.handleToChange = this.handleToChange.bind(this);
         this.reloadQuery = this.reloadQuery.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
+
+        this.handleYearMonthChangeF = this.handleYearMonthChangeF.bind(this);
+        this.handleYearMonthChangeT = this.handleYearMonthChangeT.bind(this);
+    }
+
+    handleYearMonthChangeF(index, month) {
+        let monthFrom = this.state.monthF;
+        monthFrom[index] = month;
+        this.setState({ monthF: monthFrom });
+        this.forceUpdate();
+    }
+    handleYearMonthChangeT(index, month) {
+        let monthTo = this.state.monthT;
+        monthTo[index] = month;
+        this.setState({ monthT: monthTo });
+        this.forceUpdate();
     }
 
     /**
@@ -975,6 +1032,8 @@ class QueryClause extends PureComponent {
                         let fromDate = field.valueSelected ? field.valueSelected.from : "";
                         let toDate = field.valueSelected ? field.valueSelected.to : "";
                         let modifiers = { start: fromDate, end: toDate };
+                        let fromMonthDate = _self.state.monthF[index] ? new Date(_self.state.monthF[index]) : new Date();
+                        let toMonthDate = _self.state.monthT[index] ? new Date(_self.state.monthT[index]) : new Date();
                         const ref = React.createRef();
                         return (
                             <tr key={index} className={"query-clause-row-" + index}>
@@ -1076,12 +1135,21 @@ class QueryClause extends PureComponent {
                                                 format="L"
                                                 formatDate={formatDate}
                                                 parseDate={parseDate}
-                                                // overlayComponent={_self.CustomOverlay.bind(index, index+"@from")}
                                                 keepFocus={false}
                                                 dayPickerProps={{
+                                                    month: fromMonthDate,
+                                                    fromMonth: fromMonth,
+                                                    toMonth: toMonth,
                                                     selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                     modifiers,
-                                                    numberOfMonths: 1
+                                                    numberOfMonths: 1,
+                                                    captionElement: ({ date, localeUtils }) => (
+                                                        <YearMonthForm
+                                                            date={date}
+                                                            localeUtils={localeUtils}
+                                                            onChange={_self.handleYearMonthChangeF.bind(this, index)}
+                                                        />
+                                                    )
                                                 }}
                                                 onDayChange={_self.handleFromChange.bind("", index, "valueSelected", this)}
                                             />   <span className="help-block">{_self.getDatePickerMessage(index, "from")}</span>
@@ -1094,12 +1162,20 @@ class QueryClause extends PureComponent {
                                                     format="L"
                                                     formatDate={formatDate}
                                                     parseDate={parseDate}
-                                                    // overlayComponent={_self.CustomOverlay.bind(index, index+"@to")}
                                                     keepFocus={false}
                                                     dayPickerProps={{
+                                                        month: toMonthDate,
+                                                        fromMonth: fromMonth,
                                                         selectedDays: [fromDate, { from: fromDate, to: toDate }],
                                                         modifiers,
-                                                        numberOfMonths: 1
+                                                        numberOfMonths: 1,
+                                                        captionElement: ({ date, localeUtils }) => (
+                                                            <YearMonthForm
+                                                                date={date}
+                                                                localeUtils={localeUtils}
+                                                                onChange={_self.handleYearMonthChangeT.bind(this, index)}
+                                                            />
+                                                        )
                                                     }}
                                                     onDayChange={_self.handleToChange.bind("", index, "valueSelected", this)}
                                                 />   <span className="help-block">{_self.getDatePickerMessage(index, "to")}</span>
