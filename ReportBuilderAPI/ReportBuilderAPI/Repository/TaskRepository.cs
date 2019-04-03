@@ -72,6 +72,13 @@ namespace ReportBuilderAPI.Repository
                     queryBuilderRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
                 }
 
+
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPANY_CLIENT).ToList().Count > 0 )
+                {
+                    EmployeeModel userDetails = queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPANY_CLIENT).FirstOrDefault();
+                    queryBuilderRequest.Fields.Remove(userDetails);                   
+                }
+
                 if (queryBuilderRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
                 {
                     queryBuilderRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_SUB : x.Name).ToList();
@@ -119,6 +126,14 @@ namespace ReportBuilderAPI.Repository
 
                 //Assign the companyId to the new object
                 queryBuilderRequest.CompanyId = companyId;
+
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPANY_CLIENT).ToList().Count > 0)
+                {
+                    queryBuilderRequest.CompanyId = Convert.ToInt32(queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPANY_CLIENT).Select(x=>x.Value).FirstOrDefault());
+
+                }
+
+                
 
                 //Generates the query
                 query = CreateTaskQuery(queryBuilderRequest);
