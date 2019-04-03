@@ -368,7 +368,7 @@ img {
 
 .Select-control {
   height: 25px !important;
-  border-radius: 2px;
+  border-radius: 0px !important;
 }
 
 .Select-option {
@@ -393,7 +393,7 @@ img {
   font-family: inherit;
   font-size: inherit;
   font-weight: 400;
-  padding: 0 0 0 6px;
+  // padding: 0 0 0 6px;
  }
 
  .tableWidth-10 {
@@ -731,16 +731,16 @@ button.query-action-btn.delete:disabled {
   border-bottom-right-radius: 50% !important;
 }
 .DayPickerInput-Overlay {
-  width: auto;
-}
-.DayPickerInput-Overlay {
   // margin-left: -198px;
+  width: auto;
+  color: #083254;
 }
-
 .DayPickerInput {
-  width: 48%;
+  // width: 48%;
+  width: 100%;
 }
 .day-picker-div {
+  display: flex;
   margin-left: 7px;
 }
 .DayPicker-Day--start {
@@ -899,7 +899,7 @@ div#queryResultSet {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  // border-radius: 0.25rem;
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   -o-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -1095,4 +1095,12 @@ button.grid-filter-go-btn {
 
 .react-grid-Row {
   margin-right: 2px !important;
+}
+
+.has-error .inputQueryInput .Select-control, .has-error .DayPickerInput input{
+  border: 1px solid #bc0202;
+}
+
+.day-picker-div .form-group-has-validation{
+  width: 50% !important;
 }

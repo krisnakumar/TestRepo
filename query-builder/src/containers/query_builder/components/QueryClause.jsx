@@ -274,7 +274,7 @@ class QueryClause extends PureComponent {
                 let type = selectedOption ? selectedOption.type : "others",
                     smartParamType = selectedOption.smartParam || "NONE";
                 formattedData[index].valueSelected = isSameType ? formattedData[index].valueSelected : "";
-                formattedData[index].valueSelected = selectedOption.hasSmartParams ?  formattedData[index].valueSelected : "";
+                formattedData[index].valueSelected = selectedOption.hasSmartParams ? formattedData[index].valueSelected : "";
                 formattedData[index].operators = FieldData.operator[type];
                 formattedData[index].placeholder = selectedOption.placeholder || "";
                 formattedData[index].isSkipValidation = true;
@@ -284,10 +284,10 @@ class QueryClause extends PureComponent {
                 formattedData[index].label = selectedOption.label || "";
                 formattedData[index].smartParam = FieldData.params[smartParamType];
                 formattedData[index].hasSmartParams = selectedOption.hasSmartParams;
-                if(formattedData[index].type == "date" && formattedData[index].operatorsSelected.value == "Between"){
+                if (formattedData[index].type == "date" && formattedData[index].operatorsSelected.value == "Between") {
                     formattedData[index].hasSmartParams = false;
                 }
-                if(smartParamType != formattedData[index].smartParam){
+                if (smartParamType != formattedData[index].smartParam) {
                     // formattedData[index].valueSelected = "";
                 }
                 break;
@@ -469,7 +469,7 @@ class QueryClause extends PureComponent {
                 }
                 queryObj.Operator = _self.state.formattedData[index].operatorsSelected.value;
                 queryObj.Name = _self.state.formattedData[index].fieldsSelected.field;
-                if(_self.state.formattedData[index].fieldsSelected.field == "USER_ID"){
+                if (_self.state.formattedData[index].fieldsSelected.field == "USER_ID") {
                     studentDetails.push(_self.state.formattedData[index].valueSelected);
                 }
                 if (fieldType == "date" && hasSmartParams) {
@@ -487,7 +487,7 @@ class QueryClause extends PureComponent {
 
                 queryClause.push(queryObj);
                 let { contractorManagementDetails } = sessionStorage || '{}';
-                    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+                contractorManagementDetails = JSON.parse(contractorManagementDetails);
                 let userId = contractorManagementDetails.User.Id || 0;
                 if (_self.state.formattedData[index].fieldsSelected.smartParam == "user" && (queryObj.Value == "ME" || queryObj.Value == "ME_AND_DIRECT_SUBORDINATES" || queryObj.Value == "DIRECT_SUBORDINATES")) {
                     let queryObjUser = {};
@@ -500,7 +500,7 @@ class QueryClause extends PureComponent {
                 }
             });
             let studentDetailsLength = studentDetails.length;
-            if(studentDetailsLength > 0){
+            if (studentDetailsLength > 0) {
                 let queryObjUser = {};
                 queryObjUser.Value = studentDetails.join();
                 queryObjUser.Operator = "=";
@@ -585,7 +585,7 @@ class QueryClause extends PureComponent {
                 }
             });
         });
-        
+
         switch (entity) {
             case 'employees':
                 this.setState({ empColumnList: tempColumnList });
@@ -630,6 +630,30 @@ class QueryClause extends PureComponent {
 
     /**
      * @method
+     * @name - getDatePickerClassName
+     * This method will used to get Class name from validation
+     * @param index
+     * @returns Class name or ""
+     */
+    getDatePickerClassName(index, type) {
+        const { formattedData } = this.state;
+        let validation = this.submitted ?               // if the form has been submitted at least once
+            this.validator.validate(formattedData) :   // then check validity every time we render
+            this.state.validation;
+        let currentType = validation[index] ? (validation[index].message.split('|')[1] || "") : "";
+        if (currentType == type || currentType == "both") {
+            if (formattedData[index].isSkipValidation) {
+                return classNames('form-group-has-validation');
+            } else {
+                return classNames('form-group-has-validation', { 'has-error': validation[index] ? validation[index].isInvalid : false });
+            }
+        } else {
+            return classNames('form-group-has-validation');
+        }
+    };
+
+    /**
+     * @method
      * @name - getMessage
      * This method will used to get error Message from validation
      * @param index
@@ -644,7 +668,32 @@ class QueryClause extends PureComponent {
         if (formattedData[index].isSkipValidation) {
             return "";
         } else {
-            return validation[index] ? validation[index].message : "";
+            return validation[index] ? validation[index].message.split('|')[0] : "";
+        }
+    };
+
+
+    /**
+     * @method
+     * @name - getDatePickerMessage
+     * This method will used to get error Message from validation
+     * @param index
+     * @returns Message or ""
+    */
+    getDatePickerMessage(index, type) {
+        const { formattedData } = this.state;
+        let validation = this.submitted ?               // if the form has been submitted at least once
+            this.validator.validate(formattedData) :   // then check validity every time we render
+            this.state.validation;
+        let currentType = validation[index] ? (validation[index].message.split('|')[1] || "") : "";
+        if (currentType == type || currentType == "both") {
+            if (formattedData[index].isSkipValidation) {
+                return "";
+            } else {
+                return validation[index] ? validation[index].message.split('|')[0] : "";
+            }
+        } else {
+            return "";
         }
     };
 
@@ -660,13 +709,13 @@ class QueryClause extends PureComponent {
         const { empColumnList } = this.state;
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
         let payLoad = { "Fields": requestData, "ColumnList": empColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
         let token = idToken,
@@ -689,13 +738,13 @@ class QueryClause extends PureComponent {
         const { workbookColumnList } = this.state;
 
         let { dashboardAPIToken } = sessionStorage || {};
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
         let payLoad = { "Fields": requestData, "ColumnList": workbookColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
         let token = idToken,
@@ -718,16 +767,16 @@ class QueryClause extends PureComponent {
         const { taskColumnList } = this.state;
 
         let { dashboardAPIToken } = sessionStorage || {};
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
         let payLoad = { "Fields": requestData, "ColumnList": taskColumnList, "AppType": "QUERY_BUILDER" };
 
         let { contractorManagementDetails } = sessionStorage || '{}';
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
         let companyId = contractorManagementDetails.Company.Id || 0;
 
-         let token = idToken,
+        let token = idToken,
             url = "/company/" + companyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
@@ -757,24 +806,24 @@ class QueryClause extends PureComponent {
     onDatePickerOpen() {
         let inputWrapper = document.querySelector(".DayPickerInput-OverlayWrapper") ? document.querySelector(".DayPickerInput-OverlayWrapper").previousElementSibling.getBoundingClientRect() : null;
         document.querySelector(".DayPickerInput-Overlay").style.position = 'fixed';
-        document.querySelector(".DayPickerInput-Overlay").style.left = inputWrapper ? inputWrapper.left + 'px' :  '0px';
+        document.querySelector(".DayPickerInput-Overlay").style.left = inputWrapper ? inputWrapper.left + 'px' : '0px';
         document.querySelector(".DayPickerInput-Overlay").style.display = 'block';
     };
 
-     /**
-       * @method
-       * @name - handleOnChange
-       * This method will used update value on smart params change event
-       * @param index
-       * @param type
-       * @param event
-       * @param value
-       * @returns none
-    */
+    /**
+      * @method
+      * @name - handleOnChange
+      * This method will used update value on smart params change event
+      * @param index
+      * @param type
+      * @param event
+      * @param value
+      * @returns none
+   */
     handleOnChange(index, type, event, value) {
         let formattedData = this.state.formattedData;
-        formattedData[index][type] = value;
-        this.setState({ ...this.state, formattedData, multiValue: value });
+        formattedData[index][type] = value || '';
+        this.setState({ ...this.state, formattedData, multiValue: value || '' });
         this.forceUpdate();
     };
 
@@ -798,15 +847,15 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     };
 
-     /**
-       * @method
-       * @name - componentDidUpdate
-       * This method will triggered whenever the component is updated the props
-       * @param prevProps
-       * @param prevState
-       * @param snapshot
-       * @returns none
-    */
+    /**
+      * @method
+      * @name - componentDidUpdate
+      * This method will triggered whenever the component is updated the props
+      * @param prevProps
+      * @param prevState
+      * @param snapshot
+      * @returns none
+   */
     componentDidUpdate(prevProps, prevState, snapshot) {
         // If we have a snapshot value, we've just added new items.
         // Adjust scroll so these new items don't push the old ones out of view.
@@ -862,16 +911,16 @@ class QueryClause extends PureComponent {
         );
     };
 
-     /**
-       * @method
-       * @name - handleFromChange
-       * This method will used update value on smart params date from select
-       * @param index
-       * @param type
-       * @param event
-       * @param value
-       * @returns none
-    */
+    /**
+      * @method
+      * @name - handleFromChange
+      * This method will used update value on smart params date from select
+      * @param index
+      * @param type
+      * @param event
+      * @param value
+      * @returns none
+   */
     handleFromChange(index, type, event, value) {
         // Change the from date and focus the "to" input field
         let formattedData = this.state.formattedData;
@@ -881,17 +930,17 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
-     /**
-     /**
-       * @method
-       * @name - handleToChange
-       * This method will used update value on smart params date to select
-       * @param index
-       * @param type
-       * @param event
-       * @param value
-       * @returns none
-    */
+    /**
+    /**
+      * @method
+      * @name - handleToChange
+      * This method will used update value on smart params date to select
+      * @param index
+      * @param type
+      * @param event
+      * @param value
+      * @returns none
+   */
     handleToChange(index, type, event, value) {
         let formattedData = this.state.formattedData;
         typeof formattedData[index][type] === 'object' ? formattedData[index][type].to = value : formattedData[index][type] = {};
@@ -900,14 +949,14 @@ class QueryClause extends PureComponent {
         this.forceUpdate();
     }
 
-     /**
-       * @method
-       * @name - handleBlur
-       * This method will used update value on smart params when user type's on input select
-       * @param index
-       * @returns none
-    */
-    handleBlur(index){
+    /**
+      * @method
+      * @name - handleBlur
+      * This method will used update value on smart params when user type's on input select
+      * @param index
+      * @returns none
+   */
+    handleBlur(index) {
         let { inputValue } = this.selectCreatable[index];
         this.selectCreatable[index].createNewOption(inputValue)
     }
@@ -1021,7 +1070,7 @@ class QueryClause extends PureComponent {
                                         ||
 
                                         (field.hasSmartParams == false && field.type == "date") && <div className={"day-picker-div " + index}>
-                                            <DayPickerInput
+                                            <div className={"" + _self.getDatePickerClassName(index, "from")}><DayPickerInput
                                                 value={fromDate}
                                                 placeholder="MM/DD/YYYY"
                                                 format="L"
@@ -1035,29 +1084,31 @@ class QueryClause extends PureComponent {
                                                     numberOfMonths: 1
                                                 }}
                                                 onDayChange={_self.handleFromChange.bind("", index, "valueSelected", this)}
-                                            />
-                                            {" "}—{" "}
-                                            <DayPickerInput
-                                                ref={el => (_self.toInputs[index] = el)}
-                                                value={toDate}
-                                                placeholder="MM/DD/YYYY"
-                                                format="L"
-                                                formatDate={formatDate}
-                                                parseDate={parseDate}
-                                                // overlayComponent={_self.CustomOverlay.bind(index, index+"@to")}
-                                                keepFocus={false}
-                                                dayPickerProps={{
-                                                    selectedDays: [fromDate, { from: fromDate, to: toDate }],
-                                                    modifiers,
-                                                    numberOfMonths: 1
-                                                }}
-                                                onDayChange={_self.handleToChange.bind("", index, "valueSelected", this)}
-                                            />
+                                            />   <span className="help-block">{_self.getDatePickerMessage(index, "from")}</span>
+                                            </div>
+                                            {" "}—{" "}<div className={"" + _self.getDatePickerClassName(index, "to")}>
+                                                <DayPickerInput
+                                                    ref={el => (_self.toInputs[index] = el)}
+                                                    value={toDate}
+                                                    placeholder="MM/DD/YYYY"
+                                                    format="L"
+                                                    formatDate={formatDate}
+                                                    parseDate={parseDate}
+                                                    // overlayComponent={_self.CustomOverlay.bind(index, index+"@to")}
+                                                    keepFocus={false}
+                                                    dayPickerProps={{
+                                                        selectedDays: [fromDate, { from: fromDate, to: toDate }],
+                                                        modifiers,
+                                                        numberOfMonths: 1
+                                                    }}
+                                                    onDayChange={_self.handleToChange.bind("", index, "valueSelected", this)}
+                                                />   <span className="help-block">{_self.getDatePickerMessage(index, "to")}</span>
+                                            </div>
                                         </div>
 
                                         ||
 
-                                        (field.hasSmartParams == true) && <SelectPlus.Creatable
+                                        (field.hasSmartParams == true) && <div className={"query-value-input " + _self.getClassName(index)}><SelectPlus.Creatable
                                             onOpen={_self.onOpenClose.bind()}
                                             autocomplete="off"
                                             clearable={false}
@@ -1076,6 +1127,8 @@ class QueryClause extends PureComponent {
                                             value={field.valueSelected}
                                             ref={s => _self.selectCreatable[index] = s}
                                         />
+                                            <span className="help-block">{_self.getMessage(index)}</span>
+                                        </div>
                                     }
                                 </td>
                             </tr>
