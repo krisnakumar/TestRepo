@@ -320,7 +320,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.TOTAL_COMPLETED_COMPANY_USERS,",    (SELECT ISNULL(( SELECT COUNT(ts.UserId) FROM dbo.CourseAssignment ts  JOIN dbo.UserRole ur ON ur.UserId=ts.UserId WHERE ur.RoleId=@roleId AND companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId))  ,0)) AS TotalCompanyUsers" },
 
-                { Constants.ROLE,", r.Name As Role, r.Id as roleId" },
+                { Constants.ROLE,", (SELECT STUFF((SELECT DISTINCT ', ' + r.Name FROM dbo.UserRole ur JOIN dbo.Role r ON r.Id=ur.roleId  WHERE ur.UserId=u.User_Id FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)'), 1, 2, '')) As Role, r.Id as roleId" },
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
                 {Constants.LOCK_OUT_REASON, ", ca.LockoutReason as LockoutReason " },
 
