@@ -12,7 +12,7 @@ namespace ReportBuilderAPI.IRepository
     public interface IWorkbook
     {
         WorkbookResponse GetWorkbookDetails(QueryBuilderRequest queryBuilderRequest);
-        string CreateWorkbookQuery(QueryBuilderRequest queryRequest);
+        string CreateWorkbookQuery(QueryBuilderRequest queryBuilderRequest);
         List<WorkbookModel> ReadWorkBookDetails(string query, Dictionary<string, string> parameters);
     }
 }
