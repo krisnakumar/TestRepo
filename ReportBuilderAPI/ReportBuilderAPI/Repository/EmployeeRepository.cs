@@ -105,7 +105,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Select statement for the query
-                selectQuery = "SELECT  ";
+                selectQuery = "SELECT  DISTINCT";
 
                 //getting column List
                 query = string.Join("", (from column in columnList
