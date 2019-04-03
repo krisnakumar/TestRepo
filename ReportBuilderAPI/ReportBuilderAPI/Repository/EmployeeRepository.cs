@@ -86,7 +86,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         private readonly Dictionary<string, List<string>> tableJoins = new Dictionary<string, List<string>>()
         {
-            { " LEFT JOIN dbo.UserRole ur ON ur.UserId=u.User_Id  AND ur.IsEnabled=1 LEFT JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
+            { " JOIN dbo.UserRole ur ON ur.UserId=u.User_Id  AND ur.IsEnabled=1 JOIN dbo.Role r on r.Id=ur.roleId", new List<string> {Constants.ROLEID, Constants.ROLE} },
             { " LEFT JOIN dbo.Supervisor s ON s.userId=u.User_Id", new List<string> {Constants.SUPERVISOR_ID, Constants.REPORTING} },
             { " LEFT JOIN dbo.UserDepartment ud ON ud.userId=u.User_Id LEFT JOIN dbo.Department d on d.Id=ud.DepartmentId ", new List<string> {Constants.DEPARTMENT} }
         };
@@ -115,7 +115,7 @@ namespace ReportBuilderAPI.Repository
                 query = selectQuery + query;
 
                 //Append the user query with select statement
-                query += " FROM dbo.[UserDetails_RB] u  LEFT JOIN dbo.UserCompany uc on uc.UserId=u.User_Id AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1";
+                query += " FROM dbo.[UserDetails_RB] u  JOIN dbo.UserCompany uc on uc.UserId=u.User_Id AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1";
 
                 //get table joins
                 fieldList = employeeRequest.ColumnList.ToList();
