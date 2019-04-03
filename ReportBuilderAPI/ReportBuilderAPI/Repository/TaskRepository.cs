@@ -34,7 +34,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 companyId = queryBuilderRequest.CompanyId;
-                selectQuery = "SELECT  ";
+                selectQuery = "SELECT  DISTINCT";
 
                 //getting column List
                 query = string.Join("", (from column in taskColumnList
