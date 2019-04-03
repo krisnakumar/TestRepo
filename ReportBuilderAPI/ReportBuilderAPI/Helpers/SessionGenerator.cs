@@ -55,8 +55,8 @@ namespace ReportBuilderAPI.Helpers
             {
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
                 CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", userRequest.CognitoClientId, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider) { SessionTokens = new CognitoUserSession(null, null, userRequest.Payload.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
-
+                CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider, userRequest.ClientSecret) { SessionTokens = new CognitoUserSession(null, null, userRequest.Payload.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };
+                    
                 InitiateRefreshTokenAuthRequest authRequest = new InitiateRefreshTokenAuthRequest()
                 {
                     AuthFlowType = AuthFlowType.REFRESH_TOKEN

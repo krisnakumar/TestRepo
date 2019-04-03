@@ -289,25 +289,25 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.COMPLETED_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails_RB] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  us.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id AND ss.[desc]='COMPLETED'),0)) AS CompletedTasks"},
 
-                { Constants.INCOMPLETE_TASK, ", (SELECT ISNULL((SELECT COUNT(DISTINCT tk.Id) FROM dbo.[UserDetails_RB] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  u.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND tk.Id=t.Id AND wbc.WorkBookId=@workbookId AND ss.[desc]='FAILED'),0))  AS InCompleteTask"},
+                { Constants.INCOMPLETE_TASK, ", (SELECT ISNULL((SELECT COUNT(tk.Id) FROM dbo.[UserDetails_RB] us LEFT JOIN dbo.UserWorkBook uwb ON uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id LEFT JOIN dbo.TaskSkill tss ON tss.TaskVersionId=tv.Id LEFT JOIN dbo.SkillActivity sa ON sa.SkillId=tss.SkillId LEFT JOIN dbo.SCOStatus ss ON ss.status=sa.Status WHERE  u.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND tk.Id=t.Id AND wbc.WorkBookId=@workbookId AND ss.[desc]='FAILED'),0))  AS InCompleteTask"},
 
                 { Constants.TOTAL_TASK, ", (SELECT ISNULL((SELECT SUM(wbc.Repetitions) FROM dbo.[UserDetails_RB] us LEFT JOIN dbo.UserWorkBook uwb ON  uwb.UserId=us.User_Id LEFT JOIN dbo.WorkBookContent wbc ON wbc.WorkBookId=uwb.WorkBookId LEFT JOIN  dbo.Task tk ON tk.Id=wbc.EntityId LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=tk.Id WHERE  us.User_Id IN ((u.User_Id))  AND uwb.IsEnabled=1 AND wbc.WorkBookId=@workbookId AND tk.Id=t.Id),0)) AS TotalTasks"},
 
-                { Constants.ASSIGNED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId =u.User_Id AND cs.CompanyId=@companyId ) ,0)) AS  AssignedQualification" },
+                { Constants.ASSIGNED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskversionId) FROM dbo.courseAssignment cs  WHERE UserId =u.User_Id AND cs.CompanyId=@companyId ) ,0)) AS  AssignedQualification" },
 
-                { Constants.COMPLETED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE() AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  CompletedQualification" },
+                { Constants.COMPLETED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND Date_Knowledge_Cert_Expired > GETDATE() AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  CompletedQualification" },
 
-                 { Constants.DISQUALIFIED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 2 AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  DisqualifiedQualification" },
-
-
-                 { Constants.SUSPENDED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 4 AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  SuspendedQualification" },
+                 { Constants.DISQUALIFIED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 2 AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  DisqualifiedQualification" },
 
 
-                { Constants.IN_COMPLETE_QUALIFICATION,",  (SELECT ISNULL((SELECT COUNT(DISTINCT taskId) FROM dbo.TranscriptSkillsDN ts WHERE  Knowledge_Cert_Status IN (3, 2,0,4, 255) AND  ts.User_Id = u.User_Id AND ts.CompanyId=@companyId ) ,0)) AS IncompleteQualification" },
+                 { Constants.SUSPENDED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 4 AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  SuspendedQualification" },
 
-                { Constants.PAST_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate < GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS PastDueQualification" },
 
-                { Constants.IN_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT(DISTINCT taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate > GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS InDueQualification" },
+                { Constants.IN_COMPLETE_QUALIFICATION,",  (SELECT ISNULL((SELECT COUNT( taskId) FROM dbo.TranscriptSkillsDN ts WHERE  Knowledge_Cert_Status IN (3, 2,0,4, 255) AND  ts.User_Id = u.User_Id AND ts.CompanyId=@companyId ) ,0)) AS IncompleteQualification" },
+
+                { Constants.PAST_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate < GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS PastDueQualification" },
+
+                { Constants.IN_DUE_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskversionId) FROM dbo.courseAssignment cs  WHERE UserId = u.User_Id AND cs.IsEnabled = 1 AND cs.Status = 0 AND cs.IsCurrent = 1 AND cs.ExpirationDate > GETDATE() AND  ABS(DATEDIFF(DAY,GETDATE(),cs.ExpirationDate))<=@duedays AND cs.CompanyId=@companyId AND cs.FirstAccessed IS NULL ) ,0)) AS InDueQualification" },
 
                 { Constants.TOTAL_EMPLOYEES,", (SELECT COUNT(ss.UserId) FROM dbo.Supervisor ss LEFT JOIN dbo.UserCompany uc ON uc.UserId = ss.UserId AND uc.IsEnabled = 1 AND IsDirectReport=1 AND uc.IsVisible = 1 AND uc.Status = 1 WHERE ss.SupervisorId = @userId AND ss.UserId <> @userId AND uc.CompanyId = @companyId AND ss.IsEnabled = 1 AND ss.SupervisorId <>  @userId ) AS TotalEmployees" },
 
@@ -323,9 +323,9 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.TOTAL_COMPANY_EMPLOYEES,",  (SELECT COUNT(ss.UserId) FROM  dbo.Supervisor ss  LEFT JOIN dbo.UserCompany uc ON uc.UserId = ss.UserId AND uc.IsEnabled = 1 AND IsDirectReport=1  AND uc.IsVisible = 1 AND uc.Status = 1    WHERE uc.CompanyId = cy.Id  AND ss.IsEnabled = 1 ) AS TotalEmployees" },
 
-                { Constants.COMPLETED_ROLE_QUALIFICATION,", (SELECT COUNT(DISTINCT CompanyId)FROM dbo.TranscriptSkillsDN WHERE IsEnabled=1 AND  Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND User_ID=ur.UserId) AS CompletedRoleQualification" },
+                { Constants.COMPLETED_ROLE_QUALIFICATION,", (SELECT COUNT(CompanyId)FROM dbo.TranscriptSkillsDN WHERE IsEnabled=1 AND  Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND User_ID=ur.UserId) AS CompletedRoleQualification" },
 
-                { Constants.NOT_COMPLETED_ROLE_QUALIFICATION,", (SELECT COUNT(DISTINCT CompanyId)FROM dbo.TranscriptSkillsDN WHERE IsEnabled=1 AND  Knowledge_Cert_Status != 1 AND Knowledge_Status_Code != 5 AND User_ID=ur.UserId) as NotCompletedRoleQualification" },
+                { Constants.NOT_COMPLETED_ROLE_QUALIFICATION,", (SELECT COUNT(CompanyId)FROM dbo.TranscriptSkillsDN WHERE IsEnabled=1 AND  Knowledge_Cert_Status != 1 AND Knowledge_Status_Code != 5 AND User_ID=ur.UserId) as NotCompletedRoleQualification" },
 
                 { Constants.EMPLOYEE_NAME,", Full_Name_Format1  as employeeName" },
 
