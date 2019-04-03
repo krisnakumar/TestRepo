@@ -456,14 +456,11 @@ class OQDashboard extends PureComponent {
    * @param userId
    * @returns none
    */
-  async getAssignedQualifications(userId, companyClientId) {
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
+  async getAssignedQualifications(userId, companyId) {
     const { cookies } = this.props;
     const payLoad = {
       "Fields": [
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=" }
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
       ],
       "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
     };
@@ -493,15 +490,12 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getCompletedQualifications(userId, companyClientId) {
+  async getCompletedQualifications(userId, companyId) {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "COMPLETED", "Value": "true", "Operator": "=" },
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=", "Bitwise": "AND" }
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "COMPLETED", "Value": "true", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
     };
@@ -530,15 +524,12 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getInCompletedQualifications(userId, companyClientId) {
+  async getInCompletedQualifications(userId, companyId) {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=" },
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=", "Bitwise": "AND"  },
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
     };
@@ -567,15 +558,12 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getPastDueQualifications(userId, companyClientId) {
+  async getPastDueQualifications(userId, companyId) {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "PAST_DUE", "Value": "30", "Operator": "=" },
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=", "Bitwise": "AND"  }
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "PAST_DUE", "Value": "30", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
     };
@@ -604,15 +592,12 @@ class OQDashboard extends PureComponent {
   * @param userId
   * @returns none
   */
-  async getComingDueQualifications(userId, companyClientId) {
+  async getComingDueQualifications(userId, companyId) {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "IN_DUE", "Value": "30", "Operator": "=" },
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=", "Bitwise": "AND"  },
+        // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
+        { "Name": "IN_DUE", "Value": "30", "Operator": "=" }
       ],
       "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
     };
@@ -642,15 +627,11 @@ class OQDashboard extends PureComponent {
      * @param userId
      * @returns none
     */
-  async getEmployeeQualifications(userId, companyClientId) {
+  async getEmployeeQualifications(userId, companyId) {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-        { "Name": "COMPANY_CLIENT", "Value": companyClientId, "Operator": "=", "Bitwise": "AND" },
+        { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
       ],
       "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
     };
