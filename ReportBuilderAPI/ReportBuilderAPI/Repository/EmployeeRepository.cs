@@ -143,6 +143,14 @@ namespace ReportBuilderAPI.Repository
                     employeeRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_ID_HANDLER : x.Name).ToList();
                 }
 
+
+                //Remove student details from the List
+                if (employeeRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).ToList().Count > 0)
+                {
+                    EmployeeModel userDetails = employeeRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).FirstOrDefault();
+                    employeeRequest.Fields.Remove(userDetails);
+                }
+
                 //getting where conditions
                 whereQuery = string.Join("", from employee in employeeRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (employeeFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() +
