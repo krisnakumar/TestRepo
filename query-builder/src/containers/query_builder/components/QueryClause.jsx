@@ -1095,8 +1095,10 @@ class QueryClause extends PureComponent {
                                     />
                                 </td>
                                 <td className={"tableWidth-20"}>
-                                    <Select
+                                    {<Select
                                         onOpen={_self.onOpenClose.bind()}
+                                        isDisabled={true}
+                                        disabled={field.type == "bool"}
                                         clearable={false}
                                         autosize={false}
                                         isRtl={true}
@@ -1110,6 +1112,7 @@ class QueryClause extends PureComponent {
                                         deleteRemoves={false}
                                         placeholder={""}
                                     />
+                                    }
                                 </td>
                                 <td>
                                     {

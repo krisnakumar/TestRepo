@@ -116,6 +116,12 @@
 				"label": "Not Equal To"
 			}
 		],
+		"bool": [
+			{
+				"value": "=",
+				"label": "Equal To"
+			}
+		],
 		"int": [
 			{
 				"value": "=",
@@ -889,7 +895,7 @@
 			},
 			{
 				"value": "photo",
-				"type": "text",
+				"type": "bool",
 				"label": "Has Photo",
 				"validation": "isEmpty",
 				"smartParam": "bool",
@@ -898,7 +904,7 @@
 			},
 			{
 				"value": "qrcode",
-				"type": "text",
+				"type": "bool",
 				"label": "Has QR Code",
 				"validation": "isEmpty",
 				"smartParam": "bool",
@@ -907,7 +913,7 @@
 			},
 			{
 				"value": "department",
-				"type": "text",
+				"type": "bool",
 				"label": "Has Department",
 				"validation": "isEmpty",
 				"smartParam": "bool",
@@ -955,7 +961,7 @@
 			},
 			{
 				"value": "isEnabled",
-				"type": "text",
+				"type": "bool",
 				"label": "Is Enabled",
 				"validation": "isEmpty",
 				"smartParam": "bool",
