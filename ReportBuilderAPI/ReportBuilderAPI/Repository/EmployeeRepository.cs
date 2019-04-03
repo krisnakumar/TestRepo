@@ -188,15 +188,12 @@ namespace ReportBuilderAPI.Repository
             {
                 //Assign the request details to corresponding objects
                 companyId = Convert.ToInt32(queryBuilderRequest.CompanyId);
-                userId = Convert.ToString(queryBuilderRequest.UserId);
                 queryBuilderRequest = queryBuilderRequest.Payload;
                 queryBuilderRequest.CompanyId = companyId;
 
                 //Read sql parameters from the DB
-                if (queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).ToList().Count > 0)
-                {
-                    userId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
-                }
+                userId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.USERID).Select(x => x.Value).FirstOrDefault();
+
 
                 //Create the query based on the input fields
                 query = CreateEmployeeQuery(queryBuilderRequest);
