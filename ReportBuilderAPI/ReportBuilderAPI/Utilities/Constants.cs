@@ -207,7 +207,7 @@ namespace ReportBuilderAPI.Utilities
 
         public const string ROLE_ID = "ROLE_ID";
 
-        public const string COMPANY_CLIENT = "COMPANY_CLIENT";
+        
 
         public const string NOT_COMPLETED_ROLE_QUALIFICATION = "NOT_COMPLETED_ROLE_QUALIFICATION";
 
@@ -239,5 +239,8 @@ namespace ReportBuilderAPI.Utilities
         public const string IS_NOT_NULL = " IS NOT NULL";
 
         public const string DUE_DAYS_VALUE = "30";
+        public const string TRAINING_DASHBOARD = "TRAINING_DASHBOARD";
+        public const string OQ_DASHBOARD = "OQ_DASHBOARD";
+
     }
 }

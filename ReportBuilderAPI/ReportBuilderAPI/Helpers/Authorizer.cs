@@ -19,7 +19,7 @@ namespace ReportBuilderAPI.Helpers
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="companyId"></param>
-        public UserCompany ValidateUser(int userId, int companyId, string appType = "", string studentDetails = "")
+        public bool ValidateUser(int userId, int companyId, string appType = "", string studentDetails = "")
         {
             try
             {
@@ -41,27 +41,41 @@ namespace ReportBuilderAPI.Helpers
                             {
                                 if (IsMyStudent(studentDetails, userCompany, userId, companyId))
                                 {
-                                    return userCompany;
+                                    return true;
                                 }
                                 else
                                 {
-                                    return null;
+                                    return false;
                                 }
                             }
-                            return userCompany;
+                            return true;
                         }
                         else
                         {
-                            return null;
+                            return false;
                         }
                     }
-                    return userCompany;
+                    else
+                    {
+                        if (appType == Constants.TRAINING_DASHBOARD || appType == Constants.OQ_DASHBOARD)
+                        {
+                            bool clientCompany = (from uc in context.UserCompany
+                                                  join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
+                                                  where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && uc.UserId == userId
+                                                  select uc).Any();
+                            if (clientCompany)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    return true;
                 }
             }
             catch (Exception validateUserException)
             {
                 LambdaLogger.Log(validateUserException.ToString());
-                return null;
+                return false;
             }
         }
 

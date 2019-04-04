@@ -60,6 +60,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             try
             {
                 userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
+                //userRequest.ClientSecret = Environment.GetEnvironmentVariable("ClientSecret").ToString();
                 return authenticationRepository.SilentAuth(userRequest);
             }
             catch (Exception silentAuthException)
@@ -88,7 +89,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
                 {
                     return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
                 }
@@ -121,7 +122,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
                 {
                     return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
                 }
@@ -155,7 +156,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
                 {
                     return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
                 }
@@ -187,7 +188,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId))
                 {
                     return queryRepository.SaveQuery(queryBuilderRequest);
                 }
@@ -219,7 +220,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId))
                 {
                     return queryRepository.GetUserQueries(queryBuilderRequest);
                 }
@@ -250,7 +251,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId))
                 {
                     return queryRepository.RenameQuery(queryBuilderRequest);
                 }
@@ -281,7 +282,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId))
                 {
                     return queryRepository.DeleteQuery(queryBuilderRequest);
                 }
@@ -313,7 +314,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId))
                 {
                     return queryRepository.GetUserQuery(queryBuilderRequest);
                 }
@@ -344,7 +345,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId) != null)
+                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId))
                 {
                     return roleRepository.GetRoles(roleRequest);
                 }
