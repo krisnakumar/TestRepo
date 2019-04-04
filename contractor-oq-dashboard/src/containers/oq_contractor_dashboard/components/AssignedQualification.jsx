@@ -134,7 +134,6 @@ class AssignedQualification extends PureComponent {
                 assignedDate: qualifications[i].AssignedDate
             });
         }
-
         return rows;
     };
 

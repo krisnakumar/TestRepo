@@ -417,6 +417,7 @@ class ContractorView extends PureComponent {
         employeesQualificationsArray.push(employeeQualifications);
         isEmployeeView = true;
         this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -450,6 +451,7 @@ class ContractorView extends PureComponent {
         assignedQualifications = response;
         isAssignedQualificationView = true;
         this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -485,6 +487,7 @@ class ContractorView extends PureComponent {
         completedQualifications = response;
         isCompletedQualificationView = true;
         this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -520,6 +523,7 @@ class ContractorView extends PureComponent {
         inCompletedQualifications = response;
         isInCompletedQualificationView = true;
         this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -555,6 +559,7 @@ class ContractorView extends PureComponent {
         pastDueQualifications = response;
         isPastDueQualificationView = true;
         this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
+        window.dispatchEvent(new Event('resize'));
     };
 
     /**
@@ -590,6 +595,7 @@ class ContractorView extends PureComponent {
         comingDueQualifications = response;
         isComingDueQualificationView = true;
         this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
+        window.dispatchEvent(new Event('resize'));
     };
 
     render() {
