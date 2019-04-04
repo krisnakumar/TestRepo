@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Helpers
             try
             {
                 //Get the list of Id details
-                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID || x.Name.ToUpper() == Constants.SUPERVISOR_SUB || x.Name.ToUpper() == Constants.SUPERVISOR_USER || x.Name.ToUpper() == Constants.COMPANY_USER_ID).Select(x => x.Value).FirstOrDefault();
+                supervisorId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.SUPERVISOR_ID || x.Name.ToUpper() == Constants.SUPERVISOR_SUB || x.Name.ToUpper() == Constants.SUPERVISOR_USER || x.Name.ToUpper() == Constants.COMPANY_USER_ID || x.Name.ToUpper() == Constants.NOT_SUPERVISORID).Select(x => x.Value).FirstOrDefault();
                 workbookId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.WORKBOOK_ID).Select(x => x.Value).FirstOrDefault();
                 taskId = queryRequest.Fields.Where(x => x.Name.ToUpper() == Constants.TASK_ID).Select(x => x.Value).FirstOrDefault();
                 dueDays = Convert.ToString(queryRequest.Fields.Where(x => x.Name.ToUpper() == (Constants.WORKBOOK_IN_DUE) || x.Name.ToUpper() == (Constants.PAST_DUE)).Select(x => x.Value).FirstOrDefault());
@@ -60,7 +60,7 @@ namespace ReportBuilderAPI.Helpers
         /// <param name="parameters"></param>
         public static SqlParameter[] CreateSqlParameter(Dictionary<string, string> parameters)
         {
-            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty, roles = string.Empty, companies=string.Empty;
+            string userId = string.Empty, companyId = string.Empty, workbookId = string.Empty, dueDays = string.Empty, roleId = string.Empty, roles = string.Empty, companies = string.Empty;
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
 
             try

@@ -100,7 +100,7 @@ namespace ReportBuilderAPI.Helpers
             {
                 if (inputOperator.ToUpper() == Constants.BETWEEN)
                 {
-                    string[] dateList = value.Split("AND");
+                    string[] dateList = value.ToUpper().Split("AND");
                     dateValue += " BETWEEN '" + dateList[0] + "'";
                     dateValue += " AND '" + dateList[1] + "'";
                 }
