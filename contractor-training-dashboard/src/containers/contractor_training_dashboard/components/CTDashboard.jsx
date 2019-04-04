@@ -314,8 +314,8 @@ class CTDashboard extends PureComponent {
       "AppType": "TRAINING_DASHBOARD"
     };
     let token = idToken,
-    url = "/company/" + companyId + "/tasks",
-    response = await API.ProcessAPI(url, postData, token, false, "POST", true);
+      url = "/company/" + companyId + "/tasks",
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
     companyDetails = response;
 
@@ -533,6 +533,7 @@ class CTDashboard extends PureComponent {
     let collapseClassName = (collapse ? "show" : "hide"),
       filteredRolesLength = filteredRoles.length,
       filteredCompaniesLength = filteredCompanies.length;
+    let basePath = window.location.origin || "";
     return (
       <CardBody>
         <ContractorCompanyDetail
@@ -561,6 +562,7 @@ class CTDashboard extends PureComponent {
           filterOptionsCompanies={this.state.filterOptionsCompanies}
         />
         <div className="card__title">
+          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
           <Export
             data={this.state.rows}
             heads={this.heads}

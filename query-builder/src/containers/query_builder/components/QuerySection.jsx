@@ -376,16 +376,16 @@ class QuerySection extends PureComponent {
     * @returns none
    */
   onSaveQueryClick = () => {
-      this.setState({ isSaveModal: true });
+    this.setState({ isSaveModal: true });
   };
 
-   /**
-    * @method
-    * @name - saveQuery
-    * This method Add or remove the column from initial state
-    * @param none
-    * @returns none
-   */
+  /**
+   * @method
+   * @name - saveQuery
+   * This method Add or remove the column from initial state
+   * @param none
+   * @returns none
+  */
   saveQuery = () => {
     this.setState({ isSaveModal: false });
     this.queryPane.current.saveQuery();
@@ -540,6 +540,7 @@ class QuerySection extends PureComponent {
     const { selectedOption, isClearable } = this.state;
     this.state.resultSet = [];
     let fieldDataTemp = FieldData;
+    let basePath = window.location.origin || "";
     switch (selectedOption.value) {
       case 'employees':
         this.state.resultSet = JSON.parse(JSON.stringify(fieldDataTemp.columns.employees));
@@ -556,6 +557,7 @@ class QuerySection extends PureComponent {
     return (
       <CardBody className="query-builder-fixed-height">
         <div className="card__title">
+          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
           <div className="pageheader">
             <img src="https://d2tqbrn06t95pa.cloudfront.net/img/topnav_reports.png?v=2" /> Query Builder
             </div>
@@ -580,7 +582,7 @@ class QuerySection extends PureComponent {
         <Modal backdrop={"static"} isOpen={this.state.isSaveModal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-reset">
           <ModalHeader toggle={this.toggle}>Save Query</ModalHeader>
           <ModalBody>
-            Query Name:  <input/>
+            Query Name:  <input />
           </ModalBody>
           <ModalFooter>
             <button color="primary" onClick={this.saveQuery}>Save</button>{' '}
@@ -631,7 +633,7 @@ class QuerySection extends PureComponent {
               </button>
             </Col> */}
             <Col xs="auto">
-               {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} columnOptions={this.state.empColumnList} />}
+              {this.state.isEmployee && <EmployeeExport employees={this.state.employees} entity={selectedOption.value} columnOptions={this.state.empColumnList} />}
               {this.state.isWorkbook && <WorkbookExport workbooks={this.state.workbooks} entity={selectedOption.value} columnOptions={this.state.workbookColumnList} />}
               {this.state.isTask && <TaskExport tasks={this.state.tasks} entity={selectedOption.value} columnOptions={this.state.taskColumnList} />}
             </Col>
@@ -649,8 +651,8 @@ class QuerySection extends PureComponent {
               passEmployeesColumnsToQuerySection={this.passEmployeesColumns}
               passTasksColumnsToQuerySection={this.passTasksColumns}
               passWorkbooksColumnsToQuerySection={this.passWorkbooksColumns}
-              onSaveQueryClick = {this.onSaveQueryClick}
-               />
+              onSaveQueryClick={this.onSaveQueryClick}
+            />
             <div id="queryResultSet">
               {this.state.isEmployee && <EmployeeResultSet columns={this.empHeads} ref={this.employeeResultSet} employees={this.state.employees} />}
               {this.state.isWorkbook && <WorkbookResultSet columns={this.workbookHeads} ref={this.workbookResultSet} workbooks={this.state.workbooks} />}

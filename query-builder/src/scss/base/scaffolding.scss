@@ -294,7 +294,7 @@ img {
 }
 
 .query-section-table thead{
-  background-color: #093254;
+  background-color: #233555;
     th {
       padding: 7px 0px 6px 7px;
     }
@@ -799,7 +799,7 @@ button.query-action-btn.delete:disabled {
   position: relative;
   top: -29px;
   right: -38px;
-  color: #093254;
+  color: #233555;
 
   span {
     font-size: 20px;
@@ -1113,3 +1113,16 @@ button.grid-filter-go-btn {
 .DayPicker-NavButton--prev {
   margin-right: 12.5em !important;
 }
+
+.breadcrumbs {
+  color: #233555;
+  font-size: 10px;
+  margin: -20px 1px 5px 1px !important;
+  }
+  
+  .breadcrumbs a {
+  font-size: 11px;
+  color: #233555;
+  text-decoration: none;
+  margin: 0px 5px 0px 5px;
+  }

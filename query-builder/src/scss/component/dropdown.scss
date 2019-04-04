@@ -44,12 +44,12 @@
   // padding: 15px 0;
   box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
   font-size: 13px;
-  background: #093254;
+  background: #233555;
   transform: translate3d(0px, 48px, 0px) !important; 
   padding: 0 !important; 
 
   @include themify($themes) {
-    background: #0c3254;
+    background: #233555;
   }
 
   button {
