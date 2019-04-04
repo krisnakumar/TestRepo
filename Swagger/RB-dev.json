@@ -56,7 +56,7 @@
                }
             },
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SilentAuth_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -64,14 +64,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json": "{\r\n    \"Payload\" : $input.json('$'),\r\n    \"UserName\" :  \"$context.authorizer.claims['cognito:username']\"\r\n}"
+                  "application/json": "{    \"Payload\" : $input.json('$'),    \"UserName\" :  \"$context.authorizer.claims['cognito:username']\"}"
                },
                "type":"aws"
             }
@@ -195,7 +195,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetEmployeesQueryBuilder_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -203,14 +203,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n    \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),    \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -342,7 +342,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetWorkbookQueryBuilder_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -350,14 +350,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -489,7 +489,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetTasks_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -497,14 +497,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -636,7 +636,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetRoles_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -644,14 +644,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -775,7 +775,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetCompanies_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -783,14 +783,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n  \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{  \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -923,7 +923,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SaveQuery_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -931,14 +931,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -1082,7 +1082,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_RenameQuery_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1091,14 +1091,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -1246,7 +1246,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_DeleteQuery_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1255,14 +1255,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -1407,7 +1407,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQueries_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1415,14 +1415,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
@@ -1563,7 +1563,7 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations",
+               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQuery_dev/invocations",
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1571,14 +1571,14 @@
                         "method.response.header.Access-Control-Allow-Origin":"'*'"
                      },
                      "responseTemplates":{  
-                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"401\"))\r\n#set($context.responseOverride.status = 401)\r\n#end"
+                        "application/json":"#set($inputRoot = $input.path('$'))\r\n$input.json(\"$\")\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"500\"))\r\n#set($context.responseOverride.status = 500)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"400\"))\r\n#set($context.responseOverride.status = 400)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"403\"))\r\n#set($context.responseOverride.status = 403)\r\n#end\r\n#if($inputRoot.toString().contains(\"Error\") && $inputRoot.toString().contains(\"401\"))#set($context.responseOverride.status = 401)\r\n#end"
                      }
                   }
                },
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{\r\n    \"CompanyId\" : \"$input.params('companyId')\",\r\n    \"Payload\" : $input.json('$'),\r\n     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",\r\n    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"\r\n}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'),     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }

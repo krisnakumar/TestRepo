@@ -55,14 +55,7 @@
             "StageName": {
                "Ref": "ITSEnvironment"
             },
-            "DefinitionBody": {
-                "Fn::Transform": {
-                    "Name": "AWS::Include",
-                    "Parameters": {
-                        "Location": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
-                    }
-                }
-            }
+            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
          }
       },
       "GetEmployeesDetails": {
