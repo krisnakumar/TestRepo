@@ -427,8 +427,8 @@ class OQDashboard extends PureComponent {
     }
     const payLoad = {
       "Fields": fields,
-      "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS
-
+      "ColumnList": Constants.GET_COMPANY_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let { dashboardAPIToken } = sessionStorage || '{}';
@@ -462,7 +462,8 @@ class OQDashboard extends PureComponent {
       "Fields": [
         // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isAssignedQualificationView = this.state.isAssignedQualificationView,
@@ -497,7 +498,8 @@ class OQDashboard extends PureComponent {
         // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
         { "Name": "COMPLETED", "Value": "true", "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isCompletedQualificationView = this.state.isCompletedQualificationView,
@@ -531,7 +533,8 @@ class OQDashboard extends PureComponent {
         // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
         { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isInCompletedQualificationView = this.state.isInCompletedQualificationView,
@@ -565,7 +568,8 @@ class OQDashboard extends PureComponent {
         // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
         { "Name": "PAST_DUE", "Value": "30", "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isPastDueQualificationView = this.state.isPastDueQualificationView,
@@ -599,7 +603,8 @@ class OQDashboard extends PureComponent {
         // { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
         { "Name": "IN_DUE", "Value": "30", "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isComingDueQualificationView = this.state.isComingDueQualificationView,
@@ -633,7 +638,8 @@ class OQDashboard extends PureComponent {
       "Fields": [
         //{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
       ],
-      "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS
+      "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
     };
 
     let isEmployeeView = this.state.isEmployeeView,
