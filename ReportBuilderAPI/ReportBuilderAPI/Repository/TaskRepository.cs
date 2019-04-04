@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns></returns>
         public string CreateTaskQuery(QueryBuilderRequest queryBuilderRequest)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, dashboardName = string.Empty;
             List<string> fieldList = new List<string>();
             int companyId = 0;
             try
@@ -92,6 +92,8 @@ namespace ReportBuilderAPI.Repository
                     whereQuery = !queryBuilderRequest.ColumnList.Contains(Constants.COMPANY_NAME) ? ((!string.IsNullOrEmpty(whereQuery)) ? (" WHERE uc.CompanyId IN (" + companyId + ") AND  (" + whereQuery + ")") : (" WHERE uc.CompanyId=" + companyId)) : (" WHERE (" + whereQuery + ")");
                 }
                 query += whereQuery;
+
+                query = query.Replace("@dashboard", queryBuilderRequest.AppType);
                 return query;
             }
             catch (Exception createTaskQueryException)
@@ -170,7 +172,7 @@ namespace ReportBuilderAPI.Repository
                             while (sqlDataReader.Read())
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
-                                //get the taskcomment from the payload
+                                //Get the taskcomment from the payload
                                 TaskModel taskComment = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
 
                                 //Get the task details from the database
@@ -323,6 +325,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.ROLE,", (SELECT STUFF((SELECT DISTINCT ', ' + r.Name FROM dbo.UserRole ur JOIN dbo.Role r ON r.Id=ur.roleId  WHERE ur.UserId=u.User_Id FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)'), 1, 2, '')) As Role" },
                 {Constants.ROLE_ID, ", r.Id as roleId" },
+                {Constants.TRAINING_ROLE, ", r.Name as Role" },
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
                 {Constants.LOCK_OUT_REASON, ", ca.LockoutReason as LockoutReason " },
 
@@ -396,10 +399,11 @@ namespace ReportBuilderAPI.Repository
               { " FROM dbo.Task t LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id  JOIN dbo.CourseAssignment ca on ca.TaskversionId=tv.Id AND ca.IsEnabled = 1 AND ca.Status = 0 AND ca.IsCurrent = 1   JOIN  dbo.UserRole ur on ur.UserId=ca.UserId AND ur.IsEnabled = 1   JOIN dbo.Role r on r.Id=ur.roleId AND r.IsEnabled = 1  JOIN dbo.UserCompany uc on uc.UserId=ur.UserId    AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 LEFT JOIN dbo.[UserDetails_RB] u on u.User_Id=uc.UserId AND u.Is_Enabled = 1 LEFT JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany AND cc.IsEnabled=1 AND cc.ClientCompany!=uc.CompanyId   JOIN dbo.Company cy on cy.Id=uc.CompanyId AND cy.IsEnabled=1 " , new List<string> {Constants.COMPLETED_COMPANY_USERS, Constants.NOT_COMPLETED_COMPANY_USERS, Constants.TOTAL_COMPLETED_COMPANY_USERS, Constants.ASSIGNED_DATE } },
 
              { " FROM   dbo.usercompany uc  JOIN dbo.[userdetails_rb] u  ON u.user_id = uc.userid AND uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 AND u.is_enabled = 1  JOIN dbo.supervisor s  ON s.userid = u.user_id  AND isdirectreport = 1 AND s.IsEnabled=1 JOIN dbo.company cy ON cy.id = uc.companyid AND cy.isenabled = 1 " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION,   Constants.LOCK_OUT_REASON } },
+             { " FROM   dbo.usercompany uc  JOIN dbo.[userdetails_rb] u  ON u.user_id = uc.userid AND uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 AND u.is_enabled = 1  JOIN dbo.supervisor s  ON s.userid = u.user_id  AND isdirectreport = 1 AND s.IsEnabled=1 JOIN dbo.company cy ON cy.id = uc.companyid AND cy.isenabled = 1 " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION,   Constants.LOCK_OUT_REASON } },
 
-               { "FROM (SELECT @companyId  AS [company_id] UNION SELECT c.Id AS [company_id] FROM dbo.UserCompany uc  JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany  WHERE uc.IsDefault=1	AND uc.IsEnabled=1	AND uc.UserId=@userId AND cc.IsEnabled=1	and c.IsEnabled=1  AND cc.ClientCompany!=uc.CompanyId)  As ClientCompanies JOIN dbo.usercompany uc ON uc.companyid = ClientCompanies.[company_id] JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id JOIN dbo.company cy ON ClientCompanies.[company_id]=cy.id GROUP  BY cy.NAME, cy.id,uc.companyid		" , new List<string> { Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES } },
+               { "FROM (SELECT c.Id AS [company_id] FROM dbo.UserCompany uc  JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany  WHERE uc.IsDefault=1	AND uc.IsEnabled=1	AND uc.UserId=@userId AND cc.IsEnabled=1	and c.IsEnabled=1  AND cc.ClientCompany!=uc.CompanyId)  As ClientCompanies JOIN dbo.usercompany uc ON uc.companyid = ClientCompanies.[company_id] JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id JOIN dbo.company cy ON ClientCompanies.[company_id]=cy.id GROUP  BY cy.NAME, cy.id,uc.companyid		" , new List<string> { Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES } },
 
-                 { "  FROM   dbo.UserRole ur       JOIN dbo.Role r  ON r.id = ur.roleid AND ur.IsEnabled = 1 AND r.IsEnabled = 1      JOIN dbo.UserCompany uc         ON uc.userid = ur.userid            AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1   JOIN [UserDetails_RB] u on u.User_Id=uc.UserId AND u.Is_Enabled = 1 JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany    JOIN dbo.Company c ON c.Id = cc.ClientCompany WHERE uc.IsDefault=1     AND uc.IsEnabled=1        AND cc.IsEnabled=1    and c.IsEnabled=1    AND cc.ClientCompany!=uc.CompanyId AND  uc.companyid IN ( @companyId )       AND ( r.isshared = '1' ) 	   Group by ur.userId, ur.RoleId, r.name, r.Id, u.User_Id" , new List<string> {      Constants.COMPLETED_ROLE_QUALIFICATION, Constants.NOT_COMPLETED_ROLE_QUALIFICATION, Constants.IS_SHARED } }
+                 { "  FROM   Reporting_Dashboard rd JOIN dbo.Reporting_DashboardRole rdr ON rdr. DashboardId=rd.Id JOIN Role r ON r.id=rdr.RoleId AND r.IsEnabled=1 JOIN dbo.UserRole ur ON r.Id = ur.roleid AND ur.isenabled = 1 JOIN dbo.UserCompany uc  ON uc.userid = ur.userid  AND uc.isenabled = 1  AND uc.status = 1 AND uc.isvisible = 1 AND uc.isdefault = 1 JOIN [userdetails_rb] u ON u.user_id = uc.userid AND u.is_enabled = 1 JOIN dbo.companyclient cc ON uc.companyid = cc.ownercompany JOIN dbo.company c ON c.id = cc.clientcompany WHERE  uc.isdefault = 1 AND uc.isenabled = 1  AND cc.isenabled = 1 AND c.isenabled = 1 AND cc.clientcompany != uc.companyid AND uc.companyid IN ( @companyId ) AND DashboardName='@dashboard' GROUP  BY ur.userid, ur.roleid,  r.NAME, r.id, u.User_Id " , new List<string> {      Constants.COMPLETED_ROLE_QUALIFICATION, Constants.NOT_COMPLETED_ROLE_QUALIFICATION, Constants.IS_SHARED } }
 
 
 

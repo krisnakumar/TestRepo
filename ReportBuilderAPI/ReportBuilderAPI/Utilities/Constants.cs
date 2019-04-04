@@ -40,6 +40,9 @@ namespace ReportBuilderAPI.Utilities
         public const string ZIP = "ZIP";
         public const string COUNTRY = "COUNTRY";
         public const string SUPERVISOR_ID = "SUPERVISOR_ID";
+
+        public const string TRAINING_ROLE = "TRAINING_ROLE";
+
         public const string NOT_SUPERVISORID = "NOT_SUPERVISORID ";
         public const string SUPERVISOR_USER = "SUPERVISOR_USER";
         public const string SUPERVISOR_ID_HANDLER = "SUPERVISOR_ID_HANDLER";
@@ -207,7 +210,7 @@ namespace ReportBuilderAPI.Utilities
 
         public const string ROLE_ID = "ROLE_ID";
 
-        
+
 
         public const string NOT_COMPLETED_ROLE_QUALIFICATION = "NOT_COMPLETED_ROLE_QUALIFICATION";
 
