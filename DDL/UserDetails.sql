@@ -20,8 +20,8 @@ SELECT        Id AS User_Id, UserName2 AS Alternate_User_Name, UserName AS User_
                          ForumPerms AS Forum_Permissions, ComPerms AS Communication_Permissions, ReportsPerms AS Report_Permissions, 
                          AnnouncementPerms AS Announcement_Permission, SystemPerms AS System_Permissions, Email, FName AS First_Name, LName AS Last_Name, 
                          MName AS Middle_Name, Preference, RemoteId AS Remote_Id, ISNetworldId AS ISNetworld_Id, PIIFields AS PII_Fields,
-						 City AS City, State, Zip, Phone, Photo, BarcodeHash
-FROM            dbo.[User] WITH (NOLOCK)
+						 City AS City, State, Zip, Phone, Photo, BarcodeHash, Street1, Street2
+						 FROM            dbo.[User] WITH (NOLOCK)
 GO
 
 
