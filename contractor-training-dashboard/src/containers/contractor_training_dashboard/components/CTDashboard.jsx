@@ -209,7 +209,8 @@ class CTDashboard extends PureComponent {
     }
     const postData = {
       "Fields": fields,
-      "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE']
+      "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE'],
+      "AppType": "TRAINING_DASHBOARD"
     };
     let { dashboardAPIToken } = sessionStorage || {};
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
@@ -309,7 +310,8 @@ class CTDashboard extends PureComponent {
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const postData = {
       "Fields": fields,
-      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID']
+      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID'],
+      "AppType": "TRAINING_DASHBOARD"
     };
     let token = idToken,
     url = "/company/" + companyId + "/tasks",

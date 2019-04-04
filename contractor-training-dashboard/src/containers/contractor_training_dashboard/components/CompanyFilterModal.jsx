@@ -17,28 +17,6 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
-const companiesList = [
-    {
-        "text": "Company 1",
-        "id": "1"
-    }, {
-        "text": "Company 2",
-        "id": "2"
-    }, {
-        "text": "Company 3",
-        "id": "3"
-    }, {
-        "text": "Company 4",
-        "id": "4"
-    }, {
-        "text": "Company 5",
-        "id": "5"
-    }, {
-        "text": "Company 6",
-        "id": "6"
-    }
-];
-
 class CompanyFilterModal extends React.Component {
 
     static propTypes = {
@@ -51,7 +29,7 @@ class CompanyFilterModal extends React.Component {
         this.state = {
             modal: this.props.modal,
             title: this.props.title || "",
-            options: this.props.filterOptionsCompanies || companiesList,
+            options: this.props.filterOptionsCompanies || [],
             arrayValue: [],
             companyFilterSearchValue: "",
             tags: [],

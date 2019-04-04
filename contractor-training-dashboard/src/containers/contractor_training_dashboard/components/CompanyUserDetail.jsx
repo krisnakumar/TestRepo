@@ -279,7 +279,8 @@ class CompanyUserDetail extends React.Component {
     
     const postData = {
       "Fields": fields,
-      "ColumnList": ['TASK_NAME', 'TASK_CODE', 'STATUS']
+      "ColumnList": ['TASK_NAME', 'TASK_CODE', 'STATUS'],
+      "AppType": "TRAINING_DASHBOARD"
     };
 
     let isTaskDetailsModal = this.state.isTaskDetailsModal,

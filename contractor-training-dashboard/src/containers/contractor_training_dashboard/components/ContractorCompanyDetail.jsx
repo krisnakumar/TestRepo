@@ -191,7 +191,8 @@ class ContractorCompanyDetail extends React.Component {
     }
     const postData = {
       "Fields": fields,
-      "ColumnList": ['USER_ID', 'COMPANY_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION']
+      "ColumnList": ['USER_ID', 'COMPANY_ID', 'EMPLOYEE_NAME', 'ASSIGNED_COMPANY_QUALIFICATION', 'COMPLETED_COMPANY_QUALIFICATION', 'IN_COMPLETE_COMPANY_QUALIFICATION'],
+      "AppType": "TRAINING_DASHBOARD"
     };
 
     let isUserDetailsModal = this.state.isUserDetailsModal,
