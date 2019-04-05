@@ -313,7 +313,7 @@ class CTDashboard extends PureComponent {
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const postData = {
       "Fields": fields,
-      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID'],
+      "ColumnList": ['NOT_COMPLETED_COMPANY_USERS', 'COMPLETED_COMPANY_USERS', 'TOTAL_COMPLETED_COMPANY_USERS', 'COMPANY_NAME', 'COMPANY_ID', 'ROLE_ID'],
       "AppType": "TRAINING_DASHBOARD"
     };
     let token = idToken,
@@ -336,7 +336,6 @@ class CTDashboard extends PureComponent {
   * @returns rows
   */
   createRows = (roleDetails) => {
-    debugger
     const rows = [],
       length = roleDetails ? roleDetails.length : 0;
     for (let i = 0; i < length; i++) {

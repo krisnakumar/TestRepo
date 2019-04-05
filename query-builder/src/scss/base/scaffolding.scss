@@ -672,7 +672,7 @@ button.query-action-btn.delete:disabled {
 
 .react-grid-Grid {
   min-height: 350px !important;
-  max-height: 500px !important;
+  // max-height: 500px !important;
 }
 
 .react-grid-Cell:focus {
@@ -1125,4 +1125,17 @@ button.grid-filter-go-btn {
   color: #233555;
   text-decoration: none;
   margin: 0px 5px 0px 5px;
+  }
+
+  #pp860{
+    padding: 0px; margin: 0px; width: 150px; height: 20px; background: transparent; z-index: 9000; position: absolute; display: block; left: 645px; top: 440px;
+  }
+  .ui-draggable-table{
+    width:100%;
+  }
+  .ui-draggable-table-td{
+    width:13px
+  }
+  .popup_top{
+    width:auto;background:url(&quot;https://d2vkqsz7y0fh3j.cloudfront.net/img/popup_top.png&quot;) repeat-x;
   }

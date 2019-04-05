@@ -136,13 +136,19 @@ class ContractorCompanyDetail extends React.Component {
     const rows = [],
       length = companyTasks ? companyTasks.length : 0;
     for (let i = 0; i < length; i++) {
+      let incompleteQualification = companyTasks[i].InCompletedCompanyQualification || 0;
+      let completedQualification = companyTasks[i].CompletedCompanyQualification || 0;
+      let percentageCompleted = ((completedQualification / (incompleteQualification + completedQualification) * 100));
+      percentageCompleted = percentageCompleted == NaN ? 0 : percentageCompleted;
       rows.push({
+        roleId: companyTasks[i].RoleId || 0,
+        userId: companyTasks[i].UserId || 0,
         companyId: companyTasks[i].CompanyId || 0,
         company: companyTasks[i].CompanyName || "",
-        incompleteUsers: companyTasks[i].InCompletedCompanyQualification || 0,
-        completedUsers: companyTasks[i].CompletedCompanyQualification || 0,
-        total: companyTasks[i].TotalCompanyQualification || 0,
-        percentageCompleted: ((companyTasks[i].CompletedCompanyQualification / companyTasks[i].TotalCompanyQualification * 100) + "%") || "0%"
+        incompleteUsers: incompleteQualification || 0,
+        completedUsers: completedQualification || 0,
+        total: (incompleteQualification + completedQualification) || 0,
+        percentageCompleted: parseInt(percentageCompleted) + "%" || "0%"
       });
     }
 
@@ -177,17 +183,21 @@ class ContractorCompanyDetail extends React.Component {
   * @param companyId
   * @returns none
   */
-  async getUserDetails(company, companyId, isCompleted) {
+  async getUserDetails(company, contractorCompanyId, isCompleted, roleId) {
     const { cookies } = this.props;
-    let fields = [];
+    let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // get the company Id from the session storage 
+    let companyId = contractorManagementDetails.Company.Id || 0;
 
     if (isCompleted) {
-      fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=" });
+      fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
     } else {
-      fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=" });
+      fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
-    if(isCompleted == null){
-      fields = [];
+    if (isCompleted == null) {
+      fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
     }
     const postData = {
       "Fields": fields,
@@ -201,7 +211,7 @@ class ContractorCompanyDetail extends React.Component {
     isUserDetailsModal = true;
     this.setState({ isUserDetailsModal, userDetails, selectedCompany });
     let { dashboardAPIToken } = sessionStorage || {};
-        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
@@ -312,20 +322,21 @@ class ContractorCompanyDetail extends React.Component {
   handleCellClick = (type, args) => {
     const { title } = this.state;
     let companyId = args.companyId || 0,
+      roleId = args.roleId || 0,
       company = args.company || "",
       companyType = title ? title.split('-')[0] + "- " + company : company,
       isCompleted = type == "completedUsers";
     switch (type) {
       case "incompleteUsers":
       case "completedUsers":
-        this.getUserDetails(companyType, companyId, isCompleted);
+        this.getUserDetails(companyType, companyId, isCompleted, roleId);
         break;
       case "total":
       case "percentageCompleted":
-        this.getUserDetails(companyType, companyId, null);
+        this.getUserDetails(companyType, companyId, null, roleId);
         break;
       default:
-        console.log(companyType, companyId, isCompleted);
+        console.log(companyType, companyId, isCompleted, roleId);
         break;
     }
     this.refs.incompleteCompaniesReactDataGrid.deselect();
@@ -387,7 +398,7 @@ class ContractorCompanyDetail extends React.Component {
             <p className="section-info-description">Completed Users shows number of users who have completed all tasks in the role, over the total users in the role</p>
             <p className="section-info-description">% Complete shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
           </ModalHeader>
-          <Export 
+          <Export
             data={this.state.rows}
             heads={this.heads}
             sheetName={titleText}

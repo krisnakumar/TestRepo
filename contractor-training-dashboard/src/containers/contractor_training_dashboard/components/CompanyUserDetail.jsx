@@ -136,14 +136,19 @@ class CompanyUserDetail extends React.Component {
     const rows = [],
       length = companyTasks ? companyTasks.length : 0;
     for (let i = 0; i < length; i++) {
+      let incompleteQualification = companyTasks[i].IncompleteUserQualification || 0;
+      let completedQualification = companyTasks[i].CompletedUserQualification || 0;
+      let percentageCompleted = ((completedQualification / (incompleteQualification + completedQualification) * 100));
+      percentageCompleted = percentageCompleted == NaN ? 0 : percentageCompleted;
       rows.push({
+        roleId: companyTasks[i].RoleId || 0,
         userId: companyTasks[i].UserId || 0,
         companyId: companyTasks[i].CompanyId || 0,
         employee: companyTasks[i].EmployeeName || "",
-        incomplete: companyTasks[i].IncompleteQualification || 0,
-        completed: companyTasks[i].CompletedQualification || 0,
-        total: companyTasks[i].AssignedQualification || 0,
-        percentageCompleted: parseInt(((companyTasks[i].CompletedQualification / companyTasks[i].AssignedQualification * 100))) + "%" || "0%"
+        incomplete: incompleteQualification,
+        completed: completedQualification,
+        total: (incompleteQualification + completedQualification) || 0,
+        percentageCompleted: parseInt(percentageCompleted) + "%" || "0%"
       });
     }
 
@@ -264,9 +269,9 @@ class CompanyUserDetail extends React.Component {
   * @param companyId
   * @returns none
   */
-  async getUserTaskDetails(employeeName, companyId, userId, isCompleted) {
+  async getUserTaskDetails(employeeName, companyId, userId, isCompleted, roleId) {
     const { cookies } = this.props;
-    let fields = [{"Name":"USER_ID","Value":userId,"Operator":"="}];
+    let fields = [{"Name":"USER_ID","Value":userId,"Operator":"=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
@@ -274,7 +279,7 @@ class CompanyUserDetail extends React.Component {
       fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
     if(isCompleted == null){
-      fields = [{"Name":"USER_ID","Value":userId,"Operator":"="}];
+      fields = [{"Name":"USER_ID","Value":userId,"Operator":"=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
     }
     
     const postData = {
@@ -314,16 +319,17 @@ class CompanyUserDetail extends React.Component {
   handleCellClick = (type, args) => {
     let userId = args.userId || 0,
         companyId = args.companyId || 0,
+        roleId = args.roleId || 0,
         employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee,
         isCompleted = type == "completed";
     switch (type) {
       case "incomplete":
       case "completed":
-        this.getUserTaskDetails(employeeName, companyId, userId, isCompleted);
+        this.getUserTaskDetails(employeeName, companyId, userId, isCompleted, roleId);
         break;
       case "total":
       case "percentageCompleted":
-        this.getUserTaskDetails(employeeName, companyId, userId, null);
+        this.getUserTaskDetails(employeeName, companyId, userId, null, roleId);
         break;
       default:
         console.log(type, args);
