@@ -216,6 +216,7 @@ class WorkBookProgress extends React.Component {
     workBooksRepetition = response;
     isWorkBookRepetitionModal = true;
     this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**

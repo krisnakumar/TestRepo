@@ -165,6 +165,7 @@ class WorkBookComingDue extends React.Component {
     workBooksProgress = response;
     isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**

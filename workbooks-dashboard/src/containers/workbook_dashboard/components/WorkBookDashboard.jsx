@@ -272,7 +272,6 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   updateMyEmployeesArray = (employees, supervisor) => {
-    debugger
     let myEmployeesArray = this.state.myEmployeesArray,
       level = this.state.level + 1,
       supervisorNames = this.state.supervisorNames,
@@ -350,6 +349,7 @@ class WorkBookDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -383,6 +383,7 @@ class WorkBookDashboard extends PureComponent {
       isInitial = true;
     this.setState({ rows: rows, isInitial: isInitial });
     this.onChangePage([]);
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -421,6 +422,7 @@ class WorkBookDashboard extends PureComponent {
     fakeState = !fakeState;
     isMyEmployeeModal = true;
     this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -464,6 +466,7 @@ class WorkBookDashboard extends PureComponent {
     assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -505,6 +508,7 @@ class WorkBookDashboard extends PureComponent {
     workBookDuePast = response;
     isPastDueModal = true;
     this.setState({ ...this.state, isPastDueModal, workBookDuePast });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -546,6 +550,7 @@ class WorkBookDashboard extends PureComponent {
     workBookComingDue = response;
     isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -588,6 +593,7 @@ class WorkBookDashboard extends PureComponent {
 
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**

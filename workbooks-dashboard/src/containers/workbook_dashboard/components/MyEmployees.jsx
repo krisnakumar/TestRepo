@@ -239,6 +239,7 @@ class MyEmployees extends React.Component {
       myEmployees = response;
 
     this.props.updateMyEmployeesArray(myEmployees, supervisor);
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -283,6 +284,7 @@ class MyEmployees extends React.Component {
     workBookDuePast = response;
     isPastDueModal = true;
     this.setState({ ...this.state, isPastDueModal, workBookDuePast });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -327,6 +329,7 @@ class MyEmployees extends React.Component {
 
     isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -369,6 +372,7 @@ class MyEmployees extends React.Component {
     workBookCompleted = response;
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -411,6 +415,7 @@ class MyEmployees extends React.Component {
     assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
