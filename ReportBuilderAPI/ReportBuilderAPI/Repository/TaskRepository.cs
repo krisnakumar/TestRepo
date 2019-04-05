@@ -308,20 +308,23 @@ namespace ReportBuilderAPI.Repository
                                         if (taskList.Select(x => x.RoleId == taskModel.RoleId).Count() > 0)
                                         {
                                             TaskModel task = taskList.Where(x => x.RoleId == taskModel.RoleId).Select(x => x).FirstOrDefault();
-                                            if (taskModel.RoleStatus == Constants.COMPLETED)
+                                            if (task != null)
                                             {
-                                                task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
-                                            }
-                                            else
-                                            {
-                                                task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                                if (taskModel.RoleStatus == Constants.COMPLETED)
+                                                {
+                                                    task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                                }
+                                                else
+                                                {
+                                                    task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                                }
                                             }
                                         }
                                         else
                                         {
                                             taskList.Add(taskModel);
                                         }
-                                    }                                    
+                                    }
                                 }
                                 else
                                 {
