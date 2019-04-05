@@ -357,7 +357,7 @@ namespace ReportBuilderAPI.Repository
                 {
                     case Constants.TASK:
                         TaskRepository taskRepository = new TaskRepository();
-                        List<TaskModel> taskList = taskRepository.ReadTaskDetails(query, parameterList);
+                        List<TaskModel> taskList = taskRepository.ReadTaskDetails(query, parameterList, queryBuilderRequest);
                         queryModel.Tasks = taskList;
                         break;
                     case Constants.WORKBOOK:

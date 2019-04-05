@@ -170,7 +170,7 @@ namespace ReportBuilderAPI.Repository
                 //Get the parameters  to send into the sql query
 
 
-                taskResponse.Tasks = ReadTaskDetails(query, parameterList, queryBuilderRequest.AppType);
+                taskResponse.Tasks = ReadTaskDetails(query, parameterList, queryBuilderRequest);
                 if (taskResponse.Tasks != null)
                 {
                     return taskResponse;
