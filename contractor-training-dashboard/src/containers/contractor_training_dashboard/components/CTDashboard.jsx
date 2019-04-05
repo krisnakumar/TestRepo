@@ -194,9 +194,12 @@ class CTDashboard extends PureComponent {
   */
   async getRoles(roles, companies) {
     const { cookies } = this.props;
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
     let rolesLength = roles.length,
       companiesLength = companies.length,
-      fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }];
+      fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }, { "Name": "ADMIN_ID", "Value":  adminId , "Operator": "=" , "Bitwise": "and" }    ];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
@@ -216,8 +219,6 @@ class CTDashboard extends PureComponent {
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
     let token = idToken,//cookies.get('IdentityToken'),
@@ -295,8 +296,9 @@ class CTDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
+    let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
     let companyId = contractorManagementDetails.Company.Id || 0,
-      fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }];
+      fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });

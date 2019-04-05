@@ -185,11 +185,14 @@ class ContractorCompanyDetail extends React.Component {
   */
   async getUserDetails(company, contractorCompanyId, isCompleted, roleId) {
     const { cookies } = this.props;
-    let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
+
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
     let companyId = contractorManagementDetails.Company.Id || 0;
+    let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+
+    let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
@@ -197,7 +200,7 @@ class ContractorCompanyDetail extends React.Component {
       fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
     if (isCompleted == null) {
-      fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
     }
     const postData = {
       "Fields": fields,
