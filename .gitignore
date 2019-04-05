@@ -36,3 +36,4 @@ contractor-oq-dashboard/public/config/appsettings.json
 contractor-training-dashboard/public/config/appsettings.json
 query-builder/public/config/appsettings.json
 workbooks-dashboard/public/config/appsettings.json
+*.lock
