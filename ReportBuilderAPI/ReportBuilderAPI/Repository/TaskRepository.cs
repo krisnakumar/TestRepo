@@ -131,7 +131,7 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
                 {
-                    adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
+                    adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
                     adminId = !string.IsNullOrEmpty(adminId) ? adminId : "0";
 
                     if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
