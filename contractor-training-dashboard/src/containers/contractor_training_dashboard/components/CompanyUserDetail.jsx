@@ -300,6 +300,7 @@ class CompanyUserDetail extends React.Component {
 
     isTaskDetailsModal = true;
     this.setState({ ...this.state, isTaskDetailsModal, taskDetails, selectedEmployee });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**

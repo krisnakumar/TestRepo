@@ -209,7 +209,7 @@ class CTDashboard extends PureComponent {
     }
     const postData = {
       "Fields": fields,
-      "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE'],
+      "ColumnList": ['COMPLETED_ROLE_QUALIFICATION', 'NOT_COMPLETED_ROLE_QUALIFICATION', 'ROLE_ID', 'TRAINING_ROLE'],
       "AppType": "TRAINING_DASHBOARD"
     };
     let { dashboardAPIToken } = sessionStorage || {};
@@ -228,6 +228,7 @@ class CTDashboard extends PureComponent {
       isInitial = true;
 
     this.setState({ rows: rows, isInitial: isInitial });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -254,6 +255,7 @@ class CTDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -278,6 +280,7 @@ class CTDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsCompanies: response });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -321,6 +324,7 @@ class CTDashboard extends PureComponent {
 
     isCompanyDetailsModal = true;
     this.setState({ ...this.state, isCompanyDetailsModal, companyDetails });
+    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -332,6 +336,7 @@ class CTDashboard extends PureComponent {
   * @returns rows
   */
   createRows = (roleDetails) => {
+    debugger
     const rows = [],
       length = roleDetails ? roleDetails.length : 0;
     for (let i = 0; i < length; i++) {
