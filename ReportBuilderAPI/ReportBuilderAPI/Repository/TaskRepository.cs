@@ -317,7 +317,11 @@ namespace ReportBuilderAPI.Repository
                                                 task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
                                             }
                                         }
-                                    }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }                                    
                                 }
                                 else
                                 {
