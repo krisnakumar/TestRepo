@@ -33,6 +33,7 @@ namespace ReportBuilderAPI.Repository
             int companyId = 0;
             try
             {
+
                 companyId = queryBuilderRequest.CompanyId;
                 selectQuery = "SELECT  DISTINCT";
 
@@ -113,7 +114,8 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             Dictionary<string, string> parameterList;
             TaskResponse taskResponse = new TaskResponse();
-            int companyId = 0;
+            int companyId = 0, reportId = 0;
+            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             try
             {
                 //Assign the request details to corresponding objects
@@ -123,9 +125,19 @@ namespace ReportBuilderAPI.Repository
                 //Assign the companyId to the new object
                 queryBuilderRequest.CompanyId = companyId;
 
-                //Generates the query
-                query = CreateTaskQuery(queryBuilderRequest);
-
+                if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
+                {
+                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
+                    {
+                        reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
+                        query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId;
+                    }
+                }
+                else
+                {
+                    //Generates the query
+                    query = CreateTaskQuery(queryBuilderRequest);
+                }
                 //Get the parameters  to send into the sql query
                 parameterList = ParameterHelper.Getparameters(queryBuilderRequest);
 
@@ -145,6 +157,10 @@ namespace ReportBuilderAPI.Repository
                 LambdaLogger.Log(getEmployeeDetails.ToString());
                 taskResponse.Error = ResponseBuilder.InternalError();
                 return taskResponse;
+            }
+            finally
+            {
+                databaseWrapper.CloseConnection();
             }
         }
 
@@ -195,7 +211,7 @@ namespace ReportBuilderAPI.Repository
                                     Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
                                     Comments = taskComment?.Comment,
                                     EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
-                                    Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : null,
+                                    Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : (dataTable.Select("ColumnName = 'Parent_Role_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Parent_Role_Name"]) : null,
                                     AssignedQualification = (dataTable.Select("ColumnName = 'AssignedQualification'").Count() == 1) ? (sqlDataReader["AssignedQualification"] != DBNull.Value ? (int?)sqlDataReader["AssignedQualification"] : 0) : null,
                                     CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (sqlDataReader["CompletedQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedQualification"] : 0) : null,
                                     InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (sqlDataReader["InDueQualification"] != DBNull.Value ? (int?)sqlDataReader["InDueQualification"] : 0) : null,
@@ -208,17 +224,22 @@ namespace ReportBuilderAPI.Repository
                                     CompanyId = (dataTable.Select("ColumnName = 'companyId'").Count() == 1) ? (sqlDataReader["companyId"] != DBNull.Value ? (int?)sqlDataReader["companyId"] : 0) : null,
                                     Score = (dataTable.Select("ColumnName = 'score'").Count() == 1) ? Convert.ToString(sqlDataReader["score"]) : null,
                                     Duration = (dataTable.Select("ColumnName = 'Duration'").Count() == 1) ? Convert.ToString(sqlDataReader["Duration"]) : null,
-                                    CompletedRoleQualification = (dataTable.Select("ColumnName = 'CompletedRoleQualification'").Count() == 1) ? (sqlDataReader["CompletedRoleQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedRoleQualification"] : 0) : null,
 
+                                    CompletedRoleQualification = (dataTable.Select("ColumnName = 'Number_of_Companies'").Count() == 1) ? (sqlDataReader["Number_of_Companies"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.COMPLETED ? (int?)sqlDataReader["Number_of_Companies"] : null : null : null : null,
+
+                                    InCompletedRoleQualification = (dataTable.Select("ColumnName = 'Number_of_Companies'").Count() == 1) ? (sqlDataReader["Number_of_Companies"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.NOT_COMPLETED ? (int?)sqlDataReader["Number_of_Companies"] : null : null : null : null,
 
 
                                     SuspendedQualification = (dataTable.Select("ColumnName = 'SuspendedQualification'").Count() == 1) ? (sqlDataReader["SuspendedQualification"] != DBNull.Value ? (int?)sqlDataReader["SuspendedQualification"] : 0) : null,
                                     DisqualifiedQualification = (dataTable.Select("ColumnName = 'DisqualifiedQualification'").Count() == 1) ? (sqlDataReader["DisqualifiedQualification"] != DBNull.Value ? (int?)sqlDataReader["DisqualifiedQualification"] : 0) : null,
-                                    InCompletedRoleQualification = (dataTable.Select("ColumnName = 'NotCompletedRoleQualification'").Count() == 1) ? (sqlDataReader["NotCompletedRoleQualification"] != DBNull.Value ? (int?)sqlDataReader["NotCompletedRoleQualification"] : 0) : null,
-                                    RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (sqlDataReader["roleId"] != DBNull.Value ? (int?)sqlDataReader["roleId"] : 0) : null,
+
+                                    RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (sqlDataReader["roleId"] != DBNull.Value ? (int?)sqlDataReader["roleId"] : 0) : (dataTable.Select("ColumnName = 'Parent_Role_Id'").Count() == 1) ? (sqlDataReader["Parent_Role_Id"] != DBNull.Value ? (int?)sqlDataReader["Parent_Role_Id"] : 0) : null,
+
                                     CompletedCompanyQualification = (dataTable.Select("ColumnName = 'CompletedCompanyUsers'").Count() == 1) ? (sqlDataReader["CompletedCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["CompletedCompanyUsers"] : 0) : null,
                                     InCompletedCompanyQualification = (dataTable.Select("ColumnName = 'NotCompletedCompanyUsers'").Count() == 1) ? (sqlDataReader["NotCompletedCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["NotCompletedCompanyUsers"] : 0) : null,
                                     TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (sqlDataReader["TotalCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["TotalCompanyUsers"] : 0) : null,
+
+
                                 };
                                 // Adding each task details in array list
                                 taskList.Add(taskModel);
@@ -256,7 +277,7 @@ namespace ReportBuilderAPI.Repository
                 { Constants.STATUS, ", ss.[desc] AS status"},
                 { Constants.DATE_EXPIRED, ", sa.DateExpired"},
                 { Constants.EVALUATOR_NAME, ", (SELECT Full_Name_Format1 FROM dbo.[UserDetails_RB] usr WHERE usr.User_Id=sa.Evaluator AND usr.Is_Enabled = 1) AS evaluatorName"},
-                { Constants.ASSIGNED_TO, ",  (SELECT usr.User_Name AS UserName FROM dbo.[UserDetails_RB] usr WHERE usr.User_Id=sa.UserId) AND usr.Is_Enabled = 1 AS assignee"},
+                { Constants.ASSIGNED_TO, ",  (SELECT usr.User_Name AS UserName FROM dbo.[UserDetails_RB] usr WHERE usr.User_Id=sa.UserId AND usr.Is_Enabled = 1) AS assignee"},
                 { Constants.IP, ", sam.IP"},
                 { Constants.LOCATION, ",   concat((CASE WHEN sam.street IS NOT NULL THEN (sam.street + ',') ELSE '' END),   (CASE WHEN sam.City IS NOT NULL THEN (sam.city+ ',') ELSE '' END), (CASE WHEN sam.State IS NOT NULL THEN (sam.State + ',') ELSE '' END),   (CASE WHEN sam.Zip IS NOT NULL THEN (sam.Zip + ',') ELSE '' END),  sam.country) AS location"},
                 { Constants.DURATION, ", sam.duration"},
@@ -379,8 +400,6 @@ namespace ReportBuilderAPI.Repository
             {Constants.NOT_COMPLETED_COMPANY_USERS, "  ca.UserId IN(SELECT USERID FROM dbo.CourseAssignment ts WHERE companyId IN (SELECT ClientCompany FROM      dbo.companyClient WHERE ownerCompany=@companyId) AND TaskversionId    NOT IN(SELECT TaskversionId FROM dbo.TranscriptSkillsDN t WHERE Knowledge_Cert_Status = 1 AND t.IsEnabled = 1 AND Knowledge_Status_Code = 5    and CompanyId IN (Select ClientCompany from dbo.companyClient WHERE ownerCompany=@companyId))) " },
             {Constants.COMPLETED_COMPANY_USERS, "  ca.UserId in(SELECT ts.UserId FROM dbo.CourseAssignment ts WHERE companyId IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId)    GROUP BY ts.UserId, TaskversionId HAVING COUNT(TaskversionId)= (SELECT COUNT(TaskversionId) FROM dbo.TranscriptSkillsDN t   WHERE Knowledge_Cert_Status = 1    AND t.IsEnabled = 1 AND Knowledge_Status_Code = 5 and CompanyId   IN (SELECT ClientCompany FROM dbo.companyClient WHERE ownerCompany=@companyId))) " },
             {Constants.SUPERVISOR_USER, " u.User_Id = @userId" },
-            { Constants.IS_SHARED, " r.IsShared"},
-            { Constants.ROLE_ID, " r.Id"},
             { Constants.ROLES, " r.Id IN (Select * from dbo.fnSplit_RB(@roles))"},
             { Constants.COMPANIES, " cy.Id IN (Select * from dbo.fnSplit_RB(@companies))"}
         };

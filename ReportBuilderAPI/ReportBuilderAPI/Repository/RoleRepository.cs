@@ -32,7 +32,7 @@ namespace ReportBuilderAPI.Repository
                 {
                     roleResponse.Roles = (from r in context.Role
                                              where r.CompanyId == roleRequest.CompanyId
-                                             && r.IsShared && r.IsEnabled==true  
+                                             && r.IsEnabled==true  
                                              select new RoleModel
                                              {
                                                  RoleId = Convert.ToInt32(r.Id),
