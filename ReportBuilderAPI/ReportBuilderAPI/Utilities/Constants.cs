@@ -136,7 +136,7 @@ namespace ReportBuilderAPI.Utilities
         public const string NOT_COMPLETED = "NOT COMPLETED";
 
         public const string QUALIFIED = "QUALIFIED";
-        public const string NOT_QUALIFIED = "NOT_QUALIFIED";
+        public const string NOT_QUALIFIED = "NOT QUALIFIED";
 
         public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
         public const string PAST_DUE = "PAST_DUE";
