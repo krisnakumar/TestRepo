@@ -329,25 +329,6 @@ namespace ReportBuilderAPI.Repository
                                             taskList.Add(taskModel);
                                         }
                                     }
-                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
-                                    {
-                                        TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
-                                        if (task != null)
-                                        {
-                                            if (taskModel.RoleStatus == Constants.COMPLETED)
-                                            {
-                                                task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                            }
-                                            else
-                                            {
-                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            taskList.Add(taskModel);
-                                        }
-                                    }
                                     else
                                     {
                                         taskList.Add(taskModel);
@@ -355,7 +336,6 @@ namespace ReportBuilderAPI.Repository
                                 }
                                 else
                                 {
-                                    // Adding each task details in array 
                                     taskList.Add(taskModel);
                                 }
                             }
@@ -365,8 +345,8 @@ namespace ReportBuilderAPI.Repository
                     {
                         return null;
                     }
+                    return taskList;
                 }
-                return taskList;
             }
             catch (Exception readTaskDetailsException)
             {
