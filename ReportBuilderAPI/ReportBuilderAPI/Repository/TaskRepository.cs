@@ -207,6 +207,7 @@ namespace ReportBuilderAPI.Repository
             List<TaskModel> taskList = new List<TaskModel>();
             try
             {
+                LambdaLogger.Log(query);
                 //Read the data from the database
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
@@ -214,6 +215,7 @@ namespace ReportBuilderAPI.Repository
                     {
                         if (sqlDataReader.HasRows)
                         {
+                            LambdaLogger.Log("Data found :(");
                             while (sqlDataReader.Read())
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
@@ -224,6 +226,7 @@ namespace ReportBuilderAPI.Repository
                                 TaskModel taskModel = new TaskModel
                                 {
 
+                                    
                                     TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
 
                                     TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
@@ -300,37 +303,7 @@ namespace ReportBuilderAPI.Repository
 
                                 };
 
-
-                                if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
-                                {
-                                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
-                                    {
-                                        if (taskList.Select(x => x.RoleId == taskModel.RoleId).Count() > 0)
-                                        {
-                                            TaskModel task = taskList.Where(x => x.RoleId == taskModel.RoleId).Select(x => x).FirstOrDefault();
-                                            if (task != null)
-                                            {
-                                                if (taskModel.RoleStatus == Constants.COMPLETED)
-                                                {
-                                                    task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
-                                                }
-                                                else
-                                                {
-                                                    task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            taskList.Add(taskModel);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    // Adding each task details in array 
-                                    taskList.Add(taskModel);
-                                }
+                                taskList.Add(taskModel);                               
                             }
                         }
                     }
