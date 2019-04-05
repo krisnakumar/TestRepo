@@ -115,6 +115,7 @@ namespace ReportBuilderAPI.Repository
             Dictionary<string, string> parameterList;
             TaskResponse taskResponse = new TaskResponse();
             int companyId = 0, reportId = 0;
+            string contractorCompanyId = string.Empty;
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             bool status = false;
             try
@@ -141,6 +142,14 @@ namespace ReportBuilderAPI.Repository
                         status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED_COMPANY_USERS);
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
                         query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0);
+                    }
+
+                    if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                    {
+                        status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED);
+                        contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
+                        reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
+                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + status;
                     }
                 }
                 else
@@ -214,28 +223,42 @@ namespace ReportBuilderAPI.Repository
                                     CompletedTasksCount = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (sqlDataReader["CompletedTasks"] != DBNull.Value ? (int?)sqlDataReader["CompletedTasks"] : 0) : null,
                                     TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (sqlDataReader["TotalTasks"] != DBNull.Value ? (int?)sqlDataReader["TotalTasks"] : 0) : null,
                                     IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (sqlDataReader["InCompleteTask"] != DBNull.Value ? (int?)sqlDataReader["InCompleteTask"] : 0) : null,
-                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : null,
+
+                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : (dataTable.Select("ColumnName = 'User_Id'").Count() == 1) ? (sqlDataReader["User_Id"] != DBNull.Value ? (int?)sqlDataReader["User_Id"] : 0) : null,
+
                                     WorkbookId = (dataTable.Select("ColumnName = 'workbookId'").Count() == 1) ? (sqlDataReader["workbookId"] != DBNull.Value ? (int?)sqlDataReader["workbookId"] : 0) : null,
                                     NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
                                     LastAttemptDate = (dataTable.Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                     Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
                                     Comments = taskComment?.Comment,
-                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : null,
+
+                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Full_Name_Format1'").Count() == 1) ? Convert.ToString(sqlDataReader["Full_Name_Format1"]) : null,
+
                                     Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : (dataTable.Select("ColumnName = 'Parent_Role_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Parent_Role_Name"]) : null,
+
                                     AssignedQualification = (dataTable.Select("ColumnName = 'AssignedQualification'").Count() == 1) ? (sqlDataReader["AssignedQualification"] != DBNull.Value ? (int?)sqlDataReader["AssignedQualification"] : 0) : null,
+
                                     CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (sqlDataReader["CompletedQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedQualification"] : 0) : null,
-                                    InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (sqlDataReader["InDueQualification"] != DBNull.Value ? (int?)sqlDataReader["InDueQualification"] : 0) : null,
-                                    PastDueQualification = (dataTable.Select("ColumnName = 'PastDueQualification'").Count() == 1) ? (sqlDataReader["PastDueQualification"] != DBNull.Value ? (int?)sqlDataReader["PastDueQualification"] : 0) : null,
+
                                     IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (sqlDataReader["IncompleteQualification"] != DBNull.Value ? (int?)sqlDataReader["IncompleteQualification"] : 0) : null,
 
+                                    CompletedUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
+
+                                    IncompleteUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.NOT_QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
+
+                                    InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (sqlDataReader["InDueQualification"] != DBNull.Value ? (int?)sqlDataReader["InDueQualification"] : 0) : null,
+                                    PastDueQualification = (dataTable.Select("ColumnName = 'PastDueQualification'").Count() == 1) ? (sqlDataReader["PastDueQualification"] != DBNull.Value ? (int?)sqlDataReader["PastDueQualification"] : 0) : null,
+
+
                                     TotalEmployees = (dataTable.Select("ColumnName = 'TotalEmployees'").Count() == 1) ? (sqlDataReader["TotalEmployees"] != DBNull.Value ? (int?)sqlDataReader["TotalEmployees"] : 0) : null,
+
                                     AssignedDate = (dataTable.Select("ColumnName = 'AssignedDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["AssignedDate"])) ? Convert.ToDateTime(sqlDataReader["AssignedDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
                                     CompanyName = (dataTable.Select("ColumnName = 'companyName'").Count() == 1) ? Convert.ToString(sqlDataReader["companyName"]) : (dataTable.Select("ColumnName = 'Contractor_Company_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_Company_Name"]) : null,
 
                                     CompanyId = (dataTable.Select("ColumnName = 'companyId'").Count() == 1) ? (sqlDataReader["companyId"] != DBNull.Value ? (int?)sqlDataReader["companyId"] : 0) : (dataTable.Select("ColumnName = 'Contractor_Company_Id'").Count() == 1) ? (sqlDataReader["Contractor_Company_Id"] != DBNull.Value ? (int?)sqlDataReader["Contractor_Company_Id"] : 0) : null,
 
-                      
+
                                     Score = (dataTable.Select("ColumnName = 'score'").Count() == 1) ? Convert.ToString(sqlDataReader["score"]) : null,
                                     Duration = (dataTable.Select("ColumnName = 'Duration'").Count() == 1) ? Convert.ToString(sqlDataReader["Duration"]) : null,
 
@@ -255,12 +278,13 @@ namespace ReportBuilderAPI.Repository
 
                                     RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (sqlDataReader["roleId"] != DBNull.Value ? (int?)sqlDataReader["roleId"] : 0) : (dataTable.Select("ColumnName = 'Parent_Role_Id'").Count() == 1) ? (sqlDataReader["Parent_Role_Id"] != DBNull.Value ? (int?)sqlDataReader["Parent_Role_Id"] : 0) : null,
 
-                                   
+
                                     TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (sqlDataReader["TotalCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["TotalCompanyUsers"] : 0) : null,
 
 
                                 };
-                                // Adding each task details in array list
+
+                                // Adding each task details in array 
                                 taskList.Add(taskModel);
                             }
                         }

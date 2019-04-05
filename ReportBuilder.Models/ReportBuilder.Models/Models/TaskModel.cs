@@ -122,6 +122,12 @@ namespace ReportBuilder.Models.Models
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? CompletedUserQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? IncompleteUserQualification { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? InDueQualification { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
