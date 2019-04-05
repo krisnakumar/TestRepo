@@ -206,14 +206,15 @@ namespace ReportBuilderAPI.Repository
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<TaskModel> taskList = new List<TaskModel>();
             try
-            {                
+            {
+             
                 //Read the data from the database
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
                     if (sqlDataReader != null)
                     {
                         if (sqlDataReader.HasRows)
-                        {                            
+                        {                       
                             while (sqlDataReader.Read())
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
@@ -301,36 +302,7 @@ namespace ReportBuilderAPI.Repository
 
                                 };
 
-                                if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
-                                {
-                                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
-                                    {
-                                        if (taskList.Select(x => x.Role == taskModel.Role).Count() > 0)
-                                        {
-                                            TaskModel task = taskList.Where(x => x.Role == taskModel.Role).Select(x => x).FirstOrDefault();
-                                            if (task != null)
-                                            {
-                                                if (taskModel.RoleStatus == Constants.COMPLETED)
-                                                {
-                                                    task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
-                                                }
-                                                else
-                                                {
-                                                    task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            taskList.Add(taskModel);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    // Adding each task details in array 
-                                    taskList.Add(taskModel);
-                                }
+                                taskList.Add(taskModel);                               
                             }
                         }
                     }
