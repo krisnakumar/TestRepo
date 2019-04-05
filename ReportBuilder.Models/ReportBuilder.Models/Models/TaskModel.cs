@@ -175,5 +175,9 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 
         public string Comment { get; set; }
+
+
+        [JsonIgnore]
+        public string RoleStatus { get; set; }
     }
 }

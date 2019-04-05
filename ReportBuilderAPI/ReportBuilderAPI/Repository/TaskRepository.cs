@@ -170,7 +170,7 @@ namespace ReportBuilderAPI.Repository
                 //Get the parameters  to send into the sql query
 
 
-                taskResponse.Tasks = ReadTaskDetails(query, parameterList);
+                taskResponse.Tasks = ReadTaskDetails(query, parameterList, queryBuilderRequest.AppType);
                 if (taskResponse.Tasks != null)
                 {
                     return taskResponse;
@@ -201,7 +201,7 @@ namespace ReportBuilderAPI.Repository
         /// <param name="query"></param>
         /// <param name="parameters"></param>
         /// <returns>TaskModel</returns>
-        public List<TaskModel> ReadTaskDetails(string query, Dictionary<string, string> parameters)
+        public List<TaskModel> ReadTaskDetails(string query, Dictionary<string, string> parameters, QueryBuilderRequest queryBuilderRequest)
         {
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<TaskModel> taskList = new List<TaskModel>();
@@ -223,12 +223,13 @@ namespace ReportBuilderAPI.Repository
                                 //Get the task details from the database
                                 TaskModel taskModel = new TaskModel
                                 {
+
                                     TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
 
-                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,                                   
+                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
                                     AssignedTo = (dataTable.Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,
                                     EvaluatorName = (dataTable.Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(sqlDataReader["evaluatorName"]) : null,
-                                 
+
                                     Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]) : null,
 
                                     ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
@@ -256,6 +257,8 @@ namespace ReportBuilderAPI.Repository
                                     IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (sqlDataReader["IncompleteQualification"] != DBNull.Value ? (int?)sqlDataReader["IncompleteQualification"] : 0) : null,
 
                                     CompletedUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
+
+                                    RoleStatus = (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]) : null,
 
                                     IncompleteUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.NOT_QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
 
@@ -297,8 +300,30 @@ namespace ReportBuilderAPI.Repository
 
                                 };
 
-                                // Adding each task details in array 
-                                taskList.Add(taskModel);
+
+                                if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
+                                {
+                                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
+                                    {
+                                        if (taskList.Select(x => x.RoleId == taskModel.RoleId).Count() > 0)
+                                        {
+                                            TaskModel task = taskList.Where(x => x.RoleId == taskModel.RoleId).Select(x => x).FirstOrDefault();
+                                            if (taskModel.RoleStatus == Constants.COMPLETED)
+                                            {
+                                                task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                            }
+                                            else
+                                            {
+                                                task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // Adding each task details in array 
+                                    taskList.Add(taskModel);
+                                }
                             }
                         }
                     }

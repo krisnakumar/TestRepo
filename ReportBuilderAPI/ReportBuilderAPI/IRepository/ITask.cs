@@ -14,6 +14,6 @@ namespace ReportBuilderAPI.IRepository
     {
         string CreateTaskQuery(QueryBuilderRequest queryBuilderRequest);
         TaskResponse GetQueryTaskDetails(QueryBuilderRequest queryBuilderRequest);        
-        List<TaskModel> ReadTaskDetails(string query, Dictionary<string, string> parameters);
+        List<TaskModel> ReadTaskDetails(string query, Dictionary<string, string> parameters, QueryBuilderRequest queryBuilderRequest);
     }
 }
