@@ -207,14 +207,14 @@ namespace ReportBuilderAPI.Repository
             List<TaskModel> taskList = new List<TaskModel>();
             try
             {
-             
+
                 //Read the data from the database
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
                     if (sqlDataReader != null)
                     {
                         if (sqlDataReader.HasRows)
-                        {                       
+                        {
                             while (sqlDataReader.Read())
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
@@ -225,7 +225,7 @@ namespace ReportBuilderAPI.Repository
                                 TaskModel taskModel = new TaskModel
                                 {
 
-                                    
+
                                     TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
 
                                     TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
@@ -235,7 +235,9 @@ namespace ReportBuilderAPI.Repository
                                     Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]) : null,
 
                                     ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                    TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : null,
+
+                                    TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
+
                                     CompletedTasksCount = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (sqlDataReader["CompletedTasks"] != DBNull.Value ? (int?)sqlDataReader["CompletedTasks"] : 0) : null,
                                     TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (sqlDataReader["TotalTasks"] != DBNull.Value ? (int?)sqlDataReader["TotalTasks"] : 0) : null,
                                     IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (sqlDataReader["InCompleteTask"] != DBNull.Value ? (int?)sqlDataReader["InCompleteTask"] : 0) : null,
@@ -302,7 +304,37 @@ namespace ReportBuilderAPI.Repository
 
                                 };
 
-                                taskList.Add(taskModel);                               
+
+                                //if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
+                                //{
+                                //    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
+                                //    {
+                                //        LambdaLogger.Log(taskModel.Role);                                        
+                                //        TaskModel task = taskList.Where(x => x.Role == taskModel.Role).Select(x => x).FirstOrDefault();
+                                //        if (task != null)
+                                //        {
+                                //            LambdaLogger.Log("Task Exist :(");
+                                //            if (taskModel.RoleStatus == Constants.COMPLETED)
+                                //            {
+                                //                task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                //            }
+                                //            else
+                                //            {
+                                //                task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                //            }
+                                //        }
+                                //        else
+                                //        {
+                                //            taskList.Add(taskModel);
+                                //        }
+                                //    }
+                                //}
+                                //else
+                                //{
+                                //    // Adding each task details in array 
+                                //    taskList.Add(taskModel);
+                                //}
+                                taskList.Add(taskModel);
                             }
                         }
                     }
