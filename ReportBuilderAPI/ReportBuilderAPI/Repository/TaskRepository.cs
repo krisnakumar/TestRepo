@@ -206,16 +206,14 @@ namespace ReportBuilderAPI.Repository
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             List<TaskModel> taskList = new List<TaskModel>();
             try
-            {
-                LambdaLogger.Log(query);
+            {                
                 //Read the data from the database
                 using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
                     if (sqlDataReader != null)
                     {
                         if (sqlDataReader.HasRows)
-                        {
-                            LambdaLogger.Log("Data found :(");
+                        {                            
                             while (sqlDataReader.Read())
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
@@ -303,7 +301,36 @@ namespace ReportBuilderAPI.Repository
 
                                 };
 
-                                taskList.Add(taskModel);                               
+                                if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
+                                {
+                                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
+                                    {
+                                        if (taskList.Select(x => x.Role == taskModel.Role).Count() > 0)
+                                        {
+                                            TaskModel task = taskList.Where(x => x.Role == taskModel.Role).Select(x => x).FirstOrDefault();
+                                            if (task != null)
+                                            {
+                                                if (taskModel.RoleStatus == Constants.COMPLETED)
+                                                {
+                                                    task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                                }
+                                                else
+                                                {
+                                                    task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // Adding each task details in array 
+                                    taskList.Add(taskModel);
+                                }
                             }
                         }
                     }
