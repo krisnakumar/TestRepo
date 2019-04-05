@@ -133,7 +133,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ASSIGNED = "ASSIGNED";
         public const string NULL = "NULL";
         public const string COMPLETED = "COMPLETED";
-        public const string NOT_COMPLETED = "NOT_COMPLETED";
+        public const string NOT_COMPLETED = "NOT QUALIFIED";
         public const string WORKBOOK_IN_DUE = "WORKBOOK_IN_DUE";
         public const string PAST_DUE = "PAST_DUE";
         public const string IN_DUE = "IN_DUE";
