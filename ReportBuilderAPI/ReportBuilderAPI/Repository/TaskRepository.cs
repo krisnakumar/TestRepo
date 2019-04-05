@@ -137,14 +137,14 @@ namespace ReportBuilderAPI.Repository
                         query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId;
                     }
 
-                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
+                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                     {
                         status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED_COMPANY_USERS);
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
                         query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0);
                     }
 
-                    if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                    else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                     {
                         status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED);
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
@@ -152,6 +152,15 @@ namespace ReportBuilderAPI.Repository
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
                         query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0);
                     }
+                    else
+                    {
+                        status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED);
+                        contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
+                        contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
+                        reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString();
+                    }
+
                 }
                 else
                 {
@@ -214,8 +223,9 @@ namespace ReportBuilderAPI.Repository
                                 //Get the task details from the database
                                 TaskModel taskModel = new TaskModel
                                 {
-                                    TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : null,
-                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : null,
+                                    TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
+
+                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["task_Name"]) : null,                                   
                                     AssignedTo = (dataTable.Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(sqlDataReader["assignee"]) : null,
                                     EvaluatorName = (dataTable.Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(sqlDataReader["evaluatorName"]) : null,
                                     Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
