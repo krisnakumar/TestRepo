@@ -326,13 +326,16 @@ namespace ReportBuilderAPI.Repository
                                             taskList.Add(taskModel);
                                         }
                                     }
+                                    else
+                                    {
+                                        taskList.Add(taskModel);
+                                    }
                                 }
                                 else
                                 {
                                     // Adding each task details in array 
                                     taskList.Add(taskModel);
-                                }
-                                //taskList.Add(taskModel);
+                                }                            
                             }
                         }
                     }
