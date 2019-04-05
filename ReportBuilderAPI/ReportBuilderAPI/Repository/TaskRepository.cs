@@ -308,12 +308,10 @@ namespace ReportBuilderAPI.Repository
                                 if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
                                 {
                                     if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
-                                    {
-                                        LambdaLogger.Log(taskModel.Role);
+                                    {                                       
                                         TaskModel task = taskList.Where(x => x.Role == taskModel.Role).Select(x => x).FirstOrDefault();
                                         if (task != null)
                                         {
-                                            LambdaLogger.Log("Task Exist :(");
                                             if (taskModel.RoleStatus == Constants.COMPLETED)
                                             {
                                                 task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
