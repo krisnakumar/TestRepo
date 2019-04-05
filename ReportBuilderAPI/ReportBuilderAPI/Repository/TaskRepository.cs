@@ -336,11 +336,11 @@ namespace ReportBuilderAPI.Repository
                                         {
                                             if (taskModel.RoleStatus == Constants.COMPLETED)
                                             {
-                                                task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                                task.CompletedRoleQualification = taskModel.CompletedUserQualification;
                                             }
                                             else
                                             {
-                                                task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                                task.InCompletedRoleQualification = taskModel.IncompleteUserQualification;
                                             }
                                         }
                                         else
