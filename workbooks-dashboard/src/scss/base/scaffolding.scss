@@ -1119,4 +1119,10 @@ button.grid-filter-go-btn {
   text-decoration: none;
   margin: 0px 5px 0px 5px;
   }
-  
+  .modal-body .grid-container .table .react-grid-Container .react-grid-Main .react-grid-Grid .react-grid-Viewport .react-grid-Canvas{
+    // height: auto !important;
+    max-height: 500px !important;
+ }
+ .modal-body .grid-container .table .react-grid-Container .react-grid-Main .react-grid-Grid {
+  max-height: 500px !important;
+}
