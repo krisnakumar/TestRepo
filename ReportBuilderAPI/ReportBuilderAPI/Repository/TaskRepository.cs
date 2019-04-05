@@ -115,7 +115,7 @@ namespace ReportBuilderAPI.Repository
             Dictionary<string, string> parameterList;
             TaskResponse taskResponse = new TaskResponse();
             int companyId = 0, reportId = 0;
-            string contractorCompanyId = string.Empty;
+            string contractorCompanyId = string.Empty, adminId = string.Empty;
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
             bool status = false;
             try
@@ -131,17 +131,20 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
                 {
+                    adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
+                    adminId = !string.IsNullOrEmpty(adminId) ? adminId : "0";
+
                     if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
                     {
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId;
+                        query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId + " , @adminId = " + adminId;
                     }
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                     {
                         status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED_COMPANY_USERS);
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0);
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0) + " , @adminId = " + adminId;
                     }
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
@@ -150,7 +153,7 @@ namespace ReportBuilderAPI.Repository
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0);
+                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + " , @adminId = " + adminId;
                     }
                     else
                     {
@@ -158,7 +161,7 @@ namespace ReportBuilderAPI.Repository
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString();
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString() + " , @adminId = " + adminId;
                     }
 
                 }
@@ -308,8 +311,27 @@ namespace ReportBuilderAPI.Repository
                                 if (queryBuilderRequest.AppType == Constants.TRAINING_DASHBOARD)
                                 {
                                     if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
-                                    {                                       
+                                    {
                                         TaskModel task = taskList.Where(x => x.Role == taskModel.Role).Select(x => x).FirstOrDefault();
+                                        if (task != null)
+                                        {
+                                            if (taskModel.RoleStatus == Constants.COMPLETED)
+                                            {
+                                                task.CompletedRoleQualification = taskModel.CompletedRoleQualification;
+                                            }
+                                            else
+                                            {
+                                                task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
+                                    {
+                                        TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
                                         if (task != null)
                                         {
                                             if (taskModel.RoleStatus == Constants.COMPLETED)
@@ -335,7 +357,7 @@ namespace ReportBuilderAPI.Repository
                                 {
                                     // Adding each task details in array 
                                     taskList.Add(taskModel);
-                                }                            
+                                }
                             }
                         }
                     }

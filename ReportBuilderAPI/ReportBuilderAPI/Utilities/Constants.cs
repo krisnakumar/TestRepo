@@ -217,6 +217,7 @@ namespace ReportBuilderAPI.Utilities
 
         public const string CONTRACTOR_COMPANY = "CONTRACTOR_COMPANY";
 
+        public const string ADMIN_ID = "ADMIN_ID";
         public const string NOT_COMPLETED_ROLE_QUALIFICATION = "NOT_COMPLETED_ROLE_QUALIFICATION";
 
         //Smart parameters for  username
