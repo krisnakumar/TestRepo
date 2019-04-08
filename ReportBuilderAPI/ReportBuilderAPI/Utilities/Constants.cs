@@ -151,7 +151,7 @@ namespace ReportBuilderAPI.Utilities
         public const string TASK_NAME = "TASK_NAME";
 
         public const string LOCK_OUT_REASON = "LOCK_OUT_REASON";
-        public const string EMPLOYEE_LOCK_OUT_COUNT = "EMPLOYEE_LOCK_OUT_COUNT";
+        public const string LOCK_OUT_COUNT = "LOCK_OUT_COUNT";
         public const string COMPANY_LOCK_OUT_COUNT = "COMPANY_LOCK_OUT_COUNT";
 
         public const string DISQUALIFIED = "DISQUALIFIED";
