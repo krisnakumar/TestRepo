@@ -305,6 +305,10 @@ namespace ReportBuilderAPI.Repository
                                     TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (sqlDataReader["TotalCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["TotalCompanyUsers"] : 0) : null,
 
 
+
+                                 LogoutReason = (dataTable.Select("ColumnName = 'LockoutReason'").Count() == 1) ? Convert.ToString(sqlDataReader["LockoutReason"]) : null,
+
+                                LogoutCount = (dataTable.Select("ColumnName = 'LockOutCount'").Count() == 1) ? Convert.ToString(sqlDataReader["LockOutCount"]) : null
                                 };
 
 

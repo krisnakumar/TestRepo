@@ -176,6 +176,11 @@ namespace ReportBuilder.Models.Models
 
         public string Comment { get; set; }
 
+        
+
+        public string LogoutReason { get; set; }
+
+        public string LogoutCount { get; set; }
 
         [JsonIgnore]
         public string RoleStatus { get; set; }
