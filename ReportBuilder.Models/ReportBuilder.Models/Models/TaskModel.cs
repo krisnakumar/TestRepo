@@ -176,10 +176,10 @@ namespace ReportBuilder.Models.Models
 
         public string Comment { get; set; }
 
-        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 
         public string LogoutReason { get; set; }
-
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LogoutCount { get; set; }
 
         [JsonIgnore]
