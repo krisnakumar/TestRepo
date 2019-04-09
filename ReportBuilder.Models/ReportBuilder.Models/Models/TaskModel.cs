@@ -178,9 +178,9 @@ namespace ReportBuilder.Models.Models
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 
-        public string LogoutReason { get; set; }
+        public string LockoutReason { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LogoutCount { get; set; }
+        public string LockoutCount { get; set; }
 
         [JsonIgnore]
         public string RoleStatus { get; set; }
