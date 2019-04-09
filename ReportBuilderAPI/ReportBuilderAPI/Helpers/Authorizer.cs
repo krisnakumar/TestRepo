@@ -67,10 +67,17 @@ namespace ReportBuilderAPI.Helpers
                             {
                                 return true;
                             }
+                            else
+                            {
+                                return false;
+                            }
                         }
-                    }
-                    return true;
-                }
+                        else
+                        {
+                            return false;
+                        }
+                    }                    
+                }                
             }
             catch (Exception validateUserException)
             {
