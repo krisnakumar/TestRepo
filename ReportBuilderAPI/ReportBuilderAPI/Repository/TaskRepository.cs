@@ -361,10 +361,10 @@ namespace ReportBuilderAPI.Repository
                                             {
                                                 task.CompletedUserQualification = taskModel.CompletedUserQualification;
                                             }
-                                            else
-                                            {
-                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                            }
+                                            //else
+                                            //{
+                                            //    task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                            //}
                                         }
                                         else
                                         {
