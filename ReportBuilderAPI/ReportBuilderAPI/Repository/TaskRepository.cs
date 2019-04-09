@@ -331,14 +331,10 @@ namespace ReportBuilderAPI.Repository
                                             taskList.Add(taskModel);
                                         }
                                     }
-                                    else
+                                    
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                                     {
-                                        taskList.Add(taskModel);
-                                    }
-
-                                    if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
-                                    {
-                                        LambdaLogger.Log(Convert.ToString(taskModel.Company));
+                                        LambdaLogger.Log(Convert.ToString(taskModel.Company) + " Found!");
                                         TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
                                         if (task != null)
                                         {
@@ -356,14 +352,8 @@ namespace ReportBuilderAPI.Repository
                                             taskList.Add(taskModel);
                                         }
                                     }
-                                    else
-                                    {
-                                        taskList.Add(taskModel);
-                                    }
 
-
-
-                                    if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                                     {                                        
                                         TaskModel task = taskList.Where(x => x.EmployeeName == taskModel.EmployeeName).Select(x => x).FirstOrDefault();
                                         if (task != null)
