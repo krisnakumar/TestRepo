@@ -263,11 +263,11 @@ namespace ReportBuilderAPI.Repository
 
                                     IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (sqlDataReader["IncompleteQualification"] != DBNull.Value ? (int?)sqlDataReader["IncompleteQualification"] : 0) : null,
 
-                                    CompletedUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
+                                    CompletedUserQualification = (dataTable.Select("ColumnName = 'Task_Completion_Count'").Count() == 1) ? (sqlDataReader["Task_Completion_Count"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]).ToUpper() == Constants.QUALIFIED ? (int?)sqlDataReader["Task_Completion_Count"] : null : null : null : null,
 
                                     RoleStatus = (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]) : null,
 
-                                    IncompleteUserQualification = (dataTable.Select("ColumnName = 'Number_of_Tasks'").Count() == 1) ? (sqlDataReader["Number_of_Tasks"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]).ToUpper() == Constants.NOT_QUALIFIED ? (int?)sqlDataReader["Number_of_Tasks"] : null : null : null : null,
+                                    IncompleteUserQualification = (dataTable.Select("ColumnName = 'Task_Completion_Count'").Count() == 1) ? (sqlDataReader["Task_Completion_Count"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]).ToUpper() == Constants.NOT_QUALIFIED ? (int?)sqlDataReader["Task_Completion_Count"] : null : null : null : null,
 
                                     InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (sqlDataReader["InDueQualification"] != DBNull.Value ? (int?)sqlDataReader["InDueQualification"] : 0) : null,
                                     PastDueQualification = (dataTable.Select("ColumnName = 'PastDueQualification'").Count() == 1) ? (sqlDataReader["PastDueQualification"] != DBNull.Value ? (int?)sqlDataReader["PastDueQualification"] : 0) : null,
@@ -354,23 +354,22 @@ namespace ReportBuilderAPI.Repository
 
                                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                                     {
-                                        //TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
-                                        //if (task != null)
-                                        //{
-                                        //    if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
-                                        //    {
-                                        //        task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                        //    }
-                                        //}
-                                        //else
-                                        //{
-                                        //    taskList.Add(taskModel);
-                                        //}
-                                        taskList.Add(taskModel);
+                                        TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
+                                        if (task != null)
+                                        {
+                                            if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
+                                            {
+                                                task.CompletedUserQualification = taskModel.CompletedUserQualification;
+                                            }
+                                            else
+                                            {
+                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
                                     }
                                     else
                                     {
