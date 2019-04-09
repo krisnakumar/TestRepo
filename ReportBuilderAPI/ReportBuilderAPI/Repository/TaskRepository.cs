@@ -73,6 +73,12 @@ namespace ReportBuilderAPI.Repository
                     queryBuilderRequest.Fields.Select(x => x.Name == Constants.SUPERVISOR_ID ? x.Name = Constants.SUPERVISOR_USER : x.Name).ToList();
                 }
 
+                //Remove student details from the List
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).ToList().Count > 0)
+                {
+                    EmployeeModel userDetails = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).FirstOrDefault();
+                    queryBuilderRequest.Fields.Remove(userDetails);
+                }
 
                 if (queryBuilderRequest.ColumnList.Contains(Constants.TOTAL_EMPLOYEES) && !string.IsNullOrEmpty(supervisorId))
                 {
@@ -144,8 +150,7 @@ namespace ReportBuilderAPI.Repository
                     {
                         status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED_COMPANY_USERS);
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0) + " , @adminId = " + adminId;
-                        LambdaLogger.Log(query);
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @roleId=" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0) + " , @adminId = " + adminId;                        
                     }
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
@@ -154,8 +159,7 @@ namespace ReportBuilderAPI.Repository
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + " , @adminId = " + adminId;
-                        LambdaLogger.Log(query);
+                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + " , @adminId = " + adminId;                        
                     }
                     else
                     {
@@ -163,10 +167,8 @@ namespace ReportBuilderAPI.Repository
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString() + " , @adminId = " + adminId;
-                        LambdaLogger.Log(query);
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @roleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString() + " , @adminId = " + adminId;                        
                     }
-
                 }
                 else
                 {
