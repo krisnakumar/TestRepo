@@ -93,19 +93,19 @@ namespace ReportBuilderAPI.Repository
             {Constants.SUPERVISOR_SUB, " s.supervisorId " },
             {Constants.USERID, " u.User_Id " },
             {Constants.WORKBOOK_NAME, "wb.Name " },
-            {Constants.DESCRIPTION, "wb.Description" },
-            {Constants.WORKBOOK_CREATED, "CONVERT(DATE,wb.DateCreated,101)" },
-            {Constants.WORKBOOK_ISENABLED, "wb.isenabled" },
-            {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete" },
-            {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, wbp.FirstAttemptDate),101)" },
-            {Constants.DATE_ADDED, "uwb.DateAdded" },
+            {Constants.DESCRIPTION, "wb.Description " },
+            {Constants.WORKBOOK_CREATED, "CONVERT(DATE,wb.DateCreated,101) " },
+            {Constants.WORKBOOK_ISENABLED, "wb.isenabled " },
+            {Constants.DAYS_TO_COMPLETE, "wb.Daystocomplete " },
+            {Constants.DUE_DATE, "CONVERT(DATE,DATEADD(DAY, wb.DaysToComplete, wbp.FirstAttemptDate),101) " },
+            {Constants.DATE_ADDED, "uwb.DateAdded " },
             { Constants.WORKBOOK_CREATED_BY, "(SELECT us.User_Name AS UserName FROM dbo.[UserDetails_RB] us WHERE us.User_Id=wb.createdby) " },
-            {Constants.ASSIGNED_TO, "uwb.UserId" },
+            {Constants.ASSIGNED_TO, "uwb.UserId " },
             {Constants.ASSIGNED, " u.User_Id IN (SELECT UserID FROM Supervisor WHERE SupervisorId=@userId) " },
-            {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
-            {Constants.PAST_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) AND CONVERT(date,GETDATE())  AND  (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId)" },
+            {Constants.WORKBOOK_IN_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,GETDATE())  AND CONVERT(date,DATEADD(DAY,CONVERT(INT, @duedays), GETDATE())) AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " },
+            {Constants.PAST_DUE, " uwb.IsEnabled=1 AND CONVERT(date,(DATEADD(DAY, wb.DaysToComplete, uwb.DateAdded)))  BETWEEN CONVERT(date,DATEADD(DAY, (CONVERT(INT, @duedays) * -1), GETDATE())) AND CONVERT(date,GETDATE())  AND  (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) < (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " },
             {Constants.COMPLETED, " uwb.IsEnabled=1 AND (SELECT SUM(www.NumberCompleted) FROM dbo.WorkBookProgress www WHERE www.WorkBookId=wbc.WorkBookId) >= (SELECT SUM(tre.Repetitions) FROM dbo.WorkBookContent tre WHERE tre.WorkBookId=wbc.WorkBookId) " },
-            { Constants.ROLES, " r.Id IN (Select * from dbo.fnSplit_RB(@roles))"}
+            { Constants.ROLES, " r.Id IN (Select * from dbo.fnSplit_RB(@roles)) "}
 
         };
 
