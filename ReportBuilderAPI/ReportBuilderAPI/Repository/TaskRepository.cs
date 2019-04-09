@@ -352,25 +352,25 @@ namespace ReportBuilderAPI.Repository
                                         }
                                     }
 
-                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
-                                    {
-                                        TaskModel task = taskList.Where(x => x.EmployeeName == taskModel.EmployeeName).Select(x => x).FirstOrDefault();
-                                        if (task != null)
-                                        {
-                                            if (taskModel.RoleStatus == Constants.QUALIFIED)
-                                            {
-                                                task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                            }
-                                            else
-                                            {
-                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            taskList.Add(taskModel);
-                                        }
-                                    }
+                                    //else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                                    //{
+                                    //    TaskModel task = taskList.Where(x => x.EmployeeName == taskModel.EmployeeName).Select(x => x).FirstOrDefault();
+                                    //    if (task != null)
+                                    //    {
+                                    //        if (taskModel.RoleStatus == Constants.QUALIFIED)
+                                    //        {
+                                    //            task.CompletedUserQualification = taskModel.CompletedUserQualification;
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                    //        }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        taskList.Add(taskModel);
+                                    //    }
+                                    //}
                                     else
                                     {
                                         taskList.Add(taskModel);
