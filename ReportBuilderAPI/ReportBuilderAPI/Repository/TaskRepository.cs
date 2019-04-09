@@ -403,7 +403,7 @@ namespace ReportBuilderAPI.Repository
 
                 { Constants.COMPLETED_QUALIFICATION,", (SELECT ISNULL((SELECT COUNT( taskId) FROM dbo.TranscriptSkillsDN ts WHERE Knowledge_Cert_Status = 1 AND Knowledge_Status_Code = 5 AND ts.IsEnabled = 1 AND Date_Knowledge_Cert_Expired > GETDATE() AND ts.User_Id = u.User_Id AND ts.CompanyId=@companyId  ) ,0)) AS  CompletedQualification" },
 
-                 { Constants.DISQUALIFIED_QUALIFICATION,", Sum(dr.Disqual_Count)   OVER() AS  DisqualifiedQualification" },
+                 { Constants.DISQUALIFIED_QUALIFICATION,", Sum(dr.Disqual_Count)    AS  DisqualifiedQualification" },
 
 
                  { Constants.SUSPENDED_QUALIFICATION,", 0 AS  SuspendedQualification" },
@@ -446,7 +446,7 @@ namespace ReportBuilderAPI.Repository
                 {Constants.TRAINING_ROLE, ", r.Name as Role" },
                 {Constants.ASSIGNED_DATE, ", ca.DateCreated as AssignedDate " },
                 {Constants.LOCK_OUT_REASON, ", ca.LockoutReason as LockoutReason " },
-                {Constants.LOCK_OUT_COUNT, ", SUM(dr.Lockout_Count)   OVER()  AS LockOutCount" },
+                {Constants.LOCK_OUT_COUNT, ", SUM(dr.Lockout_Count)   AS LockOutCount" },
                 { Constants.COURSE_EXPIRATION_DATE, ", ca. ExpirationDate as DateExpired"},
                 {Constants.COMPANY_NAME, ", cy.Name as companyName  " },
                 { Constants.COMPANY_ID, ", cy.Id as companyId  " }
