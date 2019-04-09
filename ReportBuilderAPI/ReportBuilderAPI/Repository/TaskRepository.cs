@@ -333,6 +333,7 @@ namespace ReportBuilderAPI.Repository
                                     }
                                     else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                                     {
+                                        LambdaLogger.Log(taskModel.Company.ToString());
                                         TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
                                         if (task != null)
                                         {
