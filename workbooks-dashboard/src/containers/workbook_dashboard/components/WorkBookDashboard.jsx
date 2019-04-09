@@ -22,7 +22,7 @@ updateModalState(modelName)
 handleCellFocus(args) 
 */
 import React, { PureComponent } from 'react';
-import { CardBody, Collapse, Row, Col } from 'reactstrap';
+import { CardBody, Collapse, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
@@ -151,7 +151,8 @@ class WorkBookDashboard extends PureComponent {
       filterModalTitle: "Roles",
       filteredRoles: [],
       userId: 0,
-      selectedUserId: 0
+      selectedUserId: 0,
+      isReloadWindow: false,
     };
 
     this.toggle = this.toggle.bind(this);
@@ -315,14 +316,32 @@ class WorkBookDashboard extends PureComponent {
   */
   async componentDidMount() {
     const { cookies } = this.props;
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let companyId = contractorManagementDetails.Company.Id || 0;
-    let userId = contractorManagementDetails.User.Id || 0,
-      roles = [];
+    let { dashboardAPIToken } = sessionStorage,
+      idToken = '';
 
-    await this.getFilterOptions();
-    this.getEmployees(companyId, userId, roles);
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }
+    if (idToken) {
+      this.setState({ isReloadWindow: false });
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+      let companyId = contractorManagementDetails.Company.Id || 0;
+      let userId = contractorManagementDetails.User.Id || 0,
+        roles = [];
+
+      await this.getFilterOptions();
+      this.getEmployees(companyId, userId, roles);
+    } else {
+      let readSessionCount = localStorage.getItem('readSessionCount');
+      if (readSessionCount) {
+        // Do nothing
+      } else {
+        localStorage.setItem('readSessionCount', '1');
+      }
+      this.setState({ isReloadWindow: true });
+    }
   };
 
 
@@ -811,6 +830,19 @@ class WorkBookDashboard extends PureComponent {
     this.getEmployees(companyId, userId, roles);
   };
 
+
+  reloadWindow() {
+    let readSessionCount = localStorage.getItem('readSessionCount');
+    if (readSessionCount <= 2) {
+      readSessionCount = parseInt(readSessionCount) + 1;
+      localStorage.setItem('readSessionCount', readSessionCount);
+      location.reload();
+    } else {
+      localStorage.removeItem('readSessionCount');
+      window.location = window.location.origin;
+    }
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, supervisorNames } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -820,6 +852,13 @@ class WorkBookDashboard extends PureComponent {
     let basePath = window.location.origin || "";
     return (
       <CardBody>
+        <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+          <ModalHeader> Alert</ModalHeader>
+          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+          </ModalFooter>
+        </Modal>
         <FilterModal
           ref={this.roleFilter}
           backdropClassName={"backdrop"}

@@ -55,9 +55,11 @@ class WorkBookDashboardExport extends Component {
     */
     formatData(data, heads) {
         const { cookies } = this.props;
-        let { contractorManagementDetails } = sessionStorage || '{}';
-          contractorManagementDetails = JSON.parse(contractorManagementDetails);
-        let runByUser = contractorManagementDetails.User.FullName || "";
+
+        let { contractorManagementDetails } = sessionStorage || {};
+        contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
+
         let runByUserMock = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
@@ -111,9 +113,9 @@ class WorkBookDashboardExport extends Component {
         return (
             hasExcelData && <ExcelFile element={
                 <div className="export-menu-right">
-                    <a href="javascript:void(0);" id="ctl00_exportExcel" className="exportExcel"><img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/excel_icon.jpg" />Excel</a>  
+                    <a href="javascript:void(0);" id="ctl00_exportExcel" className="exportExcel"><img src="https://d2vkqsz7y0fh3j.cloudfront.net/img/excel_icon.jpg" />Excel</a>
                 </div>
-                    } filename={"Industrial Training Services, Inc. Workbook Dashboard " + date} fileExtension="xlsx">
+            } filename={"Industrial Training Services, Inc. Workbook Dashboard " + date} fileExtension="xlsx">
                 <ExcelSheet dataSet={excelData} name={sheetName} />
             </ExcelFile>
         );
