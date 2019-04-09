@@ -57,8 +57,8 @@ class CTDashboardExport extends Component {
         const { cookies } = this.props;
 
         let { contractorManagementDetails } = sessionStorage || {};
-           contractorManagementDetails = JSON.parse(contractorManagementDetails);
-        let runByUser = contractorManagementDetails.User.FullName || "";
+           contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
 
         let runByUserMock = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),

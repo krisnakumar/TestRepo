@@ -12,8 +12,8 @@ class Topbar extends PureComponent {
 
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails || '{}');
-    companyName = contractorManagementDetails.Company.Name || "",
-    companyLogo = contractorManagementDetails.Company.Logo || "";
+    companyName = contractorManagementDetails.Company ? contractorManagementDetails.Company.Name : "",
+    companyLogo = contractorManagementDetails.Company ? contractorManagementDetails.Company.Logo : "";
     return (
       <div className="topbar">
         <div className="topbar__wrapper">

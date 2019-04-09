@@ -13,7 +13,7 @@ handleGridRowsUpdated(fromRow, toRow, updated)
 handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
-import { Collapse, Button, CardBody, Card, Row, Col } from 'reactstrap';
+import { Collapse, Button, CardBody, Card, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
@@ -25,6 +25,7 @@ import ContractorCompanyDetail from './ContractorCompanyDetail';
 import FilterModal from './FilterModal';
 import CompanyFilterModal from './CompanyFilterModal';
 import Export from './CTDashboardExport';
+import * as Constants from '../../../shared/constants';
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -94,6 +95,7 @@ class CTDashboard extends PureComponent {
       companyFilterTitle: "Companies",
       filteredCompanies: [],
       filterOptionsCompanies: [],
+      isReloadWindow: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
@@ -165,9 +167,29 @@ class CTDashboard extends PureComponent {
   async componentDidMount() {
     let roles = [],
       companies = [];
-    await this.getCompanyFilterOptions();
-    await this.getFilterOptions();
-    this.getRoles(roles, companies);
+
+    let { dashboardAPIToken } = sessionStorage,
+      idToken = '';
+
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }
+    if (idToken) {
+      this.setState({ isReloadWindow: false });
+      await this.getCompanyFilterOptions();
+      await this.getFilterOptions();
+      this.getRoles(roles, companies);
+    } else {
+      let readSessionCount = localStorage.getItem('readSessionCount');
+      if (readSessionCount) {
+        // Do nothing
+      } else {
+        localStorage.setItem('readSessionCount', '1');
+      }
+      this.setState({ isReloadWindow: true });
+    }
+
   };
 
   /**
@@ -199,7 +221,7 @@ class CTDashboard extends PureComponent {
     let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
     let rolesLength = roles.length,
       companiesLength = companies.length,
-      fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }, { "Name": "ADMIN_ID", "Value":  adminId , "Operator": "=" , "Bitwise": "and" }    ];
+      fields = [{ "Name": "IS_SHARED", "Value": 1, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
@@ -298,7 +320,7 @@ class CTDashboard extends PureComponent {
     // get the company Id from the session storage 
     let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
     let companyId = contractorManagementDetails.Company.Id || 0,
-      fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
+      fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
@@ -471,7 +493,6 @@ class CTDashboard extends PureComponent {
     });
   };
 
-
   /**
    * @method
    * @name - updateCompanySelectedData
@@ -534,6 +555,18 @@ class CTDashboard extends PureComponent {
     this.getRoles(roles, companies);
   };
 
+  reloadWindow() {
+    let readSessionCount = localStorage.getItem('readSessionCount');
+    if (readSessionCount <= 2) {
+      readSessionCount = parseInt(readSessionCount) + 1;
+      localStorage.setItem('readSessionCount', readSessionCount);
+      location.reload();
+    } else {
+      localStorage.removeItem('readSessionCount');
+      window.location = window.location.origin;
+    }
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, filteredCompanies } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -542,6 +575,13 @@ class CTDashboard extends PureComponent {
     let basePath = window.location.origin || "";
     return (
       <CardBody>
+        <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+          <ModalHeader> Alert</ModalHeader>
+          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+          </ModalFooter>
+        </Modal>
         <ContractorCompanyDetail
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
