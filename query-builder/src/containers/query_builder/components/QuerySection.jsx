@@ -30,6 +30,7 @@ import WorkbookResultSet from './WorkbookResultSet';
 import TaskResultSet from './TaskResultSet';
 import SlidingPane from './SlideOut';
 import FieldData from './../data';
+import * as Constants from '../../../shared/constants';
 
 // import XLSX from 'xlsx';
 import EmployeeExport from './EmployeeExport';
@@ -241,13 +242,45 @@ class QuerySection extends PureComponent {
       count: 0,
       empColumnList: ["EMPLOYEE_NAME", "ROLE", "USER_ID", "USERNAME", "EMAIL", "ALTERNATE_USERNAME", "TOTAL_EMPLOYEES"],
       workbookColumnList: ["WORKBOOK_ID", "WORKBOOK_NAME", "DESCRIPTION", "WORKBOOK_CREATED_BY", "DAYS_TO_COMPLETE"],
-      taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"]
+      taskColumnList: ["TASK_ID", "TASK_NAME", "ASSIGNED_TO", "EVALUATOR_NAME", "EXPIRATION_DATE"],
+      isReloadWindow: false,
     };
     this.toggle = this.toggle.bind(this);
     this.confirmEntitySelection = this.confirmEntitySelection.bind(this);
     this.onOpenClose = this.onOpenClose.bind(this);
     this.changeColumnOptions = this.changeColumnOptions.bind(this);
   }
+
+  /**
+   * @method
+   * @name - componentDidMount
+   * This method will invoked whenever the component is mounted
+   *  is update to this component class
+   * @param none
+   * @returns none
+  */
+  async componentDidMount() {
+
+    let { dashboardAPIToken } = sessionStorage,
+      idToken = '';
+
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }
+    if (idToken) {
+      this.setState({ isReloadWindow: false });
+    } else {
+      let readSessionCount = localStorage.getItem('readSessionCount');
+      if (readSessionCount) {
+        // Do nothing
+      } else {
+        localStorage.setItem('readSessionCount', '1');
+      }
+      this.setState({ isReloadWindow: true });
+    }
+
+  };
 
   /**
    * @method
@@ -536,6 +569,18 @@ class QuerySection extends PureComponent {
     document.querySelector(".Select-menu").style.top = inputWrapper.top + inputWrapper.height + 'px';
   };
 
+  reloadWindow() {
+    let readSessionCount = localStorage.getItem('readSessionCount');
+    if (readSessionCount <= 2) {
+      readSessionCount = parseInt(readSessionCount) + 1;
+      localStorage.setItem('readSessionCount', readSessionCount);
+      location.reload();
+    } else {
+      localStorage.removeItem('readSessionCount');
+      window.location = window.location.origin;
+    }
+  };
+
   render() {
     const { selectedOption, isClearable } = this.state;
     this.state.resultSet = [];
@@ -563,6 +608,13 @@ class QuerySection extends PureComponent {
             </div>
           <p className="card__description">Choose an entity from the available list. Create a query with the attributes available for the corresponding entity. Run the query to see corresponding search result.</p>
         </div>
+        <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+          <ModalHeader> Alert</ModalHeader>
+          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+          </ModalFooter>
+        </Modal>
         <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-confirm">
           <ModalHeader toggle={this.toggle}>Alert!</ModalHeader>
           <ModalBody>Your query and result(s) will be lost. Do you wish to proceed?</ModalBody>

@@ -56,11 +56,12 @@ class WorkbookExport extends Component {
     formatData(workbookData) {
         const { cookies } = this.props;
         let fieldDataColumns = FieldData.columns.workbooks;
+
         let { contractorManagementDetails } = sessionStorage || {};
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
-        let runByUser = contractorManagementDetails.User.FullName || "";
+        contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
+
         let workbooks = workbookData || [],
-            // runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 

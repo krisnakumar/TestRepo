@@ -56,12 +56,13 @@ class EmployeeExport extends Component {
     */
     formatData(employeeData) {
         const { cookies } = this.props;
-        let { contractorManagementDetails } = sessionStorage || '{}';
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
-        let runByUser = contractorManagementDetails.User.FullName || "";
+
+        let { contractorManagementDetails } = sessionStorage || {};
+        contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
+
         let fieldDataColumns = FieldData.columns.employees;
         let employees = employeeData || [],
-            // runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
@@ -87,7 +88,7 @@ class EmployeeExport extends Component {
 
             currentColumnOptions.forEach(function (column, empIndex) {
                 fieldDataColumns.forEach(function (value, index) {
-                    if(column == value.fields){
+                    if (column == value.fields) {
                         columns.push(value.id);
                         columnNames.push(value.label);
                     }

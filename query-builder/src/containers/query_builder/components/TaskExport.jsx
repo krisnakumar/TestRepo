@@ -56,11 +56,12 @@ class TaskExport extends Component {
     formatData(taskData) {
         const { cookies } = this.props;
         let fieldDataColumns = FieldData.columns.tasks;
+
         let { contractorManagementDetails } = sessionStorage || {};
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
-        let runByUser = contractorManagementDetails.User.FullName || "";
+        contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
+
         let tasks = taskData || [],
-            // runByUser = cookies.get('UserName') || "",
             runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
@@ -86,7 +87,7 @@ class TaskExport extends Component {
 
             currentColumnOptions.forEach(function (column, empIndex) {
                 fieldDataColumns.forEach(function (value, index) {
-                    if(column == value.fields){
+                    if (column == value.fields) {
                         columns.push(value.id);
                         columnNames.push(value.label);
                     }

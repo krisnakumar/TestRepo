@@ -57,13 +57,13 @@ class LogInForm extends PureComponent {
     if (idToken) {
       this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     } else {
-      let readSessionCount = localStorage.getItem('readSessionCount');
-      if(readSessionCount) {
-        // Do nothing
-      } else {
-        localStorage.setItem('readSessionCount', '1');
-      }
-      this.setState({ toDashboard: false, hasSessionCookie: false, isReloadWindow: true });
+      // let readSessionCount = localStorage.getItem('readSessionCount');
+      // if(readSessionCount) {
+      //   // Do nothing
+      // } else {
+      //   localStorage.setItem('readSessionCount', '1');
+      // }
+      this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     }
   };
 
