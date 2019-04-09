@@ -333,11 +333,10 @@ namespace ReportBuilderAPI.Repository
                                     }
                                     else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                                     {
-                                        
                                         TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
                                         if (task != null)
                                         {
-                                            LambdaLogger.Log(taskModel.Company.ToString());
+                                            LambdaLogger.Log("company exist:(");
                                             if (taskModel.RoleStatus == Constants.COMPLETED)
                                             {
                                                 task.CompletedCompanyQualification = taskModel.CompletedCompanyQualification;
@@ -349,6 +348,7 @@ namespace ReportBuilderAPI.Repository
                                         }
                                         else
                                         {
+                                            LambdaLogger.Log("company not exist :(");
                                             taskList.Add(taskModel);
                                         }
                                     }
