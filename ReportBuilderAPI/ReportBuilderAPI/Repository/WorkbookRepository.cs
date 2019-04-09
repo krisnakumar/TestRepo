@@ -193,6 +193,14 @@ namespace ReportBuilderAPI.Repository
                     queryBuilderRequest.Fields.Remove(userDetails);
                 }
 
+
+                //Remove student details from the List
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).ToList().Count > 0)
+                {
+                    EmployeeModel userDetails = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STUDENT_DETAILS).FirstOrDefault();
+                    queryBuilderRequest.Fields.Remove(userDetails);
+                }
+
                 //getting where conditions
                 whereQuery = string.Join("", from employee in queryBuilderRequest.Fields
                                              select (!string.IsNullOrEmpty(employee.Bitwise) ? (" " + employee.Bitwise + " ") : string.Empty) + (!string.IsNullOrEmpty(workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault()) ? (workbookFields.Where(x => x.Key == employee.Name.ToUpper()).Select(x => x.Value).FirstOrDefault() + OperatorHelper.CheckOperator(employee.Operator, employee.Value.Trim(), employee.Name)) : string.Empty));

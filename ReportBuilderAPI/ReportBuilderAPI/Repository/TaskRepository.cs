@@ -304,9 +304,9 @@ namespace ReportBuilderAPI.Repository
 
                                     TotalCompanyQualification = (dataTable.Select("ColumnName = 'TotalCompanyUsers'").Count() == 1) ? (sqlDataReader["TotalCompanyUsers"] != DBNull.Value ? (int?)sqlDataReader["TotalCompanyUsers"] : 0) : null,
 
-                                 LockoutReason = (dataTable.Select("ColumnName = 'LockoutReason'").Count() == 1) ? Convert.ToString(sqlDataReader["LockoutReason"]) : null,
+                                    LockoutReason = (dataTable.Select("ColumnName = 'LockoutReason'").Count() == 1) ? Convert.ToString(sqlDataReader["LockoutReason"]) : null,
 
-                                LockoutCount = (dataTable.Select("ColumnName = 'LockOutCount'").Count() == 1) ? Convert.ToString(sqlDataReader["LockOutCount"]) : null
+                                    LockoutCount = (dataTable.Select("ColumnName = 'LockOutCount'").Count() == 1) ? Convert.ToString(sqlDataReader["LockOutCount"]) : null
                                 };
 
 
@@ -324,6 +324,25 @@ namespace ReportBuilderAPI.Repository
                                             else
                                             {
                                                 task.InCompletedRoleQualification = taskModel.InCompletedRoleQualification;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
+                                    {
+                                        TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
+                                        if (task != null)
+                                        {
+                                            if (taskModel.RoleStatus == Constants.COMPLETED)
+                                            {
+                                                task.CompletedCompanyQualification = taskModel.CompletedCompanyQualification;
+                                            }
+                                            else
+                                            {
+                                                task.InCompletedCompanyQualification = taskModel.InCompletedCompanyQualification;
                                             }
                                         }
                                         else
@@ -516,7 +535,7 @@ namespace ReportBuilderAPI.Repository
 
              { " FROM   dbo.usercompany uc   LEFT JOIN dbo.CourseAssignment	 ca ON ca.UserId=uc.UserId AND ca.CompanyId=uc.CompanyId AND ca.IsEnabled=1 AND ca.Status=0 AND ca.IsCurrent = 1   LEFT JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id  JOIN dbo.[userdetails_rb] u  ON u.user_id = uc.userid AND uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 AND u.is_enabled = 1  JOIN dbo.supervisor s  ON s.userid = u.user_id  AND isdirectreport = 1 AND s.IsEnabled=1 JOIN dbo.company cy ON cy.id = uc.companyid AND cy.isenabled = 1  " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION} },
 
-        
+
                { "FROM (SELECT c.Id AS [company_id] FROM dbo.UserCompany uc  JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany  WHERE uc.IsDefault=1	AND uc.IsEnabled=1	AND uc.UserId=@userId AND cc.IsEnabled=1	and c.IsEnabled=1  AND cc.ClientCompany!=uc.CompanyId)  As ClientCompanies JOIN dbo.usercompany uc ON uc.companyid = ClientCompanies.[company_id] JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id JOIN dbo.company cy ON ClientCompanies.[company_id]=cy.id GROUP  BY cy.NAME, cy.id,uc.companyid		" , new List<string> { Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES } },
 
                  { "  FROM   Reporting_Dashboard rd JOIN dbo.Reporting_DashboardRole rdr ON rdr. DashboardId=rd.Id JOIN Role r ON r.id=rdr.RoleId AND r.IsEnabled=1 JOIN dbo.UserRole ur ON r.Id = ur.roleid AND ur.isenabled = 1 JOIN dbo.UserCompany uc  ON uc.userid = ur.userid  AND uc.isenabled = 1  AND uc.status = 1 AND uc.isvisible = 1 AND uc.isdefault = 1 JOIN [userdetails_rb] u ON u.user_id = uc.userid AND u.is_enabled = 1 JOIN dbo.companyclient cc ON uc.companyid = cc.ownercompany JOIN dbo.company c ON c.id = cc.clientcompany WHERE  uc.isdefault = 1 AND uc.isenabled = 1  AND cc.isenabled = 1 AND c.isenabled = 1 AND cc.clientcompany != uc.companyid AND uc.companyid IN ( @companyId ) AND DashboardName='@dashboard' GROUP  BY ur.userid, ur.roleid,  r.NAME, r.id, u.User_Id " , new List<string> {      Constants.COMPLETED_ROLE_QUALIFICATION, Constants.NOT_COMPLETED_ROLE_QUALIFICATION, Constants.IS_SHARED } }
