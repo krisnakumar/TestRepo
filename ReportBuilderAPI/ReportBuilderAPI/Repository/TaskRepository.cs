@@ -331,27 +331,28 @@ namespace ReportBuilderAPI.Repository
                                             taskList.Add(taskModel);
                                         }
                                     }
-                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
-                                    {
-                                        TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
-                                        if (task != null)
-                                        {
-                                            LambdaLogger.Log("company exist:(");
-                                            if (taskModel.RoleStatus == Constants.COMPLETED)
-                                            {
-                                                task.CompletedCompanyQualification = taskModel.CompletedCompanyQualification;
-                                            }
-                                            else
-                                            {
-                                                task.InCompletedCompanyQualification = taskModel.InCompletedCompanyQualification;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            LambdaLogger.Log("company not exist :(");
-                                            taskList.Add(taskModel);
-                                        }
-                                    }
+                                    //else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
+                                    //{
+                                    //    TaskModel task = taskList.Where(x => x.Company == taskModel.Company).Select(x => x).FirstOrDefault();
+                                    //    if (task != null)
+                                    //    {
+                                    //        LambdaLogger.Log(taskModel.RoleStatus);
+                                    //        LambdaLogger.Log(taskModel.Company);
+                                    //        if (taskModel.RoleStatus == Constants.COMPLETED)
+                                    //        {
+                                    //            task.CompletedCompanyQualification = taskModel.CompletedCompanyQualification;
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            task.InCompletedCompanyQualification = taskModel.InCompletedCompanyQualification;
+                                    //        }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        LambdaLogger.Log("company not exist :(");
+                                    //        taskList.Add(taskModel);
+                                    //    }
+                                    //}
                                     else
                                     {
                                         taskList.Add(taskModel);
