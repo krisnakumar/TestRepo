@@ -267,6 +267,9 @@ namespace ReportBuilderAPI.Repository
 
                                     RoleStatus = (dataTable.Select("ColumnName = 'Completion_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Completion_Status"]) : null,
 
+
+                                    TaskStatus = (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]) : null,
+
                                     IncompleteUserQualification = (dataTable.Select("ColumnName = 'Task_Completion_Count'").Count() == 1) ? (sqlDataReader["Task_Completion_Count"] != DBNull.Value) ? (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]).ToUpper() == Constants.NOT_QUALIFIED ? (int?)sqlDataReader["Task_Completion_Count"] : null : null : null : null,
 
                                     InDueQualification = (dataTable.Select("ColumnName = 'InDueQualification'").Count() == 1) ? (sqlDataReader["InDueQualification"] != DBNull.Value ? (int?)sqlDataReader["InDueQualification"] : 0) : null,
@@ -352,25 +355,25 @@ namespace ReportBuilderAPI.Repository
                                         }
                                     }
 
-                                    //else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
-                                    //{
-                                    //    TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
-                                    //    if (task != null)
-                                    //    {
-                                    //        if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
-                                    //        {
-                                    //            task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                    //        }
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        taskList.Add(taskModel);
-                                    //    }
-                                    //}
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                                    {
+                                        TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
+                                        if (task != null)
+                                        {
+                                            if (taskModel.TaskStatus.ToUpper() == Constants.QUALIFIED)
+                                            {
+                                                task.CompletedUserQualification = taskModel.CompletedUserQualification;
+                                            }
+                                            else
+                                            {
+                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }
                                     else
                                     {
                                         taskList.Add(taskModel);

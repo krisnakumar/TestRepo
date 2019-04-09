@@ -184,5 +184,8 @@ namespace ReportBuilder.Models.Models
 
         [JsonIgnore]
         public string RoleStatus { get; set; }
+
+        [JsonIgnore]
+        public string TaskStatus { get; set; }
     }
 }
