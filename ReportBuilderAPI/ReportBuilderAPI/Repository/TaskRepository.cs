@@ -354,22 +354,23 @@ namespace ReportBuilderAPI.Repository
 
                                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                                     {
-                                        TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
-                                        if (task != null)
-                                        {
-                                            //if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
-                                            //{
-                                            //    task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                            //}
-                                            //else
-                                            //{
-                                            //    task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                            //}
-                                        }
-                                        else
-                                        {
-                                            taskList.Add(taskModel);
-                                        }
+                                        //TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
+                                        //if (task != null)
+                                        //{
+                                        //    if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
+                                        //    {
+                                        //        task.CompletedUserQualification = taskModel.CompletedUserQualification;
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                        //    }
+                                        //}
+                                        //else
+                                        //{
+                                        //    taskList.Add(taskModel);
+                                        //}
+                                        taskList.Add(taskModel);
                                     }
                                     else
                                     {
