@@ -245,7 +245,7 @@ namespace ReportBuilderAPI.Repository
                                     TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (sqlDataReader["TotalTasks"] != DBNull.Value ? (int?)sqlDataReader["TotalTasks"] : 0) : null,
                                     IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (sqlDataReader["InCompleteTask"] != DBNull.Value ? (int?)sqlDataReader["InCompleteTask"] : 0) : null,
 
-                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : (dataTable.Select("ColumnName = 'User_Id'").Count() == 1) ? (sqlDataReader["User_Id"] != DBNull.Value ? (int?)sqlDataReader["User_Id"] : 0) : null,
+                                    UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (sqlDataReader["userId"] != DBNull.Value ? (int?)sqlDataReader["userId"] : 0) : (dataTable.Select("ColumnName = 'Contractor_User_Id'").Count() == 1) ? (sqlDataReader["Contractor_User_Id"] != DBNull.Value ? (int?)sqlDataReader["Contractor_User_Id"] : 0) : null,
 
                                     WorkbookId = (dataTable.Select("ColumnName = 'workbookId'").Count() == 1) ? (sqlDataReader["workbookId"] != DBNull.Value ? (int?)sqlDataReader["workbookId"] : 0) : null,
                                     NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
@@ -253,7 +253,7 @@ namespace ReportBuilderAPI.Repository
                                     Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
                                     Comments = taskComment?.Comment,
 
-                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Full_Name_Format1'").Count() == 1) ? Convert.ToString(sqlDataReader["Full_Name_Format1"]) : null,
+                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Contractor_Full_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_Full_Name"]) : null,
 
                                     Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : (dataTable.Select("ColumnName = 'Parent_Role_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Parent_Role_Name"]) : null,
 
@@ -352,25 +352,25 @@ namespace ReportBuilderAPI.Repository
                                         }
                                     }
 
-                                    //else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
-                                    //{
-                                    //    TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
-                                    //    if (task != null)
-                                    //    {
-                                    //        if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
-                                    //        {
-                                    //            task.CompletedUserQualification = taskModel.CompletedUserQualification;
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
-                                    //        }
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        taskList.Add(taskModel);
-                                    //    }
-                                    //}
+                                    else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
+                                    {
+                                        TaskModel task = taskList.Where(x => x.UserId == taskModel.UserId).Select(x => x).FirstOrDefault();
+                                        if (task != null)
+                                        {
+                                            if (taskModel.RoleStatus.ToUpper() == Constants.QUALIFIED)
+                                            {
+                                                task.CompletedUserQualification = taskModel.CompletedUserQualification;
+                                            }
+                                            else
+                                            {
+                                                task.IncompleteUserQualification = taskModel.IncompleteUserQualification;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            taskList.Add(taskModel);
+                                        }
+                                    }
                                     else
                                     {
                                         taskList.Add(taskModel);
