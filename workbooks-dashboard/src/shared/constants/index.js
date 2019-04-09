@@ -50,3 +50,4 @@ export const AUTH_USER_NAME = "devtester@its-training.com";
 export const AUTH_PASSKEY = "Demo@2017";
 export const AUTO_LOGOUT_IDLE_TIME = 20;
 export const AUTO_LOGOUT_MESSAGE = "You haven't had any activity in the last little while. To protect your privacy, you will be automatically logged out in the next minute. Choose cancel below to stay logged in.";
+export const NO_SESSION_MESSAGE = "Sorry, something went wrong. Please refresh the page.";
