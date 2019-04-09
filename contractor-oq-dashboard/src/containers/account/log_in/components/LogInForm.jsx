@@ -19,8 +19,8 @@ import { reduxForm } from 'redux-form';
 import { BrowserRouter as Redirect } from "react-router-dom";
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../../../shared/constants';
-
 import OQDashboard from '../../../oq_contractor_dashboard/index'
 
 
@@ -35,6 +35,7 @@ class LogInForm extends PureComponent {
     this.state = {
       showPassword: false,
       toDashboard: false,
+      hasSessionCookie: false,   
       hasSessionCookie: false,
       username: "",
       password: ""
@@ -55,9 +56,15 @@ class LogInForm extends PureComponent {
       idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     }
     if (idToken) {
-      this.setState({ toDashboard: true, hasSessionCookie: true });
+      this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     } else {
-      window.location = window.location.origin;
+      let readSessionCount = localStorage.getItem('readSessionCount');
+      if (readSessionCount) {
+        // Do nothing
+      } else {
+        localStorage.setItem('readSessionCount', '1');
+      }
+      this.setState({ toDashboard: false, hasSessionCookie: false, isReloadWindow: true });
     }
   };
 
@@ -127,19 +134,43 @@ class LogInForm extends PureComponent {
       });
   }
 
+  reloadWindow() {
+    let readSessionCount = localStorage.getItem('readSessionCount');
+    if (readSessionCount <= 2) {
+      readSessionCount = parseInt(readSessionCount) + 1;
+      localStorage.setItem('readSessionCount', readSessionCount);
+      location.reload();
+    } else {
+      localStorage.removeItem('readSessionCount');
+      window.location = window.location.origin;
+    }
+  };
+
   render() {
-    const { handleSubmit } = this.props;
+    const { isReloadWindow } = this.state;
 
     if (this.state.hasSessionCookie) {
       return <OQDashboard />;
     } else {
-      return (<div className={`load`}>
-        <div className="load__icon-wrap">
-          <svg className="load__icon">
-            <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-          </svg>
+      return (
+        isReloadWindow && <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+          <ModalHeader> Alert</ModalHeader>
+          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+          </ModalFooter>
+        </Modal>
+
+        ||
+
+        <div className={`load`}>
+          <div className="load__icon-wrap">
+            <svg className="load__icon">
+              <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+            </svg>
+          </div>
         </div>
-      </div>);
+      );
     }
   }
 }
