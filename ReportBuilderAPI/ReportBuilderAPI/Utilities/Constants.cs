@@ -215,6 +215,8 @@ namespace ReportBuilderAPI.Utilities
 
         public const string ROLE_ID = "ROLE_ID";
 
+        public const string ALL = "ALL";
+
         public const string CONTRACTOR_COMPANY = "CONTRACTOR_COMPANY";
 
         public const string ADMIN_ID = "ADMIN_ID";

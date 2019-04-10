@@ -143,7 +143,9 @@ namespace ReportBuilderAPI.Repository
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                     {
-                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED_COMPANY_USERS)? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.NOT_COMPLETED_COMPANY_USERS)? "0" : "null").FirstOrDefault();
+
+                        string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
+                        status = tag == Constants.COMPLETED_COMPANY_USERS ? "1" : tag == Constants.NOT_COMPLETED_COMPANY_USERS ? "0" : "null";
 
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
                         query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @parentRoleId =" + parameterList["role"].ToString() + ", @completionStatus=" + status + " , @adminId = " + adminId;
@@ -151,7 +153,8 @@ namespace ReportBuilderAPI.Repository
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                     {
-                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED) ? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.IN_COMPLETE) ? "0" : "null").FirstOrDefault();
+                        string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
+                        status = tag == Constants.COMPLETED ? "1" : tag == Constants.IN_COMPLETE ? "0" : "null";
 
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
@@ -160,7 +163,8 @@ namespace ReportBuilderAPI.Repository
                     }
                     else
                     {
-                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED) ? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.IN_COMPLETE) ? "0" : "null").FirstOrDefault();
+                        string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
+                        status = tag == Constants.COMPLETED ? "1" : tag == Constants.IN_COMPLETE ? "0" : "null";
 
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
