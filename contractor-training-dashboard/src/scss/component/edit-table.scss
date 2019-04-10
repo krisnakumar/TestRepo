@@ -40,8 +40,11 @@
       position: absolute;
       color: #ffffff;
       display: inline-block !important;
-      // left: calc(100% - 70%);
       transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%); /* IE 9 */
+      -webkit-transform: translate(-50%, -50%); /* Safari and Chrome */
+      -o-transform: translate(-50%, -50%); /* Opera */
+      -moz-transform: translate(-50%, -50%);/* Firefox */
     }
   }
 

@@ -96,8 +96,9 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
-        let responseObject = Object.values(json)[0];
-        return responseObject;
+        let responseObject = Object.keys(json);
+
+        return json[responseObject];
     }).catch(function (ex) {
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");

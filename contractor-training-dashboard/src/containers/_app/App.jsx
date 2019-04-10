@@ -9,7 +9,8 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
 import * as API from '../../shared/utils/APIUtils';
-import JWT from 'jsonwebtoken';
+var JWT = require('jsonwebtoken');
+// import JWT from 'jsonwebtoken';
 import Schedule from 'node-schedule';
 
 /**
