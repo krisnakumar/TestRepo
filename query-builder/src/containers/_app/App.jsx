@@ -9,8 +9,10 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
 import * as API from '../../shared/utils/APIUtils';
-import JWT from 'jsonwebtoken';
-import Schedule from 'node-schedule';
+// import JWT from 'jsonwebtoken';
+// import Schedule from 'node-schedule';
+var JWT = require('jsonwebtoken');
+var Schedule = require('node-schedule');
 
 /**
  * App Class defines the React component to render
