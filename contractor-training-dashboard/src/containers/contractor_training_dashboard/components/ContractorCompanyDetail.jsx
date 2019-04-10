@@ -50,7 +50,7 @@ class ContractorCompanyDetail extends React.Component {
         key: 'company',
         name: 'Company',
         sortable: true,
-        width: 200,
+        width: 450,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -86,7 +86,6 @@ class ContractorCompanyDetail extends React.Component {
       {
         key: 'percentageCompleted',
         name: '% Complete',
-        width: 100,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,

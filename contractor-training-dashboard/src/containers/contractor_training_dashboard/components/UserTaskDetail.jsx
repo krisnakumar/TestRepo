@@ -58,6 +58,7 @@ class UserTaskDetail extends React.Component {
         name: 'Task Name',
         sortable: true,
         editable: false,
+        width: 400,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
@@ -65,12 +66,20 @@ class UserTaskDetail extends React.Component {
       {
         key: 'status',
         name: 'Status',
-        width: 200,
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
-        cellClass: "text-left last-column"
+        cellClass: "text-left"
+      },
+      {
+        key: 'ExpirationDate',
+        name: 'Expiration Date',
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: this.cellFormatter,
+        cellClass: "text-center last-column"
       }
     ];
 
@@ -113,7 +122,9 @@ class UserTaskDetail extends React.Component {
       rows.push({
         taskCode: taskDetails[i].TaskCode || "",
         taskName: taskDetails[i].TaskName || "",
-        status: taskDetails[i].Status || ""
+        status: taskDetails[i].Status || "",
+        ExpirationDate: taskDetails[i].ExpirationDate || "",
+        
       });
     }
 
