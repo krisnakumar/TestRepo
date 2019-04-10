@@ -63,7 +63,7 @@ class CompanyUserDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("incomplete", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'completed',
@@ -72,7 +72,7 @@ class CompanyUserDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("completed", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'total',
@@ -81,7 +81,7 @@ class CompanyUserDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("total", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'percentageCompleted',
@@ -90,7 +90,7 @@ class CompanyUserDetail extends React.Component {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: (props) => this.cellClickFormatter("percentageCompleted", props),
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -144,7 +144,8 @@ class CompanyUserDetail extends React.Component {
         roleId: companyTasks[i].RoleId || 0,
         userId: companyTasks[i].UserId || 0,
         companyId: companyTasks[i].CompanyId || 0,
-        employee: companyTasks[i].EmployeeName || "",
+        employee: companyTasks[i].EmployeeName + " (" + companyTasks[i].UserId + ")"  || "",
+        // employee: companyTasks[i].EmployeeName || "",
         incomplete: incompleteQualification,
         completed: completedQualification,
         total: (incompleteQualification + completedQualification) || 0,
@@ -167,12 +168,21 @@ class CompanyUserDetail extends React.Component {
     let rows = this.createRows(newProps.userDetails),
       isArray = Array.isArray(newProps.userDetails),
       isInitial = isArray;
-    this.setState({
-      modal: newProps.modal,
-      rows: rows,
-      isInitial: isInitial,
-      title: newProps.title || ""
-    });
+
+    if (rows) {
+      this.state.modal = newProps.modal;
+      this.state.rows = rows;
+      this.state.isInitial = isInitial;
+      this.state.title = newProps.title || "";
+      this.handleGridSort("employee", "ASC");
+    } else {
+      this.setState({
+        modal: newProps.modal,
+        rows: rows,
+        isInitial: isInitial,
+        title: newProps.title || ""
+      });
+    }
   }
 
   /**
@@ -277,17 +287,17 @@ class CompanyUserDetail extends React.Component {
     let companyId = contractorManagementDetails.Company.Id || 0;
     let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
 
-    let fields = [{"Name":"USER_ID","Value":userId,"Operator":"=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
+    let fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
     } else {
       fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
-    if(isCompleted == null){
-      fields = [{"Name":"USER_ID","Value":userId,"Operator":"=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
+    if (isCompleted == null) {
+      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
     }
-    
+
     const postData = {
       "Fields": fields,
       "ColumnList": ['TASK_NAME', 'TASK_CODE', 'STATUS'],
@@ -301,7 +311,7 @@ class CompanyUserDetail extends React.Component {
 
     this.setState({ isTaskDetailsModal, taskDetails, selectedEmployee });
     let { dashboardAPIToken } = sessionStorage || {};
-        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     let token = idToken,// cookies.get('IdentityToken'),
       url = "/company/" + companyId + "/tasks",
@@ -324,10 +334,10 @@ class CompanyUserDetail extends React.Component {
    */
   handleCellClick = (type, args) => {
     let userId = args.userId || 0,
-        companyId = args.companyId || 0,
-        roleId = args.roleId || 0,
-        employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee,
-        isCompleted = type == "completed";
+      companyId = args.companyId || 0,
+      roleId = args.roleId || 0,
+      employeeName = this.state.title ? (this.state.title + " - " + args.employee) : args.employee,
+      isCompleted = type == "completed";
     switch (type) {
       case "incomplete":
       case "completed":
@@ -400,7 +410,7 @@ class CompanyUserDetail extends React.Component {
             <p className="section-info-description">This level will display the contractor's training progress required by the role</p>
             <p className="section-info-description"> </p>
           </ModalHeader>
-          <Export 
+          <Export
             data={this.state.rows}
             heads={this.heads}
             sheetName={titleText}
@@ -420,6 +430,8 @@ class CompanyUserDetail extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView}
+                  sortColumn="employee"
+                  sortDirection="ASC"
                 />
               </div>
             </div>

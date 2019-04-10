@@ -64,7 +64,7 @@ class CTDashboard extends PureComponent {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("incompleteCompanies", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'completedCompanies',
@@ -74,7 +74,7 @@ class CTDashboard extends PureComponent {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("completedCompanies", props),
-        cellClass: "text-right last-column padding-rt-2p"
+        cellClass: "text-center last-column padding-rt-2p"
       }
     ];
     this.roleFilter = React.createRef();
@@ -250,8 +250,11 @@ class CTDashboard extends PureComponent {
       rows = this.createRows(response),
       isInitial = true;
 
-    this.setState({ rows: rows, isInitial: isInitial });
+    // this.setState({ rows: rows, isInitial: isInitial });
+    this.state.rows = rows;
+    this.state.isInitial = isInitial;
     window.dispatchEvent(new Event('resize'));
+    this.handleGridSort("role", "ASC");
   };
 
   /**
@@ -683,6 +686,8 @@ class CTDashboard extends PureComponent {
                 rowHeight={35}
                 minColumnWidth={100}
                 emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
+                sortColumn="role"
+                sortDirection="ASC"
               />
             </div>
           </div>

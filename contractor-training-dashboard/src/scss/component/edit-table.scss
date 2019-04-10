@@ -39,6 +39,9 @@
       top: 50%;
       position: absolute;
       color: #ffffff;
+      display: inline-block !important;
+      // left: calc(100% - 70%);
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -81,6 +84,7 @@
     height: fit-content !important;
     width: auto !important;
     overflow-y: visible !important;
+    overflow-x: hidden !important;
   }
 
   .react-grid-Cell input.editor-main {

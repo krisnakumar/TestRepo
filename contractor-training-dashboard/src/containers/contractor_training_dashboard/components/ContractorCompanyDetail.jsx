@@ -63,7 +63,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("incompleteUsers", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'completedUsers',
@@ -72,7 +72,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("completedUsers", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'total',
@@ -81,7 +81,7 @@ class ContractorCompanyDetail extends React.Component {
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.cellClickFormatter("total", props),
-        cellClass: "text-right"
+        cellClass: "text-center"
       },
       {
         key: 'percentageCompleted',
@@ -90,7 +90,7 @@ class ContractorCompanyDetail extends React.Component {
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
-        formatter: (props) => this.cellClickFormatter("percentageCompleted", props),
+        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -167,12 +167,21 @@ class ContractorCompanyDetail extends React.Component {
     let rows = this.createRows(newProps.companyDetails),
       isArray = Array.isArray(newProps.companyDetails),
       isInitial = isArray;
-    this.setState({
-      modal: newProps.modal,
-      rows: rows,
-      isInitial: isInitial,
-      title: newProps.title || ""
-    });
+
+    if (rows) {
+      this.state.modal = newProps.modal;
+      this.state.rows = rows;
+      this.state.isInitial = isInitial;
+      this.state.title = newProps.title || "";
+      this.handleGridSort("company", "ASC");
+    } else {
+      this.setState({
+        modal: newProps.modal,
+        rows: rows,
+        isInitial: isInitial,
+        title: newProps.title || ""
+      });
+    }
   };
 
   /**
@@ -192,7 +201,7 @@ class ContractorCompanyDetail extends React.Component {
     let companyId = contractorManagementDetails.Company.Id || 0;
     let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
 
-    let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
+    let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
       fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
@@ -200,7 +209,7 @@ class ContractorCompanyDetail extends React.Component {
       fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
     }
     if (isCompleted == null) {
-      fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId , "Operator": "=" , "Bitwise": "and" }];
+      fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
     }
     const postData = {
       "Fields": fields,
@@ -421,6 +430,8 @@ class ContractorCompanyDetail extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && ContractorCompanyDetailEmptyRowsView}
+                  sortColumn="company"
+                  sortDirection="ASC"
                 />
               </div>
             </div>
