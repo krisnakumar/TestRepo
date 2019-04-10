@@ -15,14 +15,14 @@ export default class TopbarWithNavigation extends PureComponent {
     };
   }
 
-  componentWillMount(){
+  componentWillMount() {
     var nav_menus = JSON.parse(localStorage.getItem('menus')),
-        _self = this;
-    if(nav_menus !== null) {
-        nav_menus.map(function(mainMenu, index) {  
-          _self.state.isHover[index] =  false
-        });
-      }
+      _self = this;
+    if (nav_menus !== null) {
+      nav_menus.map(function (mainMenu, index) {
+        _self.state.isHover[index] = false
+      });
+    }
   }
 
   onMouseEnter(i) {
@@ -51,42 +51,42 @@ export default class TopbarWithNavigation extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails || '{}');
     let nav_menus = contractorManagementDetails.Menu || {},
-    _self = this;
+      _self = this;
     return (
       <div className="topbar topbar--navigation menu-navigation">
         <div className="topbar__wrapper">
-          <div className="topbar__right">   
+          <div className="topbar__right">
             <nav className="topbar__nav">
-                    {                      
-                       nav_menus &&
-                        Object.values(nav_menus).map(function(mainMenu, index) {             
-                          let menuName = mainMenu.Title;
-                          let basePath = window.location.origin;
-                          return (
-                            <UncontrolledDropdown key={index} 
-                                      className="topbar__nav-dropdown" 
-                                      onMouseOver={_self.onMouseEnter(index)} 
-                                      onMouseLeave={_self.onMouseLeave(index)}
-                                      isOpen={_self.state.isHover[index]} >
-                              <DropdownToggle className="topbar__nav-dropdown-toggle" href= {basePath + mainMenu.Url}>
-                                <img alt={menuName} src={mainMenu.Icon}/> 
-                                {menuName}
-                              </DropdownToggle>
-                              <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
-                              {
-                                mainMenu.Items.map((menu, index) => (
-                                <div key={menu.Title+index}>
-                                  <a className= "topbar__link" title={menu.Title} href={menu.isRedirect == false ? menu.Url : basePath + menu.Url}>
-                                      <p className="topbar__link-title">{menu.Title}</p>
-                                  </a> 
-                                </div>
-                                ))
-                              }
-                            </DropdownMenu>
-                            </UncontrolledDropdown>
-                          )
-                        })      
-                    }                  
+              {
+                nav_menus &&
+                Object.keys(nav_menus).map(function (mainMenu, index) {
+                  let menuName = nav_menus[mainMenu].Title;
+                  let basePath = window.location.origin;
+                  return (
+                    <UncontrolledDropdown key={index}
+                      className="topbar__nav-dropdown"
+                      onMouseOver={_self.onMouseEnter(index)}
+                      onMouseLeave={_self.onMouseLeave(index)}
+                      isOpen={_self.state.isHover[index]} >
+                      <DropdownToggle className="topbar__nav-dropdown-toggle" href={basePath + nav_menus[mainMenu].Url}>
+                        <img alt={menuName} src={nav_menus[mainMenu].Icon} />
+                        {menuName}
+                      </DropdownToggle>
+                      <DropdownMenu className="topbar__nav-dropdown-menu dropdown__menu">
+                        {
+                          nav_menus[mainMenu].Items.map((menu, index) => (
+                            <div key={menu.Title + index}>
+                              <a className="topbar__link" title={menu.Title} href={menu.isRedirect == false ? menu.Url : basePath + menu.Url}>
+                                <p className="topbar__link-title">{menu.Title}</p>
+                              </a>
+                            </div>
+                          ))
+                        }
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  )
+                })
+              }
             </nav>
           </div>
         </div>
