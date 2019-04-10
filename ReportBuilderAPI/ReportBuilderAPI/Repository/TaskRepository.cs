@@ -244,7 +244,7 @@ namespace ReportBuilderAPI.Repository
 
                                     Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]) : null,
 
-                                    ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : (dataTable.Select("ColumnName = 'Task_Expiration_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Task_Expiration_Date"])) ? Convert.ToDateTime(sqlDataReader["Task_Expiration_Date"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : null : (dataTable.Select("ColumnName = 'Task_Expiration_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Task_Expiration_Date"])) ? Convert.ToDateTime(sqlDataReader["Task_Expiration_Date"]).ToString("MM/dd/yyyy") : null : null,
                                     
 
                                     TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
