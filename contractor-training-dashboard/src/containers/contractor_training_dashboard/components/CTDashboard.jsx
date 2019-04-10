@@ -52,6 +52,7 @@ class CTDashboard extends PureComponent {
         name: 'Role',
         sortable: true,
         editable: false,
+        width: 700,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
         cellClass: "text-left"
@@ -60,7 +61,6 @@ class CTDashboard extends PureComponent {
         key: 'incompleteCompanies',
         name: 'Incomplete Companies',
         sortable: true,
-        width: 375,
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("incompleteCompanies", props),
@@ -70,7 +70,6 @@ class CTDashboard extends PureComponent {
         key: 'completedCompanies',
         name: 'Completed Companies',
         sortable: true,
-        width: 375,
         editable: false,
         getRowMetaData: row => row,
         formatter: (props) => this.roleDetailsFormatter("completedCompanies", props),
@@ -686,7 +685,7 @@ class CTDashboard extends PureComponent {
                 rowsCount={rows.length}
                 onGridRowsUpdated={this.handleGridRowsUpdated}
                 rowHeight={35}
-                minColumnWidth={100}
+                minColumnWidth={150}
                 emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
                 sortColumn="role"
                 sortDirection="ASC"

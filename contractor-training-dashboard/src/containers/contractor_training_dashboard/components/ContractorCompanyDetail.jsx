@@ -50,7 +50,7 @@ class ContractorCompanyDetail extends React.Component {
         key: 'company',
         name: 'Company',
         sortable: true,
-        width: 450,
+        width: 500,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,

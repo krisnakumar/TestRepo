@@ -50,7 +50,7 @@ class CompanyUserDetail extends React.Component {
         key: 'employee',
         name: 'Employee',
         sortable: true,
-        width: 400,
+        width: 500,
         editable: false,
         getRowMetaData: row => row,
         formatter: this.cellFormatter,
@@ -426,7 +426,7 @@ class CompanyUserDetail extends React.Component {
                   rowsCount={rows.length}
                   onGridRowsUpdated={this.handleGridRowsUpdated}
                   rowHeight={35}
-                  minColumnWidth={100}
+                  minColumnWidth={120}
                   emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView}
                   sortColumn="employee"
                   sortDirection="ASC"
