@@ -3,7 +3,6 @@ using OnBoardLMS.WebAPI.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
-using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
 using System;
 using System.Linq;
@@ -27,19 +26,19 @@ namespace ReportBuilderAPI.Repository
             RoleResponse roleResponse = new RoleResponse();
 
             try
-            {                
+            {
                 using (DBEntity context = new DBEntity())
                 {
                     roleResponse.Roles = (from r in context.Role
-                                             where r.CompanyId == roleRequest.CompanyId
-                                             && r.IsEnabled==true  
-                                             select new RoleModel
-                                             {
-                                                 RoleId = Convert.ToInt32(r.Id),
-                                                 Role = Convert.ToString(r.Name)
-                                             }).ToList();
+                                          join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
+                                          join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
+                                          select new RoleModel
+                                          {
+                                              RoleId = Convert.ToInt32(r.Id),
+                                              Role = Convert.ToString(r.Name)
+                                          }).ToList();
                     return roleResponse;
-                }                               
+                }
             }
             catch (Exception getRolesException)
             {

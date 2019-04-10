@@ -1,6 +1,7 @@
 ﻿using Amazon.Lambda.Core;
 using DataInterface.Database;
 using Microsoft.EntityFrameworkCore;
+using ReportBuilder.Models.Models.DBModels;
 using System;
 
 namespace OnBoardLMS.WebAPI.Models
@@ -26,6 +27,10 @@ namespace OnBoardLMS.WebAPI.Models
 
         public DbSet<User> User { get; set; }
 
+        public DbSet<ReportingDashboardRole> Reporting_DashboardRole { get; set; }
+
+        public DbSet<ReportingDashboard> Reporting_Dashboard { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -47,13 +52,18 @@ namespace OnBoardLMS.WebAPI.Models
 
                 modelBuilder.Entity<User>().ToTable("User");
 
+                modelBuilder.Entity<ReportingDashboard>().ToTable("Reporting_Dashboard")
+                   .HasKey(cc => new { cc.Id, cc.DashboardName });
+
+                modelBuilder.Entity<ReportingDashboardRole>().ToTable("Reporting_DashboardRole")
+                 .HasKey(cc => new { cc.RoleId, cc.DashboardID });
 
                 base.OnModelCreating(modelBuilder);
             }
-            catch(Exception modelException)
+            catch (Exception modelException)
             {
                 LambdaLogger.Log(modelException.ToString());
-            }        
+            }
         }
     }
 }
