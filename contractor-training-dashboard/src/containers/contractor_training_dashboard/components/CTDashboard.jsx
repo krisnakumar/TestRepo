@@ -326,9 +326,11 @@ class CTDashboard extends PureComponent {
       fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
-      fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      // fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      fields.push({ "Name": "STATUS", "Value": "COMPLETED_COMPANY_USERS", "Operator": "=", "Bitwise": "and" });
     } else {
-      fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      // fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      fields.push({ "Name": "STATUS", "Value": "NOT_COMPLETED_COMPANY_USERS", "Operator": "=", "Bitwise": "and" });
     }
     let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
       companyDetails = {},

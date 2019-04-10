@@ -290,12 +290,12 @@ class CompanyUserDetail extends React.Component {
     let fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
-      fields.push({ "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      fields.push({ "Name": "STATUS", "Value": "COMPLETED", "Operator": "=", "Bitwise": "and" });
     } else {
-      fields.push({ "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" });
+      fields.push({ "Name": "STATUS", "Value": "IN_COMPLETE", "Operator": "=", "Bitwise": "and" });
     }
     if (isCompleted == null) {
-      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=", "Bitwise": "and" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }, { "Name": "STATUS", "Value": "ALL", "Operator": "=", "Bitwise": "and" }];
     }
 
     const postData = {

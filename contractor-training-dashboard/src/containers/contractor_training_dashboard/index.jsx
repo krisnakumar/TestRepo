@@ -41,7 +41,7 @@ class ContractorTrainingDashboard extends PureComponent {
                 <div className="modal-dialog auto-logout-modal modal-dialog-centered" role="document">
                   <div className="modal-content">
                     <div className="modal-header">
-                      <h5 className="modal-title"> Alert</h5>
+                      <h5 className="modal-title api-error-modal-title"> Alert</h5>
                     </div>
                     <div className="modal-body">Sorry, something went wrong. Please refresh the page.</div>
                     <div className="modal-footer"><button color="primary" onClick={this.reloadWindow}>Refresh</button> </div>
