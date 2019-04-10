@@ -89,7 +89,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.Payload.AppType, studentDetails))
                 {
                     return employeeRepository.GetEmployeeDetails(queryBuilderRequest);
                 }
@@ -122,7 +122,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.Payload.AppType, studentDetails))
                 {
                     return workbookRepository.GetWorkbookDetails(queryBuilderRequest);
                 }
@@ -156,7 +156,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
                 //Validating the student details  
                 string studentDetails = queryBuilderRequest.Payload.Fields.Where(x => x.Name.ToUpper() == Constants.STUDENT_DETAILS).Select(x => x.Value).FirstOrDefault();
 
-                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.AppType, studentDetails))
+                if (authorizer.ValidateUser(queryBuilderRequest.UserId, queryBuilderRequest.CompanyId, queryBuilderRequest.Payload.AppType, studentDetails))
                 {
                     return taskRepository.GetQueryTaskDetails(queryBuilderRequest);
                 }
