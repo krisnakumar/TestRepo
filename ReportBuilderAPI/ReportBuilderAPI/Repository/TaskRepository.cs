@@ -92,7 +92,7 @@ namespace ReportBuilderAPI.Repository
                 query += whereQuery;
 
                 query = query.Replace("@dashboard", queryBuilderRequest.AppType);
-                if(queryBuilderRequest.AppType.ToUpper()== Constants.OQ_DASHBOARD && queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_QUALIFICATION))
+                if (queryBuilderRequest.AppType.ToUpper() == Constants.OQ_DASHBOARD && queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_QUALIFICATION))
                 {
                     query += " GROUP BY u.User_id, u.full_name_format1, cy.id  ";
                 }
@@ -118,7 +118,7 @@ namespace ReportBuilderAPI.Repository
             int companyId = 0, reportId = 0;
             string contractorCompanyId = string.Empty, adminId = string.Empty;
             DatabaseWrapper databaseWrapper = new DatabaseWrapper();
-            bool status = false;
+            string status = string.Empty;
             try
             {
                 //Assign the request details to corresponding objects
@@ -138,31 +138,34 @@ namespace ReportBuilderAPI.Repository
                     if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_ROLE_QUALIFICATION))
                     {
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId + " , @adminId = " + adminId;                        
+                        query = "EXEC  dbo.ContractorManagement_TaskProfile_GetRoleStatusByRole @operatorCompanyId =" + companyId + " , @reportId = " + reportId + " , @adminId = " + adminId;
                     }
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.COMPLETED_COMPANY_USERS))
                     {
-                        status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED_COMPANY_USERS);
+                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED_COMPANY_USERS)? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.NOT_COMPLETED_COMPANY_USERS)? "0" : "null").FirstOrDefault();
+
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @parentRoleId =" + parameterList["role"].ToString() + ", @completionStatus=" + (status ? 1 : 0) + " , @adminId = " + adminId;                        
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByCompany @operatorCompanyId = " + companyId + ", @reportId = " + reportId + ", @parentRoleId =" + parameterList["role"].ToString() + ", @completionStatus=" + status + " , @adminId = " + adminId;
                     }
 
                     else if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                     {
-                        status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED);
+                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED) ? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.IN_COMPLETE) ? "0" : "null").FirstOrDefault();
+
                         contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @parentRoleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + (status ? 1 : 0) + " , @adminId = " + adminId;                        
+                        query = " EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByUser @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @parentRoleId = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @completionStatus = " + status + " , @adminId = " + adminId;
                     }
                     else
                     {
-                        status = queryBuilderRequest.Fields.Any(x => x.Name.ToUpper() == Constants.COMPLETED);
-                        contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();    
+                        status = queryBuilderRequest.Fields.Select(x => (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.COMPLETED) ? "1" : (x.Name.ToUpper() == Constants.STATUS && x.Value.ToUpper() == Constants.IN_COMPLETE) ? "0" : "null").FirstOrDefault();
+
+                        contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                         contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                         reportId = databaseWrapper.ExecuteScalar("SELECT Id FROM Reporting_Dashboard WHERE DashboardName='TRAINING_DASHBOARD'");
-                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @parentRoleId  = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @taskCompletionStatus = " + (status ? 1 : 0) + ", @contractorEmployeeId = " + parameterList["userId"].ToString() + " , @adminId = " + adminId;                        
+                        query = "EXEC dbo.ContractorManagement_TaskProfile_GetRoleStatusByTask @operatorCompanyId = " + companyId + ", @reportId = " + reportId + " , @parentRoleId  = " + parameterList["role"].ToString() + ", @contractorCompanyId = " + contractorCompanyId + ", @taskCompletionStatus = " + status + ", @contractorEmployeeId = " + parameterList["userId"].ToString() + " , @adminId = " + adminId;
                     }
                 }
                 else
@@ -557,7 +560,7 @@ namespace ReportBuilderAPI.Repository
 
               { " FROM dbo.Task t LEFT JOIN dbo.TaskVersion tv ON tv.TaskId=t.Id  JOIN dbo.CourseAssignment ca on ca.TaskversionId=tv.Id AND ca.IsEnabled = 1 AND ca.Status = 0 AND ca.IsCurrent = 1   JOIN  dbo.UserRole ur on ur.UserId=ca.UserId AND ur.IsEnabled = 1   JOIN dbo.Role r on r.Id=ur.roleId AND r.IsEnabled = 1  JOIN dbo.UserCompany uc on uc.UserId=ur.UserId    AND  uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 LEFT JOIN dbo.[UserDetails_RB] u on u.User_Id=uc.UserId AND u.Is_Enabled = 1  LEFT JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany AND cc.IsEnabled=1 AND cc.ClientCompany!=uc.CompanyId   JOIN dbo.Company cy on cy.Id=uc.CompanyId AND cy.IsEnabled=1 " , new List<string> {Constants.COMPLETED_COMPANY_USERS, Constants.NOT_COMPLETED_COMPANY_USERS, Constants.TOTAL_COMPLETED_COMPANY_USERS, Constants.ASSIGNED_DATE } },
 
-         
+
              { " FROM   dbo.usercompany uc  JOIN dbo.[userdetails_rb] u  ON u.user_id = uc.userid AND uc.IsEnabled = 1 AND uc.Status = 1 AND uc.IsVisible = 1 AND uc.IsDefault=1 AND u.is_enabled = 1  JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id  JOIN dbo.supervisor s  ON s.userid = u.user_id  AND isdirectreport = 1 AND s.IsEnabled=1 JOIN dbo.company cy ON cy.id = uc.companyid AND cy.isenabled = 1 " , new List<string> {Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION,   Constants.LOCK_OUT_REASON } },
 
                { "FROM (SELECT c.Id AS [company_id] FROM dbo.UserCompany uc  JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany  WHERE uc.IsDefault=1	AND uc.IsEnabled=1	AND uc.UserId=@userId AND cc.IsEnabled=1	and c.IsEnabled=1  AND cc.ClientCompany!=uc.CompanyId)  As ClientCompanies JOIN dbo.usercompany uc ON uc.companyid = ClientCompanies.[company_id] JOIN dbo.dashboardreportdn dr ON uc.userid = dr.user_id AND uc.companyid = dr.company_id JOIN dbo.company cy ON ClientCompanies.[company_id]=cy.id GROUP  BY cy.NAME, cy.id,uc.companyid		" , new List<string> { Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES } },
