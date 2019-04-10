@@ -63,7 +63,7 @@ namespace ReportBuilderAPI.Helpers
                             bool clientCompany = (from uc in context.UserCompany
                                                   join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
                                                   where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && uc.UserId == userId && cc.ClientCompany == companyId
-                                                  select uc.UserId).Any();
+                                                  select uc.UserId).ToList().Count > 0;
                             if (clientCompany)
                             {
                                 return true;
@@ -77,7 +77,7 @@ namespace ReportBuilderAPI.Helpers
                         {
                             return false;
                         }
-                    }                    
+                    }
                 }
             }
             catch (Exception validateUserException)
