@@ -182,6 +182,9 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LockoutCount { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string UserName { get; set; }
+
         [JsonIgnore]
         public string RoleStatus { get; set; }
 

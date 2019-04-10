@@ -244,7 +244,8 @@ namespace ReportBuilderAPI.Repository
 
                                     Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : (dataTable.Select("ColumnName = 'Task_Status'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Status"]) : null,
 
-                                    ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    ExpirationDate = (dataTable.Select("ColumnName = 'DateExpired'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateExpired"])) ? Convert.ToDateTime(sqlDataReader["DateExpired"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : (dataTable.Select("ColumnName = 'Task_Expiration_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Task_Expiration_Date"])) ? Convert.ToDateTime(sqlDataReader["Task_Expiration_Date"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    
 
                                     TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
 
@@ -265,6 +266,8 @@ namespace ReportBuilderAPI.Repository
                                     Role = (dataTable.Select("ColumnName = 'role'").Count() == 1) ? Convert.ToString(sqlDataReader["role"]) : (dataTable.Select("ColumnName = 'Parent_Role_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Parent_Role_Name"]) : null,
 
                                     AssignedQualification = (dataTable.Select("ColumnName = 'AssignedQualification'").Count() == 1) ? (sqlDataReader["AssignedQualification"] != DBNull.Value ? (int?)sqlDataReader["AssignedQualification"] : 0) : null,
+
+                                    UserName = (dataTable.Select("ColumnName = 'Contractor_User_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_User_Name"]) : null,
 
                                     CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (sqlDataReader["CompletedQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedQualification"] : 0) : null,
 
