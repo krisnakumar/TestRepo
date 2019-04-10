@@ -59,17 +59,25 @@ namespace ReportBuilderAPI.Helpers
                     {
                         if (appType == Constants.TRAINING_DASHBOARD || appType == Constants.OQ_DASHBOARD)
                         {
+
                             bool clientCompany = (from uc in context.UserCompany
                                                   join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
-                                                  where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && uc.UserId == userId
-                                                  select uc).Any();
+                                                  where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && uc.UserId == userId && cc.ClientCompany == companyId
+                                                  select uc.UserId).Any();
                             if (clientCompany)
                             {
                                 return true;
                             }
+                            else
+                            {
+                                return false;
+                            }
                         }
-                    }
-                    return true;
+                        else
+                        {
+                            return false;
+                        }
+                    }                    
                 }
             }
             catch (Exception validateUserException)
