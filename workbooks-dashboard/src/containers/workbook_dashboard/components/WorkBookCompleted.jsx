@@ -135,7 +135,7 @@ class WorkBookCompleted extends React.Component {
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkBookName,
-        completionDate: employees[i].LastAttemptDate.split("T")[0] || ""
+        completionDate: employees[i].DueDate ? (employees[i].DueDate.split("T")[0] || "") : ""
       });
     }
 

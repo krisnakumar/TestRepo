@@ -460,7 +460,7 @@ class WorkBookDashboard extends PureComponent {
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
-      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }];
+      fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }, { "Name": "USER_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }, { "Name": "ASSIGNED_WORKBOOK", "Value": "true", "Operator": "=", "Bitwise": "and" }];
     if (loggedInUserId) {
       let currentUserField = { "Name": "CURRENT_USER", "Value": loggedInUserId, "Operator": "=", "Bitwise": "AND" };
       fields.push(currentUserField);
