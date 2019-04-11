@@ -211,11 +211,11 @@ namespace ReportBuilderAPI.Helpers
         ViewDataAudit = 17179869184, //Data Audits
         ViewEvaluatorApprovedTaskReport = 34359738368,
         ViewCoachingReport = 68719476736,
-        ViewJobReport = 137438953472L,
-        ShowDashBoardTopLevel = 274877906944L,
+        ViewJobReport = 137438953472L,        
         ViewWorkbookReport = 549755813888L,
         ViewContractorOQDashboard = 1099511627776L,
         ViewContractorTrainingDashboard = 2199023255552L,
+        ShowDashBoardTopLevel = 274877906944L,
         ViewQueryBuilder = 4398046511104L,
         ViewWorkbooksDashboard = 8796093022208L
     }

@@ -251,6 +251,8 @@ namespace ReportBuilderAPI.Utilities
 
         public const string DUE_DAYS_VALUE = "30";
         public const string TRAINING_DASHBOARD = "TRAINING_DASHBOARD";
+
+        public const string WORKBOOK_DASHBOARD = "WORKBOOK_DASHBOARD"; 
         public const string OQ_DASHBOARD = "OQ_DASHBOARD";
 
     }
