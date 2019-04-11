@@ -27,6 +27,10 @@ import CompanyFilterModal from './CompanyFilterModal';
 import Export from './CTDashboardExport';
 import * as Constants from '../../../shared/constants';
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+
 /**
  * DataTableEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
@@ -101,7 +105,7 @@ class CTDashboard extends PureComponent {
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
     this.toggleCompanyFilter = this.toggleCompanyFilter.bind(this);
     this.handleCompanyDelete = this.handleCompanyDelete.bind(this);
-
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -443,7 +447,7 @@ class CTDashboard extends PureComponent {
       default:
         break;
     }
-    this.refs.contractorDashboardDataGrid.deselect();
+    // this.refs.contractorDashboardDataGrid.deselect();
   };
 
   // This method is used to setting the row data in react data grid
@@ -571,12 +575,22 @@ class CTDashboard extends PureComponent {
     }
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span>
+    );
+  }
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, filteredCompanies } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
       filteredRolesLength = filteredRoles.length,
       filteredCompaniesLength = filteredCompanies.length;
     let basePath = window.location.origin || "";
+    let pgSize = (rows.length > 10) ? rows.length : rows.length;
     return (
       <CardBody>
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
@@ -674,7 +688,7 @@ class CTDashboard extends PureComponent {
               <p className="section-info-description">Complete =  Number of contractor companies that have users in a role, who have completed all the training tasks in the role complete.</p>
             </div>
             <div className="table has-section-view is-table-page-view">
-              <ReactDataGrid
+              {/* <ReactDataGrid
                 ref={'contractorDashboardDataGrid'}
                 className={"contractor-training-dashboard"}
                 onGridSort={this.handleGridSort}
@@ -689,6 +703,53 @@ class CTDashboard extends PureComponent {
                 emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
                 sortColumn="role"
                 sortDirection="ASC"
+              /> */}
+              <ReactTable
+                data={rows}
+                columns={[
+                  {
+                    Header: "Role",
+                    accessor: "role",
+                    // width: 200
+                    minWidth: 400,
+                    className: 'text-left'
+                  },
+                  {
+                    Header: "Incomplete Companies",
+                    id: "incompleteCompanies",
+                    accessor: d => d.incompleteCompanies,
+                    minWidth: 200,
+                    maxWidth: 300,
+                    className: 'text-center',
+                    Cell: this.customCell
+                  },
+                  {
+                    Header: "Completed Companies",
+                    accessor: "completedCompanies",
+                    minWidth: 200,
+                    maxWidth: 300,
+                    className: 'text-center',
+                    Cell: this.customCell
+                  }
+                ]
+                }
+                resizable={false}
+                className="-striped -highlight"
+                showPagination={false}
+                showPaginationTop={false}
+                showPaginationBottom={false}
+                showPageSizeOptions={false}
+                pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                pageSize={!this.state.isInitial ? 5 : pgSize}
+                loading={!this.state.isInitial}
+                loadingText={''}
+                noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                defaultSorted={[
+                  {
+                    id: "role",
+                    desc: false
+                  }
+                ]}
               />
             </div>
           </div>
