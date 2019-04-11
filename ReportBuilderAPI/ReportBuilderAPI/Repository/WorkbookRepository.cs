@@ -373,7 +373,8 @@ namespace ReportBuilderAPI.Repository
 
                                     UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
 
-                                    DueDate = (dataTable.Select("ColumnName = 'DueDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DueDate"])) ? Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    DueDate = (dataTable.Select("ColumnName = 'OJT_Due_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["OJT_Due_Date"])) ? Convert.ToDateTime(sqlDataReader["OJT_Due_Date"]).ToString("MM/dd/yyyy") : null : null,
+
                                     CompletedTasks = (dataTable.Select("ColumnName = 'OJT_Task_Completed_Count'").Count() == 1) ? Convert.ToString((sqlDataReader["OJT_Task_Completed_Count"])) : null
                                 };
                                 // Adding each workbook details in array list
