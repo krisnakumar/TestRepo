@@ -256,6 +256,24 @@ namespace ReportBuilderAPI.Repository
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetDashboardSummary  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @showTopLevel = " + CheckSupervisor(companyId, Convert.ToInt32(userId)) + ", @dueInDays  = " + parameterList["duedays"].ToString();
                     }
+
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_IN_DUE).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_IN_DUE)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @dueInDays  = " + parameterList["duedays"].ToString();
+                    }
+
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.PAST_DUE).Select(y => y.Name).FirstOrDefault() == Constants.PAST_DUE)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId;
+                    }
+
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @completionStatus   = " + 1;
+                    }
                 }
                 else
                 {
@@ -266,7 +284,7 @@ namespace ReportBuilderAPI.Repository
 
 
                 //Create the dictionary to pass the parameter value
-          
+
                 workbookResponse.Workbooks = ReadWorkBookDetails(query, parameterList);
 
                 //Send the response depends upon the workboook details
@@ -313,10 +331,11 @@ namespace ReportBuilderAPI.Repository
                                 //Get the workbook details from the database
                                 WorkbookModel workbookResponse = new WorkbookModel
                                 {
-                                 
+
                                     EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Employee_Full_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Full_Name"]) : null,
 
-                                    WorkBookName = (dataTable.Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(sqlDataReader["workbookName"]) : null,
+                                    WorkBookName = (dataTable.Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(sqlDataReader["workbookName"]) : (dataTable.Select("ColumnName = 'OJT_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["OJT_Name"]) : null,
+
                                     Description = (dataTable.Select("ColumnName = 'Description'").Count() == 1) ? Convert.ToString(sqlDataReader["Description"]) : null,
                                     WorkbookCreated = (dataTable.Select("ColumnName = 'datecreated'").Count() == 1) ? Convert.ToString(sqlDataReader["datecreated"]) : null,
                                     WorkbookEnabled = (dataTable.Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
@@ -327,11 +346,14 @@ namespace ReportBuilderAPI.Repository
                                     FirstAttemptDate = (dataTable.Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                     LastAttemptDate = (dataTable.Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                     NumberCompleted = (dataTable.Select("ColumnName = 'NumberCompleted'").Count() == 1) ? (int?)(sqlDataReader["NumberCompleted"]) : null,
-                                    
-                                 Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : (dataTable.Select("ColumnName = 'Employee_Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Role"]) : null,
+
+                                    Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : (dataTable.Select("ColumnName = 'Employee_Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Role"]) : null,
 
                                     CompletedWorkbook = (dataTable.Select("ColumnName = 'OJT_Completed'").Count() == 1) ? (int?)(sqlDataReader["OJT_Completed"]) : null,
-                                    TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (int?)(sqlDataReader["TotalTasks"]) : null,
+
+                                    TotalTasks = (dataTable.Select("ColumnName = 'OJT_Task_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Task_Count"]) : null,
+
+
                                     TotalWorkbook = (dataTable.Select("ColumnName = 'TotalWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["TotalWorkbooks"]) : null,
                                     PastDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Past_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Past_Due_Count"]) : null,
                                     InDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Due_Count"]) : null,
@@ -352,7 +374,7 @@ namespace ReportBuilderAPI.Repository
                                     UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
 
                                     DueDate = (dataTable.Select("ColumnName = 'DueDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DueDate"])) ? Convert.ToDateTime(sqlDataReader["DueDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                    CompletedTasks = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? Convert.ToString((sqlDataReader["CompletedTasks"])) : null
+                                    CompletedTasks = (dataTable.Select("ColumnName = 'OJT_Task_Completed_Count'").Count() == 1) ? Convert.ToString((sqlDataReader["OJT_Task_Completed_Count"])) : null
                                 };
                                 // Adding each workbook details in array list
                                 workbookList.Add(workbookResponse);
