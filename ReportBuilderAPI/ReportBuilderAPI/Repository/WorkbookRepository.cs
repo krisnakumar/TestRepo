@@ -339,7 +339,9 @@ namespace ReportBuilderAPI.Repository
                                     Description = (dataTable.Select("ColumnName = 'Description'").Count() == 1) ? Convert.ToString(sqlDataReader["Description"]) : null,
                                     WorkbookCreated = (dataTable.Select("ColumnName = 'datecreated'").Count() == 1) ? Convert.ToString(sqlDataReader["datecreated"]) : null,
                                     WorkbookEnabled = (dataTable.Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
-                                    WorkBookId = (dataTable.Select("ColumnName = 'Id'").Count() == 1) ? (int?)(sqlDataReader["Id"]) : null,
+
+                                    WorkBookId = (dataTable.Select("ColumnName = 'Id'").Count() == 1) ? (sqlDataReader["Id"] != DBNull.Value ? (int?)sqlDataReader["Id"] : 0) : (dataTable.Select("ColumnName = 'OJT_Id'").Count() == 1) ? (sqlDataReader["OJT_Id"] != DBNull.Value ? (int?)sqlDataReader["OJT_Id"] : 0) : null,
+
                                     LastSignoffBy = (dataTable.Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
                                     WorkbookAssignedDate = (dataTable.Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                     Repetitions = (dataTable.Select("ColumnName = 'Repetitions'").Count() == 1) ? Convert.ToString((sqlDataReader["Repetitions"])) : null,
