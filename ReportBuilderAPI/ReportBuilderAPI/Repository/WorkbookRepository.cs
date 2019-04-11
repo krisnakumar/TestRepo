@@ -266,13 +266,13 @@ namespace ReportBuilderAPI.Repository
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.PAST_DUE).Select(y => y.Name).FirstOrDefault() == Constants.PAST_DUE)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetPastDueOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
                     }
 
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @completionStatus   = " + 1;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetOJTByStatus   @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @completionStatus   = " + 1;
                     }
                 }
                 else
