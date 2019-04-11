@@ -274,6 +274,12 @@ namespace ReportBuilderAPI.Repository
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetOJTByStatus   @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @completionStatus   = " + 1;
                     }
+                    
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_WORKBOOK).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_WORKBOOK)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
+                    }
                 }
                 else
                 {
