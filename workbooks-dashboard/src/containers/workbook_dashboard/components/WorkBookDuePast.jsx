@@ -144,7 +144,8 @@ class WorkBookDuePast extends React.Component {
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     const payLoad = {
       "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
-      "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS
+      "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);

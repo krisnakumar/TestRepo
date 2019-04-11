@@ -225,7 +225,8 @@ class MyEmployees extends React.Component {
       fields = [{ "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", }, { "Name": "CURRENT_USER", "Value": userId, "Operator": "=", "Bitwise": "AND" }];
     const postData = {
       "Fields": fields,
-      "ColumnList": Constants.GET_EMPLOYEES_COLUMNS
+      "ColumnList": Constants.GET_EMPLOYEES_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     // Company Id get from session storage
@@ -263,7 +264,8 @@ class MyEmployees extends React.Component {
     }
     const payLoad = {
       "Fields": fields,
-      "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS
+      "ColumnList": Constants.GET_WORKBOOKS_PAST_DUE_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     // Company Id get from session storage
@@ -307,7 +309,8 @@ class MyEmployees extends React.Component {
     }
     const payLoad = {
       "Fields": fields,
-      "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS
+      "ColumnList": Constants.GET_WORKBOOKS_COMING_DUE_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     let isComingDueModal = this.state.isComingDueModal,
@@ -352,7 +355,8 @@ class MyEmployees extends React.Component {
     }
     const payLoad = {
       "Fields": fields,
-      "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS
+      "ColumnList": Constants.GET_COMPLETED_WORKBOOKS_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     // Company Id get from session storage
@@ -395,7 +399,8 @@ class MyEmployees extends React.Component {
     }
     const payLoad = {
       "Fields": fields,
-      "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS
+      "ColumnList": Constants.GET_ASSIGNED_WORKBOOKS_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     // Company Id get from session storage

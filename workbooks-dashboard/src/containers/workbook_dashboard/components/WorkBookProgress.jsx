@@ -200,7 +200,8 @@ class WorkBookProgress extends React.Component {
         { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "AND" },
         { "Name": "TASK_ID", "Value": taskId, "Operator": "=", "Bitwise": "AND" }
       ],
-      "ColumnList": Constants.GET_WORKBOOKS_REPETITION_COLUMNS
+      "ColumnList": Constants.GET_WORKBOOKS_REPETITION_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
     };
 
     let isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal,
