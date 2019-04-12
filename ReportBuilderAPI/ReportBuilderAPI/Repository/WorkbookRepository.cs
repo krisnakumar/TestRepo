@@ -419,7 +419,7 @@ namespace ReportBuilderAPI.Repository
 
                                     NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
 
-                                    LastAttemptDate = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                    LastAttemptDate_tasks = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date_Attempted"])) ? Convert.ToDateTime(sqlDataReader["Date_Attempted"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
                                     Location = (dataTable.Select("ColumnName = 'Attempt_Location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
                                     Comments = taskComment?.Comment,

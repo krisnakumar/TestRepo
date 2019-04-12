@@ -110,6 +110,9 @@ namespace ReportBuilder.Models.Models
         public int? NumberCompleted { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LastAttemptDate { get; set; }
+        
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastAttemptDate_tasks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string FirstAttemptDate { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
