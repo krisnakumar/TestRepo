@@ -25,6 +25,10 @@ import * as API from '../../../shared/utils/APIUtils';
 import UserTaskDetail from './UserTaskDetail';
 import Export from './CTDashboardExport';
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+
 /**
  * CompanyUserDetailEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
@@ -106,6 +110,7 @@ class CompanyUserDetail extends React.Component {
       selectedEmployee: ""
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -349,7 +354,7 @@ class CompanyUserDetail extends React.Component {
         console.log(type, args);
         break;
     }
-    this.refs.companyUserDetailReactDataGrid.deselect();
+    // this.refs.companyUserDetailReactDataGrid.deselect();
   };
 
   /**
@@ -387,12 +392,22 @@ class CompanyUserDetail extends React.Component {
     }
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   // This method is used to set the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows, title } = this.state;
     let titleText = title || "";
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
         <UserTaskDetail
@@ -416,7 +431,7 @@ class CompanyUserDetail extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'companyUserDetailReactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -430,6 +445,75 @@ class CompanyUserDetail extends React.Component {
                   emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView}
                   sortColumn="employee"
                   sortDirection="ASC"
+                /> */}
+                 <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Employee",
+                      id: "employee",
+                      accessor: "employee",
+                      minWidth: 300,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Incomplete",
+                      id: "incomplete",
+                      accessor: d => d.incomplete,
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Completed",
+                      id: "completed",
+                      accessor: "completed",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Total",
+                      id: "total",
+                      accessor: "total",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "% Complete",
+                      id: "percentageCompleted",
+                      accessor: "percentageCompleted",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center'
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 10 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  defaultSorted={[
+                    {
+                      id: "employee",
+                      desc: false
+                    }
+                  ]}
+                  style={{
+                    minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "800px"
+                  }}
                 />
               </div>
             </div>

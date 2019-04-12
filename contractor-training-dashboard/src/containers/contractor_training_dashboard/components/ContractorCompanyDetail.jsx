@@ -25,6 +25,10 @@ import * as API from '../../../shared/utils/APIUtils';
 import CompanyUserDetail from './CompanyUserDetail';
 import Export from './CTDashboardExport';
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
+
 /**
  * ContractorCompanyDetailEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
@@ -105,9 +109,12 @@ class ContractorCompanyDetail extends React.Component {
       isUserDetailsModal: false,
       userDetails: {}
     };
+    this._tBodyComponent = null;
     this.toggle = this.toggle.bind(this);
-  }
+    this.customCell = this.customCell.bind(this);
 
+  }
+  
   /**
    * @method
    * @name - componentDidCatch
@@ -350,7 +357,7 @@ class ContractorCompanyDetail extends React.Component {
         console.log(companyType, companyId, isCompleted, roleId);
         break;
     }
-    this.refs.incompleteCompaniesReactDataGrid.deselect();
+    // this.refs.incompleteCompaniesReactDataGrid.deselect();
   };
 
   /**
@@ -388,12 +395,23 @@ class ContractorCompanyDetail extends React.Component {
     }
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows, title } = this.state;
     let titleText = title || "";
+    let pgSize = (rows.length > 10) ? rows.length : 10;
+
     return (
       <div>
         <CompanyUserDetail
@@ -417,7 +435,7 @@ class ContractorCompanyDetail extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'incompleteCompaniesReactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -431,6 +449,76 @@ class ContractorCompanyDetail extends React.Component {
                   emptyRowsView={this.state.isInitial && ContractorCompanyDetailEmptyRowsView}
                   sortColumn="company"
                   sortDirection="ASC"
+                /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Company",
+                      id: "company",
+                      accessor: "company",
+                      minWidth: 300,
+                      className: 'text-left',
+                    },
+                    {
+                      Header: "Incomplete Users",
+                      id: "incompleteUsers",
+                      accessor: d => d.incompleteUsers,
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                    },
+                    {
+                      Header: "Completed Users",
+                      id: "completedUsers",
+                      accessor: "completedUsers",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                    },
+                    {
+                      Header: "Total",
+                      id: "total",
+                      accessor: "total",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                    },
+                    {
+                      Header: "% Complete",
+                      id: "percentageCompleted",
+                      accessor: "percentageCompleted",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center',
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 10 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  defaultSorted={[
+                    {
+                      id: "company",
+                      desc: false
+                    }
+                  ]}
+                  style={{
+                    minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "800px",
+                    // minWidth: "800px"
+                  }}
                 />
               </div>
             </div>

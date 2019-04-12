@@ -578,9 +578,9 @@ class CTDashboard extends PureComponent {
   customCell(props) {
     let self = this;
     return (
-      <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
         {props.value}
-      </span>
+      </span> || <span>{props.value}</span>
     );
   }
 
@@ -725,6 +725,7 @@ class CTDashboard extends PureComponent {
                   },
                   {
                     Header: "Completed Companies",
+                    id: "completedCompanies",
                     accessor: "completedCompanies",
                     minWidth: 200,
                     maxWidth: 300,

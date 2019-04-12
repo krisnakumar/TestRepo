@@ -21,7 +21,12 @@ import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import * as moment from 'moment';
 import Export from './CTDashboardExport';
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * UserTaskDetailEmptyRowsView Class defines the React component to render
@@ -65,7 +70,7 @@ class UserTaskDetail extends React.Component {
         cellClass: "text-left"
       },
       {
-        key: 'ExpirationDate',
+        key: 'expirationDate',
         name: 'Expires',
         sortable: true,
         width: 200,
@@ -93,6 +98,7 @@ class UserTaskDetail extends React.Component {
       title: this.props.title || ""
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -126,8 +132,8 @@ class UserTaskDetail extends React.Component {
         taskCode: taskDetails[i].TaskCode || "",
         taskName: taskDetails[i].TaskName || "",
         status: taskDetails[i].Status || "",
-        ExpirationDate: taskDetails[i].ExpirationDate || "",
-        
+        expirationDate: taskDetails[i].ExpirationDate || "",
+
       });
     }
 
@@ -262,6 +268,14 @@ class UserTaskDetail extends React.Component {
     );
   }
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
@@ -269,6 +283,8 @@ class UserTaskDetail extends React.Component {
   render() {
     const { rows, title } = this.state;
     let titleText = title || "";
+    let pgSize = (rows.length > 10) ? rows.length : 10;
+    // pgSize = (pgSize > 20) ? 20 : pgSize;
     return (
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
@@ -285,7 +301,7 @@ class UserTaskDetail extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'userTaskDetailReactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -299,6 +315,75 @@ class UserTaskDetail extends React.Component {
                   emptyRowsView={this.state.isInitial && UserTaskDetailEmptyRowsView}
                   sortColumn="taskName"
                   sortDirection="ASC"
+                /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Task Code",
+                      id: "taskCode",
+                      accessor: "taskCode",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Task Name",
+                      id: "taskName",
+                      accessor: d => d.taskName,
+                      minWidth: 300,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Expires",
+                      id: "expirationDate",
+                      accessor: "expirationDate",
+                      minWidth: 100,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      render: props => <span>{moment(props.value).format('MM/DD/YYYY')}</span>,
+                      sortMethod: (a, b) => {
+                          var a1 = new Date(a).getTime();
+                          var b1 = new Date(b).getTime();
+                          if (a1 <= b1)
+                            return 1;
+                          else if (a1 >= b1)
+                            return -1;
+                          else
+                            return 0;
+                      } 
+                    },
+                    {
+                      Header: "Status",
+                      id: "status",
+                      accessor: "status",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center'
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 10 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  defaultSorted={[
+                    {
+                      id: "taskName",
+                      desc: false
+                    }
+                  ]}
+                  style={{
+                    minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "800px"
+                  }}
                 />
               </div>
             </div>

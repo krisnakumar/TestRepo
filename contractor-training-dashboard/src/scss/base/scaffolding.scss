@@ -1176,3 +1176,11 @@ text-align: center !important;
 .ReactTable .rt-tbody .rt-tr-group {
     border-bottom: 1px solid #ddd !important;
 }
+
+.ReactTable .rt-table {
+  border-radius: 5px !important;
+}
+.ReactTable .rt-thead .rt-th.-cursor-pointer, .ReactTable .rt-thead .rt-td.-cursor-pointer {
+  color: #ffffff;
+  border-right: 1px solid #ddd !important;
+}
