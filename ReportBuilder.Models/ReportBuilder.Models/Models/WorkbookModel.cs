@@ -142,9 +142,7 @@ namespace ReportBuilder.Models.Models
         public string Location { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string EvaluatorName { get; set; }
-        
-        
-        
+       
         
     }
 }
