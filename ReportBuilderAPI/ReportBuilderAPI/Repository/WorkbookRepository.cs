@@ -289,7 +289,7 @@ namespace ReportBuilderAPI.Repository
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + workbookID;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @OJTId =" + workbookID;
                     }
                     
                     if (queryBuilderRequest.ColumnList.Contains(Constants.NUMBER_OF_ATTEMPTS))
@@ -299,7 +299,7 @@ namespace ReportBuilderAPI.Repository
                         taskId = parameterList["taskId"].ToString();
                         string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
                         status = tag == Constants.COMPLETED ? "1" : tag == Constants.IN_COMPLETE ? "0" : "null";
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetRepProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + workbookID + "@taskId=" + taskId + "@completionStatus=" + status;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetRepProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @OJTId =" + workbookID + ", @taskId=" + taskId + ", @completionStatus=" + status;
                     }
                 }
                 else
