@@ -135,7 +135,7 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string NumberofAttempts { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Comment { get; set; }
+        public string Comments { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Location { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
