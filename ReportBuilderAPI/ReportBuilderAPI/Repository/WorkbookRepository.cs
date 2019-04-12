@@ -291,8 +291,8 @@ namespace ReportBuilderAPI.Repository
                         workbookID = parameterList["workbookId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + workbookID;
                     }
-
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
+                    
+                    if (queryBuilderRequest.ColumnList.Contains(Constants.NUMBER_OF_ATTEMPTS))
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
