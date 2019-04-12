@@ -239,6 +239,10 @@ namespace ReportBuilderAPI.Repository
             Dictionary<string, string> parameterList;
             WorkbookResponse workbookResponse = new WorkbookResponse();
             string userId = string.Empty;
+            string status = string.Empty;
+            string workbookID = string.Empty;
+            string taskId = string.Empty;
+            
             try
             {
                 //Assign the request details to corresponding objects
@@ -284,8 +288,8 @@ namespace ReportBuilderAPI.Repository
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
                     {
                         userId = parameterList["userId"].ToString();
-                        WORKBOOK_ID = parameterList["workbookId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + WORKBOOK_ID;
+                        workbookID = parameterList["workbookId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + workbookID;
                     }
 
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
