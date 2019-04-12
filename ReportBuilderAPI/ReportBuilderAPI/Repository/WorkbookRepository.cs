@@ -260,19 +260,19 @@ namespace ReportBuilderAPI.Repository
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_IN_DUE).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_IN_DUE)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetComingDueOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @dueInDays  = " + parameterList["duedays"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @dueInDays  = " + parameterList["duedays"].ToString() ;
                     }
 
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.PAST_DUE).Select(y => y.Name).FirstOrDefault() == Constants.PAST_DUE)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetPastDueOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetPastDueOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId + " ,@status = 1";
                     }
 
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetOJTByStatus   @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @completionStatus   = " + 1;
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetOJTByStatus   @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @status   = " + 2;
                     }
                     
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_WORKBOOK).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_WORKBOOK)
@@ -347,6 +347,10 @@ namespace ReportBuilderAPI.Repository
                                     WorkbookEnabled = (dataTable.Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
 
                                     WorkBookId = (dataTable.Select("ColumnName = 'Id'").Count() == 1) ? (sqlDataReader["Id"] != DBNull.Value ? (int?)sqlDataReader["Id"] : 0) : (dataTable.Select("ColumnName = 'OJT_Id'").Count() == 1) ? (sqlDataReader["OJT_Id"] != DBNull.Value ? (int?)sqlDataReader["OJT_Id"] : 0) : null,
+
+                                    RepsRequired = (dataTable.Select("ColumnName = 'OJT_Reps_Required_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Required_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Required_Count"] : 0) : null,
+
+                                    RepsCompleted = (dataTable.Select("ColumnName = 'OJT_Reps_Completed_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Completed_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Completed_Count"] : 0) : null,
 
                                     LastSignoffBy = (dataTable.Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
                                     WorkbookAssignedDate = (dataTable.Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,

@@ -29,6 +29,12 @@ namespace ReportBuilder.Models.Models
         public int? WorkBookId { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? RepsRequired { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? RepsCompleted { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CompletionDate { get; set; }
 
 
