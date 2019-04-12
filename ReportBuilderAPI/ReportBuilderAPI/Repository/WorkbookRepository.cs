@@ -280,6 +280,23 @@ namespace ReportBuilderAPI.Repository
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
                     }
+
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        WORKBOOK_ID = parameterList["workbookId"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + WORKBOOK_ID;
+                    }
+
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
+                    {
+                        userId = parameterList["userId"].ToString();
+                        workbookID = parameterList["workbookId"].ToString();
+                        taskId = parameterList["taskId"].ToString();
+                        string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
+                        status = tag == Constants.COMPLETED ? "1" : tag == Constants.IN_COMPLETE ? "0" : "null";
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetRepProgress   @companyId  =" + companyId + " , @supervisorId  = " + userId + "@OJTId =" + workbookID + "@taskId=" + taskId + "@completionStatus=" + status;
+                    }
                 }
                 else
                 {
