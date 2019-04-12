@@ -239,7 +239,6 @@ class ContractorCompanyDetail extends React.Component {
 
     isUserDetailsModal = true;
     this.setState({ ...this.state, isUserDetailsModal, userDetails });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**

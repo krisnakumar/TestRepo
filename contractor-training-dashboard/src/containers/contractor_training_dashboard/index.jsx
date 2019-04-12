@@ -7,6 +7,10 @@ import Footer from './components/Footer';
 import Layout from '../_layout/index';
 import Dashboard from './components/CTDashboard';
 
+import "babel-polyfill";
+import "isomorphic-fetch";
+// import 'core-js/fn/string/includes';
+
 class ContractorTrainingDashboard extends PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,

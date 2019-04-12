@@ -167,7 +167,7 @@ class CTDashboard extends PureComponent {
    * @param none
    * @returns none
   */
-  async componentDidMount() {
+ async componentDidMount() {
     let roles = [],
       companies = [];
 
@@ -252,12 +252,8 @@ class CTDashboard extends PureComponent {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
       isInitial = true;
-
-    // this.setState({ rows: rows, isInitial: isInitial });
-    this.state.rows = rows;
-    this.state.isInitial = isInitial;
-    window.dispatchEvent(new Event('resize'));
-    this.handleGridSort("role", "ASC");
+      
+    this.setState({ rows: rows, isInitial: isInitial });
   };
 
   /**
@@ -284,7 +280,6 @@ class CTDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -309,7 +304,6 @@ class CTDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsCompanies: response });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -356,7 +350,6 @@ class CTDashboard extends PureComponent {
 
     isCompanyDetailsModal = true;
     this.setState({ ...this.state, isCompanyDetailsModal, companyDetails });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**

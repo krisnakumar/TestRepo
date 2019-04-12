@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
 * index.jsx
 * Written by Prashanth Ravi (pravi@its-training.com)
@@ -13,6 +14,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 import { CookiesProvider } from 'react-cookie';
+import 'core-js';
+import 'babel-polyfill';
 import App from './containers/_app/App';
 import store from './containers/_app/store';
 import ScrollToTop from './containers/_app/ScrollToTop';
