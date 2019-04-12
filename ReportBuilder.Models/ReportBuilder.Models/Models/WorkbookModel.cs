@@ -126,5 +126,25 @@ namespace ReportBuilder.Models.Models
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? WorkbookEnabled { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TaskCode { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string TaskName { get; set; }
+         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TaskId { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string NumberofAttempts { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LastAttemptDate { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Comment { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Location { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string EvaluatorName { get; set; }
+        
+        
+        
+        
     }
 }
