@@ -133,6 +133,7 @@ namespace ReportBuilderAPI.Utilities
         public const string ASSIGNED = "ASSIGNED";
         public const string NULL = "NULL";
         public const string COMPLETED = "COMPLETED";
+        public const string LOCKOUT_COUNT = "LOCKOUT_COUNT";
         public const string NOT_COMPLETED = "NOT COMPLETED";
 
         public const string QUALIFIED = "QUALIFIED";

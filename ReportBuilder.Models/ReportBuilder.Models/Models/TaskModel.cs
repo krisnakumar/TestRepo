@@ -102,6 +102,9 @@ namespace ReportBuilder.Models.Models
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string UnlockDate { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string CompanyName { get; set; }
 
 
