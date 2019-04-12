@@ -562,7 +562,10 @@ class MyEmployees extends React.Component {
   * @returns none
   */
   employeeFormatter = (props) => {
-    if (props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
+    const { supervisorNames } = this.state; 
+    let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
+    let currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
+    if (props.dependentValues.userId == currentUserId || props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -588,7 +591,10 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   workbookFormatter = (type, props) => {
-    if (props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
+    const { supervisorNames } = this.state; 
+    let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
+    let currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
+    if (props.dependentValues.userId == currentUserId || props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );

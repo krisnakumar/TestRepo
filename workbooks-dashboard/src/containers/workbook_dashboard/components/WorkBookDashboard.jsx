@@ -182,7 +182,10 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   employeeFormatter = (props) => {
-    if (props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let userId = contractorManagementDetails.User.Id || 0;
+    if (props.dependentValues.userId == userId || props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -215,7 +218,10 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
   */
   workbookFormatter = (type, props) => {
-    if (props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let userId = contractorManagementDetails.User.Id || 0;
+    if ( props.dependentValues.userId == userId || props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );

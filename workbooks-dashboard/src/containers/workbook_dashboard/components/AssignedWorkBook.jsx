@@ -157,9 +157,8 @@ class AssignedWorkBook extends React.Component {
     isWorkBookProgressModal = true;
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = localStorage.getItem("CompanyId"),//cookies.get('CompanyId'),
-      url = "/company/" + companyId + "/tasks",
+    let token = idToken,
+      url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBooksProgress = response;
@@ -188,7 +187,7 @@ class AssignedWorkBook extends React.Component {
         role: employees[i].Role,
         employee: employees[i].EmployeeName,
         completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
-        percentageCompleted: parseInt(((employees[i].RepsCompleted / employees[i].RepsRequired) || 0) * 100) + "%",
+        percentageCompleted: Math.round(((employees[i].RepsCompleted / employees[i].RepsRequired) || 0) * 100) + "%",
         dueDate: dueDate
       });
     }

@@ -96,12 +96,12 @@ class WorkBookProgress extends React.Component {
 
     this.state = {
       modal: this.props.modal,
-      rows: this.createRows(this.props.workBooksProgress),
+      selectedWorkbook: this.props.selectedWorkbook || {},
+      rows: this.createRows(this.props.workBooksProgress, this.props.selectedWorkbook.userId, this.props.selectedWorkbook.workBookId),
       pageOfItems: [],
       isWorkBookRepetitionModal: false,
       workBooksRepetition: {},
       isInitial: false,
-      selectedWorkbook: this.props.selectedWorkbook || {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -129,22 +129,24 @@ class WorkBookProgress extends React.Component {
   * @param workbooks
   * @returns rows
   */
-  createRows = (workbooks) => {
+  createRows = (workbooks, userId, workBookId) => {
     const rows = [],
       length = workbooks ? workbooks.length : 0;
     let averageCompletionPrecentage = 0;
+    // userId = this.state.selectedWorkbook ? (this.state.selectedWorkbook.userId|| 0) : 0,
+    // workBookId = this.state.selectedWorkbook ? (this.state.selectedWorkbook.workBookId || 0) : 0;
     for (let i = 0; i < length; i++) {
       rows.push({
-        userId: workbooks[i].UserId,
-        workBookId: workbooks[i].WorkbookId,
+        userId: userId,
+        workBookId: workBookId,
         taskId: workbooks[i].TaskId,
         taskCode: workbooks[i].TaskCode,
         taskName: workbooks[i].TaskName,
-        completedTasksCount: workbooks[i].CompletedTasksCount + "/" + workbooks[i].TotalTasks,
-        incompletedTasksCount: workbooks[i].IncompletedTasksCount,
-        completionPrecentage: parseInt((workbooks[i].CompletedTasksCount / workbooks[i].TotalTasks * 100)) + "%"
+        completedTasksCount: workbooks[i].RepsCompleted + "/" + workbooks[i].RepsRequired,
+        incompletedTasksCount: parseInt(workbooks[i].RepsRequired) - parseInt(workbooks[i].RepsCompleted),
+        completionPrecentage: parseInt((workbooks[i].RepsCompleted / workbooks[i].RepsRequired * 100)) + "%"
       });
-      averageCompletionPrecentage = parseInt(averageCompletionPrecentage + (workbooks[i].CompletedTasksCount / workbooks[i].TotalTasks * 100));
+      averageCompletionPrecentage = parseInt(averageCompletionPrecentage + (workbooks[i].RepsCompleted / workbooks[i].RepsRequired * 100));
     }
     averageCompletionPrecentage = parseInt(averageCompletionPrecentage / length);
 
@@ -163,7 +165,7 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   componentWillReceiveProps(newProps) {
-    let rows = this.createRows(newProps.workBooksProgress),
+    let rows = this.createRows(newProps.workBooksProgress, newProps.selectedWorkbook.userId, newProps.selectedWorkbook.workBookId),
       isArray = Array.isArray(newProps.workBooksProgress),
       isInitial = isArray;
     this.setState({
@@ -211,7 +213,8 @@ class WorkBookProgress extends React.Component {
 
     let token = idToken,//cookies.get('IdentityToken'),
       //companyId = cookies.get('CompanyId'),
-      url = "/company/" + companyId + "/tasks",
+      //url = "/company/" + companyId + "/tasks",
+      url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBooksRepetition = response;

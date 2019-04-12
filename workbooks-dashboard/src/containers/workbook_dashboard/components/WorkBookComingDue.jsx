@@ -160,7 +160,8 @@ class WorkBookComingDue extends React.Component {
 
     let token = idToken,//cookies.get('IdentityToken'),
         //companyId = cookies.get('CompanyId'),
-        url = "/company/"+companyId+"/tasks",
+        //url = "/company/"+companyId+"/tasks",
+        url = "/company/" + companyId + "/workbooks",
         response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBooksProgress = response;
@@ -188,7 +189,7 @@ class WorkBookComingDue extends React.Component {
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkBookName,
-        percentageCompleted: parseInt(parseInt(employees[i].RepsCompleted) / parseInt(employees[i].RepsRequired)  * 100) + "%",
+        percentageCompleted: Math.round(parseInt(employees[i].RepsCompleted) / parseInt(employees[i].RepsRequired)  * 100) + "%",
         dueDate: dueDate
       });
     }
