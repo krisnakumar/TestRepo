@@ -299,7 +299,7 @@ namespace ReportBuilderAPI.Repository
                         workbookID = parameterList["workbookId"].ToString();
                         taskId = parameterList["taskId"].ToString();
                         string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
-                        status = tag == Constants.COMPLETED ? "1" : tag == Constants.IN_COMPLETE ? "0" : "null";
+                        status = tag == Constants.COMPLETED ? "1" : tag == Constants.FAILED ? "0" : "null";
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetRepProgress   @companyId  =" + companyId + " , @studentId  = " + userId + ", @OJTId =" + workbookID + ", @taskId=" + taskId + ", @completionStatus=" + status;
                     }
                 }

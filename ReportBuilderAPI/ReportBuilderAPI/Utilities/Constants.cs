@@ -213,6 +213,8 @@ namespace ReportBuilderAPI.Utilities
         public const string TOTAL_COMPLETED_COMPANY_USERS = "TOTAL_COMPLETED_COMPANY_USERS";
 
         public const string IS_SHARED = "IS_SHARED";
+        public const string FAILED = "FAILED";
+        
 
         public const string ROLE_ID = "ROLE_ID";
 
