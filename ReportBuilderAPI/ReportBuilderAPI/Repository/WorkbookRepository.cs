@@ -356,6 +356,8 @@ namespace ReportBuilderAPI.Repository
                             {
                                 DataTable dataTable = sqlDataReader.GetSchemaTable();
                                 //Get the workbook details from the database
+                                TaskModel taskComment = (dataTable.Select("ColumnName = 'Attempt_Comment'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Comments"])) : null;
+
                                 WorkbookModel workbookResponse = new WorkbookModel
                                 {
 
@@ -407,6 +409,21 @@ namespace ReportBuilderAPI.Repository
                                     UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
 
                                     DueDate = (dataTable.Select("ColumnName = 'OJT_Due_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["OJT_Due_Date"])) ? Convert.ToDateTime(sqlDataReader["OJT_Due_Date"]).ToString("MM/dd/yyyy") : null : null,
+
+                                    TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
+
+                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
+
+                                    TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
+
+                                    NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
+
+                                    LastAttemptDate = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+
+                                    Location = (dataTable.Select("ColumnName = 'Attempt_Location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
+                                    Comments = taskComment?.Comment,
+
+                                    EvaluatorName = (dataTable.Select("ColumnName = 'Submitted_By_User_Id'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
 
                                     CompletedTasks = (dataTable.Select("ColumnName = 'OJT_Task_Completed_Count'").Count() == 1) ? Convert.ToString((sqlDataReader["OJT_Task_Completed_Count"])) : null
                                 };
