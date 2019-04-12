@@ -264,6 +264,10 @@ namespace ReportBuilderAPI.Repository
                 {
                     query += " , @parentRoleId = " + role;
                 }
+                if (!string.IsNullOrEmpty(query) && string.IsNullOrEmpty(role))
+                {
+                    query += " , @parentRoleId = null";
+                }
                 return query;
             }
             catch (Exception queryException)
