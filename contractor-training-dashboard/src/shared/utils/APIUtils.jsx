@@ -72,7 +72,7 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }
 
     return fetch(url, request).then(function (response) {
-        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
+        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 504 || response.status == 404 || response.status == 400) {
             let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
             if (readAPIErrorCount) {
               // Do nothing
