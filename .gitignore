@@ -3,3 +3,6 @@
 ################################################################################
 
 /DataInterface.Database/obj
+/.vs
+/ReportBuilder.Models/ReportBuilder.Models/obj/BNB
+/ReportBuilderAPI
