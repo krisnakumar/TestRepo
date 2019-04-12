@@ -153,7 +153,7 @@ namespace ReportBuilder.Models.Models
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? DisqualifiedQualification { get; set; }
+        public int? DisQualification { get; set; }
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

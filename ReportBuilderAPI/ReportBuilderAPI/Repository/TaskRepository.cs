@@ -257,7 +257,7 @@ namespace ReportBuilderAPI.Repository
                 {
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications    @viewedByUserId = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["dueDays"].ToString();
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications    @viewedByUserId = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["duedays"].ToString();
                 }
 
                 if (!string.IsNullOrEmpty(query) && !string.IsNullOrEmpty(role))
@@ -345,7 +345,7 @@ namespace ReportBuilderAPI.Repository
 
                                     UserName = (dataTable.Select("ColumnName = 'Contractor_User_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_User_Name"]) : null,
 
-                                    CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (sqlDataReader["CompletedQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedQualification"] : 0) : (dataTable.Select("ColumnName = 'Qualificaton_Count'").Count() == 1) ? (sqlDataReader["Qualificaton_Count"] != DBNull.Value ? (int?)sqlDataReader["Qualificaton_Count"] : 0) : null,
+                                    CompletedQualification = (dataTable.Select("ColumnName = 'CompletedQualification'").Count() == 1) ? (sqlDataReader["CompletedQualification"] != DBNull.Value ? (int?)sqlDataReader["CompletedQualification"] : 0) : (dataTable.Select("ColumnName = 'Qualification_Count'").Count() == 1) ? (sqlDataReader["Qualification_Count"] != DBNull.Value ? (int?)sqlDataReader["Qualification_Count"] : 0) : null,
 
 
                                     IncompleteQualification = (dataTable.Select("ColumnName = 'IncompleteQualification'").Count() == 1) ? (sqlDataReader["IncompleteQualification"] != DBNull.Value ? (int?)sqlDataReader["IncompleteQualification"] : 0) : null,
@@ -392,7 +392,7 @@ namespace ReportBuilderAPI.Repository
 
                                     SuspendedQualification = (dataTable.Select("ColumnName = 'Manual_Disqualification_Count'").Count() == 1) ? (sqlDataReader["Manual_Disqualification_Count"] != DBNull.Value ? (int?)sqlDataReader["Manual_Disqualification_Count"] : 0) : null,
 
-                                    DisqualifiedQualification = (dataTable.Select("ColumnName = 'Disqualification_Count'").Count() == 1) ? (sqlDataReader["Disqualification_Count"] != DBNull.Value ? (int?)sqlDataReader["Disqualification_Count"] : 0) : null,
+                                    DisQualification = (dataTable.Select("ColumnName = 'Disqualification_Count'").Count() == 1) ? (sqlDataReader["Disqualification_Count"] != DBNull.Value ? (int?)sqlDataReader["Disqualification_Count"] : 0) : null,
 
                                     RoleId = (dataTable.Select("ColumnName = 'roleId'").Count() == 1) ? (sqlDataReader["roleId"] != DBNull.Value ? (int?)sqlDataReader["roleId"] : 0) : (dataTable.Select("ColumnName = 'Parent_Role_Id'").Count() == 1) ? (sqlDataReader["Parent_Role_Id"] != DBNull.Value ? (int?)sqlDataReader["Parent_Role_Id"] : 0) : null,
 
