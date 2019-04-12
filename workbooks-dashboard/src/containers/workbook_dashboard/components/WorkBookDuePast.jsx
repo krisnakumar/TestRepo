@@ -186,7 +186,7 @@ class WorkBookDuePast extends React.Component {
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkBookName,
-        percentageCompleted: (parseInt(employees[i].CompletedTasks) / parseInt(employees[i].TotalTasks)  * 100) + "%",
+        percentageCompleted: parseInt(parseInt(employees[i].RepsCompleted) / parseInt(employees[i].RepsRequired)  * 100) + "%",
         dueDate: dueDate
       });
     }

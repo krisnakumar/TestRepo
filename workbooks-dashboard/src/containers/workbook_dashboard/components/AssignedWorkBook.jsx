@@ -69,7 +69,7 @@ class AssignedWorkBook extends React.Component {
       },
       {
         key: 'completedTasks',
-        name: 'Completed / Total Tasks',
+        name: 'Completed / Total Repetitions',
         width: 180,
         sortable: true,
         editable: false,
@@ -187,8 +187,8 @@ class AssignedWorkBook extends React.Component {
         workbookName: employees[i].WorkBookName,
         role: employees[i].Role,
         employee: employees[i].EmployeeName,
-        completedTasks: employees[i].CompletedTasks + "/" + employees[i].TotalTasks,
-        percentageCompleted: (((employees[i].CompletedTasks / employees[i].TotalTasks) || 0) * 100) + "%",
+        completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
+        percentageCompleted: parseInt(((employees[i].RepsCompleted / employees[i].RepsRequired) || 0) * 100) + "%",
         dueDate: dueDate
       });
     }

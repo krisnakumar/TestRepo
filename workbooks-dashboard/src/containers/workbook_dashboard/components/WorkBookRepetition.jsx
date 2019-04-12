@@ -157,7 +157,7 @@ class WorkBookRepetition extends React.Component {
         dateTime: workbooks[i].LastAttemptDate,
         location: workbooks[i].Location,
         evaluator: workbooks[i].EvaluatorName,
-        comments: workbooks[i].Comments
+        comments: workbooks[i].Status
       });
     }
 

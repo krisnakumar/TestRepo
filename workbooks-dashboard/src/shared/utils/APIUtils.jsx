@@ -72,11 +72,19 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }
 
     return fetch(url, request).then(function (response) {
-        if (response.status == 401) {
-            //LoginRefresh("", token, false)
-            deleteAllCookies();
-            window.location = window.location.origin;
-        } else {
+        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
+            let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
+            if (readAPIErrorCount) {
+              // Do nothing
+            } else {
+              localStorage.setItem('readAPIErrorCount', '1');
+            }
+            if (document.getElementById("api-error-modal-loader-layer")) {
+                document.getElementById("api-error-modal-loader-layer").classList.remove("loader-hide");
+                document.getElementById("api-error-modal-loader-layer").classList.add("loader-show");
+            }
+            // window.location = window.location.origin;
+        }else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
@@ -88,12 +96,23 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
-        let responseObject = Object.values(json)[0];
-        return responseObject;
+        let responseObject = Object.keys(json);
+
+        return json[responseObject];
     }).catch(function (ex) {
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
+        }
+        let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
+        if (readAPIErrorCount) {
+          // Do nothing
+        } else {
+          localStorage.setItem('readAPIErrorCount', '1');
+        }
+        if (document.getElementById("api-error-modal-loader-layer")) {
+            document.getElementById("api-error-modal-loader-layer").classList.remove("loader-hide");
+            document.getElementById("api-error-modal-loader-layer").classList.add("loader-show");
         }
         // Handle API Exception here
         console.log('parsing failed', ex);

@@ -1126,3 +1126,13 @@ button.grid-filter-go-btn {
  .modal-body .grid-container .table .react-grid-Container .react-grid-Main .react-grid-Grid {
   max-height: 500px !important;
 }
+.api-error-modal{
+  position: relative;
+  z-index: 1050; 
+}
+.react-grid-HeaderCell, .react-grid-HeaderRow {
+text-align: center !important;
+}
+.api-error-modal  {
+  color: #fff !important;
+}
