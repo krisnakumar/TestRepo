@@ -20,13 +20,17 @@ import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 /**
  * WorkBookCompletedEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class WorkBookCompletedEmptyRowsView extends React.Component{
+class WorkBookCompletedEmptyRowsView extends React.Component {
   render() {
     return (<div className="no-records-found-modal">Sorry, no records</div>)
   }
@@ -82,12 +86,13 @@ class WorkBookCompleted extends React.Component {
     this.employees = [];
 
     this.state = {
-      modal: this.props.modal,      
+      modal: this.props.modal,
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
       isInitial: false
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -96,21 +101,21 @@ class WorkBookCompleted extends React.Component {
    * This method will format the cell column other than workbooks Data Grid
    * @param props
    * @returns none
-   */   
+   */
   cellFormatter = (props) => {
     return (
       <span>{props.value}</span>
     );
   }
 
-   /**
-   * @method
-   * @name - componentDidCatch
-   * This method will catch all the exceptions in this class
-   * @param error
-   * @param info
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - componentDidCatch
+  * This method will catch all the exceptions in this class
+  * @param error
+  * @param info
+  * @returns none
+  */
   componentDidCatch(error, info) {
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -127,9 +132,9 @@ class WorkBookCompleted extends React.Component {
    * @returns rows
    */
   createRows = (employees) => {
-    const rows = [], 
-          length = employees ? employees.length : 0;
-    for (let i = 0; i < length; i++) {         
+    const rows = [],
+      length = employees ? employees.length : 0;
+    for (let i = 0; i < length; i++) {
       rows.push({
         userId: employees[i].UserId,
         employee: employees[i].EmployeeName,
@@ -142,23 +147,23 @@ class WorkBookCompleted extends React.Component {
     return rows;
   };
 
-   /**
-   * @method
-   * @name - componentWillReceiveProps
-   * This method will invoked whenever the props or state
-   *  is update to this component class
-   * @param newProps
-   * @returns none
-   */
+  /**
+  * @method
+  * @name - componentWillReceiveProps
+  * This method will invoked whenever the props or state
+  *  is update to this component class
+  * @param newProps
+  * @returns none
+  */
   componentWillReceiveProps(newProps) {
-      let rows = this.createRows(newProps.assignedWorkBooks),
-          isArray = Array.isArray(newProps.assignedWorkBooks),
-          isInitial = isArray;
-      this.setState({
-        modal: newProps.modal,
-        rows: rows,
-        isInitial: isInitial
-      });
+    let rows = this.createRows(newProps.assignedWorkBooks),
+      isArray = Array.isArray(newProps.assignedWorkBooks),
+      isInitial = isArray;
+    this.setState({
+      modal: newProps.modal,
+      rows: rows,
+      isInitial: isInitial
+    });
   }
 
   /**
@@ -183,7 +188,7 @@ class WorkBookCompleted extends React.Component {
    * @param toRow
    * @param updated
    * @returns none
-   */   
+   */
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
     const rows = this.state.rows.slice();
 
@@ -213,20 +218,30 @@ class WorkBookCompleted extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
   };
-  
+
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal}  fade={false}  toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
           <Export
             data={this.state.rows}
@@ -234,9 +249,9 @@ class WorkBookCompleted extends React.Component {
             sheetName={"Workbook Completed"}
           />
           <ModalBody>
-          <div className="grid-container">
+            <div className="grid-container">
               <div className="table">
-                  <ReactDataGrid
+                {/* <ReactDataGrid
                       ref={'reactDataGrid'}
                       onGridSort={this.handleGridSort}
                       enableCellSelect={false}
@@ -248,7 +263,56 @@ class WorkBookCompleted extends React.Component {
                       rowHeight={35}
                       minColumnWidth={100}
                       emptyRowsView={this.state.isInitial && WorkBookCompletedEmptyRowsView} 
-                  />
+                  /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Employee",
+                      accessor: "employee",
+                      minWidth: 120,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Role",
+                      accessor: "role",
+                      minWidth: 150,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Workbook",
+                      id: "workbookName",
+                      accessor: d => d.workbookName,
+                      minWidth: 450,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Completion Date",
+                      accessor: "completionDate",
+                      minWidth: 150,
+                      maxWidth: 200,
+                      className: 'text-center'
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 5 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  // defaultSorted={[
+                  //   {
+                  //     id: "role",
+                  //     desc: false
+                  //   }
+                  // ]}
+                />
               </div>
             </div>
           </ModalBody>

@@ -32,6 +32,11 @@ import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * EmptyRowsView Class defines the React component to render
@@ -147,6 +152,7 @@ class MyEmployees extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -196,13 +202,13 @@ class MyEmployees extends React.Component {
         inDueWorkBooks: employees[i].InDueWorkBook,
         pastDueWorkBooks: employees[i].PastDueWorkBook,
         completedWorkBooks: employees[i].CompletedWorkbook,
-        total:  parseInt(employees[i].TotalEmployees) || 0
+        total: parseInt(employees[i].TotalEmployees) || 0
       });
     }
 
     if (length > 0) {
       this.state.myEmployeesArray = employeesArray;
-      rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
+      // rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
     }
 
     return rows;
@@ -240,7 +246,6 @@ class MyEmployees extends React.Component {
       myEmployees = response;
 
     this.props.updateMyEmployeesArray(myEmployees, supervisor);
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -286,7 +291,6 @@ class MyEmployees extends React.Component {
     workBookDuePast = response;
     isPastDueModal = true;
     this.setState({ ...this.state, isPastDueModal, workBookDuePast });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -332,7 +336,6 @@ class MyEmployees extends React.Component {
 
     isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -376,7 +379,6 @@ class MyEmployees extends React.Component {
     workBookCompleted = response;
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -420,7 +422,6 @@ class MyEmployees extends React.Component {
     assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -565,7 +566,7 @@ class MyEmployees extends React.Component {
     const { supervisorNames } = this.state; 
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
     let currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
-    if (props.dependentValues.userId == currentUserId || props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
+    if (props.original.userId == currentUserId || props.original.total <= 0 || props.original.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -573,7 +574,14 @@ class MyEmployees extends React.Component {
       return (
         <span onClick={e => {
           e.preventDefault();
-          this.getMyEmployees(props.dependentValues.userId, props.dependentValues);
+          let isMyEmployeeModal = true,
+            myEmployeesArray = [],
+            supervisorNames = this.state.supervisorNames;
+
+          supervisorNames = [];
+          supervisorNames.push({ 'name': props.original.employee, 'column': "NONE", 'order': "NONE", 'userId': props.original.userId });
+          this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
+          this.getMyEmployees(props.original.userId, props.original);
         }}
           className={"text-clickable"}>
           {props.value}
@@ -591,7 +599,7 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   workbookFormatter = (type, props) => {
-    const { supervisorNames } = this.state; 
+    const { supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
     let currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     if (props.dependentValues.userId == currentUserId || props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
@@ -645,7 +653,7 @@ class MyEmployees extends React.Component {
       default:
         break;
     }
-    this.refs.reactDataGrid.deselect();
+    // this.refs.reactDataGrid.deselect();
   };
 
   // This method is used to setting the row data in react data grid
@@ -665,11 +673,21 @@ class MyEmployees extends React.Component {
     });
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   render() {
     const { rows, supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
     let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "",
       currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
         <AssignedWorkBook
@@ -709,7 +727,7 @@ class MyEmployees extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table has-total-row">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'reactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -721,6 +739,128 @@ class MyEmployees extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && EmptyRowsView}
+                /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Employee",
+                      accessor: "employee",
+                      minWidth: 120,
+                      className: 'text-left',
+                      Cell: this.employeeFormatter,
+                      Footer: (
+                        <span>
+                          <strong>Total</strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Role",
+                      accessor: "role",
+                      minWidth: 150,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Assigned Workbooks",
+                      id: "assignedWorkBooks",
+                      accessor: d => d.assignedWorkBooks,
+                      minWidth: 100,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              _.sumBy(_.values(rows), 'assignedWorkBooks')
+                            }
+                          </strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Workbooks Due",
+                      accessor: "inDueWorkBooks",
+                      minWidth: 100,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              _.sumBy(_.values(rows), 'inDueWorkBooks')
+                            }
+                          </strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Past Due Workbooks",
+                      accessor: "pastDueWorkBooks",
+                      minWidth: 100,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              _.sumBy(_.values(rows), 'pastDueWorkBooks')
+                            }
+                          </strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Completed Workbooks",
+                      accessor: "completedWorkBooks",
+                      minWidth: 100,
+                      className: 'text-center',
+                      Cell: this.customCell,
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              _.sumBy(_.values(rows), 'completedWorkBooks')
+                            }
+                          </strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Total Employees",
+                      accessor: "total",
+                      minWidth: 100,
+                      className: 'text-center',
+                      Cell: this.employeeFormatter,
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              _.sumBy(_.values(rows), 'total')
+                            }
+                          </strong>
+                        </span>
+                      )
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={this.state.isInitial ? 5 : pgSize}
+                  loading={this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  // defaultSorted={[
+                  //   {
+                  //     id: "role",
+                  //     desc: false
+                  //   }
+                  // ]}
                 />
               </div>
             </div>

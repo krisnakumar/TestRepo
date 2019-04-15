@@ -25,6 +25,11 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * AssignedWorkBookEmptyRowsView Class defines the React component to render
@@ -111,6 +116,7 @@ class AssignedWorkBook extends React.Component {
       selectedWorkbook: {}
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -164,7 +170,6 @@ class AssignedWorkBook extends React.Component {
     workBooksProgress = response;
     isWorkBookProgressModal = true;
     this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -324,7 +329,7 @@ class AssignedWorkBook extends React.Component {
       default:
         break;
     }
-    this.refs.reactDataGrid.deselect();
+    // this.refs.reactDataGrid.deselect();
   };
 
   /**
@@ -362,11 +367,22 @@ class AssignedWorkBook extends React.Component {
     }
   };
 
+
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
         <WorkBookProgress
@@ -386,7 +402,7 @@ class AssignedWorkBook extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'reactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -398,6 +414,74 @@ class AssignedWorkBook extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView}
+                /> */}
+                 <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Employee",
+                      id: "employee",
+                      accessor: "employee",
+                      minWidth: 100,
+                      maxWidth: 150,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Workbook",
+                      id: "workbookName",
+                      accessor: d => d.workbookName,
+                      minWidth: 350,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Completed / Total Repetitions",
+                      id: "completedTasks",
+                      accessor: "completedTasks",
+                      minWidth: 175,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Percentage Completed",
+                      id: "percentageCompleted",
+                      accessor: "percentageCompleted",
+                      minWidth: 175,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Due Date",
+                      id: "dueDate",
+                      accessor: "dueDate",
+                      minWidth: 100,
+                      maxWidth: 100,
+                      className: 'text-center'
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 10 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  // defaultSorted={[
+                  //   {
+                  //     id: "employee",
+                  //     desc: false
+                  //   }
+                  // ]}
+                  style={{
+                    minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "800px"
+                  }}
                 />
               </div>
             </div>

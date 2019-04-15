@@ -38,6 +38,11 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * DataTableEmptyRowsView Class defines the React component to render
@@ -158,7 +163,7 @@ class WorkBookDashboard extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
-
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -185,7 +190,7 @@ class WorkBookDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let userId = contractorManagementDetails.User.Id || 0;
-    if (props.dependentValues.userId == userId || props.dependentValues.total <= 0 || props.dependentValues.employee == "Total") {
+    if (props.original.userId == userId || props.original.total <= 0 || props.original.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -198,9 +203,9 @@ class WorkBookDashboard extends PureComponent {
             supervisorNames = this.state.supervisorNames;
 
           supervisorNames = [];
-          supervisorNames.push({ 'name': props.dependentValues.employee, 'column': "NONE", 'order': "NONE", 'userId': props.dependentValues.userId });
+          supervisorNames.push({ 'name': props.original.employee, 'column': "NONE", 'order': "NONE", 'userId': props.original.userId });
           this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
-          this.getMyEmployees(props.dependentValues.userId);
+          this.getMyEmployees(props.original.userId);
         }}
           className={"text-clickable"}>
           {props.value}
@@ -221,7 +226,7 @@ class WorkBookDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let userId = contractorManagementDetails.User.Id || 0;
-    if ( props.dependentValues.userId == userId || props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
+    if (props.dependentValues.userId == userId || props.dependentValues[type] <= 0 || props.dependentValues.employee == "Total") {
       return (
         <span>{props.value}</span>
       );
@@ -374,7 +379,6 @@ class WorkBookDashboard extends PureComponent {
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
     this.setState({ filterOptionsRoles: response });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -409,7 +413,6 @@ class WorkBookDashboard extends PureComponent {
       isInitial = true;
     this.setState({ rows: rows, isInitial: isInitial });
     this.onChangePage([]);
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -449,7 +452,7 @@ class WorkBookDashboard extends PureComponent {
     fakeState = !fakeState;
     isMyEmployeeModal = true;
     this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
-    window.dispatchEvent(new Event('resize'));
+  
   };
 
   /**
@@ -494,7 +497,6 @@ class WorkBookDashboard extends PureComponent {
     assignedWorkBooks = response;
     isAssignedModal = true;
     this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -537,7 +539,6 @@ class WorkBookDashboard extends PureComponent {
     workBookDuePast = response;
     isPastDueModal = true;
     this.setState({ ...this.state, isPastDueModal, workBookDuePast });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -580,7 +581,6 @@ class WorkBookDashboard extends PureComponent {
     workBookComingDue = response;
     isComingDueModal = true;
     this.setState({ ...this.state, isComingDueModal, workBookComingDue });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -624,7 +624,6 @@ class WorkBookDashboard extends PureComponent {
 
     isCompletedModal = true;
     this.setState({ ...this.state, isCompletedModal, workBookCompleted });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -671,8 +670,8 @@ class WorkBookDashboard extends PureComponent {
         total: parseInt(employees[i].TotalEmployees) || 0
       });
     }
-    if (length > 0)
-      rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
+    // if (length > 0)
+    //   rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
 
     return rows;
   };
@@ -765,7 +764,7 @@ class WorkBookDashboard extends PureComponent {
       default:
         break;
     }
-    this.refs.reactDataGrid.deselect();
+    // this.refs.reactDataGrid.deselect();
   };
 
   // This method is used to setting the row data in react data grid
@@ -855,6 +854,15 @@ class WorkBookDashboard extends PureComponent {
     }
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, supervisorNames } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -862,6 +870,7 @@ class WorkBookDashboard extends PureComponent {
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length,
       currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     let basePath = window.location.origin || "";
+    let pgSize = (rows.length > 10) ? rows.length : rows.length;
     return (
       <CardBody>
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
@@ -964,7 +973,7 @@ class WorkBookDashboard extends PureComponent {
               </p>
             </div>
             <div className="table has-section-view has-total-row ">
-              <ReactDataGrid
+              {/* <ReactDataGrid
                 ref={'reactDataGrid'}
                 onGridSort={this.handleGridSort}
                 enableCellSelect={false}
@@ -976,6 +985,128 @@ class WorkBookDashboard extends PureComponent {
                 rowHeight={35}
                 minColumnWidth={100}
                 emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
+              /> */}
+              <ReactTable
+                data={rows}
+                columns={[
+                  {
+                    Header: "Employee",
+                    accessor: "employee",
+                    minWidth: 120,
+                    className: 'text-left',
+                    Cell: this.employeeFormatter,
+                    Footer: (
+                      <span>
+                        <strong>Total</strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Role",
+                    accessor: "role",
+                    minWidth: 150,
+                    className: 'text-left'
+                  },
+                  {
+                    Header: "Assigned Workbooks",
+                    id: "assignedWorkBooks",
+                    accessor: d => d.assignedWorkBooks,
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'assignedWorkBooks')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Workbooks Due",
+                    accessor: "inDueWorkBooks",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'inDueWorkBooks')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Past Due Workbooks",
+                    accessor: "pastDueWorkBooks",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'pastDueWorkBooks')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Completed Workbooks",
+                    accessor: "completedWorkBooks",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'completedWorkBooks')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Total Employees",
+                    accessor: "total",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.employeeFormatter,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'total')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  }
+                ]
+                }
+                resizable={false}
+                className="-striped -highlight"
+                showPagination={false}
+                showPaginationTop={false}
+                showPaginationBottom={false}
+                showPageSizeOptions={false}
+                pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                pageSize={!this.state.isInitial ? 5 : pgSize}
+                loading={!this.state.isInitial}
+                loadingText={''}
+                noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+              // defaultSorted={[
+              //   {
+              //     id: "role",
+              //     desc: false
+              //   }
+              // ]}
               />
             </div>
           </div>

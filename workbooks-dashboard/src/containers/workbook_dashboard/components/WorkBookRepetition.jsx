@@ -22,6 +22,11 @@ import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
@@ -108,6 +113,7 @@ class WorkBookRepetition extends React.Component {
       selectedWorkbook: this.props.selectedWorkbook
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -157,7 +163,7 @@ class WorkBookRepetition extends React.Component {
         dateTime: workbooks[i].LastAttemptDate_tasks,
         location: workbooks[i].Location,
         evaluator: workbooks[i].EvaluatorName,
-        comments: workbooks[i].Status
+        comments: workbooks[i].Comments || ""
       });
     }
 
@@ -236,17 +242,28 @@ class WorkBookRepetition extends React.Component {
     };
 
     const sortRows = this.state.rows.slice(0),
-          rowsLength = this.state.rows.length || 0;
+      rowsLength = this.state.rows.length || 0;
     const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
 
     this.setState({ rows });
   };
+
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
 
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
@@ -264,7 +281,7 @@ class WorkBookRepetition extends React.Component {
             </div>
             <div className="grid-container">
               <div className="table">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'reactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -276,6 +293,69 @@ class WorkBookRepetition extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView}
+                /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Attempt(s)",
+                      accessor: "attempt",
+                      minWidth: 100,
+                      className: 'text-center'
+                    },
+                    {
+                      Header: "Complete/Incomplete",
+                      accessor: "status",
+                      minWidth: 150,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Last Attempted Date",
+                      id: "dateTime",
+                      accessor: d => d.dateTime,
+                      minWidth: 170,
+                      maxWidth: 200,
+                      className: 'text-center'
+                    },
+                    {
+                      Header: "Location",
+                      accessor: "location",
+                      minWidth: 250,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Submitted By",
+                      id: "evaluator",
+                      accessor: d => d.evaluator,
+                      minWidth: 250,
+                      maxWidth: 400,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Comments",
+                      accessor: "comments",
+                      minWidth: 250,
+                      className: 'text-left'
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 5 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                // defaultSorted={[
+                //   {
+                //     id: "role",
+                //     desc: false
+                //   }
+                // ]}
                 />
               </div>
             </div>

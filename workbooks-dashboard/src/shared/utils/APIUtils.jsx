@@ -12,8 +12,11 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 
 */
 
-import 'whatwg-fetch'
+// import 'whatwg-fetch'
 import * as Constants from '../constants';
+import "babel-polyfill";
+import "isomorphic-fetch";
+import 'core-js';
 
 const apoolData = {
     UserPoolId: 'XXX_XXX', // Your user pool id here

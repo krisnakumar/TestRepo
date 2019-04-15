@@ -25,7 +25,11 @@ import WorkBookRepetition from './WorkBookRepetition';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import _ from "lodash";
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 /**
  * WorkBookProgressEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
@@ -102,8 +106,10 @@ class WorkBookProgress extends React.Component {
       isWorkBookRepetitionModal: false,
       workBooksRepetition: {},
       isInitial: false,
+      averageCompletionPrecentage: 0
     };
     this.toggle = this.toggle.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -150,9 +156,9 @@ class WorkBookProgress extends React.Component {
     }
     averageCompletionPrecentage = parseInt(averageCompletionPrecentage / length);
 
-    if (length > 0)
-      rows.push({ taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount: "", incompletedTasksCount: "", completionPrecentage: averageCompletionPrecentage + "%" });
-
+    //if (length > 0)
+      //rows.push({ taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount: "", incompletedTasksCount: "", completionPrecentage: averageCompletionPrecentage + "%" });
+    this.setState({averageCompletionPrecentage: averageCompletionPrecentage});
     return rows;
   };
 
@@ -211,16 +217,13 @@ class WorkBookProgress extends React.Component {
     isWorkBookRepetitionModal = true;
     this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      //companyId = cookies.get('CompanyId'),
-      //url = "/company/" + companyId + "/tasks",
+    let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
     workBooksRepetition = response;
     isWorkBookRepetitionModal = true;
     this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
-    window.dispatchEvent(new Event('resize'));
   };
 
   /**
@@ -346,7 +349,7 @@ class WorkBookProgress extends React.Component {
       default:
         break;
     }
-    this.refs.reactDataGrid.deselect();
+    // this.refs.reactDataGrid.deselect();
   };
 
   /**
@@ -406,11 +409,21 @@ class WorkBookProgress extends React.Component {
     }
   };
 
+  customCell(props) {
+    let self = this;
+    return (
+      props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {props.value}
+      </span> || <span>{props.value}</span>
+    );
+  }
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
+    let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
         <WorkBookRepetition
@@ -434,7 +447,7 @@ class WorkBookProgress extends React.Component {
             </div>
             <div className="grid-container">
               <div className="table has-total-row">
-                <ReactDataGrid
+                {/* <ReactDataGrid
                   ref={'reactDataGrid'}
                   onGridSort={this.handleGridSort}
                   enableCellSelect={false}
@@ -446,6 +459,80 @@ class WorkBookProgress extends React.Component {
                   rowHeight={35}
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView}
+                /> */}
+                <ReactTable
+                  data={rows}
+                  columns={[
+                    {
+                      Header: "Task Code",
+                      accessor: "taskCode",
+                      minWidth: 200,
+                      className: 'text-left',
+                      Cell: this.employeeFormatter,
+                      Footer: (
+                        <span>
+                          <strong>OQ Task Completion Percentage</strong>
+                        </span>
+                      )
+                    },
+                    {
+                      Header: "Task Name",
+                      accessor: "taskName",
+                      minWidth: 350,
+                      className: 'text-left'
+                    },
+                    {
+                      Header: "Completed / Total Repetitions",
+                      id: "completedTasksCount",
+                      accessor: d => d.completedTasksCount,
+                      minWidth: 150,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Incomplete Repetitions",
+                      id: "incompletedTasksCount",
+                      accessor: "incompletedTasksCount",
+                      minWidth: 150,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
+                      Header: "Percentage Completed",
+                      id: "completionPrecentage",
+                      accessor: "completionPrecentage",
+                      minWidth: 120,
+                      className: 'text-center',
+                      Footer: (
+                        <span>
+                          <strong>
+                            {
+                              //_.sumBy(_.values(rows), 'completionPrecentage')
+                              this.state.averageCompletionPrecentage ? this.state.averageCompletionPrecentage + "%" : "0%"
+                            }
+                          </strong>
+                        </span>
+                      )
+                    }
+                  ]
+                  }
+                  resizable={false}
+                  className="-striped -highlight"
+                  showPagination={false}
+                  showPaginationTop={false}
+                  showPaginationBottom={false}
+                  showPageSizeOptions={false}
+                  pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                  pageSize={!this.state.isInitial ? 5 : pgSize}
+                  loading={!this.state.isInitial}
+                  loadingText={''}
+                  noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                  // defaultSorted={[
+                  //   {
+                  //     id: "role",
+                  //     desc: false
+                  //   }
+                  // ]}
                 />
               </div>
             </div>
