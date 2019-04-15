@@ -202,7 +202,7 @@ class EmployeeView extends PureComponent {
                 total: qualifications[i].TotalEmployees,
             });
         }
-        
+
         if (length > 0) {
             this.state.employeesQualificationsArray = qualificationsArray;
         }
@@ -243,8 +243,8 @@ class EmployeeView extends PureComponent {
         if (isArray && isRows) {
             isInitial = rows.length > 0 ? false : true;
         }
-        
-        if(sortColumn != "" && sortDirection != "NONE"){
+
+        if (sortColumn != "" && sortDirection != "NONE") {
             this.state.modal = newProps.modal;
             this.state.rows = rows;
             this.state.isInitial = isInitial;
@@ -388,30 +388,36 @@ class EmployeeView extends PureComponent {
         this.refs.employeeViewReactDataGrid.deselect();
     };
 
-     /**
-     * @method
-     * @name - getMyEmployees
-     * This method will used to get My Employees details supervisior
-     * @param userId
-     * @param supervisor
-     * @returns none
-    */
+    /**
+    * @method
+    * @name - getMyEmployees
+    * This method will used to get My Employees details supervisior
+    * @param userId
+    * @param supervisor
+    * @returns none
+   */
     async getMyEmployees(userId, companyId, args) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_EMPLOYEE_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
         };
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
             myEmployees = response;
 
@@ -428,9 +434,15 @@ class EmployeeView extends PureComponent {
     */
     async getAssignedQualifications(userId, companyId) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
@@ -442,11 +454,11 @@ class EmployeeView extends PureComponent {
         this.setState({ isAssignedQualificationView, assignedQualifications });
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         assignedQualifications = response;
         isAssignedQualificationView = true;
@@ -463,10 +475,16 @@ class EmployeeView extends PureComponent {
     */
     async getCompletedQualifications(userId, companyId) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "COMPLETED", "Bitwise": "and", "Value": "true", "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
@@ -478,11 +496,11 @@ class EmployeeView extends PureComponent {
         this.setState({ isCompletedQualificationView, completedQualifications });
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         completedQualifications = response;
         isCompletedQualificationView = true;
@@ -499,10 +517,16 @@ class EmployeeView extends PureComponent {
     */
     async getInCompletedQualifications(userId, companyId) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "IN_COMPLETE", "Bitwise": "and", "Value": "true", "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
@@ -514,11 +538,11 @@ class EmployeeView extends PureComponent {
         this.setState({ isInCompletedQualificationView, inCompletedQualifications });
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         inCompletedQualifications = response;
         isInCompletedQualificationView = true;
@@ -535,10 +559,16 @@ class EmployeeView extends PureComponent {
     */
     async getPastDueQualifications(userId, companyId) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "PAST_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
@@ -550,11 +580,11 @@ class EmployeeView extends PureComponent {
         this.setState({ isPastDueQualificationView, pastDueQualifications });
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         pastDueQualifications = response;
         isPastDueQualificationView = true;
@@ -571,10 +601,16 @@ class EmployeeView extends PureComponent {
     */
     async getComingDueQualifications(userId, companyId) {
         const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const payLoad = {
             "Fields": [
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=" },
-                { "Name": "IN_DUE", "Bitwise": "and", "Value": "30", "Operator": "=" }
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
@@ -586,11 +622,11 @@ class EmployeeView extends PureComponent {
         this.setState({ isComingDueQualificationView, comingDueQualifications });
 
         let { dashboardAPIToken } = sessionStorage || '{}';
-            dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
         let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
-        let token = idToken,//cookies.get('IdentityToken'),
-            url = "/company/" + companyId + "/tasks",
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
         comingDueQualifications = response;
         isComingDueQualificationView = true;
@@ -599,7 +635,7 @@ class EmployeeView extends PureComponent {
     };
 
     render() {
-        const { rows , contractorsNames} = this.state;
+        const { rows, contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
         let contractorsName = contractorsNames[contractorsNamesLength] ? ' - ' + contractorsNames[contractorsNamesLength].name : "";
         return (
