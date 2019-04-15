@@ -87,15 +87,25 @@ class OQDashboard extends PureComponent {
         cellClass: "text-right"
       },
       // {
-      //   key: 'pastDue',
-      //   name: 'Expired Qualifications (30 Days)',
+      //   key: 'suspendedQualification',//lockoutCount
+      //   name: 'Suspensions',
       //   width: 200,
       //   sortable: true,
       //   editable: false,
       //   getRowMetaData: row => row,
-      //   formatter: (props) => this.qualificationsFormatter("pastDue", props),
+      //   formatter: (props) => this.qualificationsFormatter("suspendedQualification", props),
       //   cellClass: "text-right"
       // },
+      {
+        key: 'lockoutCount',
+        name: 'Locked Out 6 Months',
+        width: 200,
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: (props) => this.qualificationsFormatter("lockoutCount", props),
+        cellClass: "text-right"
+      },
       {
         key: 'comingDue',
         name: 'Expires in 30 Days',
@@ -209,14 +219,18 @@ class OQDashboard extends PureComponent {
       completedQualificationCount = 0,
       inCompletedQualificationCount = 0,
       pastDueCount = 0,
+      lockoutCountCount= 0,
+      suspendedQualificationCount = 0,
       comingDueCount = 0,
       totalQualificationCount = 0;
     const rows = [],
       length = qualifications ? qualifications.length : 0;
     for (let i = 0; i < length; i++) {
       assignedQualificationCount += parseInt(qualifications[i].AssignedQualification);
+      suspendedQualificationCount += parseInt(qualifications[i].SuspendedQualification);
+      lockoutCountCount += parseInt(qualifications[i].lockoutCount);
       completedQualificationCount += parseInt(qualifications[i].CompletedQualification);
-      inCompletedQualificationCount += parseInt(qualifications[i].IncompleteQualification);
+      inCompletedQualificationCount += parseInt(qualifications[i].DisQualification);
       pastDueCount += parseInt(qualifications[i].PastDueQualification);
       comingDueCount += parseInt(qualifications[i].InDueQualification);
       totalQualificationCount += parseInt(qualifications[i].TotalEmployees || 0);
@@ -227,6 +241,8 @@ class OQDashboard extends PureComponent {
         companyId: qualifications[i].CompanyId,
         role: qualifications[i].Role || "",
         assignedQualification: qualifications[i].AssignedQualification,
+        suspendedQualification: qualifications[i].SuspendedQualification,
+        lockoutCount: qualifications[i].LockoutCount,
         completedQualification: qualifications[i].CompletedQualification,
         inCompletedQualification: qualifications[i].DisQualification,
         pastDue: qualifications[i].PastDueQualification,
@@ -236,7 +252,7 @@ class OQDashboard extends PureComponent {
     }
 
     if (length > 0) {
-      rows.push({ company: "Total", role: "", assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
+      rows.push({ company: "Total", role: "", lockoutCount: isNaN(lockoutCountCount) ? 0 : lockoutCountCount, suspendedQualification: suspendedQualificationCount, assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
     }
     return rows;
   };
@@ -355,7 +371,7 @@ class OQDashboard extends PureComponent {
           contractorsNames = this.state.contractorsNames;
         isEmployeeView = true;
         contractorsNames = [];
-        contractorsNames.push({ 'name': args.company, 'column': "NONE", 'order': "NONE" });
+        contractorsNames.push({ 'name': args.company, 'column': "NONE", 'order': "NONE", 'companyId': companyId });
         this.setState({ isEmployeeView, employeeQualifications, employeesQualificationsArray, contractorsNames });
         this.getEmployeeQualifications(userId, companyId);
         break;
@@ -712,7 +728,7 @@ class OQDashboard extends PureComponent {
       contractorsLength = contractorsNames.length;
 
     if (contractorsLength > 0)
-      contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE" });
+      contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE", 'companyId': contractors.companyId });
 
     employeesQualificationsArray.push(qualifications);
     this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });

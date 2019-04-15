@@ -94,16 +94,16 @@ class EmployeeView extends PureComponent {
                 formatter: (props) => this.qualificationsFormatter("inCompletedQualification", props),
                 cellClass: "text-right"
             },
-            // {
-            //     key: 'pastDue',
-            //     name: 'Expired Qualifications (30 Days)',
-            //     width: 200,
-            //     sortable: true,
-            //     editable: false,
-            //     getRowMetaData: row => row,
-            //     formatter: (props) => this.qualificationsFormatter("pastDue", props),
-            //     cellClass: "text-right"
-            // },
+            {
+                key: 'lockoutCount',
+                name: 'Locked Out 6 Months',
+                width: 200,
+                sortable: true,
+                editable: false,
+                getRowMetaData: row => row,
+                formatter: (props) => this.qualificationsFormatter("lockoutCount", props),
+                cellClass: "text-right"
+            },
             {
                 key: 'comingDue',
                 name: 'Expires in 30 Days',
@@ -111,17 +111,8 @@ class EmployeeView extends PureComponent {
                 editable: false,
                 getRowMetaData: row => row,
                 formatter: (props) => this.qualificationsFormatter("comingDue", props),
-                cellClass: "text-right"
-            },
-            {
-                key: 'total',
-                name: 'Total Employees',
-                sortable: true,
-                editable: false,
-                getRowMetaData: row => row,
-                formatter: (props) => this.qualificationsFormatter("total", props),
                 cellClass: "text-right last-column"
-            },
+            }
         ];
 
         this.state = {
@@ -196,6 +187,8 @@ class EmployeeView extends PureComponent {
                 role: qualifications[i].Role || "",
                 assignedQualification: qualifications[i].AssignedQualification,
                 completedQualification: qualifications[i].CompletedQualification,
+                suspendedQualification: qualifications[i].SuspendedQualification,
+                lockoutCount: qualifications[i].LockoutCount,
                 inCompletedQualification: qualifications[i].DisQualification,
                 pastDue: qualifications[i].PastDueQualification,
                 comingDue: qualifications[i].InDueQualification,
@@ -396,13 +389,16 @@ class EmployeeView extends PureComponent {
     * @param supervisor
     * @returns none
    */
-    async getMyEmployees(userId, companyId, args) {
+    async getMyEmployees(userId, companyIdArgs, args) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -432,13 +428,16 @@ class EmployeeView extends PureComponent {
      * @param userId
      * @returns none
     */
-    async getAssignedQualifications(userId, companyId) {
+    async getAssignedQualifications(userId, companyIdArgs) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -474,13 +473,16 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getCompletedQualifications(userId, companyId) {
+    async getCompletedQualifications(userId, companyIdArgs) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -516,13 +518,16 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getInCompletedQualifications(userId, companyId) {
+    async getInCompletedQualifications(userId, companyIdArgs) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -558,13 +563,16 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getPastDueQualifications(userId, companyId) {
+    async getPastDueQualifications(userId, companyIdArgs) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -600,13 +608,16 @@ class EmployeeView extends PureComponent {
     * @param userId
     * @returns none
     */
-    async getComingDueQualifications(userId, companyId) {
+    async getComingDueQualifications(userId, companyIdArgs) {
         const { cookies } = this.props;
         let { contractorManagementDetails } = sessionStorage || '{}';
         contractorManagementDetails = JSON.parse(contractorManagementDetails);
         // get the company Id from the session storage 
         let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
