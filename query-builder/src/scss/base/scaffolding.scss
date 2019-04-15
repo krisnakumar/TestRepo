@@ -1092,6 +1092,12 @@ button.grid-filter-go-btn {
 .query-builder-fixed-height{ 
   min-height: 520px !important;
 }
+@media all and (-ms-high-contrast:none)
+{
+.query-builder-fixed-height{ 
+min-height: 750px !important;
+}
+}
 
 .react-grid-Row {
   margin-right: 2px !important;
