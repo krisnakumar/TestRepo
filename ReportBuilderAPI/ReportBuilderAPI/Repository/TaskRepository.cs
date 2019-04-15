@@ -261,7 +261,7 @@ namespace ReportBuilderAPI.Repository
                 }
 
 
-                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_QUALIFICATION).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_QUALIFICATION)
+                if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_QUALIFICATION))
                 {
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
@@ -341,7 +341,7 @@ namespace ReportBuilderAPI.Repository
                                     NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
                                     LastAttemptDate = (dataTable.Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["lastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                     Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(sqlDataReader["location"]) : null,
-                                    Comments = taskComment?.Comment,
+                                    Comments = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? taskComment != null ? taskComment.Comment : string.Empty : null,
 
                                     EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Contractor_Full_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_Full_Name"]) : null,
 
