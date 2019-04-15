@@ -229,7 +229,7 @@ namespace ReportBuilderAPI.Repository
 
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetAllContractors   @operatorCompanyId   =" + companyId + " , @viewedByUserId   = " + userId;
                 }
-                if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_DATE))
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED)
                 {
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
