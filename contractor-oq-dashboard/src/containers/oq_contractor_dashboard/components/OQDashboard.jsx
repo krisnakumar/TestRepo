@@ -25,6 +25,7 @@ import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
+import LockedOutQualification from '../components/LockedOutQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
@@ -137,6 +138,8 @@ class OQDashboard extends PureComponent {
       isInCompletedQualificationView: false,
       isPastDueQualificationView: false,
       isComingDueQualificationView: false,
+      isLockoutQualificationView: false,
+      lockoutQualifications: {},
       employeeQualifications: {},
       employeesQualificationsArray: {},
       assignedQualifications: {},
@@ -219,7 +222,7 @@ class OQDashboard extends PureComponent {
       completedQualificationCount = 0,
       inCompletedQualificationCount = 0,
       pastDueCount = 0,
-      lockoutCountCount= 0,
+      lockoutCountCount = 0,
       suspendedQualificationCount = 0,
       comingDueCount = 0,
       totalQualificationCount = 0;
@@ -390,6 +393,9 @@ class OQDashboard extends PureComponent {
       case "comingDue":
         this.getComingDueQualifications(userId, companyId);
         break;
+      case "lockoutCount":
+        this.getLockedOutQualifications(userId, companyId);
+        break;
       default:
         console.log("default", type, args);
         break;
@@ -434,7 +440,7 @@ class OQDashboard extends PureComponent {
   async getQualifications(userId, roles) {
     const { cookies } = this.props;
     let rolesLength = roles.length,
-      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, ];
+      fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" },];
     if (rolesLength > 0) {
       let roleIds = roles.join();
       let roleField = { "Name": "ROLES", "Value": roleIds, "Operator": "=", "Bitwise": "AND" };
@@ -545,6 +551,48 @@ class OQDashboard extends PureComponent {
     this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
     window.dispatchEvent(new Event('resize'));
   };
+
+  /**
+  * @method
+  * @name - getLockedOutQualifications
+  * This method will used to get LockedOut Qualifications
+  * @param userId
+  * @returns none
+  */
+  async getLockedOutQualifications(userId, companyId) {
+    const { cookies } = this.props;
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // get the company Id from the session storage 
+    let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+    let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+    const payLoad = {
+      "Fields": [
+        { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+        { "Name": "LOCKOUT_COUNT", "Value": "true", "Operator": "=", "Bitwise": "and" }
+      ],
+      "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
+    };
+
+    let isLockoutQualificationView = this.state.isLockoutQualificationView,
+      lockoutQualifications = {};
+    isLockoutQualificationView = true;
+    this.setState({ isLockoutQualificationView, lockoutQualifications });
+
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,
+      url = "/company/" + contractorCompanyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+    lockoutQualifications = response;
+    isLockoutQualificationView = true;
+    this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
+    window.dispatchEvent(new Event('resize'));
+  };
+
 
   /**
   * @method
@@ -853,7 +901,13 @@ class OQDashboard extends PureComponent {
           employeeQualifications={this.state.employeeQualifications}
           contractorsNames={this.state.contractorsNames}
         />
-        <AssignedQualification
+        <LockedOutQualification
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isLockoutQualificationView}
+          assignedQualifications={this.state.lockoutQualifications}
+        />
+         <AssignedQualification
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isAssignedQualificationView}
@@ -884,7 +938,7 @@ class OQDashboard extends PureComponent {
           comingDueQualifications={this.state.comingDueQualifications}
         />
         <div className="card__title">
-        <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
+          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
           <Export
             data={this.state.rows}
             heads={this.heads}
@@ -927,9 +981,9 @@ class OQDashboard extends PureComponent {
             <div className="section-info-title">
               <div className="section-info-pageheader">Operator Qualifications</div>
               <p className="section-info-description">
-                Shows the list of companies and the progress of their qualifications<br/>
-                Qualifications show the count of completed qualifications<br/>
-                Disqualifications show the incomplete qualifications while Suspended shows the qualifications suspended by the admin/ evaluator<br/>
+                Shows the list of companies and the progress of their qualifications<br />
+                Qualifications show the count of completed qualifications<br />
+                Disqualifications show the incomplete qualifications while Suspended shows the qualifications suspended by the admin/ evaluator<br />
               </p>
             </div>
             <div className="table has-section-view has-total-row">

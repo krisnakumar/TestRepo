@@ -24,6 +24,7 @@ import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
+import LockedOutQualification from '../components/LockedOutQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './OQDashboardExport';
@@ -128,6 +129,8 @@ class EmployeeView extends PureComponent {
             isInCompletedQualificationView: false,
             isPastDueQualificationView: false,
             isComingDueQualificationView: false,
+            isLockoutQualificationView: false,
+            lockoutQualifications: {},
             assignedQualifications: {},
             completedQualifications: {},
             inCompletedQualifications: {},
@@ -374,6 +377,9 @@ class EmployeeView extends PureComponent {
             case "comingDue":
                 this.getComingDueQualifications(userId, companyId);
                 break;
+            case "lockoutCount":
+                this.getLockedOutQualifications(userId, companyId);
+                break;
             default:
                 console.log("default-", type, args);
                 break;
@@ -398,7 +404,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -437,7 +443,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -482,7 +488,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -527,7 +533,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -572,7 +578,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -617,7 +623,7 @@ class EmployeeView extends PureComponent {
         let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
         const { contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
-        let companyId = contractorsNames[contractorsNamesLength] ?  contractorsNames[contractorsNamesLength].companyId : 0;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
@@ -646,12 +652,62 @@ class EmployeeView extends PureComponent {
         window.dispatchEvent(new Event('resize'));
     };
 
+    /**
+  * @method
+  * @name - getLockedOutQualifications
+  * This method will used to get LockedOut Qualifications
+  * @param userId
+  * @returns none
+  */
+    async getLockedOutQualifications(userId, companyIdArgs) {
+        const { cookies } = this.props;
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const { contractorsNames } = this.state;
+        let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
+        let companyId = contractorsNames[contractorsNamesLength] ? contractorsNames[contractorsNamesLength].companyId : 0;
+        const payLoad = {
+            "Fields": [
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "LOCKOUT_COUNT", "Value": "true", "Operator": "=", "Bitwise": "and" }
+            ],
+            "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS,
+            "AppType": "OQ_DASHBOARD"
+        };
+
+        let isLockoutQualificationView = this.state.isLockoutQualificationView,
+            lockoutQualifications = {};
+        isLockoutQualificationView = true;
+        this.setState({ isLockoutQualificationView, lockoutQualifications });
+
+        let { dashboardAPIToken } = sessionStorage || '{}';
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+        lockoutQualifications = response;
+        isLockoutQualificationView = true;
+        this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
+        window.dispatchEvent(new Event('resize'));
+    };
+
     render() {
         const { rows, contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
         let contractorsName = contractorsNames[contractorsNamesLength] ? ' - ' + contractorsNames[contractorsNamesLength].name : "";
         return (
             <div>
+                <LockedOutQualification
+                    backdropClassName={"backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isLockoutQualificationView}
+                    assignedQualifications={this.state.lockoutQualifications}
+                />
                 <AssignedQualification
                     backdropClassName={"no-backdrop"}
                     updateState={this.updateModalState.bind(this)}
