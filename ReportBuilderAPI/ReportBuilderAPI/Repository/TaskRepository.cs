@@ -260,6 +260,14 @@ namespace ReportBuilderAPI.Repository
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications    @viewedByUserId = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["duedays"].ToString();
                 }
 
+
+                if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_QUALIFICATION).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_QUALIFICATION)
+                {
+                    contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
+                    contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetContractor    @viewedByUserId = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                }
+
                 if (!string.IsNullOrEmpty(query) && !string.IsNullOrEmpty(role))
                 {
                     query += " , @parentRoleId = " + role;
