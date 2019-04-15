@@ -259,7 +259,7 @@ namespace ReportBuilderAPI.Repository
                     if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_WORKBOOK))
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetDashboardSummary  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @showTopLevel = " + CheckSupervisor(companyId, Convert.ToInt32(userId)) + ", @dueInDays  = " + parameterList["duedays"].ToString();
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetDashboardSummary  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @showTopLevel = " + CheckSupervisor(companyId, Convert.ToInt32(userId));
                     }
 
                     if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_IN_DUE).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_IN_DUE)

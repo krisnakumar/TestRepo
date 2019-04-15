@@ -218,7 +218,7 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 userId = Convert.ToString(parameterList["userId"]);
-                role = Convert.ToString(parameterList["role"]);
+                role = Convert.ToString(parameterList["roles"]);
                 if (string.IsNullOrEmpty(userId))
                 {
                     userId = queryBuilderRequest.UserId.ToString();
