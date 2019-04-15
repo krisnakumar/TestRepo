@@ -1,18 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ReportBuilder.Models.Models
 {
-    public class WorkbookModel
+    public class WorkbookModel : TaskModel
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? UserId { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EmployeeName { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Role { get; set; }
+       
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string WorkbookName { get; set; }
 
@@ -34,9 +26,7 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? RepsCompleted { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CompletionDate { get; set; }
-
+      
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 
@@ -53,16 +43,13 @@ namespace ReportBuilder.Models.Models
         public int? TotalWorkbook { get; set; }
 
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TotalTasks { get; set; }
-
+        
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? CompletedWorkbook { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string WorkbookCreated { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string CreatedBy { get; set; }
+      
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string DaysToComplete { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -70,8 +57,7 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? UserCount { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string UserName { get; set; }
+      
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AlternateName { get; set; }
 
@@ -100,18 +86,16 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Phone { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TotalEmployees { get; set; }
+    
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? EntityCount { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? NumberCompleted { get; set; }
+
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string LastAttemptDate { get; set; }
-        
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LastAttemptDate_tasks { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string FirstAttemptDate { get; set; }
@@ -129,21 +113,8 @@ namespace ReportBuilder.Models.Models
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? WorkbookEnabled { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TaskCode { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string TaskName { get; set; }
-         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int? TaskId { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NumberofAttempts { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Comments { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string EvaluatorName { get; set; }
-       
-        
+
+
+
     }
 }

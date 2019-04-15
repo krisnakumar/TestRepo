@@ -26,9 +26,7 @@ namespace ReportBuilder.Models.Request
 
         public string QueryId { get; set; }
 
-        public int UserId { get; set; }
-
-        public int CompanyId { get; set; }
+      
         public QueryBuilderRequest Payload { get; set; }
     }
 }
