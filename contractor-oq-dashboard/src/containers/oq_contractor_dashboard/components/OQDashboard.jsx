@@ -464,7 +464,8 @@ class OQDashboard extends PureComponent {
     let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
     const payLoad = {
       "Fields": [
-        { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" }
+        { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+        { "Name": "ASSIGNED", "Value": "true", "Operator": "=", "Bitwise": "and" }
       ],
       "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS,
       "AppType": "OQ_DASHBOARD"

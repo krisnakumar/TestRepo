@@ -85,16 +85,16 @@ class ContractorView extends PureComponent {
                 formatter: (props) => this.qualificationsFormatter("inCompletedQualification", props),
                 cellClass: "text-right"
             },
-            {
-                key: 'pastDue',
-                name: 'Expired Qualifications (30 Days)',
-                width: 200,
-                sortable: true,
-                editable: false,
-                getRowMetaData: row => row,
-                formatter: (props) => this.qualificationsFormatter("pastDue", props),
-                cellClass: "text-right"
-            },
+            // {
+            //     key: 'pastDue',
+            //     name: 'Expired Qualifications (30 Days)',
+            //     width: 200,
+            //     sortable: true,
+            //     editable: false,
+            //     getRowMetaData: row => row,
+            //     formatter: (props) => this.qualificationsFormatter("pastDue", props),
+            //     cellClass: "text-right"
+            // },
             {
                 key: 'comingDue',
                 name: 'Expires in 30 Days',
@@ -218,7 +218,7 @@ class ContractorView extends PureComponent {
                 role: qualifications[i].role || "",
                 assignedQualification: qualifications[i].AssignedQualification,
                 completedQualification: qualifications[i].CompletedQualification,
-                inCompletedQualification: qualifications[i].IncompleteQualification,
+                inCompletedQualification: qualifications[i].DisQualification,
                 pastDue: qualifications[i].PastDueQualification,
                 comingDue: qualifications[i].InDueQualification,
                 total: qualifications[i].TotalEmployees,
@@ -442,7 +442,8 @@ class ContractorView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
-                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" }
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "ASSIGNED", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_ASSIGNED_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
