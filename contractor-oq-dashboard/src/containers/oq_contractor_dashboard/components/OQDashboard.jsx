@@ -426,10 +426,13 @@ class OQDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
-
+    
+    const postData = {
+      "AppType": "WORKBOOK_DASHBOARD"
+    };
     let token = idToken,
       url = "/company/" + companyId + "/roles",
-      response = await API.ProcessAPI(url, "", token, false, "GET", true);
+      response = await API.ProcessAPI(url, postData, token, false, "POST", true);
     response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
     response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
     Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
