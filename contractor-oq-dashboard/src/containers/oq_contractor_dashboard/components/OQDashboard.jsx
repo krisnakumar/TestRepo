@@ -30,6 +30,7 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
 import Export from './OQDashboardExport';
+import SessionPopup from './SessionPopup';
 import _ from "lodash";
 
 // Import React Table
@@ -158,7 +159,8 @@ class OQDashboard extends PureComponent {
       isFilterModal: false,
       filterModalTitle: "Roles",
       filteredRoles: [],
-      filterOptionsRoles: []
+      filterOptionsRoles: [],
+      isSessionPopup: false
     };
 
     this.toggle = this.toggle.bind(this);
@@ -426,17 +428,24 @@ class OQDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
-    
+
     const postData = {
       "AppType": "OQ_DASHBOARD"
     };
     let token = idToken,
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
-    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
-    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
-    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
-    this.setState({ filterOptionsRoles: response });
+
+    if (response) {
+      response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+      response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+      Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+      this.setState({ filterOptionsRoles: response });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
+
   };
 
   /**
@@ -475,8 +484,12 @@ class OQDashboard extends PureComponent {
       rows = this.createRows(response),
       isInitial = true;
 
-    this.setState({ rows: rows, isInitial: isInitial });
-    
+    if (response) {
+      this.setState({ rows: rows, isInitial: isInitial });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -514,10 +527,15 @@ class OQDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    assignedQualifications = response;
-    isAssignedQualificationView = true;
-    this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-    
+
+    if (response) {
+      assignedQualifications = response;
+      isAssignedQualificationView = true;
+      this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -555,10 +573,15 @@ class OQDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    completedQualifications = response;
-    isCompletedQualificationView = true;
-    this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-    
+
+    if (response) {
+      completedQualifications = response;
+      isCompletedQualificationView = true;
+      this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -596,10 +619,15 @@ class OQDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    lockoutQualifications = response;
-    isLockoutQualificationView = true;
-    this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
-    
+
+    if (response) {
+      lockoutQualifications = response;
+      isLockoutQualificationView = true;
+      this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
 
@@ -638,10 +666,16 @@ class OQDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    inCompletedQualifications = response;
-    isInCompletedQualificationView = true;
-    this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-    
+
+    if (response) {
+      inCompletedQualifications = response;
+      isInCompletedQualificationView = true;
+      this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
+
   };
 
   /**
@@ -679,10 +713,16 @@ class OQDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-    pastDueQualifications = response;
-    isPastDueQualificationView = true;
-    this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-    
+
+    if (response) {
+      pastDueQualifications = response;
+      isPastDueQualificationView = true;
+      this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
+
   };
 
   /**
@@ -721,10 +761,14 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    comingDueQualifications = response;
-    isComingDueQualificationView = true;
-    this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-    
+    if (response) {
+      comingDueQualifications = response;
+      isComingDueQualificationView = true;
+      this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -764,11 +808,14 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    employeeQualifications = response;
-    employeesQualificationsArray.push(employeeQualifications);
-    isEmployeeView = true;
-    this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
-    
+    if (response) {
+      employeeQualifications = response;
+      employeesQualificationsArray.push(employeeQualifications);
+      isEmployeeView = true;
+      this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
   };
 
   /**
@@ -902,6 +949,10 @@ class OQDashboard extends PureComponent {
 
     return (
       <CardBody>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <FilterModal
           ref={this.roleFilter}
           backdropClassName={"backdrop"}
@@ -1153,12 +1204,12 @@ class OQDashboard extends PureComponent {
                 loading={!this.state.isInitial}
                 loadingText={''}
                 noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                // defaultSorted={[
-                //   {
-                //     id: "role",
-                //     desc: false
-                //   }
-                // ]}
+              // defaultSorted={[
+              //   {
+              //     id: "role",
+              //     desc: false
+              //   }
+              // ]}
               />
             </div>
           </div>

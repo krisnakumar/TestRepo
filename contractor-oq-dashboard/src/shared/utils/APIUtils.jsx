@@ -75,10 +75,12 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }
 
     return fetch(url, request).then(function (response) {
-        if (response.status == 401) {
-            //LoginRefresh("", token, false)
-            // deleteAllCookies();
-            window.location = window.location.origin;           
+        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
+            if (document.getElementById("loader-layer")) {
+                document.getElementById("loader-layer").classList.remove("loader-show");
+                document.getElementById("loader-layer").classList.add("loader-hide");
+            }
+            return false;
         } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");

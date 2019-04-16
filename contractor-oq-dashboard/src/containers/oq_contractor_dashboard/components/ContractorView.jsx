@@ -28,6 +28,7 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './OQDashboardExport';
 import _ from "lodash";
+import SessionPopup from './SessionPopup';
 
 // Import React Table
 import ReactTable from "react-table";
@@ -136,7 +137,8 @@ class ContractorView extends PureComponent {
             completedQualifications: {},
             inCompletedQualifications: {},
             pastDueQualifications: {},
-            comingDueQualifications: {}
+            comingDueQualifications: {},
+            isSessionPopup: false
         };
 
         this.toggle = this.toggle.bind(this);
@@ -423,11 +425,14 @@ class ContractorView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        employeeQualifications = response;
-        employeesQualificationsArray.push(employeeQualifications);
-        isEmployeeView = true;
-        this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
-        
+        if (response) {
+            employeeQualifications = response;
+            employeesQualificationsArray.push(employeeQualifications);
+            isEmployeeView = true;
+            this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     /**
@@ -465,10 +470,14 @@ class ContractorView extends PureComponent {
         let token = idToken,
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        assignedQualifications = response;
-        isAssignedQualificationView = true;
-        this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-        
+
+        if (response) {
+            assignedQualifications = response;
+            isAssignedQualificationView = true;
+            this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     /**
@@ -507,10 +516,14 @@ class ContractorView extends PureComponent {
         let token = idToken,
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        completedQualifications = response;
-        isCompletedQualificationView = true;
-        this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-        
+
+        if (response) {
+            completedQualifications = response;
+            isCompletedQualificationView = true;
+            this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     /**
@@ -549,10 +562,14 @@ class ContractorView extends PureComponent {
         let token = idToken,
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        inCompletedQualifications = response;
-        isInCompletedQualificationView = true;
-        this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-        
+
+        if (response) {
+            inCompletedQualifications = response;
+            isInCompletedQualificationView = true;
+            this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     /**
@@ -591,10 +608,14 @@ class ContractorView extends PureComponent {
         let token = idToken,
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        pastDueQualifications = response;
-        isPastDueQualificationView = true;
-        this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-        
+
+        if (response) {
+            pastDueQualifications = response;
+            isPastDueQualificationView = true;
+            this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     /**
@@ -633,10 +654,14 @@ class ContractorView extends PureComponent {
         let token = idToken,
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
-        comingDueQualifications = response;
-        isComingDueQualificationView = true;
-        this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-        
+
+        if (response) {
+            comingDueQualifications = response;
+            isComingDueQualificationView = true;
+            this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
+        } else {
+            this.setState({ isSessionPopup: true });
+        }
     };
 
     customCell(props) {
@@ -653,6 +678,10 @@ class ContractorView extends PureComponent {
         let pgSize = (rows.length > 10) ? rows.length : 10;
         return (
             <div>
+                <SessionPopup
+                    backdropClassName={"backdrop"}
+                    modal={this.state.isSessionPopup}
+                />
                 <EmployeeView
                     backdropClassName={"no-backdrop"}
                     updateState={this.updateModalState.bind(this)}
