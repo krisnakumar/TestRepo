@@ -1144,12 +1144,12 @@ class WorkBookDashboard extends PureComponent {
                 loading={!this.state.isInitial}
                 loadingText={''}
                 noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-              // defaultSorted={[
-              //   {
-              //     id: "role",
-              //     desc: false
-              //   }
-              // ]}
+                defaultSorted={[
+                  {
+                    id: "employee",
+                    desc: false
+                  }
+                ]}
               />
             </div>
           </div>

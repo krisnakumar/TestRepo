@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import CompanyUserDetail from './CompanyUserDetail';
+import SessionPopup from './SessionPopup';
 import Export from './CTDashboardExport';
 
 // Import React Table
@@ -107,14 +108,15 @@ class ContractorCompanyDetail extends React.Component {
       title: this.props.title || "",
       selectedCompany: "",
       isUserDetailsModal: false,
-      userDetails: {}
+      userDetails: {},
+      isSessionPopup: false
     };
     this._tBodyComponent = null;
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
 
   }
-  
+
   /**
    * @method
    * @name - componentDidCatch
@@ -231,14 +233,16 @@ class ContractorCompanyDetail extends React.Component {
     let { dashboardAPIToken } = sessionStorage || {};
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    let token = idToken,// cookies.get('IdentityToken'),
+    let token = idToken,
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
-
-    userDetails = response;
-
-    isUserDetailsModal = true;
-    this.setState({ ...this.state, isUserDetailsModal, userDetails });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      userDetails = response;
+      isUserDetailsModal = true;
+      this.setState({ ...this.state, isUserDetailsModal, userDetails });
+    }
   };
 
   /**
@@ -413,6 +417,10 @@ class ContractorCompanyDetail extends React.Component {
 
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <CompanyUserDetail
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}

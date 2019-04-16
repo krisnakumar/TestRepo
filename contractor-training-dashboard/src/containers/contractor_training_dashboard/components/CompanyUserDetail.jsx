@@ -23,6 +23,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import UserTaskDetail from './UserTaskDetail';
+import SessionPopup from './SessionPopup';
 import Export from './CTDashboardExport';
 
 // Import React Table
@@ -107,7 +108,8 @@ class CompanyUserDetail extends React.Component {
       title: this.props.title || "",
       isTaskDetailsModal: false,
       taskDetails: {},
-      selectedEmployee: ""
+      selectedEmployee: "",
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -148,7 +150,7 @@ class CompanyUserDetail extends React.Component {
         roleId: companyTasks[i].RoleId || 0,
         userId: companyTasks[i].UserId || 0,
         companyId: companyTasks[i].CompanyId || 0,
-        employee: companyTasks[i].EmployeeName + " (" + companyTasks[i].UserName + " | " + companyTasks[i].UserId + ")"  || "",
+        employee: companyTasks[i].EmployeeName + " (" + companyTasks[i].UserName + " | " + companyTasks[i].UserId + ")" || "",
         incomplete: incompleteQualification,
         completed: completedQualification,
         total: (incompleteQualification + completedQualification) || 0,
@@ -320,10 +322,13 @@ class CompanyUserDetail extends React.Component {
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
-    taskDetails = response;
-
-    isTaskDetailsModal = true;
-    this.setState({ ...this.state, isTaskDetailsModal, taskDetails, selectedEmployee });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      taskDetails = response;
+      isTaskDetailsModal = true;
+      this.setState({ ...this.state, isTaskDetailsModal, taskDetails, selectedEmployee });
+    }
   };
 
   /**
@@ -409,6 +414,10 @@ class CompanyUserDetail extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+         <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <UserTaskDetail
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -445,7 +454,7 @@ class CompanyUserDetail extends React.Component {
                   sortColumn="employee"
                   sortDirection="ASC"
                 /> */}
-                 <ReactTable
+                <ReactTable
                   data={rows}
                   columns={[
                     {

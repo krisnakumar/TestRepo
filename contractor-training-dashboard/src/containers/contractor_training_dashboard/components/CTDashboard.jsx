@@ -25,6 +25,7 @@ import ContractorCompanyDetail from './ContractorCompanyDetail';
 import FilterModal from './FilterModal';
 import CompanyFilterModal from './CompanyFilterModal';
 import Export from './CTDashboardExport';
+import SessionPopup from './SessionPopup';
 import * as Constants from '../../../shared/constants';
 
 // Import React Table
@@ -99,6 +100,7 @@ class CTDashboard extends PureComponent {
       filteredCompanies: [],
       filterOptionsCompanies: [],
       isReloadWindow: false,
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
@@ -167,7 +169,7 @@ class CTDashboard extends PureComponent {
    * @param none
    * @returns none
   */
- async componentDidMount() {
+  async componentDidMount() {
     let roles = [],
       companies = [];
 
@@ -180,7 +182,7 @@ class CTDashboard extends PureComponent {
     }
     if (idToken) {
       this.setState({ isReloadWindow: false });
-      await this.getCompanyFilterOptions();
+      // await this.getCompanyFilterOptions();
       await this.getFilterOptions();
       this.getRoles(roles, companies);
     } else {
@@ -246,14 +248,16 @@ class CTDashboard extends PureComponent {
 
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let token = idToken,//cookies.get('IdentityToken'),
-      // companyId = cookies.get('CompanyId'),
+    let token = idToken,
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
       isInitial = true;
-      
-    this.setState({ rows: rows, isInitial: isInitial });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      this.setState({ rows: rows, isInitial: isInitial });
+    }
   };
 
   /**
@@ -278,10 +282,15 @@ class CTDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
-    response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
-    response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
-    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
-    this.setState({ filterOptionsRoles: response });
+
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
+      response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
+      Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+      this.setState({ filterOptionsRoles: response });
+    }
   };
 
   /**
@@ -302,10 +311,14 @@ class CTDashboard extends PureComponent {
     let token = idToken,
       url = "/companies",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
-    response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
-    response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
-    Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
-    this.setState({ filterOptionsCompanies: response });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
+      response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
+      Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+      this.setState({ filterOptionsCompanies: response });
+    }
   };
 
   /**
@@ -348,10 +361,13 @@ class CTDashboard extends PureComponent {
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
-    companyDetails = response;
-
-    isCompanyDetailsModal = true;
-    this.setState({ ...this.state, isCompanyDetailsModal, companyDetails });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true });
+    } else {
+      companyDetails = response;
+      isCompanyDetailsModal = true;
+      this.setState({ ...this.state, isCompanyDetailsModal, companyDetails });
+    }
   };
 
   /**
@@ -588,6 +604,10 @@ class CTDashboard extends PureComponent {
     let pgSize = (rows.length > 10) ? rows.length : rows.length;
     return (
       <CardBody>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
           <ModalHeader> Alert</ModalHeader>
           <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
