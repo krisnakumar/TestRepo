@@ -40,14 +40,17 @@ namespace ReportBuilderAPI.Repository
                     {
                         if (sqlDataReader != null)
                         {
-                            while (sqlDataReader.HasRows)
+                            if (sqlDataReader.HasRows)
                             {
-                                RoleModel roleModel = new RoleModel
+                                while (sqlDataReader.Read())
                                 {
-                                    Role = Convert.ToString(sqlDataReader["Role_Name"]),
-                                    RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
-                                };
-                                roles.Add(roleModel);
+                                    RoleModel roleModel = new RoleModel
+                                    {
+                                        Role = Convert.ToString(sqlDataReader["Role_Name"]),
+                                        RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
+                                    };
+                                    roles.Add(roleModel);
+                                }
                             }
                             roleResponse.Roles = roles;
                             return roleResponse;
