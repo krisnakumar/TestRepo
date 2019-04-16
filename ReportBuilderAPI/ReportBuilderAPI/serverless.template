@@ -484,7 +484,7 @@
                         "Ref": "ReportBuilderAPI"
                      },
                      "Path": "/company/{companyId}/roles",
-                     "Method": "GET"
+                     "Method": "POST"
                   }
                }
             }

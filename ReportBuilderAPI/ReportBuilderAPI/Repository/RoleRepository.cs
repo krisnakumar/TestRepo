@@ -5,8 +5,10 @@ using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 
@@ -31,48 +33,48 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
-                //if (roleRequest.Payload.AppType == Constants.WORKBOOK_DASHBOARD)
-                //{
-                //    query = "EXEC dbo.Roles_GetRoles @companyId=" + roleRequest.CompanyId;
-                //    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, null))
-                //    {
-                //        if (sqlDataReader != null)
-                //        {
-                //            while (sqlDataReader.HasRows)
-                //            {
-                //                RoleModel roleModel = new RoleModel
-                //                {
-                //                    Role = Convert.ToString(sqlDataReader["Role_Name"]),
-                //                    RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
-                //                };
-                //                roles.Add(roleModel);
-                //            }
-                //            roleResponse.Roles = roles;
-                //            return roleResponse;
-                //        }
-                //        else
-                //        {
-                //            roleResponse.Error = ResponseBuilder.InternalError();
-                //            return roleResponse;
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                using (DBEntity context = new DBEntity())
+                if (roleRequest.Payload.AppType == Constants.WORKBOOK_DASHBOARD)
                 {
-                    roleResponse.Roles = (from r in context.Role
-                                          join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
-                                          join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
-                                          // where rd.DashboardName == roleRequest.Payload.AppType
-                                          select new RoleModel
-                                          {
-                                              RoleId = Convert.ToInt32(r.Id),
-                                              Role = Convert.ToString(r.Name)
-                                          }).ToList();
-                    return roleResponse;
+                    query = "EXEC dbo.Roles_GetRoles @companyId=" + roleRequest.CompanyId;
+                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, null))
+                    {
+                        if (sqlDataReader != null)
+                        {
+                            while (sqlDataReader.HasRows)
+                            {
+                                RoleModel roleModel = new RoleModel
+                                {
+                                    Role = Convert.ToString(sqlDataReader["Role_Name"]),
+                                    RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
+                                };
+                                roles.Add(roleModel);
+                            }
+                            roleResponse.Roles = roles;
+                            return roleResponse;
+                        }
+                        else
+                        {
+                            roleResponse.Error = ResponseBuilder.InternalError();
+                            return roleResponse;
+                        }
+                    }
                 }
-                //}
+                else
+                {
+                    using (DBEntity context = new DBEntity())
+                    {
+                        roleResponse.Roles = (from r in context.Role
+                                              join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
+                                              join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
+                                              where rd.DashboardName == roleRequest.Payload.AppType
+                                              select new RoleModel
+                                              {
+                                                  RoleId = Convert.ToInt32(r.Id),
+                                                  Role = Convert.ToString(r.Name)
+                                              }).ToList();
+                        return roleResponse;
+                    }
+                }
             }
             catch (Exception getRolesException)
             {
