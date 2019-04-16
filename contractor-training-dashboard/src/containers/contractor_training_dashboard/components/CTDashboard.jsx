@@ -273,7 +273,7 @@ class CTDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
     const postData = {
-      "AppType": "WORKBOOK_DASHBOARD"
+      "AppType": "TRAINING_DASHBOARD"
     };
     let token = idToken,
       url = "/company/" + companyId + "/roles",
