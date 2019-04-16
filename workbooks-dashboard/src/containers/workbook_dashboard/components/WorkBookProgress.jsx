@@ -466,6 +466,7 @@ class WorkBookProgress extends React.Component {
                     {
                       Header: "Task Code",
                       accessor: "taskCode",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 200,
                       className: 'text-left',
                       Cell: this.employeeFormatter,
@@ -478,6 +479,7 @@ class WorkBookProgress extends React.Component {
                     {
                       Header: "Task Name",
                       accessor: "taskName",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 350,
                       className: 'text-left'
                     },
@@ -485,6 +487,7 @@ class WorkBookProgress extends React.Component {
                       Header: "Completed / Total Repetitions",
                       id: "completedTasksCount",
                       accessor: d => d.completedTasksCount,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-center',
                       Cell: this.customCell
@@ -493,6 +496,7 @@ class WorkBookProgress extends React.Component {
                       Header: "Incomplete Repetitions",
                       id: "incompletedTasksCount",
                       accessor: "incompletedTasksCount",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-center',
                       Cell: this.customCell
@@ -501,6 +505,7 @@ class WorkBookProgress extends React.Component {
                       Header: "Percentage Completed",
                       id: "completionPrecentage",
                       accessor: "completionPrecentage",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 120,
                       className: 'text-center',
                       Footer: (

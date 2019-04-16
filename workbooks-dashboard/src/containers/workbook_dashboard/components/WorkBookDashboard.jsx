@@ -654,19 +654,19 @@ class WorkBookDashboard extends PureComponent {
     let rows = [],
       length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
-      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook);
-      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook);
-      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook);
-      completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook);
-      totalEmpCount += parseInt(employees[i].TotalEmployees);
+      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook || 0);
+      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook || 0);
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook || 0);
+      completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook || 0);
+      totalEmpCount += parseInt(employees[i].TotalEmployees || 0);
       rows.push({
         userId: employees[i].UserId || 0,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
-        assignedWorkBooks: parseInt(employees[i].AssignedWorkBook),
-        inDueWorkBooks: parseInt(employees[i].InDueWorkBook),
-        pastDueWorkBooks: parseInt(employees[i].PastDueWorkBook),
-        completedWorkBooks: parseInt(employees[i].CompletedWorkbook),
+        assignedWorkBooks: parseInt(employees[i].AssignedWorkBook || 0),
+        inDueWorkBooks: parseInt(employees[i].InDueWorkBook || 0),
+        pastDueWorkBooks: parseInt(employees[i].PastDueWorkBook || 0),
+        completedWorkBooks: parseInt(employees[i].CompletedWorkbook || 0),
         total: parseInt(employees[i].TotalEmployees) || 0
       });
     }
@@ -972,7 +972,7 @@ class WorkBookDashboard extends PureComponent {
                 View list of employees and the progress of their direct and indirect subordinates. Shows the workbooks assigned, completed and due.<br />
               </p>
             </div>
-            <div className="table has-section-view has-total-row ">
+            <div className="table has-section-view has-total-row is-table-page-view">
               {/* <ReactDataGrid
                 ref={'reactDataGrid'}
                 onGridSort={this.handleGridSort}
@@ -992,6 +992,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Employee",
                     accessor: "employee",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 120,
                     className: 'text-left',
                     Cell: this.employeeFormatter,
@@ -1011,6 +1012,7 @@ class WorkBookDashboard extends PureComponent {
                     Header: "Assigned Workbooks",
                     id: "assignedWorkBooks",
                     accessor: d => d.assignedWorkBooks,
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1027,6 +1029,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Workbooks Due",
                     accessor: "inDueWorkBooks",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1043,6 +1046,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Past Due Workbooks",
                     accessor: "pastDueWorkBooks",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1059,6 +1063,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Completed Workbooks",
                     accessor: "completedWorkBooks",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1075,6 +1080,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Total Employees",
                     accessor: "total",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.employeeFormatter,

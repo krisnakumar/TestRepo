@@ -83,6 +83,16 @@ class WorkBookComingDue extends React.Component {
         cellClass: "text-left"
       },
       {
+        key: 'completedTasks',
+        name: 'Completed / Total Repetitions',
+        width: 180,
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedTasks", props),
+        cellClass: "text-center"
+      },
+      {
         key: 'percentageCompleted',
         name: 'Percentage Completed',
         sortable: true,
@@ -190,6 +200,7 @@ class WorkBookComingDue extends React.Component {
         workBookId: employees[i].WorkBookId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
+        completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
         workbookName: employees[i].WorkBookName,
         percentageCompleted: Math.round(parseInt(employees[i].RepsCompleted) / parseInt(employees[i].RepsRequired) * 100) + "%",
         dueDate: dueDate
@@ -319,6 +330,7 @@ class WorkBookComingDue extends React.Component {
     this.state.selectedWorkbook = args;
     switch (type) {
       case "percentageCompleted":
+      case "completedTasks":
         userId = args.userId;
         workBookId = args.workBookId;
         if (userId && workBookId)
@@ -418,12 +430,14 @@ class WorkBookComingDue extends React.Component {
                     {
                       Header: "Employee",
                       accessor: "employee",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 120,
                       className: 'text-left'
                     },
                     {
                       Header: "Role",
                       accessor: "role",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-left'
                     },
@@ -431,19 +445,31 @@ class WorkBookComingDue extends React.Component {
                       Header: "Workbook",
                       id: "workbookName",
                       accessor: d => d.workbookName,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 450,
                       className: 'text-left'
                     },
                     {
-                      Header: "Percentage Completed",
-                      accessor: "percentageCompleted",
-                      minWidth: 150,
+                      Header: "Completed / Total Repetitions",
+                      id: "completedTasks",
+                      accessor: "completedTasks",
+                      headerClassName: 'header-wordwrap',
+                      minWidth: 175,
+                      maxWidth: 200,
                       className: 'text-center',
                       Cell: this.customCell
                     },
                     {
+                      Header: "Percentage Completed",
+                      accessor: "percentageCompleted",
+                      headerClassName: 'header-wordwrap',
+                      minWidth: 150,
+                      className: 'text-center'
+                    },
+                    {
                       Header: "Due Date",
                       accessor: "dueDate",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center'
                     }

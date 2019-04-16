@@ -1003,7 +1003,7 @@ class OQDashboard extends PureComponent {
                 Disqualifications show the incomplete qualifications while Suspended shows the qualifications suspended by the admin/ evaluator<br />
               </p>
             </div>
-            <div className="table has-section-view has-total-row">
+            <div className="table has-section-view has-total-row is-table-page-view">
               {/* <ReactDataGrid
                 ref={'oQDashboardReactDataGrid'}
                 onGridSort={this.handleGridSort}

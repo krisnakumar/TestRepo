@@ -422,6 +422,7 @@ class AssignedWorkBook extends React.Component {
                       Header: "Employee",
                       id: "employee",
                       accessor: "employee",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       maxWidth: 150,
                       className: 'text-left'
@@ -430,6 +431,7 @@ class AssignedWorkBook extends React.Component {
                       Header: "Workbook",
                       id: "workbookName",
                       accessor: d => d.workbookName,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 350,
                       className: 'text-left'
                     },
@@ -437,6 +439,7 @@ class AssignedWorkBook extends React.Component {
                       Header: "Completed / Total Repetitions",
                       id: "completedTasks",
                       accessor: "completedTasks",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 175,
                       maxWidth: 200,
                       className: 'text-center',
@@ -446,15 +449,16 @@ class AssignedWorkBook extends React.Component {
                       Header: "Percentage Completed",
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 175,
                       maxWidth: 200,
-                      className: 'text-center',
-                      Cell: this.customCell
+                      className: 'text-center'
                     },
                     {
                       Header: "Due Date",
                       id: "dueDate",
                       accessor: "dueDate",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       maxWidth: 100,
                       className: 'text-center'

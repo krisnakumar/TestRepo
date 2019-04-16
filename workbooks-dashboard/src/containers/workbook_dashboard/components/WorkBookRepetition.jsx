@@ -300,12 +300,14 @@ class WorkBookRepetition extends React.Component {
                     {
                       Header: "Attempt(s)",
                       accessor: "attempt",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center'
                     },
                     {
                       Header: "Complete/Incomplete",
                       accessor: "status",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-left'
                     },
@@ -313,6 +315,7 @@ class WorkBookRepetition extends React.Component {
                       Header: "Last Attempted Date",
                       id: "dateTime",
                       accessor: d => d.dateTime,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 170,
                       maxWidth: 200,
                       className: 'text-center'
@@ -320,6 +323,7 @@ class WorkBookRepetition extends React.Component {
                     {
                       Header: "Location",
                       accessor: "location",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 250,
                       className: 'text-left'
                     },
@@ -327,6 +331,7 @@ class WorkBookRepetition extends React.Component {
                       Header: "Submitted By",
                       id: "evaluator",
                       accessor: d => d.evaluator,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 250,
                       maxWidth: 400,
                       className: 'text-left'
@@ -334,6 +339,7 @@ class WorkBookRepetition extends React.Component {
                     {
                       Header: "Comments",
                       accessor: "comments",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 250,
                       className: 'text-left'
                     }

@@ -270,12 +270,14 @@ class WorkBookCompleted extends React.Component {
                     {
                       Header: "Employee",
                       accessor: "employee",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 120,
                       className: 'text-left'
                     },
                     {
                       Header: "Role",
                       accessor: "role",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-left'
                     },
@@ -283,12 +285,14 @@ class WorkBookCompleted extends React.Component {
                       Header: "Workbook",
                       id: "workbookName",
                       accessor: d => d.workbookName,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 450,
                       className: 'text-left'
                     },
                     {
                       Header: "Completion Date",
                       accessor: "completionDate",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center'

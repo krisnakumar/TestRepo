@@ -746,6 +746,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Employee",
                       accessor: "employee",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 120,
                       className: 'text-left',
                       Cell: this.employeeFormatter,
@@ -758,6 +759,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Role",
                       accessor: "role",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       className: 'text-left'
                     },
@@ -765,6 +767,7 @@ class MyEmployees extends React.Component {
                       Header: "Assigned Workbooks",
                       id: "assignedWorkBooks",
                       accessor: d => d.assignedWorkBooks,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center',
                       Cell: this.customCell,
@@ -781,6 +784,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Workbooks Due",
                       accessor: "inDueWorkBooks",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center',
                       Cell: this.customCell,
@@ -797,6 +801,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Past Due Workbooks",
                       accessor: "pastDueWorkBooks",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center',
                       Cell: this.customCell,
@@ -813,6 +818,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Completed Workbooks",
                       accessor: "completedWorkBooks",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center',
                       Cell: this.customCell,
@@ -829,6 +835,7 @@ class MyEmployees extends React.Component {
                     {
                       Header: "Total Employees",
                       accessor: "total",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       className: 'text-center',
                       Cell: this.employeeFormatter,
