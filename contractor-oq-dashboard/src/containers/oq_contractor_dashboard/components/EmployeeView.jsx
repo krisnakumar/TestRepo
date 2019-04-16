@@ -783,18 +783,21 @@ class EmployeeView extends PureComponent {
                                         {
                                             Header: "Employee",
                                             accessor: "employee",
-                                            minWidth: 120,
+                                            headerClassName: 'header-wordwrap',
+                                            minWidth: 250,
                                             className: 'text-left'
                                         },
                                         {
                                             Header: "Role",
                                             accessor: "role",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 120,
                                             className: 'text-left'
                                         },
                                         {
                                             Header: "Assigned Qualifications",
                                             accessor: "assignedQualification",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 150,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -803,6 +806,7 @@ class EmployeeView extends PureComponent {
                                             Header: "Qualifications",
                                             id: "completedQualification",
                                             accessor: d => d.completedQualification,
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -810,6 +814,7 @@ class EmployeeView extends PureComponent {
                                         {
                                             Header: "Disqualifications",
                                             accessor: "inCompletedQualification",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -817,6 +822,7 @@ class EmployeeView extends PureComponent {
                                         {
                                             Header: "Locked Out 6 Months",
                                             accessor: "lockoutCount",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -824,6 +830,7 @@ class EmployeeView extends PureComponent {
                                         {
                                             Header: "Expires in 30 Days",
                                             accessor: "comingDue",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell

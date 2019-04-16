@@ -721,6 +721,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Employee",
                                             accessor: "employee",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 120,
                                             className: 'text-left',
                                             Cell: props => this.qualificationsFormatter("total", props)
@@ -728,6 +729,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Assigned Qualifications",
                                             accessor: "assignedQualification",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 150,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -736,6 +738,7 @@ class ContractorView extends PureComponent {
                                             Header: "Qualifications",
                                             id: "completedQualification",
                                             accessor: d => d.completedQualification,
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -743,6 +746,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Disqualifications",
                                             accessor: "inCompletedQualification",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -750,6 +754,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Locked Out 6 Months",
                                             accessor: "lockoutCount",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -757,6 +762,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Expires in 30 Days",
                                             accessor: "comingDue",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
@@ -764,6 +770,7 @@ class ContractorView extends PureComponent {
                                         {
                                             Header: "Total Employees",
                                             accessor: "total",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: props => this.qualificationsFormatter("total", props)

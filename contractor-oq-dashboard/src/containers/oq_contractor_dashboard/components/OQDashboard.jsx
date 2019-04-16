@@ -1023,7 +1023,9 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Company",
                     accessor: "company",
-                    minWidth: 120,
+                    headerClassName: 'header-wordwrap',
+                    minWidth: 270,
+                    minWidth: 500,
                     className: 'text-left',
                     Cell: props => this.qualificationsFormatter("total", props),
                     Footer: (
@@ -1035,6 +1037,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Assigned Qualifications",
                     accessor: "assignedQualification",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 150,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1052,6 +1055,7 @@ class OQDashboard extends PureComponent {
                     Header: "Qualifications",
                     id: "completedQualification",
                     accessor: d => d.completedQualification,
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1068,6 +1072,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Disqualifications",
                     accessor: "inCompletedQualification",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1084,6 +1089,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Locked Out 6 Months",
                     accessor: "lockoutCount",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1100,6 +1106,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Expires in 30 Days",
                     accessor: "comingDue",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: this.customCell,
@@ -1116,6 +1123,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Total Employees",
                     accessor: "total",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
                     Cell: props => this.qualificationsFormatter("total", props),

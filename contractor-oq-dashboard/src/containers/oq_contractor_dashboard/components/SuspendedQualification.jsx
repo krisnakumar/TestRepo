@@ -264,6 +264,7 @@ class SuspendedQualification extends PureComponent {
                                         {
                                             Header: "Task Code",
                                             accessor: "taskCode",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 120,
                                             maxWidth: 200,
                                             className: 'text-left'
@@ -271,6 +272,7 @@ class SuspendedQualification extends PureComponent {
                                         {
                                             Header: "OQ Task",
                                             accessor: "oQTask",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 250,
                                             className: 'text-left'
                                         },
@@ -278,6 +280,7 @@ class SuspendedQualification extends PureComponent {
                                             Header: "Employee",
                                             id: "employee",
                                             accessor: d => d.employee,
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 300,
                                             className: 'text-left'
@@ -285,6 +288,7 @@ class SuspendedQualification extends PureComponent {
                                         {
                                             Header: "Assigned Date",
                                             accessor: "assignedDate",
+                                            headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 150,
                                             className: 'text-center'

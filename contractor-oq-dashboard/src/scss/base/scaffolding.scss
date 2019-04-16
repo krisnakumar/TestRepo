@@ -1176,3 +1176,16 @@ max-height: 500px !important;
   color: #ffffff;
   border-right: 1px solid #ddd !important;
 }
+.header-wordwrap {
+  white-space: pre-line !important;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ReactTable .rt-th, .ReactTable .rt-td {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
