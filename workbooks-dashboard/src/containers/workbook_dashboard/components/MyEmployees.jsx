@@ -189,19 +189,19 @@ class MyEmployees extends React.Component {
     const rows = [],
       length = employees ? employees.length : 0;
     for (let i = 0; i < length; i++) {
-      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook);
-      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook);
-      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook);
-      completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook);
-      totalEmpCount += parseInt(employees[i].TotalEmployees);
+      assignedWorkBooksCount += parseInt(employees[i].AssignedWorkBook || 0);
+      inDueWorkBooksCount += parseInt(employees[i].InDueWorkBook || 0);
+      pastDueWorkBooksCount += parseInt(employees[i].PastDueWorkBook || 0);
+      completedWorkBooksCount += parseInt(employees[i].CompletedWorkbook || 0);
+      totalEmpCount += parseInt(employees[i].TotalEmployees || 0);
       rows.push({
         userId: employees[i].UserId || 0,
         role: employees[i].Role,
-        assignedWorkBooks: employees[i].AssignedWorkBook,
+        assignedWorkBooks: employees[i].AssignedWorkBook || 0,
         employee: employees[i].EmployeeName,
-        inDueWorkBooks: employees[i].InDueWorkBook,
-        pastDueWorkBooks: employees[i].PastDueWorkBook,
-        completedWorkBooks: employees[i].CompletedWorkbook,
+        inDueWorkBooks: employees[i].InDueWorkBook || 0,
+        pastDueWorkBooks: employees[i].PastDueWorkBook || 0,
+        completedWorkBooks: employees[i].CompletedWorkbook || 0,
         total: parseInt(employees[i].TotalEmployees) || 0
       });
     }

@@ -19,6 +19,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Card, CardBody, Col } from 'reactstrap';
 import 'whatwg-fetch'
 import ReactDataGrid from 'react-data-grid';
+import * as API from '../../../shared/utils/APIUtils';
+import * as Constants from '../../../shared/constants';
+import WorkBookProgress from './WorkBookProgress';
 import Export from './WorkBookDashboardExport';
 import _ from "lodash";
 
@@ -72,6 +75,16 @@ class WorkBookCompleted extends React.Component {
         cellClass: "text-left"
       },
       {
+        key: 'completedTasks',
+        name: 'Completed / Total Repetitions',
+        width: 180,
+        sortable: true,
+        editable: false,
+        getRowMetaData: row => row,
+        formatter: (props) => this.workbookFormatter("completedTasks", props),
+        cellClass: "text-center"
+      },
+      {
         key: 'completionDate',
         name: 'Completion Date',
         sortable: true,
@@ -89,7 +102,10 @@ class WorkBookCompleted extends React.Component {
       modal: this.props.modal,
       rows: this.createRows(this.props.assignedWorkBooks),
       pageOfItems: [],
-      isInitial: false
+      isInitial: false,
+      isWorkBookProgressModal: false,
+      workBooksProgress: {},
+      selectedWorkbook: {}
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -137,9 +153,11 @@ class WorkBookCompleted extends React.Component {
     for (let i = 0; i < length; i++) {
       rows.push({
         userId: employees[i].UserId,
+        workBookId: employees[i].WorkBookId,
         employee: employees[i].EmployeeName,
         role: employees[i].Role,
         workbookName: employees[i].WorkBookName,
+        completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
         completionDate: employees[i].DueDate ? (employees[i].DueDate.split("T")[0] || "") : ""
       });
     }
@@ -233,6 +251,85 @@ class WorkBookCompleted extends React.Component {
     );
   }
 
+  /**
+   * @method
+   * @name - updateModalState
+   * This method will update the modal window state of parent
+   * @param modelName
+   * @returns none
+   */
+  updateModalState = (modelName) => {
+    let value = !this.state[modelName];
+    this.setState({
+      [modelName]: value
+    });
+  };
+
+
+  /**
+   * @method
+   * @name - handleCellClick
+   * This method will trigger the event of API's respective to cell clicked Data Grid
+   * @param type
+   * @param args
+   * @returns none
+   */
+  handleCellClick = (type, args) => {
+    let userId = 0,
+      workBookId = 0;
+    this.state.selectedWorkbook = args;
+    switch (type) {
+      case "percentageCompleted":
+      case "completedTasks":
+        userId = args.userId;
+        workBookId = args.workBookId;
+        if (userId && workBookId)
+          this.getWorkBookProgress(userId, workBookId);
+        break;
+      default:
+        break;
+    }
+    // this.refs.reactDataGrid.deselect();
+  };
+
+  /**
+    * @method
+    * @name - getWorkBookProgress
+    * This method will used to get workbook progress details
+    * @param userId
+    * @param workBookId
+    * @returns none
+  */
+  async getWorkBookProgress(userId, workBookId) {
+    const { cookies } = this.props;
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    const payLoad = {
+      "Fields": [{ "Name": "USER_ID", "Value": userId, "Operator": "=" }, { "Name": "WORKBOOK_ID", "Value": workBookId, "Operator": "=", "Bitwise": "and" }],
+      "ColumnList": Constants.GET_WORKBOOKS_PROGRESS_COLUMNS,
+      "AppType": "WORKBOOK_DASHBOARD"
+    };
+
+    // Company Id get from session storage
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    let companyId = contractorManagementDetails.Company.Id || 0;
+
+    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+      workBooksProgress = {};
+    isWorkBookProgressModal = true;
+    this.setState({ isWorkBookProgressModal, workBooksProgress });
+
+    let token = idToken,
+      url = "/company/" + companyId + "/workbooks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+    workBooksProgress = response;
+    isWorkBookProgressModal = true;
+    this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+  };
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
 
@@ -241,6 +338,13 @@ class WorkBookCompleted extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <WorkBookProgress
+          backdropClassName={"no-backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isWorkBookProgressModal}
+          workBooksProgress={this.state.workBooksProgress}
+          selectedWorkbook={this.state.selectedWorkbook}
+        />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
           <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
           <Export
@@ -290,6 +394,16 @@ class WorkBookCompleted extends React.Component {
                       className: 'text-left'
                     },
                     {
+                      Header: "Completed / Total Repetitions",
+                      id: "completedTasks",
+                      accessor: "completedTasks",
+                      headerClassName: 'header-wordwrap',
+                      minWidth: 175,
+                      maxWidth: 200,
+                      className: 'text-center',
+                      Cell: this.customCell
+                    },
+                    {
                       Header: "Completion Date",
                       accessor: "completionDate",
                       headerClassName: 'header-wordwrap',
@@ -310,12 +424,12 @@ class WorkBookCompleted extends React.Component {
                   loading={!this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                  // defaultSorted={[
-                  //   {
-                  //     id: "role",
-                  //     desc: false
-                  //   }
-                  // ]}
+                // defaultSorted={[
+                //   {
+                //     id: "role",
+                //     desc: false
+                //   }
+                // ]}
                 />
               </div>
             </div>
