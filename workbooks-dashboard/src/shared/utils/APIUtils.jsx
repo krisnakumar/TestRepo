@@ -24,7 +24,6 @@ const apoolData = {
     Region: 'us-west-2'
 };
 
-
 /**
 * @method
 * @name - ProcessAPI
@@ -76,18 +75,12 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
 
     return fetch(url, request).then(function (response) {
         if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
-            let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
-            if (readAPIErrorCount) {
-              // Do nothing
-            } else {
-              localStorage.setItem('readAPIErrorCount', '1');
+            if (document.getElementById("loader-layer")) {
+                document.getElementById("loader-layer").classList.remove("loader-show");
+                document.getElementById("loader-layer").classList.add("loader-hide");
             }
-            if (document.getElementById("api-error-modal-loader-layer")) {
-                document.getElementById("api-error-modal-loader-layer").classList.remove("loader-hide");
-                document.getElementById("api-error-modal-loader-layer").classList.add("loader-show");
-            }
-            // window.location = window.location.origin;
-        }else {
+            return false;
+        } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
@@ -102,23 +95,23 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
         let responseObject = Object.keys(json);
 
         return json[responseObject];
-    }).catch(function (ex) {
+    }).catch(function (error, statusCode) {
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
         let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
         if (readAPIErrorCount) {
-          // Do nothing
+            // Do nothing
         } else {
-          localStorage.setItem('readAPIErrorCount', '1');
+            localStorage.setItem('readAPIErrorCount', '1');
         }
         if (document.getElementById("api-error-modal-loader-layer")) {
             document.getElementById("api-error-modal-loader-layer").classList.remove("loader-hide");
             document.getElementById("api-error-modal-loader-layer").classList.add("loader-show");
         }
         // Handle API Exception here
-        console.log('parsing failed', ex);
+        console.log('parsing failed', error, statusCode);
     });
 }
 

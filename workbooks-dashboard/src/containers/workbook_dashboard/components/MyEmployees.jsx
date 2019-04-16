@@ -31,6 +31,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
+import SessionPopup from './SessionPopup';
 import Export from './WorkBookDashboardExport';
 import _ from "lodash";
 
@@ -148,7 +149,8 @@ class MyEmployees extends React.Component {
       isInitial: false,
       sortColumn: "",
       sortDirection: "NONE",
-      selectedUserId: this.props.selectedUserId || 0
+      selectedUserId: this.props.selectedUserId || 0,
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -245,7 +247,12 @@ class MyEmployees extends React.Component {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response;
 
-    this.props.updateMyEmployeesArray(myEmployees, supervisor);
+    if (response) {
+      this.props.updateMyEmployeesArray(myEmployees, supervisor);
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -288,9 +295,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBookDuePast = response;
-    isPastDueModal = true;
-    this.setState({ ...this.state, isPastDueModal, workBookDuePast });
+    if (response) {
+      workBookDuePast = response;
+      isPastDueModal = true;
+      this.setState({ ...this.state, isPastDueModal, workBookDuePast });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -332,10 +344,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBookComingDue = response;
+    if (response) {
+      workBookComingDue = response;
+      isComingDueModal = true;
+      this.setState({ ...this.state, isComingDueModal, workBookComingDue });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
 
-    isComingDueModal = true;
-    this.setState({ ...this.state, isComingDueModal, workBookComingDue });
   };
 
   /**
@@ -376,9 +392,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBookCompleted = response;
-    isCompletedModal = true;
-    this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+    if (response) {
+      workBookCompleted = response;
+      isCompletedModal = true;
+      this.setState({ ...this.state, isCompletedModal, workBookCompleted });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -419,9 +440,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    assignedWorkBooks = response;
-    isAssignedModal = true;
-    this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
+    if (response) {
+      assignedWorkBooks = response;
+      isAssignedModal = true;
+      this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -690,6 +716,10 @@ class MyEmployees extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <AssignedWorkBook
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}

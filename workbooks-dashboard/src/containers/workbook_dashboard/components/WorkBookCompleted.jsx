@@ -23,6 +23,7 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import WorkBookProgress from './WorkBookProgress';
 import Export from './WorkBookDashboardExport';
+import SessionPopup from './SessionPopup';
 import _ from "lodash";
 
 // Import React Table
@@ -105,7 +106,8 @@ class WorkBookCompleted extends React.Component {
       isInitial: false,
       isWorkBookProgressModal: false,
       workBooksProgress: {},
-      selectedWorkbook: {}
+      selectedWorkbook: {},
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -325,9 +327,14 @@ class WorkBookCompleted extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBooksProgress = response;
-    isWorkBookProgressModal = true;
-    this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    if (response) {
+      workBooksProgress = response;
+      isWorkBookProgressModal = true;
+      this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   // This method is used to setting the row data in react data grid
@@ -338,6 +345,10 @@ class WorkBookCompleted extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <WorkBookProgress
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}

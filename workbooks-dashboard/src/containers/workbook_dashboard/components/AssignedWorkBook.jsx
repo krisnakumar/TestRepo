@@ -25,6 +25,7 @@ import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import SessionPopup from './SessionPopup';
 import _ from "lodash";
 
 // Import React Table
@@ -113,7 +114,8 @@ class AssignedWorkBook extends React.Component {
       isWorkBookProgressModal: false,
       workBooksProgress: {},
       isInitial: false,
-      selectedWorkbook: {}
+      selectedWorkbook: {},
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -155,7 +157,7 @@ class AssignedWorkBook extends React.Component {
 
     // Company Id get from session storage
     let { contractorManagementDetails } = sessionStorage || '{}';
-      contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
     let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
@@ -166,10 +168,14 @@ class AssignedWorkBook extends React.Component {
     let token = idToken,
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+    if (response) {
+      workBooksProgress = response;
+      isWorkBookProgressModal = true;
+      this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
 
-    workBooksProgress = response;
-    isWorkBookProgressModal = true;
-    this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
   };
 
   /**
@@ -385,6 +391,10 @@ class AssignedWorkBook extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <WorkBookProgress
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -415,7 +425,7 @@ class AssignedWorkBook extends React.Component {
                   minColumnWidth={100}
                   emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView}
                 /> */}
-                 <ReactTable
+                <ReactTable
                   data={rows}
                   columns={[
                     {

@@ -25,6 +25,7 @@ import WorkBookProgress from './WorkBookProgress';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import SessionPopup from './SessionPopup';
 import _ from "lodash";
 
 // Import React Table
@@ -122,7 +123,8 @@ class WorkBookDuePast extends React.Component {
       isWorkBookProgressModal: false,
       workBooksProgress: {},
       isInitial: false,
-      selectedWorkbook: {}
+      selectedWorkbook: {},
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -174,9 +176,14 @@ class WorkBookDuePast extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBooksProgress = response;
-    isWorkBookProgressModal = true;
-    this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    if (response) {
+      workBooksProgress = response;
+      isWorkBookProgressModal = true;
+      this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -390,6 +397,10 @@ class WorkBookDuePast extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <WorkBookProgress
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -444,7 +455,7 @@ class WorkBookDuePast extends React.Component {
                       headerClassName: 'header-wordwrap',
                       minWidth: 350,
                       className: 'text-left'
-                    },     
+                    },
                     {
                       Header: "Completed / Total Repetitions",
                       id: "completedTasks",

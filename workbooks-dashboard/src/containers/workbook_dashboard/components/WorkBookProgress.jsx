@@ -25,6 +25,7 @@ import WorkBookRepetition from './WorkBookRepetition';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './WorkBookDashboardExport';
+import SessionPopup from './SessionPopup';
 import _ from "lodash";
 
 // Import React Table
@@ -106,7 +107,8 @@ class WorkBookProgress extends React.Component {
       isWorkBookRepetitionModal: false,
       workBooksRepetition: {},
       isInitial: false,
-      averageCompletionPrecentage: 0
+      averageCompletionPrecentage: 0,
+      isSessionPopup: false
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -157,8 +159,8 @@ class WorkBookProgress extends React.Component {
     averageCompletionPrecentage = parseInt(averageCompletionPrecentage / length);
 
     //if (length > 0)
-      //rows.push({ taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount: "", incompletedTasksCount: "", completionPrecentage: averageCompletionPrecentage + "%" });
-    this.setState({averageCompletionPrecentage: averageCompletionPrecentage});
+    //rows.push({ taskCode: "OQ Task Completion Percentage", taskName: "", completedTasksCount: "", incompletedTasksCount: "", completionPrecentage: averageCompletionPrecentage + "%" });
+    this.setState({ averageCompletionPrecentage: averageCompletionPrecentage });
     return rows;
   };
 
@@ -221,9 +223,14 @@ class WorkBookProgress extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    workBooksRepetition = response;
-    isWorkBookRepetitionModal = true;
-    this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
+    if (response) {
+      workBooksRepetition = response;
+      isWorkBookRepetitionModal = true;
+      this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
+    } else {
+      this.setState({ isSessionPopup: true });
+    }
+
   };
 
   /**
@@ -426,6 +433,10 @@ class WorkBookProgress extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+        />
         <WorkBookRepetition
           backdropClassName={"no-backdrop"}
           updateState={this.updateModalState.bind(this)}
@@ -532,12 +543,12 @@ class WorkBookProgress extends React.Component {
                   loading={!this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                  // defaultSorted={[
-                  //   {
-                  //     id: "role",
-                  //     desc: false
-                  //   }
-                  // ]}
+                // defaultSorted={[
+                //   {
+                //     id: "role",
+                //     desc: false
+                //   }
+                // ]}
                 />
               </div>
             </div>
