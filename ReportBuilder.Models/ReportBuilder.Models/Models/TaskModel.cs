@@ -100,6 +100,8 @@ namespace ReportBuilder.Models.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string AssignedDate { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string QualificationAssignedDate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string UnlockDate { get; set; }
@@ -114,6 +116,11 @@ namespace ReportBuilder.Models.Models
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Role { get; set; }
+
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string EmployeeRole { get; set; }
 
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
