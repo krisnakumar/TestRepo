@@ -556,7 +556,7 @@
          }
       },
       "/company/{companyId}/roles":{  
-         "get":{  
+         "post":{  
             "tags":[  
                "Roles"
             ],
@@ -651,7 +651,7 @@
                "passthroughBehavior":"when_no_match",
                "httpMethod":"POST",
                "requestTemplates":{  
-                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",     \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
+                  "application/json":"{    \"CompanyId\" : \"$input.params('companyId')\",    \"Payload\" : $input.json('$'), \"UserName\" :  \"$context.authorizer.claims['cognito:username']\",    \"UserId\":\"$context.authorizer.claims['custom:user_id']\"}"
                },
                "type":"aws"
             }
