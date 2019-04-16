@@ -653,23 +653,6 @@ class CTDashboard extends PureComponent {
               <Col xs="1"><button className="btn-as-text" onClick={this.toggleFilter} >Change</button></Col>
             </Row>
             <Row className="collapse-body-row">
-              <Col xs="1"><label>Company:</label></Col>
-              <Col xs="auto">
-                {
-                  filteredCompaniesLength <= 0 && <input value="ALL" disabled className="text-center" />
-
-                  ||
-
-                  <ReactTags
-                    tags={filteredCompanies}
-                    handleDelete={this.handleCompanyDelete}
-                    handleDrag={console.log()}
-                  />
-                }
-              </Col>
-              <Col xs="1"><button className="btn-as-text" onClick={this.toggleCompanyFilter} >Change</button></Col>
-            </Row>
-            <Row className="collapse-body-row">
               <Col xs="1"><label></label></Col>
               <Col xs="auto"><button className="grid-filter-go-btn" size="sm" onClick={this.filterGoAction} >Go</button></Col>
               <Col xs="1"></Col>
