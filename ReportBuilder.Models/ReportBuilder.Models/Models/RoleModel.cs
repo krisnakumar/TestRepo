@@ -10,7 +10,6 @@ namespace ReportBuilder.Models.Response
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? RoleId { get; set; }
-        
 
     }
 }

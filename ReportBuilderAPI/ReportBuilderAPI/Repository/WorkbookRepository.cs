@@ -242,7 +242,7 @@ namespace ReportBuilderAPI.Repository
             string userId = string.Empty;
             string status = string.Empty;
             string workbookID = string.Empty;
-            string taskId = string.Empty;
+            string taskId = string.Empty, role = string.Empty;
 
             try
             {
@@ -253,6 +253,7 @@ namespace ReportBuilderAPI.Repository
                 //Assign the companyId to the new object
                 queryBuilderRequest.CompanyId = companyId;
                 parameterList = ParameterHelper.Getparameters(queryBuilderRequest);
+                role = Convert.ToString(parameterList["roles"]);
 
                 if (queryBuilderRequest.AppType == Constants.WORKBOOK_DASHBOARD)
                 {
@@ -262,38 +263,38 @@ namespace ReportBuilderAPI.Repository
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetDashboardSummary  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @showTopLevel = " + CheckSupervisor(companyId, Convert.ToInt32(userId));
                     }
 
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_IN_DUE).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_IN_DUE)
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_IN_DUE).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_IN_DUE)
                     {
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs  @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @dueInDays  = " + parameterList["duedays"].ToString() + ",@status = 0";
                     }
 
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.PAST_DUE).Select(y => y.Name).FirstOrDefault() == Constants.PAST_DUE)
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.PAST_DUE).Select(y => y.Name).FirstOrDefault() == Constants.PAST_DUE)
                     {
                         userId = parameterList["userId"].ToString();
-                        query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId + " ,@status = 1";
+                        query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId + ", @dueInDays  = " + parameterList["duedays"].ToString() + " ,@status = 1";
                     }
 
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
                     {
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @status   = " + 2;
                     }
 
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_WORKBOOK).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_WORKBOOK)
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED_WORKBOOK).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED_WORKBOOK)
                     {
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
                     }
 
-                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @studentId   = " + userId + ", @OJTId =" + workbookID;
                     }
 
-                    if (queryBuilderRequest.ColumnList.Contains(Constants.NUMBER_OF_ATTEMPTS))
+                    else if (queryBuilderRequest.ColumnList.Contains(Constants.NUMBER_OF_ATTEMPTS))
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
@@ -301,6 +302,10 @@ namespace ReportBuilderAPI.Repository
                         string tag = queryBuilderRequest.Fields.Where(x => x.Name == Constants.STATUS).Select(y => y.Value).FirstOrDefault();
                         status = tag == Constants.COMPLETED ? "1" : tag == Constants.FAILED ? "0" : "null";
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetRepProgress   @companyId  =" + companyId + " , @studentId  = " + userId + ", @OJTId =" + workbookID + ", @taskId=" + taskId + ", @completionStatus=" + status;
+                    }
+                    if (!string.IsNullOrEmpty(query) && !string.IsNullOrEmpty(role))
+                    {
+                        query += " , @roleId  = " + role;
                     }
                 }
                 else
@@ -405,7 +410,7 @@ namespace ReportBuilderAPI.Repository
                                     Address = (dataTable.Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
                                     Phone = (dataTable.Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
                                     TotalEmployees = (dataTable.Select("ColumnName = 'Subordinate_Count'").Count() == 1) ? (int?)(sqlDataReader["Subordinate_Count"]) : null,
-                                   
+
                                     InCompleteWorkBook = (dataTable.Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
 
                                     UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
@@ -423,7 +428,7 @@ namespace ReportBuilderAPI.Repository
                                     LastAttemptDate_tasks = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date_Attempted"])) ? Convert.ToDateTime(sqlDataReader["Date_Attempted"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
                                     Location = (dataTable.Select("ColumnName = 'Attempt_Location'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt_Location"]) : null,
-                                     Comments = taskComment?.Comment,
+                                    Comments = taskComment?.Comment,
 
                                     EvaluatorName = (dataTable.Select("ColumnName = 'Submitted_By_User_Id'").Count() == 1) ? Convert.ToString(sqlDataReader["Submitted_By_User_Id"]) : null,
 
