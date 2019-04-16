@@ -323,6 +323,7 @@ class UserTaskDetail extends React.Component {
                       Header: "Task Code",
                       id: "taskCode",
                       accessor: "taskCode",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-left'
@@ -331,6 +332,7 @@ class UserTaskDetail extends React.Component {
                       Header: "Task Name",
                       id: "taskName",
                       accessor: d => d.taskName,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 300,
                       className: 'text-left'
                     },
@@ -338,6 +340,7 @@ class UserTaskDetail extends React.Component {
                       Header: "Expires",
                       id: "expirationDate",
                       accessor: "expirationDate",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 100,
                       maxWidth: 200,
                       className: 'text-center',
@@ -357,6 +360,7 @@ class UserTaskDetail extends React.Component {
                       Header: "Status",
                       id: "status",
                       accessor: "status",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center'

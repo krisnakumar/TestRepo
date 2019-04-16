@@ -19,8 +19,6 @@ const Footer = () => (
             <a href="http://www.its-training.com" rel="noopener noreferrer" target="_blank">
               Industrial Training Services, Inc.
             </a>
-            <br />
-            <a href="/bz_business.aspx">Business</a>
           </div>
         </Col>
       </Row>

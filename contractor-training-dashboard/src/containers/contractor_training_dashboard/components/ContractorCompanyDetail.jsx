@@ -154,7 +154,7 @@ class ContractorCompanyDetail extends React.Component {
         incompleteUsers: incompleteQualification || 0,
         completedUsers: completedQualification || 0,
         total: (incompleteQualification + completedQualification) || 0,
-        percentageCompleted: parseInt(percentageCompleted) + "%" || "0%"
+        percentageCompleted: Math.round(percentageCompleted) + "%" || "0%"
       });
     }
 
@@ -456,6 +456,7 @@ class ContractorCompanyDetail extends React.Component {
                       Header: "Company",
                       id: "company",
                       accessor: "company",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 300,
                       className: 'text-left',
                     },
@@ -463,6 +464,7 @@ class ContractorCompanyDetail extends React.Component {
                       Header: "Incomplete Users",
                       id: "incompleteUsers",
                       accessor: d => d.incompleteUsers,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -472,6 +474,7 @@ class ContractorCompanyDetail extends React.Component {
                       Header: "Completed Users",
                       id: "completedUsers",
                       accessor: "completedUsers",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -481,6 +484,7 @@ class ContractorCompanyDetail extends React.Component {
                       Header: "Total",
                       id: "total",
                       accessor: "total",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -490,6 +494,7 @@ class ContractorCompanyDetail extends React.Component {
                       Header: "% Complete",
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',

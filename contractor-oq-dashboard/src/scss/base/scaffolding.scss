@@ -1189,3 +1189,7 @@ max-height: 500px !important;
   flex-direction: column;
   justify-content: center;
 }
+
+.ReactTable .-striped .-highlight{
+  overflow-y: scroll;
+}

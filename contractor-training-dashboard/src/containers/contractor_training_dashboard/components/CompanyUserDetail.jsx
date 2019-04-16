@@ -152,7 +152,7 @@ class CompanyUserDetail extends React.Component {
         incomplete: incompleteQualification,
         completed: completedQualification,
         total: (incompleteQualification + completedQualification) || 0,
-        percentageCompleted: parseInt(percentageCompleted) + "%" || "0%"
+        percentageCompleted: Math.round(percentageCompleted) + "%" || "0%"
       });
     }
 
@@ -452,6 +452,7 @@ class CompanyUserDetail extends React.Component {
                       Header: "Employee",
                       id: "employee",
                       accessor: "employee",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 300,
                       className: 'text-left'
                     },
@@ -459,6 +460,7 @@ class CompanyUserDetail extends React.Component {
                       Header: "Incomplete",
                       id: "incomplete",
                       accessor: d => d.incomplete,
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -468,6 +470,7 @@ class CompanyUserDetail extends React.Component {
                       Header: "Completed",
                       id: "completed",
                       accessor: "completed",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -477,6 +480,7 @@ class CompanyUserDetail extends React.Component {
                       Header: "Total",
                       id: "total",
                       accessor: "total",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center',
@@ -486,6 +490,7 @@ class CompanyUserDetail extends React.Component {
                       Header: "% Complete",
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
+                      headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
                       className: 'text-center'

@@ -113,7 +113,12 @@ class CompanyFilterModal extends React.Component {
     * @returns none
     */
     selectMultipleOption(isParentUpdate, value) {
-        if(isParentUpdate){
+        // patch to set the only one value for the filter
+        // this will be removed 
+        if (value.length > 1)
+            value = value.splice(1, 1); // Patch for filter, it will retain the last selected
+
+        if (isParentUpdate) {
             this.setState({ arrayValue: value, tags: value, lastSelectedValue: value });
         } else {
             this.setState({ arrayValue: value, tags: value });
@@ -149,13 +154,13 @@ class CompanyFilterModal extends React.Component {
         this.setState({ [name]: value });
     }
 
-     /**
-     * @method
-     * @name - handleDelete
-     * This method will delete the selected roles and update it on state
-     * @param i
-     * @returns none
-    */
+    /**
+    * @method
+    * @name - handleDelete
+    * This method will delete the selected roles and update it on state
+    * @param i
+    * @returns none
+   */
     handleDelete(i) {
         const { tags, arrayValue } = this.state;
         this.setState({

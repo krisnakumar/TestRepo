@@ -703,6 +703,7 @@ class CTDashboard extends PureComponent {
                   {
                     Header: "Role",
                     accessor: "role",
+                    headerClassName: 'header-wordwrap',
                     // width: 200
                     minWidth: 400,
                     className: 'text-left'
@@ -711,6 +712,7 @@ class CTDashboard extends PureComponent {
                     Header: "Incomplete Companies",
                     id: "incompleteCompanies",
                     accessor: d => d.incompleteCompanies,
+                    headerClassName: 'header-wordwrap',
                     minWidth: 200,
                     maxWidth: 300,
                     className: 'text-center',
@@ -720,6 +722,7 @@ class CTDashboard extends PureComponent {
                     Header: "Completed Companies",
                     id: "completedCompanies",
                     accessor: "completedCompanies",
+                    headerClassName: 'header-wordwrap',
                     minWidth: 200,
                     maxWidth: 300,
                     className: 'text-center',
