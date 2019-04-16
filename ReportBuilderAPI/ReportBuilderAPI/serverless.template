@@ -14,7 +14,7 @@
       },
       "LambdaTimeout": {
          "Type": "String",
-         "Description": "Time in seconds (s) that a lambda function will run before timing out.",		    
+         "Description": "Time in seconds (s) that a lambda function will run before timing out.",
          "Default": "30"
       },
       "VPCSecurityGroupIDs": {
@@ -25,17 +25,21 @@
          "Description": "A comma-delimited list of strings - the subnet IDs that your Lambda function should be assigned to",
          "Type": "CommaDelimitedList"
       },
-      "LambdaExecutionRoleArn" : {
-		"Description": "The Arn of the role that the lambda functions will execute as.",
-		"Type" : "String"
+      "LambdaExecutionRoleArn": {
+         "Description": "The Arn of the role that the lambda functions will execute as.",
+         "Type": "String"
       },
-      "ITSEnvironment" : {
-		"Description": "The environment to which the application will be deployed.",
-		"Type" : "String"
+      "ITSEnvironment": {
+         "Description": "The environment to which the application will be deployed.",
+         "Type": "String"
       },
-	  "CognitoClientId" : {
-		"Description": "Cognito client Id that helps to connect the cognito authorizer",
-		"Type" : "String"
+      "CognitoClientId": {
+         "Description": "Cognito client Id that helps to connect the cognito authorizer",
+         "Type": "String"
+      },
+      "DefinitionURI": {
+         "Description": "Swagger definition URI which will be used to create resources in APIGateway",
+         "Type": "String"
       }
    },
    "Resources": {
@@ -43,19 +47,22 @@
          "Type": "AWS::Serverless::Api",
          "Properties": {
             "Name": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS-ReportBuilder-",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS-ReportBuilder-",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "StageName": {
                "Ref": "ITSEnvironment"
             },
-            "DefinitionUri": "s3://onboard-lms-ci/report-builder-api/swagger/RB-dev.json"
+            "DefinitionUri": {
+               "Ref": "DefinitionURI"
+            }
          }
       },
       "GetEmployeesDetails": {
@@ -63,15 +70,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetEmployeesQueryBuilder",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetEmployeesQueryBuilder_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetEmployeesQueryBuilder_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -80,11 +88,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-           "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -111,15 +125,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetWorkbookQueryBuilder",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetWorkbookQueryBuilder_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetWorkbookQueryBuilder_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -128,11 +143,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -159,15 +180,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetTaskQueryBuilder",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetTasks_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetTasks_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -176,11 +198,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -207,15 +235,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SaveQuery",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_SaveQuery_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_SaveQuery_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -224,11 +253,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -255,15 +290,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQuery",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetQuery_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetQuery_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -272,11 +308,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -303,15 +345,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::RenameQuery",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_RenameQuery_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_RenameQuery_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -320,11 +363,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-           "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -351,15 +400,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::DeleteQuery",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_DeleteQuery_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_DeleteQuery_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -368,11 +418,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-           "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -399,15 +455,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetQueries",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetQueries_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetQueries_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -416,11 +473,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -447,15 +510,16 @@
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetRoles",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetRoles_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetRoles_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -464,11 +528,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -490,20 +560,21 @@
             }
          }
       },
-	   "GetCompanies": {
+      "GetCompanies": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::GetCompany",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_GetCompanies_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_GetCompanies_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -512,11 +583,17 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
             "Environment": {
                "Variables": {
                   "ConnectionString": {
@@ -538,20 +615,21 @@
             }
          }
       },
-	  	  "SilentAuth": {
+      "SilentAuth": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
             "Handler": "ReportBuilderAPI::ReportBuilderAPI.Handlers.FunctionHandler.Function::SilentAuth",
             "FunctionName": {
-                "Fn::Join": [
-                    "", [
-                    "OnBoardLMS_RB_SilentAuth_",
-                    {
+               "Fn::Join": [
+                  "",
+                  [
+                     "OnBoardLMS_RB_SilentAuth_",
+                     {
                         "Ref": "ITSEnvironment"
-                    }
-                    ]
-                ]
-                },
+                     }
+                  ]
+               ]
+            },
             "Runtime": "dotnetcore2.1",
             "CodeUri": "",
             "MemorySize": {
@@ -560,22 +638,28 @@
             "Timeout": {
                "Ref": "LambdaTimeout"
             },
-            "Role": { "Ref" : "LambdaExecutionRoleArn" },
-			"VpcConfig" : {
-					 "SecurityGroupIds": { "Ref": "VPCSecurityGroupIDs" },
-					 "SubnetIds": { "Ref": "VPCSubnetIDs" }
-			},
-			"Environment": {
+            "Role": {
+               "Ref": "LambdaExecutionRoleArn"
+            },
+            "VpcConfig": {
+               "SecurityGroupIds": {
+                  "Ref": "VPCSecurityGroupIDs"
+               },
+               "SubnetIds": {
+                  "Ref": "VPCSubnetIDs"
+               }
+            },
+            "Environment": {
                "Variables": {
                   "ConnectionString": {
                      "Ref": "ConnectionString"
                   },
-				  "CognitoClientId": {
+                  "CognitoClientId": {
                      "Ref": "CognitoClientId"
                   }
                }
-            },            
-			"Events": {
+            },
+            "Events": {
                "PutResource": {
                   "Type": "Api",
                   "Properties": {
