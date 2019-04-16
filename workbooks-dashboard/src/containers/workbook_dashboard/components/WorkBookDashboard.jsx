@@ -993,7 +993,7 @@ class WorkBookDashboard extends PureComponent {
                     Header: "Employee",
                     accessor: "employee",
                     headerClassName: 'header-wordwrap',
-                    minWidth: 120,
+                    minWidth: 270,
                     className: 'text-left',
                     Cell: this.employeeFormatter,
                     Footer: (
@@ -1005,7 +1005,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Role",
                     accessor: "role",
-                    minWidth: 150,
+                    minWidth: 120,
                     className: 'text-left'
                   },
                   {

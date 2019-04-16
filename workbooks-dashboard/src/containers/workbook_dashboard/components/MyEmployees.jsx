@@ -563,7 +563,7 @@ class MyEmployees extends React.Component {
   * @returns none
   */
   employeeFormatter = (props) => {
-    const { supervisorNames } = this.state; 
+    const { supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
     let currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     if (props.original.userId == currentUserId || props.original.total <= 0 || props.original.employee == "Total") {
@@ -747,7 +747,7 @@ class MyEmployees extends React.Component {
                       Header: "Employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 120,
+                      minWidth: 270,
                       className: 'text-left',
                       Cell: this.employeeFormatter,
                       Footer: (
@@ -760,7 +760,7 @@ class MyEmployees extends React.Component {
                       Header: "Role",
                       accessor: "role",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 150,
+                      minWidth: 120,
                       className: 'text-left'
                     },
                     {
@@ -862,12 +862,12 @@ class MyEmployees extends React.Component {
                   loading={this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                  // defaultSorted={[
-                  //   {
-                  //     id: "role",
-                  //     desc: false
-                  //   }
-                  // ]}
+                // defaultSorted={[
+                //   {
+                //     id: "role",
+                //     desc: false
+                //   }
+                // ]}
                 />
               </div>
             </div>
