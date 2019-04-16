@@ -19,6 +19,11 @@ import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import Export from './OQDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * AssignedQualificationEmptyRowsView Class defines the React component to render
@@ -85,6 +90,7 @@ class AssignedQualification extends PureComponent {
         };
 
         this.toggle = this.toggle.bind(this);
+        this.customCell = this.customCell.bind(this);
     }
 
     /**
@@ -212,11 +218,21 @@ class AssignedQualification extends PureComponent {
         this.setState({ rows });
     };
 
+    customCell(props) {
+        let self = this;
+        return (
+            props.value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+                {props.value}
+            </span> || <span>{props.value}</span>
+        );
+    }
+
     // This method is used to setting the row data in react data grid
     rowGetter = i => this.state.rows[i];
 
     render() {
         const { rows } = this.state;
+        let pgSize = (rows.length > 10) ? rows.length : 10;
         return (
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
@@ -232,7 +248,7 @@ class AssignedQualification extends PureComponent {
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
-                                <ReactDataGrid
+                                {/* <ReactDataGrid
                                     ref={'assignedQualificationReactDataGrid'}
                                     onGridSort={this.handleGridSort}
                                     enableCellSelect={false}
@@ -244,6 +260,61 @@ class AssignedQualification extends PureComponent {
                                     rowHeight={35}
                                     minColumnWidth={100}
                                     emptyRowsView={this.state.isInitial && AssignedQualificationEmptyRowsView}
+                                /> */}
+                                <ReactTable
+                                    data={rows}
+                                    columns={[
+                                        {
+                                            Header: "Task Code",
+                                            accessor: "taskCode",
+                                            minWidth: 120,
+                                            maxWidth: 200,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "OQ Task",
+                                            accessor: "oQTask",
+                                            minWidth: 250,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Employee",
+                                            id: "employee",
+                                            accessor: d => d.employee,
+                                            minWidth: 100,
+                                            maxWidth: 300,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Assigned Date",
+                                            accessor: "assignedDate",
+                                            minWidth: 100,
+                                            maxWidth: 150,
+                                            className: 'text-center'
+                                        }
+                                    ]
+                                    }
+                                    resizable={false}
+                                    className="-striped -highlight"
+                                    showPagination={false}
+                                    showPaginationTop={false}
+                                    showPaginationBottom={false}
+                                    showPageSizeOptions={false}
+                                    pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                                    pageSize={!this.state.isInitial ? 5 : pgSize}
+                                    loading={!this.state.isInitial}
+                                    loadingText={''}
+                                    noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                                    // defaultSorted={[
+                                    //   {
+                                    //     id: "role",
+                                    //     desc: false
+                                    //   }
+                                    // ]}
+                                    style={{
+                                        minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                                        maxHeight: "800px"
+                                    }}
                                 />
                             </div>
                         </div>

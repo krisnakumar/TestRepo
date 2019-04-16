@@ -18,7 +18,6 @@ import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import OQDashboardMock from '../components/OQDashboardMock.json';
 import AssignedQualification from '../components/AssignedQualification';
 import CompletedQualification from '../components/CompletedQualification';
 import InCompletedQualification from '../components/InCompletedQualification';
@@ -28,7 +27,11 @@ import LockedOutQualification from '../components/LockedOutQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './OQDashboardExport';
+import _ from "lodash";
 
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 /**
  * EmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
@@ -139,6 +142,7 @@ class EmployeeView extends PureComponent {
         };
 
         this.toggle = this.toggle.bind(this);
+        this.customCell = this.customCell.bind(this);
     }
 
     /**
@@ -384,7 +388,7 @@ class EmployeeView extends PureComponent {
                 console.log("default-", type, args);
                 break;
         }
-        this.refs.employeeViewReactDataGrid.deselect();
+        // this.refs.employeeViewReactDataGrid.deselect();
     };
 
     /**
@@ -424,7 +428,7 @@ class EmployeeView extends PureComponent {
             myEmployees = response;
 
         this.props.updateEmployeesQualificationsArray(myEmployees, args);
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -469,7 +473,7 @@ class EmployeeView extends PureComponent {
         assignedQualifications = response;
         isAssignedQualificationView = true;
         this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -514,7 +518,7 @@ class EmployeeView extends PureComponent {
         completedQualifications = response;
         isCompletedQualificationView = true;
         this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -559,7 +563,7 @@ class EmployeeView extends PureComponent {
         inCompletedQualifications = response;
         isInCompletedQualificationView = true;
         this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -604,7 +608,7 @@ class EmployeeView extends PureComponent {
         pastDueQualifications = response;
         isPastDueQualificationView = true;
         this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -649,7 +653,7 @@ class EmployeeView extends PureComponent {
         comingDueQualifications = response;
         isComingDueQualificationView = true;
         this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
 
     /**
@@ -693,13 +697,25 @@ class EmployeeView extends PureComponent {
         lockoutQualifications = response;
         isLockoutQualificationView = true;
         this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
-        window.dispatchEvent(new Event('resize'));
+        
     };
+
+
+    customCell(props) {
+        let self = this;
+        let value = parseInt(props.value);
+        return (
+          value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+            {value}
+          </span> || <span>{value}</span>
+        );
+      };
 
     render() {
         const { rows, contractorsNames } = this.state;
         let contractorsNamesLength = contractorsNames.length > 0 ? contractorsNames.length - 1 : contractorsNames.length;
         let contractorsName = contractorsNames[contractorsNamesLength] ? ' - ' + contractorsNames[contractorsNamesLength].name : "";
+        let pgSize = (rows.length > 10) ? rows.length : 10;
         return (
             <div>
                 <LockedOutQualification
@@ -748,7 +764,7 @@ class EmployeeView extends PureComponent {
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
-                                <ReactDataGrid
+                                {/* <ReactDataGrid
                                     ref={'employeeViewReactDataGrid'}
                                     onGridSort={this.handleGridSort}
                                     enableCellSelect={false}
@@ -760,6 +776,81 @@ class EmployeeView extends PureComponent {
                                     rowHeight={35}
                                     minColumnWidth={100}
                                     emptyRowsView={this.state.isInitial && EmployeeViewEmptyRowsView}
+                                /> */}
+                                <ReactTable
+                                    data={rows}
+                                    columns={[
+                                        {
+                                            Header: "Employee",
+                                            accessor: "employee",
+                                            minWidth: 120,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Role",
+                                            accessor: "role",
+                                            minWidth: 120,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Assigned Qualifications",
+                                            accessor: "assignedQualification",
+                                            minWidth: 150,
+                                            className: 'text-center',
+                                            Cell: this.customCell
+                                        },
+                                        {
+                                            Header: "Qualifications",
+                                            id: "completedQualification",
+                                            accessor: d => d.completedQualification,
+                                            minWidth: 100,
+                                            className: 'text-center',
+                                            Cell: this.customCell
+                                        },
+                                        {
+                                            Header: "Disqualifications",
+                                            accessor: "inCompletedQualification",
+                                            minWidth: 100,
+                                            className: 'text-center',
+                                            Cell: this.customCell
+                                        },
+                                        {
+                                            Header: "Locked Out 6 Months",
+                                            accessor: "lockoutCount",
+                                            minWidth: 100,
+                                            className: 'text-center',
+                                            Cell: this.customCell
+                                        },
+                                        {
+                                            Header: "Expires in 30 Days",
+                                            accessor: "comingDue",
+                                            minWidth: 100,
+                                            className: 'text-center',
+                                            Cell: this.customCell
+                                        }
+                                    ]
+                                    }
+                                    resizable={false}
+                                    className="-striped -highlight"
+                                    showPagination={false}
+                                    showPaginationTop={false}
+                                    showPaginationBottom={false}
+                                    showPageSizeOptions={false}
+                                    pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                                    pageSize={this.state.isInitial ? 5 : pgSize}
+                                    loading={this.state.isInitial}
+                                    loadingText={''}
+                                    noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                                    // defaultSorted={[
+                                    //   {
+                                    //     id: "role",
+                                    //     desc: false
+                                    //   }
+                                    // ]}
+                                    style={{
+                                        minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
+                                        maxHeight: "800px"
+                                    }}
                                 />
                             </div>
                         </div>

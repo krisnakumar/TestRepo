@@ -30,6 +30,11 @@ import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
 import Export from './OQDashboardExport';
+import _ from "lodash";
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 /**
  * OQDashboardEmptyRowsView Class defines the React component to render
@@ -159,6 +164,7 @@ class OQDashboard extends PureComponent {
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
+    this.customCell = this.customCell.bind(this);
   }
 
   /**
@@ -255,7 +261,7 @@ class OQDashboard extends PureComponent {
     }
 
     if (length > 0) {
-      rows.push({ company: "Total", role: "", lockoutCount: isNaN(lockoutCountCount) ? 0 : lockoutCountCount, suspendedQualification: suspendedQualificationCount, assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
+      // rows.push({ company: "Total", role: "", lockoutCount: isNaN(lockoutCountCount) ? 0 : lockoutCountCount, suspendedQualification: suspendedQualificationCount, assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
     }
     return rows;
   };
@@ -325,14 +331,14 @@ class OQDashboard extends PureComponent {
    * @returns none
    */
   qualificationsFormatter = (type, props) => {
-    if (props.dependentValues[type] <= 0 || props.dependentValues.company == "Total") {
+    if (props.original[type] <= 0 || props.original.company == "Total") {
       return (
         <span>{props.value}</span>
       );
     } else {
       return (
         <span onClick={e => {
-          e.preventDefault(); this.handleCellClick(type, props.dependentValues);
+          e.preventDefault(); this.handleCellClick(type, props.original);
         }} className={"text-clickable"}>
           {props.value}
         </span>
@@ -400,7 +406,7 @@ class OQDashboard extends PureComponent {
         console.log("default", type, args);
         break;
     }
-    this.refs.oQDashboardReactDataGrid.deselect();
+    // this.refs.oQDashboardReactDataGrid.deselect();
   };
 
   /**
@@ -467,7 +473,7 @@ class OQDashboard extends PureComponent {
       isInitial = true;
 
     this.setState({ rows: rows, isInitial: isInitial });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -508,7 +514,7 @@ class OQDashboard extends PureComponent {
     assignedQualifications = response;
     isAssignedQualificationView = true;
     this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -549,7 +555,7 @@ class OQDashboard extends PureComponent {
     completedQualifications = response;
     isCompletedQualificationView = true;
     this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -590,7 +596,7 @@ class OQDashboard extends PureComponent {
     lockoutQualifications = response;
     isLockoutQualificationView = true;
     this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
 
@@ -632,7 +638,7 @@ class OQDashboard extends PureComponent {
     inCompletedQualifications = response;
     isInCompletedQualificationView = true;
     this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -673,7 +679,7 @@ class OQDashboard extends PureComponent {
     pastDueQualifications = response;
     isPastDueQualificationView = true;
     this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -715,7 +721,7 @@ class OQDashboard extends PureComponent {
     comingDueQualifications = response;
     isComingDueQualificationView = true;
     this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -759,7 +765,7 @@ class OQDashboard extends PureComponent {
     employeesQualificationsArray.push(employeeQualifications);
     isEmployeeView = true;
     this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
-    window.dispatchEvent(new Event('resize'));
+    
   };
 
   /**
@@ -874,12 +880,23 @@ class OQDashboard extends PureComponent {
     this.getQualifications(userId, roles);
   };
 
+  customCell(props) {
+    let self = this;
+    let value = parseInt(props.value);
+    return (
+      value && <span onClick={e => { e.preventDefault(); self.handleCellClick(props.column.id, props.original); }} className={"text-clickable"}>
+        {value}
+      </span> || <span>{value}</span>
+    );
+  };
   render() {
     const { rows, collapseText, collapse, filteredRoles } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
       filteredRolesLength = filteredRoles.length;
     let basePath = window.location.origin || "";
     let rowsLength = rows.length || 0;
+    let pgSize = (rows.length > 10) ? rows.length : rows.length;
+
     return (
       <CardBody>
         <FilterModal
@@ -907,7 +924,7 @@ class OQDashboard extends PureComponent {
           modal={this.state.isLockoutQualificationView}
           assignedQualifications={this.state.lockoutQualifications}
         />
-         <AssignedQualification
+        <AssignedQualification
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isAssignedQualificationView}
@@ -987,7 +1004,7 @@ class OQDashboard extends PureComponent {
               </p>
             </div>
             <div className="table has-section-view has-total-row">
-              <ReactDataGrid
+              {/* <ReactDataGrid
                 ref={'oQDashboardReactDataGrid'}
                 onGridSort={this.handleGridSort}
                 enableCellSelect={false}
@@ -999,6 +1016,138 @@ class OQDashboard extends PureComponent {
                 rowHeight={35}
                 minColumnWidth={100}
                 emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
+              /> */}
+              <ReactTable
+                data={rows}
+                columns={[
+                  {
+                    Header: "Company",
+                    accessor: "company",
+                    minWidth: 120,
+                    className: 'text-left',
+                    Cell: props => this.qualificationsFormatter("total", props),
+                    Footer: (
+                      <span>
+                        <strong>Total</strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Assigned Qualifications",
+                    accessor: "assignedQualification",
+                    minWidth: 150,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'assignedQualification')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Qualifications",
+                    id: "completedQualification",
+                    accessor: d => d.completedQualification,
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'completedQualification')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Disqualifications",
+                    accessor: "inCompletedQualification",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'inCompletedQualification')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Locked Out 6 Months",
+                    accessor: "lockoutCount",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(parseInt(_.values(rows), 'lockoutCount'))
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Expires in 30 Days",
+                    accessor: "comingDue",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'comingDue')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Total Employees",
+                    accessor: "total",
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: props => this.qualificationsFormatter("total", props),
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'total')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  }
+                ]
+                }
+                resizable={false}
+                className="-striped -highlight"
+                showPagination={false}
+                showPaginationTop={false}
+                showPaginationBottom={false}
+                showPageSizeOptions={false}
+                pageSizeOptions={[5, 10, 20, 25, 50, 100]}
+                pageSize={!this.state.isInitial ? 5 : pgSize}
+                loading={!this.state.isInitial}
+                loadingText={''}
+                noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
+                // defaultSorted={[
+                //   {
+                //     id: "role",
+                //     desc: false
+                //   }
+                // ]}
               />
             </div>
           </div>

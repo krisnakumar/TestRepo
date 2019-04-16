@@ -1126,3 +1126,53 @@ button.grid-filter-go-btn {
 .modal-body .grid-container .table .react-grid-Container .react-grid-Main .react-grid-Grid {
 max-height: 500px !important;
 }
+
+
+.rt-th.-sort-desc.-cursor-pointer :after {
+  // content: " ▾";
+  // content: " ↓";
+  content: " ▼";
+}
+
+.rt-th.-sort-asc.-cursor-pointer :after {
+  // content: " ▴";
+  // content: " ↑";
+  content: " ▲";
+}
+
+.rt-thead.-header {
+  background: #233455;
+}
+.ReactTable .rt-thead .rt-th.-cursor-pointer, .ReactTable .rt-thead .rt-td.-cursor-pointer {
+  color: #ffffff;
+}
+.ReactTable .rt-tbody .rt-td {
+  border-right: 1px solid #ddd !important;
+}
+.ReactTable .rt-thead.-header {
+  min-height: 35px !important;
+}
+.table.has-section-view.is-table-page-view {
+  padding: 10px 10px 10px 10px !important;
+}
+.rt-td {
+  white-space: pre-line !important;
+  word-wrap: break-word;
+}
+
+.ReactTable .rt-tbody .rt-tr-group {
+    border-bottom: 1px solid #ddd !important;
+}
+.ReactTable .rt-tfoot {
+  text-decoration: none;
+  cursor: default;
+  font-weight: 600;
+  background-color: #c4c4c4;
+}
+.ReactTable .rt-table {
+  border-radius: 5px !important;
+}
+.ReactTable .rt-thead .rt-th.-cursor-pointer, .ReactTable .rt-thead .rt-td.-cursor-pointer {
+  color: #ffffff;
+  border-right: 1px solid #ddd !important;
+}

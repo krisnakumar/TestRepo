@@ -12,8 +12,11 @@ ProcessAPI(url, requestPayload, token, isLogin, type, isLoader)
 
 */
 
-import 'whatwg-fetch'
+// import 'whatwg-fetch'
 import * as Constants from '../constants';
+import "babel-polyfill";
+import "isomorphic-fetch";
+import 'core-js';
 
 const apoolData = {
     UserPoolId: 'XXX_XXX', // Your user pool id here
@@ -74,8 +77,8 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     return fetch(url, request).then(function (response) {
         if (response.status == 401) {
             //LoginRefresh("", token, false)
-            deleteAllCookies();
-            window.location = window.location.origin;
+            // deleteAllCookies();
+            window.location = window.location.origin;           
         } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
