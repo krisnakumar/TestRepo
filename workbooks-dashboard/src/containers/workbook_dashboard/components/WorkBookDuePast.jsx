@@ -196,7 +196,7 @@ class WorkBookDuePast extends React.Component {
       rows.push({
         userId: employees[i].UserId,
         workBookId: employees[i].WorkBookId,
-        employee: employees[i].EmployeeName,
+        employee: employees[i].EmployeeName + " (" + employees[i].UserName + " | " + employees[i].UserId + ")",
         role: employees[i].Role,
         completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
         workbookName: employees[i].WorkBookName,
@@ -427,14 +427,14 @@ class WorkBookDuePast extends React.Component {
                       Header: "Employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 120,
+                      minWidth: 250,
                       className: 'text-left'
                     },
                     {
                       Header: "Role",
                       accessor: "role",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 150,
+                      minWidth: 200,
                       className: 'text-left'
                     },
                     {
@@ -442,7 +442,7 @@ class WorkBookDuePast extends React.Component {
                       id: "workbookName",
                       accessor: d => d.workbookName,
                       headerClassName: 'header-wordwrap',
-                      minWidth: 450,
+                      minWidth: 350,
                       className: 'text-left'
                     },     
                     {
@@ -450,7 +450,7 @@ class WorkBookDuePast extends React.Component {
                       id: "completedTasks",
                       accessor: "completedTasks",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 175,
+                      minWidth: 125,
                       maxWidth: 200,
                       className: 'text-center',
                       Cell: this.customCell
@@ -459,14 +459,14 @@ class WorkBookDuePast extends React.Component {
                       Header: "Percentage Completed",
                       accessor: "percentageCompleted",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 150,
+                      minWidth: 120,
                       className: 'text-center'
                     },
                     {
                       Header: "Due Date",
                       accessor: "dueDate",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 100,
+                      minWidth: 120,
                       className: 'text-center'
                     }
                   ]

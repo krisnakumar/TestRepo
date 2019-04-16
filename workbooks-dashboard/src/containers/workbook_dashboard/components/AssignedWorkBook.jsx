@@ -190,7 +190,7 @@ class AssignedWorkBook extends React.Component {
         workBookId: employees[i].WorkBookId,
         workbookName: employees[i].WorkBookName,
         role: employees[i].Role,
-        employee: employees[i].EmployeeName,
+        employee: employees[i].EmployeeName + " (" + employees[i].UserName + " | " + employees[i].UserId + ")",
         completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
         percentageCompleted: Math.round(((employees[i].RepsCompleted / employees[i].RepsRequired) || 0) * 100) + "%",
         dueDate: dueDate
@@ -419,12 +419,12 @@ class AssignedWorkBook extends React.Component {
                   data={rows}
                   columns={[
                     {
-                      Header: "Employee",
+                      Header: "Employessse",
                       id: "employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 100,
-                      maxWidth: 150,
+                      minWidth: 250,
+                      maxWidth: 250,
                       className: 'text-left'
                     },
                     {
@@ -432,7 +432,8 @@ class AssignedWorkBook extends React.Component {
                       id: "workbookName",
                       accessor: d => d.workbookName,
                       headerClassName: 'header-wordwrap',
-                      minWidth: 350,
+                      minWidth: 250,
+                      maxWidth: 350,
                       className: 'text-left'
                     },
                     {
@@ -440,8 +441,8 @@ class AssignedWorkBook extends React.Component {
                       id: "completedTasks",
                       accessor: "completedTasks",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 175,
                       maxWidth: 200,
+                      minWidth: 100,
                       className: 'text-center',
                       Cell: this.customCell
                     },
@@ -450,8 +451,8 @@ class AssignedWorkBook extends React.Component {
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 175,
                       maxWidth: 200,
+                      minWidth: 100,
                       className: 'text-center'
                     },
                     {
@@ -459,8 +460,8 @@ class AssignedWorkBook extends React.Component {
                       id: "dueDate",
                       accessor: "dueDate",
                       headerClassName: 'header-wordwrap',
+                      maxWidth: 200,
                       minWidth: 100,
-                      maxWidth: 100,
                       className: 'text-center'
                     }
                   ]

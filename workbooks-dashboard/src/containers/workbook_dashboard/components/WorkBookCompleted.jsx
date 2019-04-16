@@ -154,7 +154,7 @@ class WorkBookCompleted extends React.Component {
       rows.push({
         userId: employees[i].UserId,
         workBookId: employees[i].WorkBookId,
-        employee: employees[i].EmployeeName,
+        employee: employees[i].EmployeeName + " (" + employees[i].UserName + " | " + employees[i].UserId + ")",
         role: employees[i].Role,
         workbookName: employees[i].WorkBookName,
         completedTasks: employees[i].RepsCompleted + "/" + employees[i].RepsRequired,
@@ -375,14 +375,14 @@ class WorkBookCompleted extends React.Component {
                       Header: "Employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 120,
+                      minWidth: 250,
                       className: 'text-left'
                     },
                     {
                       Header: "Role",
                       accessor: "role",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 150,
+                      minWidth: 200,
                       className: 'text-left'
                     },
                     {
@@ -390,7 +390,7 @@ class WorkBookCompleted extends React.Component {
                       id: "workbookName",
                       accessor: d => d.workbookName,
                       headerClassName: 'header-wordwrap',
-                      minWidth: 450,
+                      minWidth: 350,
                       className: 'text-left'
                     },
                     {
@@ -398,7 +398,7 @@ class WorkBookCompleted extends React.Component {
                       id: "completedTasks",
                       accessor: "completedTasks",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 175,
+                      minWidth: 120,
                       maxWidth: 200,
                       className: 'text-center',
                       Cell: this.customCell
@@ -407,7 +407,7 @@ class WorkBookCompleted extends React.Component {
                       Header: "Completion Date",
                       accessor: "completionDate",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 150,
+                      minWidth: 120,
                       maxWidth: 200,
                       className: 'text-center'
                     }

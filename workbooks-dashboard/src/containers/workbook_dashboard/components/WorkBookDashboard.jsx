@@ -663,7 +663,7 @@ class WorkBookDashboard extends PureComponent {
       totalEmpCount += parseInt(employees[i].TotalEmployees || 0);
       rows.push({
         userId: employees[i].UserId || 0,
-        employee: employees[i].EmployeeName,
+        employee: employees[i].EmployeeName + " (" + employees[i].UserName + " | " + employees[i].UserId + ")",
         role: employees[i].Role,
         assignedWorkBooks: parseInt(employees[i].AssignedWorkBook || 0),
         inDueWorkBooks: parseInt(employees[i].InDueWorkBook || 0),
@@ -995,7 +995,7 @@ class WorkBookDashboard extends PureComponent {
                     Header: "Employee",
                     accessor: "employee",
                     headerClassName: 'header-wordwrap',
-                    minWidth: 270,
+                    minWidth: 200,
                     className: 'text-left',
                     Cell: this.employeeFormatter,
                     Footer: (
@@ -1007,7 +1007,7 @@ class WorkBookDashboard extends PureComponent {
                   {
                     Header: "Role",
                     accessor: "role",
-                    minWidth: 120,
+                    minWidth: 180,
                     className: 'text-left'
                   },
                   {

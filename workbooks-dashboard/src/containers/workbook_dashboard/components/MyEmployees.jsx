@@ -198,7 +198,7 @@ class MyEmployees extends React.Component {
         userId: employees[i].UserId || 0,
         role: employees[i].Role,
         assignedWorkBooks: employees[i].AssignedWorkBook || 0,
-        employee: employees[i].EmployeeName,
+        employee: employees[i].EmployeeName + " (" + employees[i].UserName + " | " + employees[i].UserId + ")",
         inDueWorkBooks: employees[i].InDueWorkBook || 0,
         pastDueWorkBooks: employees[i].PastDueWorkBook || 0,
         completedWorkBooks: employees[i].CompletedWorkbook || 0,
@@ -747,7 +747,7 @@ class MyEmployees extends React.Component {
                       Header: "Employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 270,
+                      minWidth: 210,
                       className: 'text-left',
                       Cell: this.employeeFormatter,
                       Footer: (
@@ -760,7 +760,7 @@ class MyEmployees extends React.Component {
                       Header: "Role",
                       accessor: "role",
                       headerClassName: 'header-wordwrap',
-                      minWidth: 120,
+                      minWidth: 200,
                       className: 'text-left'
                     },
                     {
