@@ -256,7 +256,7 @@ namespace ReportBuilderAPI.Repository
                         adminId = userId;
                     }
 
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetActiveQualifications   @viewedByUserId = " + adminId + ",   @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetActiveQualifications   @viewedByUserId = " + adminId + ",   @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
                 }
 
 
@@ -271,7 +271,7 @@ namespace ReportBuilderAPI.Repository
                     }
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetLockedQualifications	  @viewedByUserId = " + adminId + ",  @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetLockedQualifications	  @viewedByUserId = " + adminId + ",  @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
 
 
                 }
@@ -287,7 +287,7 @@ namespace ReportBuilderAPI.Repository
                         studentId = "null";
                         adminId = userId;
                     }
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications   @viewedByUserId = " + adminId + ", @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["duedays"].ToString();
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications   @viewedByUserId = " + adminId + ", @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["duedays"].ToString();
                 }
 
 
@@ -310,7 +310,7 @@ namespace ReportBuilderAPI.Repository
                     }
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetDisqualifications   @viewedByUserId = " + adminId + ",  @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetDisqualifications   @viewedByUserId = " + adminId + ",  @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
                 }
 
                 if (!string.IsNullOrEmpty(query) && !string.IsNullOrEmpty(role))
