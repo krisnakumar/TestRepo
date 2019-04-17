@@ -513,8 +513,7 @@ class WorkBookProgress extends React.Component {
                       accessor: "incompletedTasksCount",
                       headerClassName: 'header-wordwrap',
                       minWidth: 150,
-                      className: 'text-center',
-                      Cell: this.customCell
+                      className: 'text-center'
                     },
                     {
                       Header: "Percentage Completed",
