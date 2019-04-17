@@ -159,7 +159,8 @@ class WorkBookDashboard extends PureComponent {
       userId: 0,
       selectedUserId: 0,
       isReloadWindow: false,
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
 
     this.toggle = this.toggle.bind(this);
@@ -379,13 +380,16 @@ class WorkBookDashboard extends PureComponent {
     let token = idToken,
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
-    if (response) {
+
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
       response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
       Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
       this.setState({ filterOptionsRoles: response });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
   };
 
@@ -419,11 +423,14 @@ class WorkBookDashboard extends PureComponent {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
       isInitial = true;
-    if (response) {
+
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       this.setState({ rows: rows, isInitial: isInitial });
       this.onChangePage([]);
-    } else {
-      this.setState({ isSessionPopup: true });
     }
   };
 
@@ -459,16 +466,17 @@ class WorkBookDashboard extends PureComponent {
       fakeState = this.state.fakeState,
       level = this.state.level + 1;
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       myEmployeesArray = [];
       myEmployeesArray.push(myEmployees);
       fakeState = !fakeState;
       isMyEmployeeModal = true;
       this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -510,14 +518,15 @@ class WorkBookDashboard extends PureComponent {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       assignedWorkBooks = response;
       isAssignedModal = true;
       this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -557,12 +566,14 @@ class WorkBookDashboard extends PureComponent {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookDuePast = response;
       isPastDueModal = true;
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
   };
 
@@ -603,12 +614,14 @@ class WorkBookDashboard extends PureComponent {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookComingDue = response;
       isComingDueModal = true;
       this.setState({ ...this.state, isComingDueModal, workBookComingDue });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
   };
 
@@ -649,14 +662,15 @@ class WorkBookDashboard extends PureComponent {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookCompleted = response;
       isCompletedModal = true;
       this.setState({ ...this.state, isCompletedModal, workBookCompleted });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -916,6 +930,7 @@ class WorkBookDashboard extends PureComponent {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <FilterModal
           ref={this.roleFilter}

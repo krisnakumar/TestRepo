@@ -150,7 +150,8 @@ class MyEmployees extends React.Component {
       sortColumn: "",
       sortDirection: "NONE",
       selectedUserId: this.props.selectedUserId || 0,
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this.toggle = this.toggle.bind(this);
     this.updateModalState = this.updateModalState.bind(this);
@@ -247,10 +248,12 @@ class MyEmployees extends React.Component {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response;
 
-    if (response) {
-      this.props.updateMyEmployeesArray(myEmployees, supervisor);
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
-      this.setState({ isSessionPopup: true });
+      this.props.updateMyEmployeesArray(myEmployees, supervisor);
     }
 
   };
@@ -295,12 +298,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookDuePast = response;
       isPastDueModal = true;
       this.setState({ ...this.state, isPastDueModal, workBookDuePast });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
 
   };
@@ -344,12 +349,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookComingDue = response;
       isComingDueModal = true;
       this.setState({ ...this.state, isComingDueModal, workBookComingDue });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
 
   };
@@ -392,12 +399,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBookCompleted = response;
       isCompletedModal = true;
       this.setState({ ...this.state, isCompletedModal, workBookCompleted });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
 
   };
@@ -440,12 +449,14 @@ class MyEmployees extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       assignedWorkBooks = response;
       isAssignedModal = true;
       this.setState({ ...this.state, isAssignedModal, assignedWorkBooks });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
 
   };
@@ -719,6 +730,7 @@ class MyEmployees extends React.Component {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <AssignedWorkBook
           backdropClassName={"no-backdrop"}

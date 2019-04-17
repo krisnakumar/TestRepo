@@ -108,7 +108,8 @@ class WorkBookProgress extends React.Component {
       workBooksRepetition: {},
       isInitial: false,
       averageCompletionPrecentage: 0,
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -223,14 +224,15 @@ class WorkBookProgress extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBooksRepetition = response;
       isWorkBookRepetitionModal = true;
       this.setState({ ...this.state, isWorkBookRepetitionModal, workBooksRepetition });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -436,6 +438,7 @@ class WorkBookProgress extends React.Component {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <WorkBookRepetition
           backdropClassName={"no-backdrop"}

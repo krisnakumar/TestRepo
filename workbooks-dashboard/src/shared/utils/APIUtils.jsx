@@ -24,6 +24,7 @@ const apoolData = {
     Region: 'us-west-2'
 };
 
+
 /**
 * @method
 * @name - ProcessAPI
@@ -74,12 +75,18 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }
 
     return fetch(url, request).then(function (response) {
-        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
+        if (response.status == 401) {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
             }
-            return false;
+            return { 'SessionError': 401 };
+        } else if (response.status == 504 || response.status == 403 || response.status == 500 || response.status == 400) {
+            if (document.getElementById("loader-layer")) {
+                document.getElementById("loader-layer").classList.remove("loader-show");
+                document.getElementById("loader-layer").classList.add("loader-hide");
+            }
+            return { 'APIError': 'API_ERROR' };
         } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
@@ -92,26 +99,15 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
-        let responseObject = Object.keys(json);
-
-        return json[responseObject];
-    }).catch(function (error, statusCode) {
+        let responseObject = Object.values(json)[0];
+        return responseObject;
+    }).catch(function (ex) {
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
-        let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
-        if (readAPIErrorCount) {
-            // Do nothing
-        } else {
-            localStorage.setItem('readAPIErrorCount', '1');
-        }
-        if (document.getElementById("api-error-modal-loader-layer")) {
-            document.getElementById("api-error-modal-loader-layer").classList.remove("loader-hide");
-            document.getElementById("api-error-modal-loader-layer").classList.add("loader-show");
-        }
         // Handle API Exception here
-        console.log('parsing failed', error, statusCode);
+        console.log('parsing failed', ex);
     });
 }
 

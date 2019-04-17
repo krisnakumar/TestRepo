@@ -107,7 +107,8 @@ class WorkBookCompleted extends React.Component {
       isWorkBookProgressModal: false,
       workBooksProgress: {},
       selectedWorkbook: {},
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -327,14 +328,15 @@ class WorkBookCompleted extends React.Component {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       workBooksProgress = response;
       isWorkBookProgressModal = true;
       this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   // This method is used to setting the row data in react data grid
@@ -348,6 +350,7 @@ class WorkBookCompleted extends React.Component {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <WorkBookProgress
           backdropClassName={"no-backdrop"}
