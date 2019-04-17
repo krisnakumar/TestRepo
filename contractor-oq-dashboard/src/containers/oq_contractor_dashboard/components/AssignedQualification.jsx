@@ -235,7 +235,7 @@ class AssignedQualification extends PureComponent {
         let pgSize = (rows.length > 10) ? rows.length : 10;
         return (
             <div>
-                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
+                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader className="text-left" toggle={this.toggle}>
                         Assigned Qualifications
                     <p className="section-info-description">Shows the qualification detail of the chosen company</p>
@@ -262,6 +262,7 @@ class AssignedQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && AssignedQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
+                                    minRows = {1}
                                     data={rows}
                                     columns={[
                                         {
@@ -316,8 +317,7 @@ class AssignedQualification extends PureComponent {
                                     //   }
                                     // ]}
                                     style={{
-                                        minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                                        maxHeight: "575px"
+                                        maxHeight: "550px"
                                     }}
                                 />
                             </div>

@@ -235,7 +235,7 @@ class SuspendedQualification extends PureComponent {
         let pgSize = (rows.length > 10) ? rows.length : 10;
         return (
             <div>
-                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
+                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Suspensions</ModalHeader>
                     <Export
                         data={this.state.rows}
@@ -259,6 +259,7 @@ class SuspendedQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && SuspendedQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
+                                    minRows = {1}
                                     data={rows}
                                     columns={[
                                         {
@@ -313,8 +314,7 @@ class SuspendedQualification extends PureComponent {
                                     //   }
                                     // ]}
                                     style={{
-                                        minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                                        maxHeight: "575px"
+                                        maxHeight: "550px"
                                     }}
                                 />
                             </div>

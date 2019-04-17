@@ -1081,6 +1081,7 @@ class OQDashboard extends PureComponent {
                 emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
               /> */}
               <ReactTable
+                minRows={1}
                 data={rows}
                 columns={[
                   {

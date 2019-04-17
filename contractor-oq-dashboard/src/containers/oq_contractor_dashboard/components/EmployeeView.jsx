@@ -811,7 +811,7 @@ class EmployeeView extends PureComponent {
                     modal={this.state.isComingDueQualificationView}
                     comingDueQualifications={this.state.comingDueQualifications}
                 />
-                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
+                <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Employee View{contractorsName}</ModalHeader>
                     <Export
                         data={this.state.rows}
@@ -835,6 +835,7 @@ class EmployeeView extends PureComponent {
                                     emptyRowsView={this.state.isInitial && EmployeeViewEmptyRowsView}
                                 /> */}
                                 <ReactTable
+                                    minRows = {1}
                                     data={rows}
                                     columns={[
                                         {
@@ -912,8 +913,7 @@ class EmployeeView extends PureComponent {
                                     //   }
                                     // ]}
                                     style={{
-                                        minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                                        maxHeight: "575px"
+                                        maxHeight: "550px"
                                     }}
                                 />
                             </div>
