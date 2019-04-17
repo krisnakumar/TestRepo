@@ -239,6 +239,7 @@ namespace ReportBuilderAPI.Repository
                     if (string.IsNullOrEmpty(adminId))
                     {
                         studentId = "null";
+                        adminId = userId;
                     }
 
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetAssignedQualifications  @viewedByUserId = " + adminId + ", @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
