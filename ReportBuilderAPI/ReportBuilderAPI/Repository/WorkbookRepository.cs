@@ -287,7 +287,7 @@ namespace ReportBuilderAPI.Repository
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
                     }
 
-                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_ID).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_ID)
+                    else if (queryBuilderRequest.ColumnList.Contains(Constants.TASK_ID))
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
