@@ -250,6 +250,7 @@ namespace ReportBuilderAPI.Repository
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
 
+                    studentId = userId;
                     if (string.IsNullOrEmpty(adminId))
                     {
                         studentId = "null";
