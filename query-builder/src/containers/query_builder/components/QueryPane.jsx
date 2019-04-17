@@ -22,6 +22,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Table, CardBody, Button, Container, Row, Col } from 'reactstrap';
 import FieldData from './../data';
 import QueryClause from './QueryClause';
+import SessionPopup from './SessionPopup';
 
 class QueryPane extends PureComponent {
 
@@ -35,7 +36,9 @@ class QueryPane extends PureComponent {
 
     this.initialState = {
       entity: this.props.selectedOption ? this.props.selectedOption.value : "employees",
-      fieldData: FieldData.field[this.props.selectedOption ? this.props.selectedOption.value : "employees"].slice(0, 2)
+      fieldData: FieldData.field[this.props.selectedOption ? this.props.selectedOption.value : "employees"].slice(0, 2),
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
 
     this.state = this.initialState;
@@ -133,7 +136,13 @@ class QueryPane extends PureComponent {
    * @returns none
   */
   passEmployeesResults(employees) {
-    this.props.passEmployeesResultsToQuerySection(employees);
+    if (employees == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if(employees == 'API_ERROR'){
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {      
+      this.props.passEmployeesResultsToQuerySection(employees);
+    }
   }
 
   /**
@@ -144,7 +153,13 @@ class QueryPane extends PureComponent {
    * @returns none
   */
   passWorkbooksResults(workbooks) {
-    this.props.passWorkbooksResultsToQuerySection(workbooks);
+    if (workbooks == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if(workbooks == 'API_ERROR'){
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {      
+      this.props.passWorkbooksResultsToQuerySection(workbooks);
+    }    
   }
 
   /**
@@ -155,7 +170,13 @@ class QueryPane extends PureComponent {
   * @returns none
  */
   passTasksResults(tasks) {
-    this.props.passTasksToQuerySection(tasks);
+    if (tasks == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if(tasks == 'API_ERROR'){
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {            
+      this.props.passTasksToQuerySection(tasks);
+    }  
   }
 
   /**
@@ -207,6 +228,11 @@ class QueryPane extends PureComponent {
   render() {
     return (
       <div className="query-builder-section">
+        <SessionPopup
+          backdropClassName={"backdrop"}
+          modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
+        />
         <Table className="query-section-table">
           <thead className="query-section-table thead">
             <tr>
