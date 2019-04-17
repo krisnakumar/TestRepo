@@ -356,12 +356,16 @@ class WorkBookRepetition extends React.Component {
                   loading={!this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                // defaultSorted={[
-                //   {
-                //     id: "role",
-                //     desc: false
-                //   }
-                // ]}
+                  // defaultSorted={[
+                  //   {
+                  //     id: "role",
+                  //     desc: false
+                  //   }
+                  // ]}
+                  style={{
+                    minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "575px"
+                  }}
                 />
               </div>
             </div>
