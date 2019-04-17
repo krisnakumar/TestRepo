@@ -109,7 +109,8 @@ class ContractorCompanyDetail extends React.Component {
       selectedCompany: "",
       isUserDetailsModal: false,
       userDetails: {},
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this._tBodyComponent = null;
     this.toggle = this.toggle.bind(this);
@@ -236,8 +237,11 @@ class ContractorCompanyDetail extends React.Component {
     let token = idToken,
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
+  
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if(response == 'API_ERROR'){
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       userDetails = response;
       isUserDetailsModal = true;
@@ -420,6 +424,7 @@ class ContractorCompanyDetail extends React.Component {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <CompanyUserDetail
           backdropClassName={"no-backdrop"}
