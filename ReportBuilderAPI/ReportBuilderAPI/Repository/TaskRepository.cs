@@ -214,7 +214,7 @@ namespace ReportBuilderAPI.Repository
         /// <param name="parameterList"></param>
         public string OQDashboardQuery(Dictionary<string, string> parameterList, QueryBuilderRequest queryBuilderRequest, int companyId)
         {
-            string query = string.Empty, userId = string.Empty, contractorCompanyId = string.Empty, role = string.Empty , adminId = string.Empty;
+            string query = string.Empty, userId = string.Empty, contractorCompanyId = string.Empty, role = string.Empty, adminId = string.Empty, studentId = string.Empty;
             try
             {
                 userId = Convert.ToString(parameterList["userId"]);
@@ -234,7 +234,14 @@ namespace ReportBuilderAPI.Repository
                     adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetAssignedQualifications  @viewedByUserId = " + adminId + ", @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                    studentId = userId;
+
+                    if (string.IsNullOrEmpty(adminId))
+                    {
+                        studentId = "null";
+                    }
+
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetAssignedQualifications  @viewedByUserId = " + adminId + ", @studentId  = " + studentId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
                 }
 
                 if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.COMPLETED).Select(y => y.Name).FirstOrDefault() == Constants.COMPLETED)
