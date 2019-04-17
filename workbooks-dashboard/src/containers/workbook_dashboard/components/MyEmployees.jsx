@@ -756,7 +756,7 @@ class MyEmployees extends React.Component {
           modal={this.state.isCompletedModal}
           assignedWorkBooks={this.state.workBookCompleted}
         />
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader className="text-left" toggle={this.toggle}>
             My Employees{supervisorName}
             <p className="section-info-description">Shows the progress of the direct subordinates of employee</p>
@@ -766,7 +766,7 @@ class MyEmployees extends React.Component {
             heads={this.heads}
             sheetName={"My Employees"}
           />
-          <ModalBody>
+          <ModalBody className={""}>
             <div className="grid-container">
               <div className="table has-total-row">
                 {/* <ReactDataGrid
@@ -783,6 +783,7 @@ class MyEmployees extends React.Component {
                   emptyRowsView={this.state.isInitial && EmptyRowsView}
                 /> */}
                 <ReactTable
+                  minRows = {1}
                   data={rows}
                   columns={[
                     {
@@ -911,8 +912,8 @@ class MyEmployees extends React.Component {
                     }
                   ]}
                   style={{
-                    minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                    maxHeight: "575px"
+                    // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "550px"
                   }}
                 />
               </div>

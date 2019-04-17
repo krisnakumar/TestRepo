@@ -447,14 +447,14 @@ class WorkBookProgress extends React.Component {
           workBooksRepetition={this.state.workBooksRepetition}
           selectedWorkbook={this.state.selectedWorkbook}
         />
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
           <Export
             data={this.state.rows}
             heads={this.heads}
             sheetName={"Total Tasks and Completed Percentage"}
           />
-          <ModalBody>
+          <ModalBody className={""}>
             <div className="grid-description">
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
@@ -475,6 +475,7 @@ class WorkBookProgress extends React.Component {
                   emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView}
                 /> */}
                 <ReactTable
+                  minRows = {1}
                   data={rows}
                   columns={[
                     {
@@ -553,8 +554,8 @@ class WorkBookProgress extends React.Component {
                   //   }
                   // ]}
                   style={{
-                    minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                    maxHeight: "575px"
+                    // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "550px"
                   }}
                 />
               </div>
