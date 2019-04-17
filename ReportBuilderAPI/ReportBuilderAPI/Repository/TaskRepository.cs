@@ -214,7 +214,7 @@ namespace ReportBuilderAPI.Repository
         /// <param name="parameterList"></param>
         public string OQDashboardQuery(Dictionary<string, string> parameterList, QueryBuilderRequest queryBuilderRequest, int companyId)
         {
-            string query = string.Empty, userId = string.Empty, contractorCompanyId = string.Empty, role = string.Empty;
+            string query = string.Empty, userId = string.Empty, contractorCompanyId = string.Empty, role = string.Empty , adminId = string.Empty;
             try
             {
                 userId = Convert.ToString(parameterList["userId"]);
