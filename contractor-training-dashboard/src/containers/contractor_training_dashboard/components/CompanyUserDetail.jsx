@@ -429,7 +429,7 @@ class CompanyUserDetail extends React.Component {
           taskDetails={this.state.taskDetails}
           title={this.state.selectedEmployee}
         />
-        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid">
+        <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader className="text-left" toggle={this.toggle}>
             {titleText}
             <p className="section-info-description">This level will display the contractor's training progress required by the role</p>
@@ -459,6 +459,7 @@ class CompanyUserDetail extends React.Component {
                   sortDirection="ASC"
                 /> */}
                 <ReactTable
+                  minRows={1}
                   data={rows}
                   columns={[
                     {
@@ -528,8 +529,7 @@ class CompanyUserDetail extends React.Component {
                     }
                   ]}
                   style={{
-                    minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                    maxHeight: "575px"
+                    maxHeight: "550px"
                   }}
                 />
               </div>

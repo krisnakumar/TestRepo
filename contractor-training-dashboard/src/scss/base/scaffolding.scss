@@ -1202,3 +1202,17 @@ text-align: center !important;
 .ReactTable .-striped .-highlight{
   overflow-y: scroll;
 }
+
+
+.grid-modal-popup .modal-content {
+  min-height: 705px !important;
+  max-height: 705px !important;
+}
+.ReactTable .rt-noData {    
+  background: none !important;
+  top: 80% !important;
+  color: #888 !important;
+  text-align: center !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+}

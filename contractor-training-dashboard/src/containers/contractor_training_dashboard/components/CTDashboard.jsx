@@ -716,6 +716,7 @@ class CTDashboard extends PureComponent {
                 sortDirection="ASC"
               /> */}
               <ReactTable
+                minRows = {1}
                 data={rows}
                 columns={[
                   {
