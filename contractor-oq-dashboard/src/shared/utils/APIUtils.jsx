@@ -75,12 +75,18 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
     }
 
     return fetch(url, request).then(function (response) {
-        if (response.status == 401 || response.status == 403 || response.status == 500 || response.status == 400) {
+        if (response.status == 401) {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
             }
-            return false;
+            return { 'SessionError': 401 };
+        } else if (response.status == 504 || response.status == 403 || response.status == 500 || response.status == 400) {
+            if (document.getElementById("loader-layer")) {
+                document.getElementById("loader-layer").classList.remove("loader-show");
+                document.getElementById("loader-layer").classList.add("loader-hide");
+            }
+            return { 'APIError': 'API_ERROR' };
         } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");

@@ -140,7 +140,8 @@ class EmployeeView extends PureComponent {
             inCompletedQualifications: {},
             pastDueQualifications: {},
             comingDueQualifications: {},
-            isSessionPopup: false
+            isSessionPopup: false,
+            sessionPopupType: "API"
         };
 
         this.toggle = this.toggle.bind(this);
@@ -192,7 +193,8 @@ class EmployeeView extends PureComponent {
             rows.push({
                 userId: qualifications[i].UserId,
                 companyId: qualifications[i].CompanyId,
-                employee: qualifications[i].EmployeeName,
+                // employee: qualifications[i].EmployeeName,
+                employee: qualifications[i].EmployeeName + " (" + qualifications[i].UserName + " | " + qualifications[i].UserId + ")",
                 role: qualifications[i].Role || "",
                 assignedQualification: qualifications[i].AssignedQualification,
                 completedQualification: qualifications[i].CompletedQualification,
@@ -429,10 +431,12 @@ class EmployeeView extends PureComponent {
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true),
             myEmployees = response;
 
-        if (response) {
-            this.props.updateEmployeesQualificationsArray(myEmployees, args);
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
         } else {
-            this.setState({ isSessionPopup: true });
+            this.props.updateEmployeesQualificationsArray(myEmployees, args);
         }
     };
 
@@ -477,12 +481,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             assignedQualifications = response;
             isAssignedQualificationView = true;
             this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -527,12 +533,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             completedQualifications = response;
             isCompletedQualificationView = true;
             this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -577,12 +585,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             inCompletedQualifications = response;
             isInCompletedQualificationView = true;
             this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -627,12 +637,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             pastDueQualifications = response;
             isPastDueQualificationView = true;
             this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -677,12 +689,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             comingDueQualifications = response;
             isComingDueQualificationView = true;
             this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -727,12 +741,14 @@ class EmployeeView extends PureComponent {
             url = "/company/" + contractorCompanyId + "/tasks",
             response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-        if (response) {
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
             lockoutQualifications = response;
             isLockoutQualificationView = true;
             this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
-        } else {
-            this.setState({ isSessionPopup: true });
         }
     };
 
@@ -757,6 +773,7 @@ class EmployeeView extends PureComponent {
                 <SessionPopup
                     backdropClassName={"backdrop"}
                     modal={this.state.isSessionPopup}
+                    sessionPopupType={this.state.sessionPopupType}
                 />
                 <LockedOutQualification
                     backdropClassName={"backdrop"}

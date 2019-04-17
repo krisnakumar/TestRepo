@@ -160,7 +160,8 @@ class OQDashboard extends PureComponent {
       filterModalTitle: "Roles",
       filteredRoles: [],
       filterOptionsRoles: [],
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
 
     this.toggle = this.toggle.bind(this);
@@ -436,16 +437,16 @@ class OQDashboard extends PureComponent {
       url = "/company/" + companyId + "/roles",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
       response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
       Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
       this.setState({ filterOptionsRoles: response });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
-
   };
 
   /**
@@ -484,12 +485,13 @@ class OQDashboard extends PureComponent {
       rows = this.createRows(response),
       isInitial = true;
 
-    if (response) {
-      this.setState({ rows: rows, isInitial: isInitial });
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
-      this.setState({ isSessionPopup: true });
+      this.setState({ rows: rows, isInitial: isInitial });
     }
-
   };
 
   /**
@@ -528,14 +530,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       assignedQualifications = response;
       isAssignedQualificationView = true;
       this.setState({ ...this.state, isAssignedQualificationView, assignedQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -574,14 +577,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       completedQualifications = response;
       isCompletedQualificationView = true;
       this.setState({ ...this.state, isCompletedQualificationView, completedQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -620,14 +624,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       lockoutQualifications = response;
       isLockoutQualificationView = true;
       this.setState({ ...this.state, isLockoutQualificationView, lockoutQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
 
@@ -667,15 +672,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       inCompletedQualifications = response;
       isInCompletedQualificationView = true;
       this.setState({ ...this.state, isInCompletedQualificationView, inCompletedQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
-
   };
 
   /**
@@ -714,15 +719,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       pastDueQualifications = response;
       isPastDueQualificationView = true;
       this.setState({ ...this.state, isPastDueQualificationView, pastDueQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
-
   };
 
   /**
@@ -761,14 +766,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       comingDueQualifications = response;
       isComingDueQualificationView = true;
       this.setState({ ...this.state, isComingDueQualificationView, comingDueQualifications });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
-
   };
 
   /**
@@ -808,13 +814,15 @@ class OQDashboard extends PureComponent {
       url = "/company/" + contractorCompanyId + "/tasks",
       response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
 
-    if (response) {
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
       employeeQualifications = response;
       employeesQualificationsArray.push(employeeQualifications);
       isEmployeeView = true;
       this.setState({ ...this.state, isEmployeeView, employeeQualifications, employeesQualificationsArray });
-    } else {
-      this.setState({ isSessionPopup: true });
     }
   };
 
@@ -952,6 +960,7 @@ class OQDashboard extends PureComponent {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <FilterModal
           ref={this.roleFilter}

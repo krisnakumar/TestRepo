@@ -20,6 +20,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import _ from "lodash";
+import * as Constants from '../../../shared/constants';
 
 class SessionPopup extends React.Component {
     static propTypes = {
@@ -30,23 +31,25 @@ class SessionPopup extends React.Component {
         super(props);
 
         this.state = {
-            modal: this.props.modal
+            modal: this.props.modal,
+            sessionPopupType: this.props.sessionPopupType
         };
     };
 
-      /**
-   * @method
-   * @name - componentWillReceiveProps
-   * This method will invoked whenever the props or state
-   *  is update to this component class
-   * @param newProps
-   * @returns none
-   */
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      modal: newProps.modal
-    });
-  }
+    /**
+ * @method
+ * @name - componentWillReceiveProps
+ * This method will invoked whenever the props or state
+ *  is update to this component class
+ * @param newProps
+ * @returns none
+ */
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            modal: newProps.modal,
+            sessionPopupType: newProps.sessionPopupType
+        });
+    }
 
     /**
    * @method
@@ -61,21 +64,44 @@ class SessionPopup extends React.Component {
         });
     };
 
+    reloadWindow() {
+        let readSessionCount = localStorage.getItem('readAPIErrorCount');
+        if (readSessionCount <= 2) {
+            readSessionCount = parseInt(readSessionCount) + 1;
+            localStorage.setItem('readAPIErrorCount', readSessionCount);
+            location.reload();
+        } else {
+            localStorage.removeItem('readAPIErrorCount');
+            window.location = window.location.origin;
+        }
+    };
+
     autoLogout() {
         window.location = window.location.origin + "/Logout.aspx"; //Need to be window.location.origin after integrating with LMS Site
     };
 
     render() {
-        const { rows } = this.state;
+        const { sessionPopupType } = this.state;
+        let isReloadWindow = sessionPopupType == "API";
         return (
             <div>
-                <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
-                    <ModalHeader> Alert</ModalHeader>
-                    <ModalBody>Your session has expired. Please login again</ModalBody>
-                    <ModalFooter>
-                        <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
-                    </ModalFooter>
-                </Modal>
+                {
+                    isReloadWindow && <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+                        <ModalHeader> Alert</ModalHeader>
+                        <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+                        <ModalFooter>
+                            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+                        </ModalFooter>
+                    </Modal>
+                    ||
+                    <Modal backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+                        <ModalHeader> Alert</ModalHeader>
+                        <ModalBody>Your session has expired. Please login again</ModalBody>
+                        <ModalFooter>
+                            <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }
