@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Repository
         /// <returns></returns>
         public string CreateTaskQuery(QueryBuilderRequest queryBuilderRequest)
         {
-            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, dashboardName = string.Empty;
+            string query = string.Empty, tableJoin = string.Empty, selectQuery = string.Empty, whereQuery = string.Empty, supervisorId = string.Empty, dashboardName = string.Empty, adminId = string.Empty;
             List<string> fieldList = new List<string>();
             int companyId = 0;
             try
