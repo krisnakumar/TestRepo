@@ -83,7 +83,7 @@ class LockedOutQualification extends PureComponent {
         ];
 
         this.state = {
-            rows: this.createRows(this.props.lockedOutQualifications),
+            rows: this.createRows(this.props.lockoutQualifications),
             modal: this.props.modal,
             isInitial: false,
         };
@@ -136,7 +136,7 @@ class LockedOutQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 taskName: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
-                unlockDate: qualifications[i].ExpirationDate
+                unlockDate: qualifications[i].UnlockDate
             });
         }
 
@@ -152,8 +152,8 @@ class LockedOutQualification extends PureComponent {
      * @returns none
     */
     componentWillReceiveProps(newProps) {
-        let rows = this.createRows(newProps.lockedOutQualifications),
-            isArray = Array.isArray(newProps.lockedOutQualifications),
+        let rows = this.createRows(newProps.lockoutQualifications),
+            isArray = Array.isArray(newProps.lockoutQualifications),
             isInitial = isArray;
         this.setState({
             modal: newProps.modal,
@@ -272,7 +272,7 @@ class LockedOutQualification extends PureComponent {
                                         },
                                         {
                                             Header: "OQ Task",
-                                            accessor: "oQTask",
+                                            accessor: "taskName",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 250,
                                             className: 'text-left'
@@ -287,8 +287,8 @@ class LockedOutQualification extends PureComponent {
                                             className: 'text-left'
                                         },
                                         {
-                                            Header: "Assigned Date",
-                                            accessor: "assignedDate",
+                                            Header: "Unlock Date",
+                                            accessor: "unlockDate",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 150,

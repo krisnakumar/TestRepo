@@ -985,7 +985,7 @@ class OQDashboard extends PureComponent {
           backdropClassName={"backdrop"}
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isLockoutQualificationView}
-          assignedQualifications={this.state.lockoutQualifications}
+          lockoutQualifications={this.state.lockoutQualifications}
         />
         <AssignedQualification
           backdropClassName={"backdrop"}
