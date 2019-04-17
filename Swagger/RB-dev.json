@@ -56,7 +56,9 @@
                }
             },
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SilentAuth_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SilentAuth.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -195,7 +197,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetEmployeesQueryBuilder_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetEmployeesDetails.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -342,7 +346,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetWorkbookQueryBuilder_dev/invocations",
+                 "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetWorkbookQueryDetails.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -489,7 +495,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetTasks_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetTaskQueryDetails.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -636,7 +644,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetRoles_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetRoles.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -775,7 +785,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetCompanies_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetCompanies.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -923,7 +935,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_SaveQuery_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SaveQuery.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1082,7 +1096,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_RenameQuery_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RenameQuery.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1246,7 +1262,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_DeleteQuery_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteQuery.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1407,7 +1425,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQueries_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetQueries.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
@@ -1563,7 +1583,9 @@
                }
             ],
             "x-amazon-apigateway-integration":{  
-               "uri":"arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:059147590818:function:OnBoardLMS_RB_GetQuery_dev/invocations",
+                "uri":{
+                   "Fn::Sub":"arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetQuery.Arn}/invocations"
+                },
                "responses":{  
                   "default":{  
                      "statusCode":"200",
