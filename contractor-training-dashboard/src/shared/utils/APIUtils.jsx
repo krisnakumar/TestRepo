@@ -81,13 +81,13 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
                 document.getElementById("loader-layer").classList.add("loader-hide");
             }
             return { 'SessionError': 401 };
-        } else if(response.status == 504 || response.status == 403 || response.status == 500 || response.status == 400){
+        } else if (response.status == 504 || response.status == 403 || response.status == 500 || response.status == 400) {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
             }
-            return { 'APIError': [] };
-        }else {
+            return { 'APIError': 'API_ERROR' };
+        } else {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
@@ -99,8 +99,8 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
         }
-        let responseObject = Object.keys(json);
-        return json[responseObject];
+        let responseObject = Object.values(json)[0];
+        return responseObject;
     }).catch(function (ex) {
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");

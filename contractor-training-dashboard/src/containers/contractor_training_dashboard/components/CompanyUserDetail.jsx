@@ -109,7 +109,8 @@ class CompanyUserDetail extends React.Component {
       isTaskDetailsModal: false,
       taskDetails: {},
       selectedEmployee: "",
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
@@ -318,12 +319,14 @@ class CompanyUserDetail extends React.Component {
     let { dashboardAPIToken } = sessionStorage || {};
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    let token = idToken,// cookies.get('IdentityToken'),
+    let token = idToken,
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       taskDetails = response;
       isTaskDetailsModal = true;
@@ -414,9 +417,10 @@ class CompanyUserDetail extends React.Component {
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>
-         <SessionPopup
+        <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <UserTaskDetail
           backdropClassName={"no-backdrop"}

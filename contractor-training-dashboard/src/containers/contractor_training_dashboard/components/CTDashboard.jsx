@@ -100,7 +100,8 @@ class CTDashboard extends PureComponent {
       filteredCompanies: [],
       filterOptionsCompanies: [],
       isReloadWindow: false,
-      isSessionPopup: false
+      isSessionPopup: false,
+      sessionPopupType: "API"
     };
     this.toggle = this.toggle.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
@@ -253,11 +254,15 @@ class CTDashboard extends PureComponent {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       rows = this.createRows(response),
       isInitial = true;
+
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       this.setState({ rows: rows, isInitial: isInitial });
     }
+
   };
 
   /**
@@ -284,13 +289,16 @@ class CTDashboard extends PureComponent {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
       response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
       Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
       this.setState({ filterOptionsRoles: response });
     }
+
   };
 
   /**
@@ -311,14 +319,18 @@ class CTDashboard extends PureComponent {
     let token = idToken,
       url = "/companies",
       response = await API.ProcessAPI(url, "", token, false, "GET", true);
+
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       response = JSON.parse(JSON.stringify(response).split('"CompanyName":').join('"text":'));
       response = JSON.parse(JSON.stringify(response).split('"CompanyId":').join('"id":'));
       Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
       this.setState({ filterOptionsCompanies: response });
     }
+
   };
 
   /**
@@ -338,10 +350,8 @@ class CTDashboard extends PureComponent {
       fields = [{ "Name": "ROLE_ID", "Value": roleId, "Operator": "=" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
-      // fields.push({ "Name": "COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
       fields.push({ "Name": "STATUS", "Value": "COMPLETED_COMPANY_USERS", "Operator": "=", "Bitwise": "and" });
     } else {
-      // fields.push({ "Name": "NOT_COMPLETED_COMPANY_USERS", "Value": "true", "Operator": "=", "Bitwise": "and" });
       fields.push({ "Name": "STATUS", "Value": "NOT_COMPLETED_COMPANY_USERS", "Operator": "=", "Bitwise": "and" });
     }
     let isCompanyDetailsModal = this.state.isCompanyDetailsModal,
@@ -362,7 +372,9 @@ class CTDashboard extends PureComponent {
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
 
     if (response == 401) {
-      this.setState({ isSessionPopup: true });
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       companyDetails = response;
       isCompanyDetailsModal = true;
@@ -607,6 +619,7 @@ class CTDashboard extends PureComponent {
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
+          sessionPopupType={this.state.sessionPopupType}
         />
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
           <ModalHeader> Alert</ModalHeader>
