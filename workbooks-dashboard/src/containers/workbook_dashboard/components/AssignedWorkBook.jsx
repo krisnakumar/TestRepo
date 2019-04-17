@@ -433,7 +433,7 @@ class AssignedWorkBook extends React.Component {
                   data={rows}
                   columns={[
                     {
-                      Header: "Employessse",
+                      Header: "Employee",
                       id: "employee",
                       accessor: "employee",
                       headerClassName: 'header-wordwrap',
