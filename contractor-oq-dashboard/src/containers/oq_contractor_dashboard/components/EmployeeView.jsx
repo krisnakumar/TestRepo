@@ -456,6 +456,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "ASSIGNED", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
@@ -505,6 +506,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "COMPLETED", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
@@ -554,6 +556,7 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" }
             ],
@@ -604,6 +607,7 @@ class EmployeeView extends PureComponent {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "PAST_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_PAST_DUE_QUALIFICATION_COLUMNS,
@@ -653,6 +657,7 @@ class EmployeeView extends PureComponent {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
                 { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
                 { "Name": "IN_DUE", "Value": "30", "Operator": "=", "Bitwise": "and" }
             ],
             "ColumnList": Constants.GET_COMING_DUE_QUALIFICATION_COLUMNS,
@@ -701,7 +706,9 @@ class EmployeeView extends PureComponent {
         const payLoad = {
             "Fields": [
                 { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
-                { "Name": "LOCKOUT_COUNT", "Value": "true", "Operator": "=", "Bitwise": "and" }
+                { "Name": "LOCKOUT_COUNT", "Value": "true", "Operator": "=", "Bitwise": "and" },
+                { "Name": "ADMIN", "Value": adminId, "Operator": "=", "Bitwise": "and" },
+                { "Name": "SUPERVISOR_ID", "Value": userId, "Operator": "=", "Bitwise": "and" },
             ],
             "ColumnList": Constants.GET_COMPLETED_QUALIFICATION_COLUMNS,
             "AppType": "OQ_DASHBOARD"
