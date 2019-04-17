@@ -226,7 +226,6 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_COMPANY_QUALIFICATION))
                 {
-
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetAllContractors   @operatorCompanyId   =" + companyId + " , @viewedByUserId   = " + userId;
                 }
                 if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.ASSIGNED).Select(y => y.Name).FirstOrDefault() == Constants.ASSIGNED)
@@ -250,6 +249,13 @@ namespace ReportBuilderAPI.Repository
                     adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
+
+                    if (string.IsNullOrEmpty(adminId))
+                    {
+                        studentId = "null";
+                        adminId = userId;
+                    }
+
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetActiveQualifications   @viewedByUserId = " + adminId + ",   @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
                 }
 
@@ -257,6 +263,12 @@ namespace ReportBuilderAPI.Repository
                 if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.LOCKOUT_COUNT).Select(y => y.Name).FirstOrDefault() == Constants.LOCKOUT_COUNT)
                 {
                     adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
+                    studentId = userId;
+                    if (string.IsNullOrEmpty(adminId))
+                    {
+                        studentId = "null";
+                        adminId = userId;
+                    }
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetLockedQualifications	  @viewedByUserId = " + adminId + ",  @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
@@ -269,6 +281,12 @@ namespace ReportBuilderAPI.Repository
                     adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
+                    studentId = userId;
+                    if (string.IsNullOrEmpty(adminId))
+                    {
+                        studentId = "null";
+                        adminId = userId;
+                    }
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetExpiringQualifications   @viewedByUserId = " + adminId + ", @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId + ", @expiringInDaysStart = 0, @expiringInDaysEnd = " + parameterList["duedays"].ToString();
                 }
 
@@ -284,6 +302,12 @@ namespace ReportBuilderAPI.Repository
                 if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.IN_COMPLETE).Select(y => y.Name).FirstOrDefault() == Constants.IN_COMPLETE)
                 {
                     adminId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.ADMIN_ID).Select(x => x.Value).FirstOrDefault();
+                    studentId = userId;
+                    if (string.IsNullOrEmpty(adminId))
+                    {
+                        studentId = "null";
+                        adminId = userId;
+                    }
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
                     query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetDisqualifications   @viewedByUserId = " + adminId + ",  @studentId  = " + userId + ",     @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
