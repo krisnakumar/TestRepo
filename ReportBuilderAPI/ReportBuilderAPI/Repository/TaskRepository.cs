@@ -270,7 +270,7 @@ namespace ReportBuilderAPI.Repository
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = queryBuilderRequest.Fields.Where(x => x.Name.ToUpper() == Constants.CONTRACTOR_COMPANY).Select(x => x.Value).FirstOrDefault();
                     contractorCompanyId = !string.IsNullOrEmpty(contractorCompanyId) ? contractorCompanyId : "0";
-                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetContractor  @viewedByUserId = " + userId + ",  @studentId  = NULL , @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
+                    query = "EXEC  dbo.ContractorManagement_QualsDashboard_GetContractor  @viewedByUserId = " + userId + ", @contractorCompanyId = " + contractorCompanyId + ", @operatorCompanyId = " + companyId;
                 }
 
                 if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.IN_COMPLETE).Select(y => y.Name).FirstOrDefault() == Constants.IN_COMPLETE)
