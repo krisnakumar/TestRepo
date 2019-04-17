@@ -532,9 +532,8 @@ class ContractorCompanyDetail extends React.Component {
                     }
                   ]}
                   style={{
-                    minHeight: "400px", // This will force the table body to overflow and scroll, since there is not enough room
-                    maxHeight: "800px",
-                    // minWidth: "800px"
+                    minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "575px"
                   }}
                 />
               </div>
