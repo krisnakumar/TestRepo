@@ -63,7 +63,7 @@ class CompanyUserDetail extends React.Component {
       },
       {
         key: 'incomplete',
-        name: 'Incomplete',
+        name: 'Incomplete Tasks',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -72,7 +72,7 @@ class CompanyUserDetail extends React.Component {
       },
       {
         key: 'completed',
-        name: 'Completed',
+        name: 'Completed Tasks',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -471,7 +471,7 @@ class CompanyUserDetail extends React.Component {
                       className: 'text-left'
                     },
                     {
-                      Header: "Incomplete",
+                      Header: "Incomplete Tasks",
                       id: "incomplete",
                       accessor: d => d.incomplete,
                       headerClassName: 'header-wordwrap',
@@ -481,7 +481,7 @@ class CompanyUserDetail extends React.Component {
                       Cell: this.customCell
                     },
                     {
-                      Header: "Completed",
+                      Header: "Completed Tasks",
                       id: "completed",
                       accessor: "completed",
                       headerClassName: 'header-wordwrap',
