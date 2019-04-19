@@ -112,7 +112,7 @@ class App extends Component {
   */
   componentDidMount() {
     window.addEventListener('load', () => {
-      this.setState({ loading: false });
+      this.setState({ loading: false, loaded: true  });
       setTimeout(() => this.setState({ loaded: true }), 500);
     });
   };

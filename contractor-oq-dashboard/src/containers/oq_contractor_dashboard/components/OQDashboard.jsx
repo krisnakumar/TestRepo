@@ -254,7 +254,7 @@ class OQDashboard extends PureComponent {
         role: qualifications[i].Role || "",
         assignedQualification: qualifications[i].AssignedQualification,
         suspendedQualification: qualifications[i].SuspendedQualification,
-        lockoutCount: qualifications[i].LockoutCount,
+        lockoutCount: parseInt(qualifications[i].LockoutCount) || 0,
         completedQualification: qualifications[i].CompletedQualification,
         inCompletedQualification: qualifications[i].DisQualification,
         pastDue: qualifications[i].PastDueQualification,
@@ -1088,8 +1088,7 @@ class OQDashboard extends PureComponent {
                     Header: "Company",
                     accessor: "company",
                     headerClassName: 'header-wordwrap',
-                    minWidth: 270,
-                    minWidth: 500,
+                    minWidth: 480,
                     className: 'text-left',
                     Cell: props => this.qualificationsFormatter("total", props),
                     Footer: (
@@ -1161,7 +1160,7 @@ class OQDashboard extends PureComponent {
                       <span>
                         <strong>
                           {
-                            _.sumBy(parseInt(_.values(rows), 'lockoutCount'))
+                            _.sumBy(_.values(rows), 'lockoutCount')
                           }
                         </strong>
                       </span>
