@@ -65,6 +65,7 @@
 				}
          }
       },
+
       "GetEmployeesDetails": {
          "Type": "AWS::Serverless::Function",
          "Properties": {
