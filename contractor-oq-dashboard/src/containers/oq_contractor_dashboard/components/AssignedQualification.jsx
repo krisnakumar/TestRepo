@@ -137,7 +137,7 @@ class AssignedQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 oQTask: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
-                assignedDate: qualifications[i].AssignedDate
+                assignedDate: qualifications[i].QualificationAssignedDate
             });
         }
         return rows;
