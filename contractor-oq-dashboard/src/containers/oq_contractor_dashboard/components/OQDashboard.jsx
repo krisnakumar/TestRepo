@@ -209,8 +209,7 @@ class OQDashboard extends PureComponent {
   */
   async componentDidMount() {
     // Do API call for loading initial table view
-    let { contractorManagementDetails } = sessionStorage || '{}';
-    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+  
     let { dashboardAPIToken } = sessionStorage || '{}',
       idToken = '';
 
@@ -219,6 +218,8 @@ class OQDashboard extends PureComponent {
       idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
     }
     if (idToken) {
+      let { contractorManagementDetails } = sessionStorage || '{}';
+      contractorManagementDetails = JSON.parse(contractorManagementDetails);
       this.setState({ isReloadWindow: false });
       let userId = contractorManagementDetails.User.Id || 0,
         roles = [];

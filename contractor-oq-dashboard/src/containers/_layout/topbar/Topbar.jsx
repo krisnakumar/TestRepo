@@ -8,12 +8,13 @@ const logo = `https://d2vkqsz7y0fh3j.cloudfront.net/img/content_logo.png?v=2`;
 class Topbar extends PureComponent {
   render() {
     let companyName = "",
-    companyLogo = "";
+      companyLogo = "";
 
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails || '{}');
-    companyName = contractorManagementDetails.Company.Name || "",
-    companyLogo = contractorManagementDetails.Company.Logo || "";
+    companyName = contractorManagementDetails.Company ? contractorManagementDetails.Company.Name : "",
+      companyLogo = contractorManagementDetails.Company ? contractorManagementDetails.Company.Logo : "";
+
     return (
       <div className="topbar">
         <div className="topbar__wrapper">
@@ -22,7 +23,7 @@ class Topbar extends PureComponent {
               <img src={logo} alt="" />
             </a>
             <div className="comp">
-            <span id="ctl00_compname" >{companyLogo &&<img src={companyLogo} />}{companyName}</span>
+              <span id="ctl00_compname" >{companyLogo && <img src={companyLogo} />}{companyName}</span>
             </div>
           </div>
           <div className="topbar__right">

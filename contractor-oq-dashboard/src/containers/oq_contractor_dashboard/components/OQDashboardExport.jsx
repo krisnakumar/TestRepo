@@ -55,11 +55,12 @@ class OQDashboardExport extends Component {
     */
     formatData(data, heads) {
         const { cookies } = this.props;
-        let { contractorManagementDetails } = sessionStorage || '{}';
-            contractorManagementDetails = JSON.parse(contractorManagementDetails);
+   
+        let { contractorManagementDetails } = sessionStorage || {};
+        contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
+        let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
             
-        let runByUser = contractorManagementDetails.User.FullName || "",
-            runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
+        let runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
         let multiDataSet = [
