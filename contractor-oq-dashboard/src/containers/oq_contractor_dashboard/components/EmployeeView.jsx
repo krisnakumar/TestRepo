@@ -813,11 +813,18 @@ class EmployeeView extends PureComponent {
                 />
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Employee View{contractorsName}</ModalHeader>
-                    <Export
-                        data={this.state.rows}
-                        heads={this.heads}
-                        sheetName={"Employee View"}
-                    />
+                    <div>
+                        <div className="export-menu-one">
+
+                        </div>
+                        <div className="export-menu-two">
+                            <Export
+                                data={this.state.rows}
+                                heads={this.heads}
+                                sheetName={"Employee View"}
+                            />
+                        </div>
+                    </div>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
@@ -835,7 +842,7 @@ class EmployeeView extends PureComponent {
                                     emptyRowsView={this.state.isInitial && EmployeeViewEmptyRowsView}
                                 /> */}
                                 <ReactTable
-                                    minRows = {1}
+                                    minRows={1}
                                     data={rows}
                                     columns={[
                                         {

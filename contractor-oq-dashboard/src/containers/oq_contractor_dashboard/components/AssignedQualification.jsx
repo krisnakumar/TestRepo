@@ -240,11 +240,18 @@ class AssignedQualification extends PureComponent {
                         Assigned Qualifications
                     <p className="section-info-description">Shows the qualification detail of the chosen company</p>
                     </ModalHeader>
-                    <Export
-                        data={this.state.rows}
-                        heads={this.heads}
-                        sheetName={"Assigned Qualifications"}
-                    />
+                    <div>
+                        <div className="export-menu-one">
+
+                        </div>
+                        <div className="export-menu-two">
+                            <Export
+                                data={this.state.rows}
+                                heads={this.heads}
+                                sheetName={"Assigned Qualifications"}
+                            />
+                        </div>
+                    </div>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
@@ -262,7 +269,7 @@ class AssignedQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && AssignedQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
-                                    minRows = {1}
+                                    minRows={1}
                                     data={rows}
                                     columns={[
                                         {

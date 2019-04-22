@@ -64,7 +64,7 @@ class LogInForm extends PureComponent {
       } else {
         localStorage.setItem('readSessionCount', '1');
       }
-      this.setState({ toDashboard: false, hasSessionCookie: false, isReloadWindow: true });
+      this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     }
   };
 

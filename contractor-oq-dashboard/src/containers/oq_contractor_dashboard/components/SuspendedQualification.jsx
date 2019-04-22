@@ -237,11 +237,18 @@ class SuspendedQualification extends PureComponent {
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Suspensions</ModalHeader>
-                    <Export
-                        data={this.state.rows}
-                        heads={this.heads}
-                        sheetName={"Suspensions"}
-                    />
+                    <div>
+                        <div className="export-menu-one">
+
+                        </div>
+                        <div className="export-menu-two">
+                            <Export
+                                data={this.state.rows}
+                                heads={this.heads}
+                                sheetName={"Suspensions"}
+                            />
+                        </div>
+                    </div>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
@@ -259,7 +266,7 @@ class SuspendedQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && SuspendedQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
-                                    minRows = {1}
+                                    minRows={1}
                                     data={rows}
                                     columns={[
                                         {

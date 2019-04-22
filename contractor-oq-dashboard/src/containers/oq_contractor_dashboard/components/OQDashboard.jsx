@@ -13,7 +13,7 @@ handleGridRowsUpdated(fromRow, toRow, updated)
 handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
-import { CardBody, Collapse, Row, Col } from 'reactstrap';
+import { CardBody, Collapse, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
@@ -160,6 +160,7 @@ class OQDashboard extends PureComponent {
       filterModalTitle: "Roles",
       filteredRoles: [],
       filterOptionsRoles: [],
+      isReloadWindow: false,
       isSessionPopup: false,
       sessionPopupType: "API"
     };
@@ -210,12 +211,23 @@ class OQDashboard extends PureComponent {
     // Do API call for loading initial table view
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    // let userId = contractorManagementDetails.User.Id || 0;
-    const { cookies } = this.props;
-    let userId = contractorManagementDetails.User.Id || 0,// cookies.get('UserId'),
-      roles = [];
-    await this.getFilterOptions();
-    this.getQualifications(userId, roles);
+    let { dashboardAPIToken } = sessionStorage || '{}',
+      idToken = '';
+
+    if (dashboardAPIToken) {
+      dashboardAPIToken = JSON.parse(dashboardAPIToken);
+      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+    }
+    if (idToken) {
+      this.setState({ isReloadWindow: false });
+      let userId = contractorManagementDetails.User.Id || 0,
+        roles = [];
+      await this.getFilterOptions();
+      this.getQualifications(userId, roles);
+    } else {
+      this.setState({ isReloadWindow: true });
+    }
+
   };
 
   /**
@@ -947,6 +959,11 @@ class OQDashboard extends PureComponent {
       </span> || <span>{value}</span>
     );
   };
+
+  autoLogout() {
+    window.location = window.location.origin + "/Logout.aspx";
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -957,6 +974,13 @@ class OQDashboard extends PureComponent {
 
     return (
       <CardBody>
+        <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
+          <ModalHeader> Alert</ModalHeader>
+          <ModalBody>Your session has expired. Please login again</ModalBody>
+          <ModalFooter>
+            <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
+          </ModalFooter>
+        </Modal>
         <SessionPopup
           backdropClassName={"backdrop"}
           modal={this.state.isSessionPopup}
@@ -1213,12 +1237,12 @@ class OQDashboard extends PureComponent {
                 loading={!this.state.isInitial}
                 loadingText={''}
                 noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                // defaultSorted={[
-                //   {
-                //     id: "role",
-                //     desc: false
-                //   }
-                // ]}
+              // defaultSorted={[
+              //   {
+              //     id: "role",
+              //     desc: false
+              //   }
+              // ]}
               />
             </div>
           </div>

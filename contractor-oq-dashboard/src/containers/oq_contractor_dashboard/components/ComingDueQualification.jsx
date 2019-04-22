@@ -237,11 +237,18 @@ class ComingDueQualification extends PureComponent {
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Expiring Qualifications (In 30 Days)</ModalHeader>
-                    <Export
-                        data={this.state.rows}
-                        heads={this.heads}
-                        sheetName={"Expiring Qualifications (In 30 Days)"}
-                    />
+                    <div>
+                        <div className="export-menu-one">
+
+                        </div>
+                        <div className="export-menu-two">
+                            <Export
+                                data={this.state.rows}
+                                heads={this.heads}
+                                sheetName={"Expiring Qualifications (In 30 Days)"}
+                            />
+                        </div>
+                    </div>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
@@ -259,7 +266,7 @@ class ComingDueQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && ComingDueQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
-                                    minRows = {1}
+                                    minRows={1}
                                     data={rows}
                                     columns={[
                                         {

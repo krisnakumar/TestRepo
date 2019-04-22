@@ -238,11 +238,18 @@ class CompletedQualification extends PureComponent {
             <div>
                 <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
                     <ModalHeader toggle={this.toggle}>Qualifications</ModalHeader>
-                    <Export
-                        data={this.state.rows}
-                        heads={this.heads}
-                        sheetName={"Qualifications"}
-                    />
+                    <div>
+                        <div className="export-menu-one">
+
+                        </div>
+                        <div className="export-menu-two">
+                            <Export
+                                data={this.state.rows}
+                                heads={this.heads}
+                                sheetName={"Qualifications"}
+                            />
+                        </div>
+                    </div>
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
@@ -260,7 +267,7 @@ class CompletedQualification extends PureComponent {
                                     emptyRowsView={this.state.isInitial && CompletedQualificationEmptyRowsView}
                                 /> */}
                                 <ReactTable
-                                    minRows = {1}
+                                    minRows={1}
                                     data={rows}
                                     columns={[
                                         {
