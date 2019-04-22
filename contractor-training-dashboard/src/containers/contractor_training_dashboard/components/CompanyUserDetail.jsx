@@ -435,11 +435,18 @@ class CompanyUserDetail extends React.Component {
             <p className="section-info-description">This level will display the contractor's training progress required by the role</p>
             <p className="section-info-description"> </p>
           </ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={titleText}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={titleText}
+              />
+            </div>
+          </div>
           <ModalBody>
             <div className="grid-container">
               <div className="table">

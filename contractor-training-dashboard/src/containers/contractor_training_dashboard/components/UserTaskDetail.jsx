@@ -293,11 +293,18 @@ class UserTaskDetail extends React.Component {
             <p className="section-info-description">This level will display the contractors training tasks and their respective status</p>
             <p className="section-info-description"> </p>
           </ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={titleText}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={titleText}
+              />
+            </div>
+          </div>
           <ModalBody>
             <div className="grid-container">
               <div className="table">
@@ -317,7 +324,7 @@ class UserTaskDetail extends React.Component {
                   sortDirection="ASC"
                 /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {
@@ -347,15 +354,15 @@ class UserTaskDetail extends React.Component {
                       className: 'text-center',
                       render: props => <span>{moment(props.value).format('MM/DD/YYYY')}</span>,
                       sortMethod: (a, b) => {
-                          var a1 = new Date(a).getTime();
-                          var b1 = new Date(b).getTime();
-                          if (a1 <= b1)
-                            return 1;
-                          else if (a1 >= b1)
-                            return -1;
-                          else
-                            return 0;
-                      } 
+                        var a1 = new Date(a).getTime();
+                        var b1 = new Date(b).getTime();
+                        if (a1 <= b1)
+                          return 1;
+                        else if (a1 >= b1)
+                          return -1;
+                        else
+                          return 0;
+                      }
                     },
                     {
                       Header: "Status",

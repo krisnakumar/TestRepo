@@ -237,10 +237,10 @@ class ContractorCompanyDetail extends React.Component {
     let token = idToken,
       url = "/company/" + companyId + "/tasks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true);
-  
+
     if (response == 401) {
       this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
-    } else if(response == 'API_ERROR'){
+    } else if (response == 'API_ERROR') {
       this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
       userDetails = response;
@@ -439,11 +439,18 @@ class ContractorCompanyDetail extends React.Component {
             <p className="section-info-description">Completed Users shows number of users who have completed all tasks in the role, over the total users in the role</p>
             <p className="section-info-description">% Complete shows as a percent the number of users who have completed all tasks in the role vs total users in the role</p>
           </ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={titleText}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={titleText}
+              />
+            </div>
+          </div>
           <ModalBody>
             <div className="grid-container">
               <div className="table">
@@ -463,7 +470,7 @@ class ContractorCompanyDetail extends React.Component {
                   sortDirection="ASC"
                 /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {

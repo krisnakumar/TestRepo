@@ -607,6 +607,10 @@ class CTDashboard extends PureComponent {
     );
   }
 
+  autoLogout() {
+    window.location = window.location.origin + "/Logout.aspx";
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, filteredCompanies } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -623,9 +627,9 @@ class CTDashboard extends PureComponent {
         />
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
           <ModalHeader> Alert</ModalHeader>
-          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalBody>Your session has expired. Please login again</ModalBody>
           <ModalFooter>
-            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+            <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
           </ModalFooter>
         </Modal>
         <ContractorCompanyDetail
@@ -716,7 +720,7 @@ class CTDashboard extends PureComponent {
                 sortDirection="ASC"
               /> */}
               <ReactTable
-                minRows = {1}
+                minRows={1}
                 data={rows}
                 columns={[
                   {
