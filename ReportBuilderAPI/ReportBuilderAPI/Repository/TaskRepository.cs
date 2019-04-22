@@ -427,7 +427,7 @@ namespace ReportBuilderAPI.Repository
 
                                     AssignedDate = (dataTable.Select("ColumnName = 'AssignedDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["AssignedDate"])) ? Convert.ToDateTime(sqlDataReader["AssignedDate"]).ToString("MM/dd/yyyy") : null : (dataTable.Select("ColumnName = 'Date_Assigned'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date_Assigned"])) ? Convert.ToDateTime(sqlDataReader["Date_Assigned"]).ToString("MM/dd/yyyy") : !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date"])) ? Convert.ToDateTime(sqlDataReader["Date"]).ToString("MM/dd/yyyy") : null : null,
 
-                                    QualificationAssignedDate = (dataTable.Select("ColumnName = 'Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date"])) ? Convert.ToDateTime(sqlDataReader["Date"]).ToString("MM/dd/yyyy") : null : null,
+                                    QualificationAssignedDate = (dataTable.Select("ColumnName = 'Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date"])) ? Convert.ToDateTime(sqlDataReader["Date"]).ToString("MM/dd/yyyy") : string.Empty : null,
 
                                     CompanyName = (dataTable.Select("ColumnName = 'companyName'").Count() == 1) ? Convert.ToString(sqlDataReader["companyName"]) : (dataTable.Select("ColumnName = 'Contractor_Company_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Contractor_Company_Name"]) : (dataTable.Select("ColumnName = 'Company_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Company_Name"]) : null,
 
