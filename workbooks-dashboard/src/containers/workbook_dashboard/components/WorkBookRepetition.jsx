@@ -268,11 +268,18 @@ class WorkBookRepetition extends React.Component {
       <div>
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader toggle={this.toggle}>Workbook Repetition</ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={"Workbook Repetition"}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={"Workbook Repetition"}
+              />
+            </div>
+          </div>
           <ModalBody className={""}>
             <div className="grid-description">
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
@@ -295,7 +302,7 @@ class WorkBookRepetition extends React.Component {
                   emptyRowsView={this.state.isInitial && WorkBookRepetitionEmptyRowsView}
                 /> */}
                 <ReactTable
-                 minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {

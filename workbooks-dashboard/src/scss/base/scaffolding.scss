@@ -1353,3 +1353,55 @@ text-align: center !important;
 #pp9966{
   width: 100%
 }
+
+.ReactTable {
+  border-radius: 7px !important;
+}
+
+// // To test react tooltip
+
+// .tooltip-div{
+//   white-space: break-word;
+//   // width: 350px; 
+//   width: auto; 
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   position: relative;
+//   // line-height: 40px;
+//   pointer-events:none;
+// }
+
+// .tooltip-div:after {
+//   content:"";
+//   display: block;
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   //width: 48px;
+//   //height: 48px;
+//   z-index: 1;
+//   pointer-events:initial;
+// }
+
+// .tooltip-div:hover:after{
+//   cursor: pointer;
+// }
+
+// .tooltip-text {
+//   // width: 350px; 
+//   width: auto; 
+//   visibility: hidden;
+//   background-color: #fff;
+//   // padding: 20px;
+//   -webkit-box-shadow: 0 0 50px 0 rgba(0,0,0,0.3);
+//   opacity: 0;
+//   transition: opacity 0.5s ease;
+// }
+
+
+// .tooltip-div:hover + .tooltip-text {
+//   visibility: visible;
+//   transition: opacity 0.5s ease;
+//   opacity: 1;
+//   position: absolute;
+// }

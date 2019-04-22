@@ -910,6 +910,10 @@ class WorkBookDashboard extends PureComponent {
     );
   }
 
+  autoLogout() {
+    window.location = window.location.origin + "/Logout.aspx"; //Need to be window.location.origin after integrating with LMS Site
+  };
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, supervisorNames } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -922,9 +926,9 @@ class WorkBookDashboard extends PureComponent {
       <CardBody>
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
           <ModalHeader> Alert</ModalHeader>
-          <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
+          <ModalBody>Your session has expired. Please login again</ModalBody>
           <ModalFooter>
-            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+            <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
           </ModalFooter>
         </Modal>
         <SessionPopup
@@ -978,7 +982,7 @@ class WorkBookDashboard extends PureComponent {
           assignedWorkBooks={this.state.workBookCompleted}
         />
         <div className="card__title">
-          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ManageLanding.aspx"}>Manage</a>&gt;<a href={basePath + "/WorkbooksLanding.aspx"}>Training</a></div>
+          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ManageLanding.aspx"}>Manage</a>&gt;<a href={basePath + "/WorkbooksLanding.aspx"}>Training</a></div>          
           <Export
             data={this.state.rows}
             heads={this.heads}

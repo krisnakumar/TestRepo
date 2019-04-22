@@ -449,11 +449,18 @@ class WorkBookProgress extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader toggle={this.toggle}>Total Tasks and Completed Percentage</ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={"Total Tasks and Completed Percentage"}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={"Total Tasks and Completed Percentage"}
+              />
+            </div>
+          </div>
           <ModalBody className={""}>
             <div className="grid-description">
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
@@ -475,7 +482,7 @@ class WorkBookProgress extends React.Component {
                   emptyRowsView={this.state.isInitial && WorkBookProgressEmptyRowsView}
                 /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {
@@ -496,7 +503,8 @@ class WorkBookProgress extends React.Component {
                       accessor: "taskName",
                       headerClassName: 'header-wordwrap',
                       minWidth: 350,
-                      className: 'text-left'
+                      className: 'text-left',
+                      // Cell: props => <span><span className="tooltip-div">{props.value}</span><span className='tooltip-text'>{props.value}</span></span>
                     },
                     {
                       Header: "Completed / Total Repetitions",

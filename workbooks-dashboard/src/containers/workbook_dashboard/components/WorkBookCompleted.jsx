@@ -361,11 +361,18 @@ class WorkBookCompleted extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader toggle={this.toggle}>Workbook Completed</ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={"Workbook Completed"}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={"Workbook Completed"}
+              />
+            </div>
+          </div>
           <ModalBody className={""}>
             <div className="grid-container">
               <div className="table">
@@ -383,7 +390,7 @@ class WorkBookCompleted extends React.Component {
                       emptyRowsView={this.state.isInitial && WorkBookCompletedEmptyRowsView} 
                   /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {

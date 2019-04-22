@@ -761,11 +761,18 @@ class MyEmployees extends React.Component {
             My Employees{supervisorName}
             <p className="section-info-description">Shows the progress of the direct subordinates of employee</p>
           </ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={"My Employees"}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={"My Employees"}
+              />
+            </div>
+          </div>
           <ModalBody className={""}>
             <div className="grid-container">
               <div className="table has-total-row">
@@ -783,7 +790,7 @@ class MyEmployees extends React.Component {
                   emptyRowsView={this.state.isInitial && EmptyRowsView}
                 /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {

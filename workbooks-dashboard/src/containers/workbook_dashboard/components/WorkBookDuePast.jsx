@@ -413,11 +413,18 @@ class WorkBookDuePast extends React.Component {
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader toggle={this.toggle}>Past Due Workbooks</ModalHeader>
-          <Export
-            data={this.state.rows}
-            heads={this.heads}
-            sheetName={"Past Due Workbooks"}
-          />
+          <div>
+            <div className="export-menu-one">
+
+            </div>
+            <div className="export-menu-two">
+              <Export
+                data={this.state.rows}
+                heads={this.heads}
+                sheetName={"Past Due Workbooks"}
+              />
+            </div>
+          </div>
           <ModalBody className={""}>
             <div className="grid-container">
               <div className="table">
@@ -435,7 +442,7 @@ class WorkBookDuePast extends React.Component {
                       emptyRowsView={this.state.isInitial && WorkBookDuePastEmptyRowsView} 
                   /> */}
                 <ReactTable
-                  minRows = {1}
+                  minRows={1}
                   data={rows}
                   columns={[
                     {
@@ -503,10 +510,10 @@ class WorkBookDuePast extends React.Component {
                   //     desc: false
                   //   }
                   // ]}
-                style={{
-                  // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
-                  maxHeight: "550px"
-                }}
+                  style={{
+                    // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    maxHeight: "550px"
+                  }}
                 />
               </div>
             </div>
