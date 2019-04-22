@@ -21,11 +21,9 @@ namespace ReportBuilder.Models.Response
     public class TaskResponse
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-
         public List<TaskModel> Tasks { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-
         public ErrorResponse Error { get; set; }
     }
 }
