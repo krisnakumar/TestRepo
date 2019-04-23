@@ -107,9 +107,11 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
         if (document.getElementById("loader-layer")) {
             document.getElementById("loader-layer").classList.remove("loader-show");
             document.getElementById("loader-layer").classList.add("loader-hide");
+            document.getElementById("loader-layer").remove();
         }
-        // Handle API Exception here
+        // Handle API Exception here and show API Error Popup here
         console.log('parsing failed', ex);
+        return 'API_ERROR';
     });
 }
 
