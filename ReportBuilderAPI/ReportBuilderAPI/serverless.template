@@ -81,7 +81,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "test_content",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
