@@ -44,14 +44,6 @@
 	  "SwaggerLocation": {
 			"Type": "String",
 			"Description": "Swagger Definition URI"			
-		},
-		"BucketName": {
-			"Type": "String",
-			"Description": "Swagger Definition URI"			
-		},
-		"CodeKey": {
-			"Type": "String",
-			"Description": "Swagger Definition URI"			
 		}
    },
    "Resources": {
@@ -97,10 +89,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": {
-					"Bucket": {"Ref": "BucketName"},
-					"Key": {"Ref": "CodeKey"}
-			},
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
