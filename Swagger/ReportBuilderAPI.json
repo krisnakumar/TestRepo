@@ -1660,7 +1660,7 @@
          "x-amazon-apigateway-authtype":"COGNITO_USER_POOLS",
          "x-amazon-apigateway-authorizer":{  
             "providerARNs":[  
-               "arn:aws:cognito-idp:us-west-2:059147590818:userpool/us-west-2_F54j6m3T2"
+               "Fn::Sub":"arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoPoolId}"
             ],
             "type":"cognito_user_pools"
          }
