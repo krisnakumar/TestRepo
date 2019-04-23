@@ -550,7 +550,7 @@ class CTDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, filteredRoles);
+    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
   }
 
   /**
@@ -566,7 +566,7 @@ class CTDashboard extends PureComponent {
     this.setState({
       filteredCompanies: filteredCompanies,
     });
-    this.companyFilter.current.selectMultipleOption(true, filteredCompanies);
+    this.companyFilter.current.selectMultipleOption(true, this, filteredCompanies);
   }
 
   /** handleCompanyDelete
