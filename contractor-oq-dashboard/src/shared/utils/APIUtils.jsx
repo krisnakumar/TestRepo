@@ -79,15 +79,15 @@ export async function ProcessAPI(path, requestPayload, token, isLogin, type, isL
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
-            }
-            document.getElementById("loader-layer").remove();
+                document.getElementById("loader-layer").remove();
+            }            
             return { 'SessionError': 401 };
         } else if (response.status == 504 || response.status == 403 || response.status == 500 || response.status == 400) {
             if (document.getElementById("loader-layer")) {
                 document.getElementById("loader-layer").classList.remove("loader-show");
                 document.getElementById("loader-layer").classList.add("loader-hide");
-            }
-            document.getElementById("loader-layer").remove();
+                document.getElementById("loader-layer").remove();
+            }            
             return { 'APIError': 'API_ERROR' };
         } else {
             if (document.getElementById("loader-layer")) {

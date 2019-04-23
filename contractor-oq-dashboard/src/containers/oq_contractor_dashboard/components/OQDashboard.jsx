@@ -929,7 +929,7 @@ class OQDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, filteredRoles);
+    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
   }
 
   /**

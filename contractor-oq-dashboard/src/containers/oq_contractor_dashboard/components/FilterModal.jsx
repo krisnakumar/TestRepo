@@ -112,7 +112,7 @@ class FilterModal extends React.Component {
     * @param value
     * @returns none
     */
-    selectMultipleOption(isParentUpdate, value) {
+    selectMultipleOption(isParentUpdate, component, value) {
         // patch to set the only one value for the filter
         // this will be removed 
         if (value.length > 1)
@@ -250,7 +250,7 @@ class FilterModal extends React.Component {
                                         className="custom-picky"
                                         value={arrayValue}
                                         options={possibleOptionsArray}
-                                        onChange={this.selectMultipleOption.bind(false, this)}
+                                        onChange={this.selectMultipleOption.bind("", false, this)}
                                         open={true}
                                         keepOpen={true}
                                         valueKey="id"
