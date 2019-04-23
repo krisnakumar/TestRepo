@@ -37,6 +37,10 @@
 		"Description": "Cognito client Id that helps to connect the cognito authorizer",
 		"Type" : "String"
       },
+	  "CognitoPoolId" : {
+		"Description": "Cognito pool Id that helps to connect the cognito authorizer",
+		"Type" : "String"
+      },
 	  "SwaggerLocation": {
 			"Type": "String",
 			"Description": "Swagger Definition URI"			
