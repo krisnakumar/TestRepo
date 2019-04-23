@@ -1358,6 +1358,10 @@ text-align: center !important;
   border-radius: 7px !important;
 }
 
+.is-table-page-view .ReactTable.-striped.-highlight .rt-noData {
+  top: 50% !important;
+}
+
 // // To test react tooltip
 
 // .tooltip-div{

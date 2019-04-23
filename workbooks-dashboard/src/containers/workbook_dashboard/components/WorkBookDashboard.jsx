@@ -866,16 +866,16 @@ class WorkBookDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, filteredRoles);
+    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
   };
 
   /**
-  * @method
-  * @name - filterGoAction
-  * This method will update the selected role on state
-  * @param none
-  * @returns none
- */
+    * @method
+    * @name - filterGoAction
+    * This method will update the selected role on state
+    * @param none
+    * @returns none
+  */
   filterGoAction = () => {
     const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
@@ -1043,6 +1043,7 @@ class WorkBookDashboard extends PureComponent {
                 emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
               /> */}
               <ReactTable
+                minRows={1}
                 data={rows}
                 columns={[
                   {
