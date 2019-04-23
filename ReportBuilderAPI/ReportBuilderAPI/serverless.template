@@ -81,7 +81,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -129,7 +129,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -177,7 +177,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -225,7 +225,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -273,7 +273,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -321,7 +321,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -369,7 +369,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -417,7 +417,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -465,7 +465,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -513,7 +513,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
@@ -561,7 +561,7 @@
                 ]
                 },
             "Runtime": "dotnetcore2.1",
-            "CodeUri": "",
+            "CodeUri": "__CODE_URI__",
             "MemorySize": {
                "Ref": "LambdaMemory"
             },
