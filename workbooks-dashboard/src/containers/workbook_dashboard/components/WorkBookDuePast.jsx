@@ -394,25 +394,25 @@ class WorkBookDuePast extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // One possible fix...
-    var tooltipDivs = document.getElementsByClassName('truncate');
+    // var tooltipDivs = document.getElementsByClassName('truncate');
 
-    tooltipDivs.forEach(function (node) {
-      var thisTxt = node.textContent || "";
-      var cloneEle = document.createElement("div");
-      cloneEle.className += " ele-clone";
-      cloneEle.textContent = thisTxt;
-      document.body.appendChild(cloneEle);
-      if (node.offsetWidth <= (cloneEle.offsetWidth) / 2) {
-        var att = document.createAttribute("title");
-        att.value = thisTxt;
-        node.setAttributeNode(att);
-      } else {
-        var att = document.createAttribute("title");
-        att.value = "";
-        node.setAttributeNode(att);
-      }
-      cloneEle.remove();
-    });
+    // tooltipDivs.forEach(function (node) {
+    //   var thisTxt = node.textContent || "";
+    //   var cloneEle = document.createElement("div");
+    //   cloneEle.className += " ele-clone";
+    //   cloneEle.textContent = thisTxt;
+    //   document.body.appendChild(cloneEle);
+    //   if (node.offsetWidth <= (cloneEle.offsetWidth) / 2) {
+    //     var att = document.createAttribute("title");
+    //     att.value = thisTxt;
+    //     node.setAttributeNode(att);
+    //   } else {
+    //     var att = document.createAttribute("title");
+    //     att.value = "";
+    //     node.setAttributeNode(att);
+    //   }
+    //   cloneEle.remove();
+    // });
   }
 
   customCellTextTooltip(props) {
