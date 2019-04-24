@@ -918,7 +918,6 @@ class WorkBookDashboard extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     // One possible fix...
     // var tooltipDivs = document.getElementsByClassName('truncate');
-
     // tooltipDivs.forEach(function (node) {
     //   var thisTxt = node.textContent || "";
     //   var cloneEle = document.createElement("div");
@@ -1096,7 +1095,7 @@ class WorkBookDashboard extends PureComponent {
                     accessor: "role",
                     minWidth: 180,
                     className: 'text-left',
-                    Cell: this.customCellTextTooltip
+                    // Cell: this.customCellTextTooltip
                   },
                   {
                     Header: "Assigned Workbooks",

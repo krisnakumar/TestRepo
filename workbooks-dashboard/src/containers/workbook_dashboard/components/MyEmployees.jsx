@@ -844,7 +844,7 @@ class MyEmployees extends React.Component {
                       headerClassName: 'header-wordwrap',
                       minWidth: 200,
                       className: 'text-left',
-                      Cell: this.customCellTextTooltip
+                      // Cell: this.customCellTextTooltip
                     },
                     {
                       Header: "Assigned Workbooks",
