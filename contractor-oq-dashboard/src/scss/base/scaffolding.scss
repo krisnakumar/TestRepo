@@ -1361,4 +1361,20 @@ max-height: 500px !important;
         min-height: 100% !important;
     }
   }
+  .modal-backdrop {
+    position: -ms-page !important;
+    top: 0px;
+    left: 0px;
+    z-index: 1040;
+    width: 100%;
+    height: 100%;
+    background-color: #000 !important;
+  }
+  .ReactTable .rt-tbody {
+    scrollbar-width: thin;
+    max-height: 515px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 }
+
