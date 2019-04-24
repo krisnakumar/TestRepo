@@ -1274,3 +1274,35 @@ min-height: 750px !important;
   #pp9966{
     width: 100%
   }
+
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 80% !important;
+  }
+  @media (min-width: 576px){
+    .modal-dialog-centered {
+        min-height: 100% !important;
+    }
+  }
+  .modal-backdrop {
+    position: -ms-page !important;
+    top: 0px;
+    left: 0px;
+    z-index: 1040;
+    width: 100%;
+    height: 100%;
+    background-color: #000 !important;
+  }
+  .modal-body .ReactTable .rt-tbody {
+    scrollbar-width: thin;
+    max-height: 515px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}

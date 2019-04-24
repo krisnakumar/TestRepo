@@ -1364,48 +1364,100 @@ text-align: center !important;
 
 // // To test react tooltip
 
-// .tooltip-div{
-//   white-space: break-word;
-//   // width: 350px; 
-//   width: auto; 
+
+// .tooltip-hover {
+//   white-space: nowrap; 
+//   // width: 60%; 
 //   overflow: hidden;
 //   text-overflow: ellipsis;
 //   position: relative;
-//   // line-height: 40px;
+//   // line-height: 50px;
+//   box-sizing: border-box;
 //   pointer-events:none;
 // }
 
-// .tooltip-div:after {
+// .tooltip-hover:after {
 //   content:"";
 //   display: block;
 //   position: absolute;
 //   top: 0;
 //   right: 0;
-//   //width: 48px;
-//   //height: 48px;
+//   width: 40px;
+//   height: 48px;
 //   z-index: 1;
+//   border: 1px solid red;
 //   pointer-events:initial;
+
 // }
 
-// .tooltip-div:hover:after{
+// .tooltip-hover:hover:after{
 //   cursor: pointer;
 // }
 
-// .tooltip-text {
-//   // width: 350px; 
-//   width: auto; 
+// .tooltip {
+//   width: 60%;
 //   visibility: hidden;
 //   background-color: #fff;
-//   // padding: 20px;
+//   padding: 20px;
 //   -webkit-box-shadow: 0 0 50px 0 rgba(0,0,0,0.3);
 //   opacity: 0;
 //   transition: opacity 0.5s ease;
 // }
 
 
-// .tooltip-div:hover + .tooltip-text {
+// .tooltip-hover:hover + .tooltip {
 //   visibility: visible;
 //   transition: opacity 0.5s ease;
 //   opacity: 1;
-//   position: absolute;
 // }
+
+
+.truncate {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  // display: -webkit-box;
+  // -webkit-line-clamp: 2;
+  // -webkit-box-orient: vertical;  
+}
+
+.ele-clone {
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: fixed;
+}
+
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 80% !important;
+  }
+  @media (min-width: 576px){
+    .modal-dialog-centered {
+        min-height: 100% !important;
+    }
+  }
+  .modal-backdrop {
+    position: -ms-page !important;
+    top: 0px;
+    left: 0px;
+    z-index: 1040;
+    width: 100%;
+    height: 100%;
+    background-color: #000 !important;
+  }
+  .modal-body .ReactTable .rt-tbody {
+    scrollbar-width: thin;
+    max-height: 515px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
+
