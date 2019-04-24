@@ -35,7 +35,7 @@ namespace ReportBuilderAPI.Helpers
                     {
                         //Validate the user report permissions
                         PermissionManager permissionManager = new PermissionManager(Convert.ToInt64(userCompany.ReportsPerms));
-                        if (CheckReportPermissions(permissionManager))
+                        if (CheckReportPermissions(permissionManager, appType))
                         {
                             if (appType == Constants.QUERY_BUILDER && !string.IsNullOrEmpty(studentDetails))
                             {
@@ -91,19 +91,30 @@ namespace ReportBuilderAPI.Helpers
         /// </summary>
         /// <param name="permissionManager"></param>
         /// <returns></returns>
-        public bool CheckReportPermissions(PermissionManager permissionManager)
+        public bool CheckReportPermissions(PermissionManager permissionManager, string appType)
         {
+            bool hasPermission = false;
             try
             {
-                if (permissionManager.Contains(ReportPerms.ViewContractorOQDashboard)
-                            || permissionManager.Contains(ReportPerms.ViewContractorTrainingDashboard) || permissionManager.Contains(ReportPerms.ViewWorkbooksDashboard) || permissionManager.Contains(ReportPerms.ViewQueryBuilder))
+                switch(appType)
                 {
-                    return true;
+                    case Constants.OQ_DASHBOARD:
+                        hasPermission = permissionManager.Contains(ReportPerms.ViewContractorOQDashboard);
+                        break;
+                    case Constants.TRAINING_DASHBOARD:
+                        hasPermission = permissionManager.Contains(ReportPerms.ViewContractorTrainingDashboard);
+                        break;
+                    case Constants.WORKBOOK_DASHBOARD:
+                        hasPermission = permissionManager.Contains(ReportPerms.ViewWorkbooksDashboard);
+                        break;
+                    case Constants.QUERY_BUILDER:
+                        hasPermission = permissionManager.Contains(ReportPerms.ViewQueryBuilder);
+                        break;
+                    default:
+                        hasPermission = false;
+                        break;
                 }
-                else
-                {
-                    return false;
-                }
+                return hasPermission;
             }
             catch (Exception reportException)
             {
