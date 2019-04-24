@@ -345,7 +345,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
             Authorizer authorizer = new Authorizer();
             try
             {
-                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId))
+                if (authorizer.ValidateUser(roleRequest.UserId, roleRequest.CompanyId, roleRequest.Payload.AppType))
                 {
                     return roleRepository.GetRoles(roleRequest);
                 }
