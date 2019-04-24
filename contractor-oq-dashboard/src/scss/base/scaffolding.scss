@@ -1346,3 +1346,19 @@ max-height: 500px !important;
 .is-table-page-view .ReactTable.-striped.-highlight .rt-noData {
   top: 50% !important;
 }
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 80% !important;
+  }
+  @media (min-width: 576px){
+    .modal-dialog-centered {
+        min-height: 100% !important;
+    }
+  }
+}
