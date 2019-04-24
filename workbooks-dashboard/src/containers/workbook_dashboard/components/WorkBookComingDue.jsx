@@ -130,6 +130,7 @@ class WorkBookComingDue extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.customCell = this.customCell.bind(this);
+    this.customCellTextTooltip = this.customCellTextTooltip.bind(this);
   }
 
   /**
@@ -395,8 +396,39 @@ class WorkBookComingDue extends React.Component {
     );
   }
 
+  customCellTextTooltip(props) {
+    return (
+      <span className={"tooltip-hover truncate"}>
+        {props.value}
+      </span>
+    );
+  }
+
   // This method is used to setting the row data in react data grid
   rowGetter = i => this.state.rows[i];
+
+  componentDidUpdate(prevProps, prevState) {
+    // One possible fix...
+    var tooltipDivs = document.getElementsByClassName('truncate');
+
+    tooltipDivs.forEach(function (node) {
+      var thisTxt = node.textContent || "";
+      var cloneEle = document.createElement("div");
+      cloneEle.className += " ele-clone";
+      cloneEle.textContent = thisTxt;
+      document.body.appendChild(cloneEle);
+      if (node.offsetWidth <= (cloneEle.offsetWidth) / 2) {
+        var att = document.createAttribute("title");
+        att.value = thisTxt;
+        node.setAttributeNode(att);
+      } else {
+        var att = document.createAttribute("title");
+        att.value = "";
+        node.setAttributeNode(att);
+      }
+      cloneEle.remove();
+    });
+  }
 
   render() {
     const { rows } = this.state;
@@ -416,7 +448,7 @@ class WorkBookComingDue extends React.Component {
           selectedWorkbook={this.state.selectedWorkbook}
         />
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} fade={false} toggle={this.toggle} centered={true} className="custom-modal-grid grid-modal-popup">
-          <ModalHeader toggle={this.toggle}>WorkBook Due in 30 Days</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Workbook Due in 30 Days</ModalHeader>
           <div>
             <div className="export-menu-one">
 
@@ -425,7 +457,7 @@ class WorkBookComingDue extends React.Component {
               <Export
                 data={this.state.rows}
                 heads={this.heads}
-                sheetName={"WorkBook Due in 30 Days"}
+                sheetName={"Workbook Due in 30 Days"}
               />
             </div>
           </div>
@@ -461,7 +493,8 @@ class WorkBookComingDue extends React.Component {
                       accessor: "role",
                       headerClassName: 'header-wordwrap',
                       minWidth: 200,
-                      className: 'text-left'
+                      className: 'text-left',
+                      Cell: this.customCellTextTooltip
                     },
                     {
                       Header: "Workbook",

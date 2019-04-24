@@ -167,6 +167,7 @@ class WorkBookDashboard extends PureComponent {
     this.toggleFilter = this.toggleFilter.bind(this);
     this.handleRoleDelete = this.handleRoleDelete.bind(this);
     this.customCell = this.customCell.bind(this);
+    this.customCellTextTooltip = this.customCellTextTooltip.bind(this);
   }
 
   /**
@@ -914,6 +915,37 @@ class WorkBookDashboard extends PureComponent {
     window.location = window.location.origin + "/Logout.aspx"; //Need to be window.location.origin after integrating with LMS Site
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    // One possible fix...
+    var tooltipDivs = document.getElementsByClassName('truncate');
+
+    tooltipDivs.forEach(function (node) {
+      var thisTxt = node.textContent || "";
+      var cloneEle = document.createElement("div");
+      cloneEle.className += " ele-clone";
+      cloneEle.textContent = thisTxt;
+      document.body.appendChild(cloneEle);
+      if (node.offsetWidth <= (cloneEle.offsetWidth) / 2) {
+        var att = document.createAttribute("title");
+        att.value = thisTxt;
+        node.setAttributeNode(att);
+      } else {
+        var att = document.createAttribute("title");
+        att.value = "";
+        node.setAttributeNode(att);
+      }
+      cloneEle.remove();
+    });
+  }
+
+  customCellTextTooltip(props) {
+    return (
+      <span className={"tooltip-hover truncate"}>
+        {props.value}
+      </span>
+    );
+  }
+
   render() {
     const { rows, collapseText, collapse, filteredRoles, supervisorNames } = this.state;
     let collapseClassName = (collapse ? "show" : "hide"),
@@ -1063,7 +1095,8 @@ class WorkBookDashboard extends PureComponent {
                     Header: "Role",
                     accessor: "role",
                     minWidth: 180,
-                    className: 'text-left'
+                    className: 'text-left',
+                    Cell: this.customCellTextTooltip
                   },
                   {
                     Header: "Assigned Workbooks",
