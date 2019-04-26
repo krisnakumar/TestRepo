@@ -59,13 +59,6 @@ class LogInForm extends PureComponent {
     if (idToken) {
       this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     } else {
-      // let readSessionCount = localStorage.getItem('readSessionCount');
-      // if (readSessionCount) {
-      //   // Do nothing
-      // } else {
-      //   localStorage.setItem('readSessionCount', '1');
-      // }
-      // this.setState({ toDashboard: false, hasSessionCookie: false, isReloadWindow: true });
       this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
     }
   };
@@ -135,18 +128,6 @@ class LogInForm extends PureComponent {
         console.log('parsing failed', ex)
       });
   }
-
-  reloadWindow() {
-    let readSessionCount = localStorage.getItem('readSessionCount');
-    if (readSessionCount <= 2) {
-      readSessionCount = parseInt(readSessionCount) + 1;
-      localStorage.setItem('readSessionCount', readSessionCount);
-      location.reload();
-    } else {
-      localStorage.removeItem('readSessionCount');
-      window.location = window.location.origin;
-    }
-  };
 
   render() {
     const { isReloadWindow } = this.state;

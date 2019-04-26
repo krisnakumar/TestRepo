@@ -187,12 +187,6 @@ class CTDashboard extends PureComponent {
       await this.getFilterOptions();
       this.getRoles(roles, companies);
     } else {
-      let readSessionCount = localStorage.getItem('readSessionCount');
-      if (readSessionCount) {
-        // Do nothing
-      } else {
-        localStorage.setItem('readSessionCount', '1');
-      }
       this.setState({ isReloadWindow: true });
     }
 
@@ -584,18 +578,6 @@ class CTDashboard extends PureComponent {
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
     Object.keys(filteredCompanies).map(function (i) { companies.push(filteredCompanies[i].id) });
     this.getRoles(roles, companies);
-  };
-
-  reloadWindow() {
-    let readSessionCount = localStorage.getItem('readSessionCount');
-    if (readSessionCount <= 2) {
-      readSessionCount = parseInt(readSessionCount) + 1;
-      localStorage.setItem('readSessionCount', readSessionCount);
-      location.reload();
-    } else {
-      localStorage.removeItem('readSessionCount');
-      window.location = window.location.origin;
-    }
   };
 
   customCell(props) {

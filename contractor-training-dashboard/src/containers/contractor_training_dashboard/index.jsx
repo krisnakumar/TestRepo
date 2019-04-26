@@ -24,16 +24,16 @@ class ContractorTrainingDashboard extends PureComponent {
   }
 
   reloadWindow() {
-    let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
+    let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0; 
     if (readAPIErrorCount <= 2) {
-      readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
-      localStorage.setItem('readAPIErrorCount', readAPIErrorCount);
-      location.reload();
+        readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
+        sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
+        location.reload();
     } else {
-      localStorage.removeItem('readAPIErrorCount');
-      window.location = window.location.origin;
+        sessionStorage.removeItem('readAPIErrorCount');
+        window.location = window.location.origin;
     }
-  };
+};
 
   render() {
     return (
