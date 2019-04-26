@@ -65,7 +65,7 @@ class SessionPopup extends React.Component {
     };
 
     reloadWindow() {
-        let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount'); 
+        let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0; 
         if (readAPIErrorCount <= 2) {
             readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
             sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
