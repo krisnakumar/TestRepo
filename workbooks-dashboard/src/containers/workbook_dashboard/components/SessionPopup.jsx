@@ -65,13 +65,13 @@ class SessionPopup extends React.Component {
     };
 
     reloadWindow() {
-        let readSessionCount = localStorage.getItem('readAPIErrorCount');
-        if (readSessionCount <= 2) {
-            readSessionCount = parseInt(readSessionCount) + 1;
-            localStorage.setItem('readAPIErrorCount', readSessionCount);
+        let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount'); 
+        if (readAPIErrorCount <= 2) {
+            readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
+            sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
             location.reload();
         } else {
-            localStorage.removeItem('readAPIErrorCount');
+            sessionStorage.removeItem('readAPIErrorCount');
             window.location = window.location.origin;
         }
     };

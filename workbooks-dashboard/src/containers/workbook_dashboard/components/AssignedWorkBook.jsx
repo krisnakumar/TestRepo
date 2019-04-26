@@ -423,19 +423,6 @@ class AssignedWorkBook extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                {/* <ReactDataGrid
-                  ref={'reactDataGrid'}
-                  onGridSort={this.handleGridSort}
-                  enableCellSelect={false}
-                  enableCellAutoFocus={false}
-                  columns={this.heads}
-                  rowGetter={this.rowGetter}
-                  rowsCount={rows.length}
-                  onGridRowsUpdated={this.handleGridRowsUpdated}
-                  rowHeight={35}
-                  minColumnWidth={100}
-                  emptyRowsView={this.state.isInitial && AssignedWorkBookEmptyRowsView}
-                /> */}
                 <ReactTable
                   minRows={1}
                   data={rows}
@@ -506,7 +493,7 @@ class AssignedWorkBook extends React.Component {
                   //   }
                   // ]}
                   style={{
-                    //minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
+                    // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
                     maxHeight: "550px"
                   }}
                 />

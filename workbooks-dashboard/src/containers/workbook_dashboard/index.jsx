@@ -30,15 +30,15 @@ class Landing extends PureComponent {
     console.log(error, info);
   }
 
-  reloadWindow() {
-    let readAPIErrorCount = localStorage.getItem('readAPIErrorCount');
+  reloadWindow() {   
+    let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount'); 
     if (readAPIErrorCount <= 2) {
-      readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
-      localStorage.setItem('readAPIErrorCount', readAPIErrorCount);
-      location.reload();
+        readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
+        sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
+        location.reload();
     } else {
-      localStorage.removeItem('readAPIErrorCount');
-      window.location = window.location.origin;
+        sessionStorage.removeItem('readAPIErrorCount');
+        window.location = window.location.origin;
     }
   };
 

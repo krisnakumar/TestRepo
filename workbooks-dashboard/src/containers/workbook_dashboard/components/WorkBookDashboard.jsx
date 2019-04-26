@@ -349,12 +349,6 @@ class WorkBookDashboard extends PureComponent {
       await this.getFilterOptions();
       this.getEmployees(companyId, userId, roles);
     } else {
-      let readSessionCount = localStorage.getItem('readSessionCount');
-      if (readSessionCount) {
-        // Do nothing
-      } else {
-        localStorage.setItem('readSessionCount', '1');
-      }
       this.setState({ isReloadWindow: true });
     }
   };
@@ -889,19 +883,6 @@ class WorkBookDashboard extends PureComponent {
     this.getEmployees(companyId, userId, roles);
   };
 
-
-  reloadWindow() {
-    let readSessionCount = localStorage.getItem('readSessionCount');
-    if (readSessionCount <= 2) {
-      readSessionCount = parseInt(readSessionCount) + 1;
-      localStorage.setItem('readSessionCount', readSessionCount);
-      location.reload();
-    } else {
-      localStorage.removeItem('readSessionCount');
-      window.location = window.location.origin;
-    }
-  };
-
   customCell(props) {
     let self = this;
     return (
@@ -1013,7 +994,7 @@ class WorkBookDashboard extends PureComponent {
           assignedWorkBooks={this.state.workBookCompleted}
         />
         <div className="card__title">
-          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ManageLanding.aspx"}>Manage</a>&gt;<a href={basePath + "/WorkbooksLanding.aspx"}>Training</a></div>          
+          <div className="breadcrumbs noprint"><a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ManageLanding.aspx"}>Manage</a>&gt;<a href={basePath + "/WorkbooksLanding.aspx"}>Training</a></div>          
           <Export
             data={this.state.rows}
             heads={this.heads}

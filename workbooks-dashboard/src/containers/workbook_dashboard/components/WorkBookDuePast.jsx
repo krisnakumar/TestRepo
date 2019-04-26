@@ -460,19 +460,6 @@ class WorkBookDuePast extends React.Component {
           <ModalBody className={""}>
             <div className="grid-container">
               <div className="table">
-                {/* <ReactDataGrid
-                      ref={'reactDataGrid'}
-                      onGridSort={this.handleGridSort}
-                      enableCellSelect={false}
-                      enableCellAutoFocus={false}
-                      columns={this.heads}
-                      rowGetter={this.rowGetter}
-                      rowsCount={rows.length}
-                      onGridRowsUpdated={this.handleGridRowsUpdated}
-                      rowHeight={35}
-                      minColumnWidth={100}
-                      emptyRowsView={this.state.isInitial && WorkBookDuePastEmptyRowsView} 
-                  /> */}
                 <ReactTable
                   minRows={1}
                   data={rows}
