@@ -20,5 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ReportBuilderAPI\ReportBuilderAPI.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 
 </Project>
