@@ -54,14 +54,12 @@ class WorkBookDashboardExport extends Component {
      * @returns multiDataSet
     */
     formatData(data, heads) {
-        const { cookies } = this.props;
 
         let { contractorManagementDetails } = sessionStorage || {};
         contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
         let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
 
-        let runByUserMock = cookies.get('UserName') || "",
-            runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
+        let runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
         let multiDataSet = [

@@ -204,9 +204,8 @@ class WorkBookDashboard extends PureComponent {
           e.preventDefault();
           let isMyEmployeeModal = true,
             myEmployeesArray = [],
-            supervisorNames = this.state.supervisorNames;
+            supervisorNames = [];
 
-          supervisorNames = [];
           supervisorNames.push({ 'name': props.original.employee, 'column': "NONE", 'order': "NONE", 'userId': props.original.userId });
           this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
           this.getMyEmployees(props.original.userId);
@@ -313,10 +312,10 @@ class WorkBookDashboard extends PureComponent {
       supervisorNames = this.state.supervisorNames;
 
     if (myEmployeesArray.length > 0) {
-      let totalRow = myEmployeesArray.pop();
+        myEmployeesArray.pop();
     }
     if (supervisorNames.length > 0) {
-      let totalRow = supervisorNames.pop();
+        supervisorNames.pop();
     }
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames });
   };
@@ -330,7 +329,6 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
   */
   async componentDidMount() {
-    const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage,
       idToken = '';
 
@@ -362,7 +360,6 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getFilterOptions() {
-    const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
@@ -383,7 +380,7 @@ class WorkBookDashboard extends PureComponent {
     } else {
       response = JSON.parse(JSON.stringify(response).split('"Role":').join('"text":'));
       response = JSON.parse(JSON.stringify(response).split('"RoleId":').join('"id":'));
-      Object.keys(response).map(function (i) { response[i].id ? response[i].id = response[i].id.toString() : "" });
+      Object.keys(response).map(function (i) { return response[i].id ? response[i].id = response[i].id.toString() : "" });
       this.setState({ filterOptionsRoles: response });
     }
   };
@@ -396,7 +393,6 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getEmployees(companyId, userId, roles) {
-    const { cookies } = this.props;
     this.setState({ userId: userId });
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
@@ -437,8 +433,6 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getMyEmployees(userId) {
-    const { cookies } = this.props,
-      loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
@@ -456,8 +450,8 @@ class WorkBookDashboard extends PureComponent {
       url = "/company/" + companyId + "/workbooks",
       response = await API.ProcessAPI(url, postData, token, false, "POST", true),
       myEmployees = response,
-      myEmployeesArray = this.state.myEmployeesArray,
-      isMyEmployeeModal = this.state.isMyEmployeeModal,
+      myEmployeesArray = [],
+      isMyEmployeeModal = true,
       fakeState = this.state.fakeState,
       level = this.state.level + 1;
 
@@ -466,10 +460,8 @@ class WorkBookDashboard extends PureComponent {
     } else if (response == 'API_ERROR') {
       this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
     } else {
-      myEmployeesArray = [];
       myEmployeesArray.push(myEmployees);
       fakeState = !fakeState;
-      isMyEmployeeModal = true;
       this.setState({ ...this.state, isMyEmployeeModal, myEmployees, myEmployeesArray, fakeState, level });
     }
   };
@@ -482,8 +474,7 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getAssignedWorkbooks(userId) {
-    const { cookies } = this.props,
-      loggedInUserId = this.state.userId || 0;
+    const loggedInUserId = this.state.userId || 0;
 
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
@@ -504,9 +495,8 @@ class WorkBookDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isAssignedModal = this.state.isAssignedModal,
+    let isAssignedModal = true,
       assignedWorkBooks = {};
-    isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
     let token = idToken,
@@ -532,8 +522,7 @@ class WorkBookDashboard extends PureComponent {
   * @returns none
   */
   async getPastDueWorkbooks(userId) {
-    const { cookies } = this.props,
-      loggedInUserId = this.state.userId || 0;
+    const loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -552,9 +541,8 @@ class WorkBookDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isPastDueModal = this.state.isPastDueModal,
+    let isPastDueModal = true,
       workBookDuePast = {};
-    isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = idToken,
@@ -580,8 +568,7 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getComingDueWorkbooks(userId) {
-    const { cookies } = this.props,
-      loggedInUserId = this.state.userId || 0;
+    const loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -600,9 +587,8 @@ class WorkBookDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isComingDueModal = this.state.isComingDueModal,
+    let isComingDueModal = true,
       workBookComingDue = {};
-    isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
     let token = idToken,
@@ -628,8 +614,7 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   async getCompletedWorkbooks(userId) {
-    const { cookies } = this.props,
-      loggedInUserId = this.state.userId || 0;
+    const loggedInUserId = this.state.userId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -648,9 +633,8 @@ class WorkBookDashboard extends PureComponent {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isCompletedModal = this.state.isCompletedModal,
+    let isCompletedModal = true,
       workBookCompleted = {};
-    isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
     let token = idToken,
@@ -712,9 +696,7 @@ class WorkBookDashboard extends PureComponent {
         total: parseInt(employees[i].TotalEmployees) || 0
       });
     }
-    // if (length > 0)
-    //   rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
-
+    
     return rows;
   };
 
@@ -872,14 +854,13 @@ class WorkBookDashboard extends PureComponent {
     * @returns none
   */
   filterGoAction = () => {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0,
       userId = contractorManagementDetails.User.Id || 0;
     let filteredRoles = this.state.filteredRoles,
       roles = [];
-    Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
+    Object.keys(filteredRoles).map(function (i) { return roles.push(filteredRoles[i].id) });
     this.getEmployees(companyId, userId, roles);
   };
 
@@ -933,7 +914,7 @@ class WorkBookDashboard extends PureComponent {
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length,
       currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
     let basePath = window.location.origin || "";
-    let pgSize = (rows.length > 10) ? rows.length : rows.length;
+    let pgSize = rows.length;
     return (
       <CardBody>
         <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
@@ -1075,7 +1056,7 @@ class WorkBookDashboard extends PureComponent {
                     Header: "Role",
                     accessor: "role",
                     minWidth: 180,
-                    className: 'text-left',
+                    className: 'text-left role-cell',
                     // Cell: this.customCellTextTooltip
                   },
                   {

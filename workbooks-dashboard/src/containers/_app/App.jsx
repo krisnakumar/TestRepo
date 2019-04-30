@@ -32,7 +32,7 @@ class App extends Component {
     this.state = {
       loading: true,
       loaded: false,
-      isValid: false,
+      isValid: true,
       modal: false
     };
   };
@@ -113,52 +113,19 @@ class App extends Component {
   */
   componentDidMount() {
     window.addEventListener('load', () => {
-      this.setState({ loading: false, loaded: true  });
+      this.setState({ loading: false, loaded: true });
       setTimeout(() => this.setState({ loaded: true }), 500);
     });
   };
 
-  /**
-   * @method
-   * @name - componentWillMount
-   * This method will invoked whenever the component is to be mounted
-   * @param none
-   * @returns none
-  */
-  async componentWillMount() {
-    const { cookies } = this.props;
-    let { dashboardAPIToken } = sessionStorage,
-      idToken = '';
-    if (dashboardAPIToken) {
-      dashboardAPIToken = JSON.parse(dashboardAPIToken);
-      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    }                     // Get Identity token from browser cookie
-    let isTokenAvailable = idToken ? true : false,                      // Checking Identity token is available or not
-      isBasePath = window.location.pathname == '/' ? true : false,
-      isMockBasePath = true;  // Checking it is base path or not
-
-    // Checking that the Identity token is available and it is not app base path
-    if (!isTokenAvailable && !isMockBasePath) {
-      // If there is no Identity token from browser cookie on loading app other than base domain setting state 'isValid' to false and doing re-direct
-      this.setState({ isValid: false });
-      window.location = window.location.origin;
-    } else {
-      // let refreshSession = await API.LoginRefresh();
-      // this.updateSessionTokens(refreshSession);
-      this.setState({ isValid: true });
-    }
-  };
-
   async updateSessionTokens(refreshSession) {
     let idToken = refreshSession.IdToken || "",
-        accessToken = refreshSession.AccessToken || "",
-        _self = this;
+      _self = this;
 
     // get the decoded payload and header
     let decoded = JWT.decode(idToken, { complete: true });
 
     let exp = new Date(decoded.payload.exp * 1000),
-      tokenExp = exp.toLocaleString(),
       refreshTrigger = new Date(exp),
       durationInMinutes = 5;
 
@@ -171,7 +138,7 @@ class App extends Component {
       refreshSecond = refreshTrigger.getSeconds();
 
     var date = new Date(refreshYear, refreshMonth, refreshDay, refreshHour, refreshMinute, refreshSecond);
-    let scheduleTask = Schedule.scheduleJob(date, async function () {
+    Schedule.scheduleJob(date, async function () {
       let refreshSession = await API.LoginRefresh();
       _self.updateSessionTokens(refreshSession);
     });

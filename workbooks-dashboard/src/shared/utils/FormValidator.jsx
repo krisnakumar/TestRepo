@@ -64,7 +64,7 @@ class FormValidator {
 
   isEmptyOrSpaces(str){
     let value = str || "";
-    return value === null || value.match(/^ *$/) !== null;
+    return value == null || value.match(/^ *$/) != null;
   }
 }
 

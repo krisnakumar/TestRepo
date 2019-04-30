@@ -30,35 +30,15 @@ class LogInForm extends PureComponent {
 
   constructor(props) {
     super(props);
-    const { cookies } = props;
     this.state = {
-      showPassword: false,
       toDashboard: false,
       hasSessionCookie: false,
-      isReloadWindow: false,
-      username: "",
-      password: ""
+      isReloadWindow: false
     };
-
-    this.showPassword = this.showPassword.bind(this);
-    this.loginSubmit = this.loginSubmit.bind(this);
-    this.handleUserInput = this.handleUserInput.bind(this);
-    this.authenticate = this.authenticate.bind(this);
   };
 
-  componentWillMount() {
-    const { cookies } = this.props;
-    let { dashboardAPIToken } = sessionStorage,
-      idToken = '';
-    if (dashboardAPIToken) {
-      dashboardAPIToken = JSON.parse(dashboardAPIToken);
-      idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
-    }
-    if (idToken) {
-      this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
-    } else {
-      this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
-    }
+  componentWillMount() { 
+    this.setState({ toDashboard: true, hasSessionCookie: true, isReloadWindow: false });
   };
 
   componentDidCatch(error, info) {
@@ -68,73 +48,13 @@ class LogInForm extends PureComponent {
     console.log(error, info);
   };
 
-  showPassword(e) {
-    e.preventDefault();
-    this.setState({
-      showPassword: !this.state.showPassword,
-    });
-  }
-
-  handleUserInput(event) {
-    let name = event.target.name;
-    let value = event.target.value;
-    this.setState({ [name]: value });
-  };
-
-  loginSubmit(event) {
-    event.preventDefault();
-    let userName = this.state.username;
-    let password = this.state.password;
-    if (userName && password) {
-      this.authenticate(userName, password);
-    }
-  };
-
-  authenticate(userName, password) {
-    let _self = this,
-      url = Constants.API_DOMAIN + Constants.API_STAGE_NAME + "/login",
-      postData = {
-        "UserName": userName,
-        "Password": password
-      };
-    fetch(url,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify(postData)
-      }).then(function (response) {
-        return response.json()
-      }).then(function (json) {
-        if (json.AccessToken && json.IdentityToken) {
-          const { cookies } = _self.props;
-          cookies.set('UserName', _self.state.username, { path: '/' });
-          cookies.set('AccessToken', json.AccessToken, { path: '/' });
-          cookies.set('IdentityToken', json.IdentityToken, { path: '/' });
-          cookies.set('RefreshToken', json.RefreshToken, { path: '/' });
-          cookies.set('UserId', json.UserId, { path: '/' });
-          cookies.set('CompanyId', json.CompanyId, { path: '/' });
-          cookies.set('UserName', json.UserName, { path: '/' });
-
-          _self.setState({ toDashboard: true, hasSessionCookie: true });
-        } else {
-          _self.setState({ toDashboard: false, hasSessionCookie: false });
-        }
-        return json
-      }).catch(function (ex) {
-        console.log('parsing failed', ex)
-      });
-  }
-
   render() {
     const { isReloadWindow } = this.state;
 
     if (this.state.hasSessionCookie) {
       return <WorkbookDashboard />;
     } else {
-      return (
+      return (               
         isReloadWindow && <Modal backdrop={"static"} isOpen={this.state.isReloadWindow} toggle={this.toggle} fade={false} centered={true} className="auto-logout-modal">
           <ModalHeader> Alert</ModalHeader>
           <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
@@ -158,5 +78,5 @@ class LogInForm extends PureComponent {
 }
 
 export default reduxForm({
-  form: 'log_in_form', // a unique identifier for this form
+  form: 'log_in_form', // A unique identifier for this form 
 })(withCookies(LogInForm));

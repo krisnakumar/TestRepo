@@ -211,8 +211,7 @@ class MyEmployees extends React.Component {
     }
 
     if (length > 0) {
-      this.state.myEmployeesArray = employeesArray;
-      // rows.push({ employee: "Total", role: "", assignedWorkBooks: assignedWorkBooksCount, inDueWorkBooks: inDueWorkBooksCount, pastDueWorkBooks: pastDueWorkBooksCount, completedWorkBooks: completedWorkBooksCount, total: totalEmpCount });
+      this.state.myEmployeesArray = employeesArray;      
     }
 
     return rows;
@@ -227,8 +226,6 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getMyEmployees(userId, supervisor) {
-    const { cookies } = this.props,
-      currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -267,8 +264,7 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getPastDueWorkbooks(userId) {
-    const { cookies } = this.props,
-      currentUserId = this.state.selectedUserId || 0;
+    const currentUserId = this.state.selectedUserId || 0;
 
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
@@ -290,9 +286,8 @@ class MyEmployees extends React.Component {
     let companyId = contractorManagementDetails.Company.Id || 0;
 
 
-    let isPastDueModal = this.state.isPastDueModal,
+    let isPastDueModal = true,
       workBookDuePast = {};
-    isPastDueModal = true;
     this.setState({ isPastDueModal, workBookDuePast });
 
     let token = idToken,
@@ -319,8 +314,7 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getComingDueWorkbooks(userId) {
-    const { cookies } = this.props,
-      currentUserId = this.state.selectedUserId || 0;
+    const currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -335,16 +329,14 @@ class MyEmployees extends React.Component {
       "AppType": "WORKBOOK_DASHBOARD"
     };
 
-    let isComingDueModal = this.state.isComingDueModal,
+    let isComingDueModal = true,
       workBookComingDue = {};
-    isComingDueModal = true;
     this.setState({ isComingDueModal, workBookComingDue });
 
     // Company Id get from session storage
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
-
 
     let token = idToken,
       url = "/company/" + companyId + "/workbooks",
@@ -370,8 +362,7 @@ class MyEmployees extends React.Component {
   * @returns none
   */
   async getCompletedWorkbooks(userId) {
-    const { cookies } = this.props,
-      currentUserId = this.state.selectedUserId || 0;
+    const currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -391,9 +382,8 @@ class MyEmployees extends React.Component {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isCompletedModal = this.state.isCompletedModal,
+    let isCompletedModal = true,
       workBookCompleted = {};
-    isCompletedModal = true;
     this.setState({ isCompletedModal, workBookCompleted });
 
     let token = idToken,
@@ -420,8 +410,7 @@ class MyEmployees extends React.Component {
    * @returns none
    */
   async getAssignedWorkbooks(userId) {
-    const { cookies } = this.props,
-      currentUserId = this.state.selectedUserId || 0;
+    const currentUserId = this.state.selectedUserId || 0;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "",
@@ -441,9 +430,8 @@ class MyEmployees extends React.Component {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isAssignedModal = this.state.isAssignedModal,
+    let isAssignedModal = true,
       assignedWorkBooks = {};
-    isAssignedModal = true;
     this.setState({ isAssignedModal, assignedWorkBooks });
 
     let token = idToken,
@@ -614,9 +602,8 @@ class MyEmployees extends React.Component {
           e.preventDefault();
           let isMyEmployeeModal = true,
             myEmployeesArray = [],
-            supervisorNames = this.state.supervisorNames;
+            supervisorNames = [];
 
-          supervisorNames = [];
           supervisorNames.push({ 'name': props.original.employee, 'column': "NONE", 'order': "NONE", 'userId': props.original.userId });
           this.setState({ isMyEmployeeModal, myEmployeesArray, supervisorNames });
           this.getMyEmployees(props.original.userId, props.original);
@@ -754,8 +741,7 @@ class MyEmployees extends React.Component {
   render() {
     const { rows, supervisorNames } = this.state;
     let supervisorNamesLength = supervisorNames.length > 0 ? supervisorNames.length - 1 : supervisorNames.length;
-    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "",
-      currentUserId = supervisorNames[supervisorNamesLength] ? supervisorNames[supervisorNamesLength].userId : 0;
+    let supervisorName = supervisorNames[supervisorNamesLength] ? ' - ' + supervisorNames[supervisorNamesLength].name : "";
     let pgSize = (rows.length > 10) ? rows.length : 10;
     return (
       <div>

@@ -195,7 +195,6 @@ class WorkBookProgress extends React.Component {
    * @returns none
    */
   async getWorkbookRepetitions(userId, workBookId, taskId, status) {
-    const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
@@ -215,9 +214,8 @@ class WorkBookProgress extends React.Component {
       "AppType": "WORKBOOK_DASHBOARD"
     };
 
-    let isWorkBookRepetitionModal = this.state.isWorkBookRepetitionModal,
+    let isWorkBookRepetitionModal = true,
       workBooksRepetition = {};
-    isWorkBookRepetitionModal = true;
     this.setState({ isWorkBookRepetitionModal, workBooksRepetition });
 
     let token = idToken,

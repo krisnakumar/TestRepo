@@ -305,7 +305,6 @@ class WorkBookCompleted extends React.Component {
     * @returns none
   */
   async getWorkBookProgress(userId, workBookId) {
-    const { cookies } = this.props;
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
@@ -320,9 +319,9 @@ class WorkBookCompleted extends React.Component {
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let companyId = contractorManagementDetails.Company.Id || 0;
 
-    let isWorkBookProgressModal = this.state.isWorkBookProgressModal,
+    let isWorkBookProgressModal = true,
       workBooksProgress = {};
-    isWorkBookProgressModal = true;
+      
     this.setState({ isWorkBookProgressModal, workBooksProgress });
 
     let token = idToken,

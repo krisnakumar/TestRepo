@@ -38,7 +38,6 @@ const apoolData = {
 * @returns json
 */
 export async function ProcessAPI(path, requestPayload, token, isLogin, type, isLoader) {
-    let _self = this;
     let API_URL = Constants.API_CONFIG.API_URL || "";
     if (API_URL == "") {
         API_URL = await Constants.getAPIEndpoint();
@@ -147,12 +146,10 @@ function deleteAllCookies() {
 * @returns none
 */
 export async function LoginRefresh(requestPayload, token, isLoader) {
-    let _self = this;
     // let API_URL = Constants.API_CONFIG.API_URL || "";
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let refreshToken = dashboardAPIToken.dashboardAPIToken.RefreshToken || "";
-    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
 
     return fetch("https://cognito-idp." + apoolData.Region + ".amazonaws.com/" + apoolData.UserPoolId, {
         headers: {
