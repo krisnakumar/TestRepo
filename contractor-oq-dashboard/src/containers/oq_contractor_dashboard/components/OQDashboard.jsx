@@ -1043,7 +1043,7 @@ class OQDashboard extends PureComponent {
           comingDueQualifications={this.state.comingDueQualifications}
         />
         <div className="card__title">
-          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
+          <div className="breadcrumbs noprint"><a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
           <Export
             data={this.state.rows}
             heads={this.heads}
@@ -1092,19 +1092,6 @@ class OQDashboard extends PureComponent {
               </p>
             </div>
             <div className="table has-section-view has-total-row is-table-page-view">
-              {/* <ReactDataGrid
-                ref={'oQDashboardReactDataGrid'}
-                onGridSort={this.handleGridSort}
-                enableCellSelect={false}
-                enableCellAutoFocus={false}
-                columns={this.heads}
-                rowGetter={this.rowGetter}
-                rowsCount={rows.length}
-                onGridRowsUpdated={this.handleGridRowsUpdated}
-                rowHeight={35}
-                minColumnWidth={100}
-                emptyRowsView={this.state.isInitial && OQDashboardEmptyRowsView}
-              /> */}
               <ReactTable
                 minRows={1}
                 data={rows}

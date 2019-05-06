@@ -640,7 +640,7 @@ class CTDashboard extends PureComponent {
           filterOptionsCompanies={this.state.filterOptionsCompanies}
         />
         <div className="card__title">
-          <div className="breadcrumbs noprint">&gt;<a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
+          <div className="breadcrumbs noprint"><a href={basePath + "/default.aspx"}>Home</a>&gt;<a href={basePath + "/ReportsLanding.aspx"}>Reports</a></div>
           <Export
             data={this.state.rows}
             heads={this.heads}
@@ -685,22 +685,6 @@ class CTDashboard extends PureComponent {
               <p className="section-info-description">Complete =  Number of contractor companies that have users in a role, who have completed all the training tasks in the role complete.</p>
             </div>
             <div className="table has-section-view is-table-page-view">
-              {/* <ReactDataGrid
-                ref={'contractorDashboardDataGrid'}
-                className={"contractor-training-dashboard"}
-                onGridSort={this.handleGridSort}
-                enableCellSelect={false}
-                enableCellAutoFocus={false}
-                columns={this.heads}
-                rowGetter={this.rowGetter}
-                rowsCount={rows.length}
-                onGridRowsUpdated={this.handleGridRowsUpdated}
-                rowHeight={35}
-                minColumnWidth={150}
-                emptyRowsView={this.state.isInitial && DataTableEmptyRowsView}
-                sortColumn="role"
-                sortDirection="ASC"
-              /> */}
               <ReactTable
                 minRows={1}
                 data={rows}

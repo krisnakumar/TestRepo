@@ -199,7 +199,7 @@ class App extends Component {
             debounce={250}
             timeout={autoTimeout} />
         }
-        {
+        {/* {
           !loaded &&
           <div className={`load${loading ? '' : ' loaded'}`}>
             <div className="load__icon-wrap">
@@ -208,7 +208,7 @@ class App extends Component {
               </svg>
             </div>
           </div>
-        }
+        } */}
         <div>
           {isValid && <Router />}
         </div>

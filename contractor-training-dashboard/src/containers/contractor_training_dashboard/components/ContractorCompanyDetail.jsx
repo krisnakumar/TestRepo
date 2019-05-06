@@ -90,7 +90,7 @@ class ContractorCompanyDetail extends React.Component {
       },
       {
         key: 'percentageCompleted',
-        name: '% Complete',
+        name: 'Percentage Completed',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -213,7 +213,7 @@ class ContractorCompanyDetail extends React.Component {
     let fields = [{ "Name": "CONTRACTOR_COMPANY", "Value": contractorCompanyId, "Operator": "=" }, { "Name": "ROLE_ID", "Value": roleId, "Operator": "=", "Bitwise": "and" }, { "Name": "ADMIN_ID", "Value": adminId, "Operator": "=", "Bitwise": "and" }];
 
     if (isCompleted) {
-      fields.push({ "Name": "STATUS", "Value": "COMPLETED", "Operator": "=", "Bitwise": "and" });
+      fields.push({ "Name": "STATUS", "Value": "COMPLETED", "Operator": "=", "Bitwise": "and" });     
     } else {
       fields.push({ "Name": "STATUS", "Value": "IN_COMPLETE", "Operator": "=", "Bitwise": "and" });
     }
@@ -454,21 +454,6 @@ class ContractorCompanyDetail extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                {/* <ReactDataGrid
-                  ref={'incompleteCompaniesReactDataGrid'}
-                  onGridSort={this.handleGridSort}
-                  enableCellSelect={false}
-                  enableCellAutoFocus={false}
-                  columns={this.heads}
-                  rowGetter={this.rowGetter}
-                  rowsCount={rows.length}
-                  onGridRowsUpdated={this.handleGridRowsUpdated}
-                  rowHeight={35}
-                  minColumnWidth={100}
-                  emptyRowsView={this.state.isInitial && ContractorCompanyDetailEmptyRowsView}
-                  sortColumn="company"
-                  sortDirection="ASC"
-                /> */}
                 <ReactTable
                   minRows={1}
                   data={rows}
@@ -512,7 +497,7 @@ class ContractorCompanyDetail extends React.Component {
                       Cell: this.customCell,
                     },
                     {
-                      Header: "% Complete",
+                      Header: "Percentage Completed",
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
                       headerClassName: 'header-wordwrap',

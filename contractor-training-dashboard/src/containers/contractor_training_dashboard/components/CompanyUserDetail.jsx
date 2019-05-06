@@ -90,7 +90,7 @@ class CompanyUserDetail extends React.Component {
       },
       {
         key: 'percentageCompleted',
-        name: '% Complete',
+        name: 'Percentage Completed',
         sortable: true,
         editable: false,
         getRowMetaData: row => row,
@@ -314,7 +314,7 @@ class CompanyUserDetail extends React.Component {
       taskDetails = {},
       selectedEmployee = employeeName;
     isTaskDetailsModal = true;
-
+    
     this.setState({ isTaskDetailsModal, taskDetails, selectedEmployee });
     let { dashboardAPIToken } = sessionStorage || {};
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
@@ -450,21 +450,6 @@ class CompanyUserDetail extends React.Component {
           <ModalBody>
             <div className="grid-container">
               <div className="table">
-                {/* <ReactDataGrid
-                  ref={'companyUserDetailReactDataGrid'}
-                  onGridSort={this.handleGridSort}
-                  enableCellSelect={false}
-                  enableCellAutoFocus={false}
-                  columns={this.heads}
-                  rowGetter={this.rowGetter}
-                  rowsCount={rows.length}
-                  onGridRowsUpdated={this.handleGridRowsUpdated}
-                  rowHeight={35}
-                  minColumnWidth={120}
-                  emptyRowsView={this.state.isInitial && CompanyUserDetailEmptyRowsView}
-                  sortColumn="employee"
-                  sortDirection="ASC"
-                /> */}
                 <ReactTable
                   minRows={1}
                   data={rows}
@@ -508,7 +493,7 @@ class CompanyUserDetail extends React.Component {
                       Cell: this.customCell
                     },
                     {
-                      Header: "% Complete",
+                      Header: "Percentage Completed",
                       id: "percentageCompleted",
                       accessor: "percentageCompleted",
                       headerClassName: 'header-wordwrap',
