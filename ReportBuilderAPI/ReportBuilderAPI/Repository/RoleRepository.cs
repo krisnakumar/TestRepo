@@ -17,7 +17,7 @@ namespace ReportBuilderAPI.Repository
     /// <summary>
     /// Class that manages the role
     /// </summary>
-    public class RoleRepository : DatabaseWrapper,IRole
+    public class RoleRepository : DatabaseWrapper, IRole
     {
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ReportBuilderAPI.Repository
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
             RoleResponse roleResponse = new RoleResponse();
-            List<RoleModel> roles = new List<RoleModel>();            
+            List<RoleModel> roles = new List<RoleModel>();
             string query = string.Empty;
             IDataReader sqlDataReader = null;
             try
@@ -62,19 +62,8 @@ namespace ReportBuilderAPI.Repository
                 }
                 else
                 {
-                    using (DBEntity context = new DBEntity())
-                    {
-                        roleResponse.Roles = (from r in context.Role
-                                              join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
-                                              join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
-                                              where rd.DashboardName == roleRequest.Payload.AppType
-                                              select new RoleModel
-                                              {
-                                                  RoleId = Convert.ToInt32(r.Id),
-                                                  Role = Convert.ToString(r.Name)
-                                              }).ToList();
-                        return roleResponse;
-                    }
+                    roleResponse.Roles = GetDashboardRoles(roleRequest.Payload.AppType);
+                    return roleResponse;
                 }
             }
             catch (Exception getRolesException)
@@ -82,6 +71,37 @@ namespace ReportBuilderAPI.Repository
                 LambdaLogger.Log(getRolesException.ToString());
                 roleResponse.Error = ResponseBuilder.InternalError();
                 return roleResponse;
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="appType"></param>
+        public List<RoleModel> GetDashboardRoles(string appType)
+        {
+            List<RoleModel> roleList = new List<RoleModel>();
+            try
+            {
+                using (DBEntity context = new DBEntity())
+                {
+                    roleList = (from r in context.Role
+                                join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
+                                join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
+                                where rd.DashboardName == appType
+                                select new RoleModel
+                                {
+                                    RoleId = Convert.ToInt32(r.Id),
+                                    Role = Convert.ToString(r.Name)
+                                }).ToList();
+                    return roleList;
+                }
+            }
+            catch (Exception getDashboardRolesException)
+            {
+                LambdaLogger.Log(getDashboardRolesException.ToString());
+                return roleList;
             }
         }
     }

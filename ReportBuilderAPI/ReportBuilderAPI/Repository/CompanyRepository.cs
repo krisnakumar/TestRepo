@@ -24,25 +24,45 @@ namespace ReportBuilderAPI.Repository
             CompanyResponse companyResponse = new CompanyResponse();
             try
             {
-                using (DBEntity context = new DBEntity())
-                {
-                    companyResponse.Companies = (from uc in context.UserCompany
-                                                 join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
-                                                 join c in context.Company on cc.ClientCompany equals c.Id
-                                                 where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && c.IsEnabled && uc.UserId == companyRequest.UserId && cc.ClientCompany!=uc.CompanyId
-                                                 select new CompanyModels
-                                                 {
-                                                     CompanyId = Convert.ToInt32(c.Id),
-                                                     CompanyName = Convert.ToString(c.Name)
-                                                 }).ToList();
-                    return companyResponse;
-                }
+                companyResponse.Companies = ReadCompanies(companyRequest.UserId);
+                return companyResponse;
+
             }
             catch (Exception getCompanyException)
             {
                 LambdaLogger.Log(getCompanyException.ToString());
                 companyResponse.Error = ResponseBuilder.InternalError();
                 return companyResponse;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        public List<CompanyModels> ReadCompanies(int userId)
+        {
+            List<CompanyModels> companyList = new List<CompanyModels>();
+            try
+            {
+                using (DBEntity context = new DBEntity())
+                {
+                    companyList = (from uc in context.UserCompany
+                                   join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
+                                   join c in context.Company on cc.ClientCompany equals c.Id
+                                   where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && c.IsEnabled && uc.UserId == userId && cc.ClientCompany != uc.CompanyId
+                                   select new CompanyModels
+                                   {
+                                       CompanyId = Convert.ToInt32(c.Id),
+                                       CompanyName = Convert.ToString(c.Name)
+                                   }).ToList();
+                    return companyList;
+                }
+            }
+            catch (Exception readCompaniesException)
+            {
+                LambdaLogger.Log(readCompaniesException.ToString());
+                return companyList;
             }
         }
     }
