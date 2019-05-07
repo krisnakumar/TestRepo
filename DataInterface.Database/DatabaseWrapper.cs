@@ -179,6 +179,49 @@ namespace DataInterface.Database
         /// </summary>
         /// <param name="command">Transact-SQL statement</param>
         /// <returns>A SqlDataReader object.</returns>
+        public virtual IDataReader ExecuteDataReader(string command, SqlParameter[] sqlParameters)
+        {
+            try
+            {
+                IDataReader sqlDataReader;
+                if (sqlConnection != null && sqlConnection.State == ConnectionState.Closed)
+                {
+                    sqlConnection.Open();
+                }
+
+                if (sqlConnection != null)
+                {
+                    //Creates and returns a SqlCommand object associated with the SqlConnection.
+                    SqlCommand sqlCommand = sqlConnection.CreateCommand();
+                    sqlCommand.Connection = sqlConnection;
+
+                    //Gets or sets the Transact-SQL statement, table name or stored procedure to execute at the data source.
+                    sqlCommand.CommandText = command;
+                    if (sqlParameters != null && sqlParameters.Length > 0)
+                    {
+                        sqlCommand.Parameters.AddRange(sqlParameters);
+                    }
+                    //Gets or sets the wait time before terminating the attempt to execute a command and generating an error.
+                    sqlCommand.CommandTimeout = 60;
+
+                    //Sends the CommandText to the Connection and builds a SqlDataReader.
+                    sqlDataReader = sqlCommand.ExecuteReader();
+                    return sqlDataReader;
+                }
+                return null;
+            }
+            catch (Exception executeReaderException)
+            {
+                LambdaLogger.Log(executeReaderException.ToString());
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     This method executes the Select Command and returns data
+        /// </summary>
+        /// <param name="command">Transact-SQL statement</param>
+        /// <returns>A SqlDataReader object.</returns>
         public DataSet ExecuteAdapter(string command)
         {
             DataSet dataSet = new DataSet();
@@ -245,7 +288,7 @@ namespace DataInterface.Database
         /// <summary>
         ///     This method disposes the database connection.
         /// </summary>
-        public void CloseConnection()
+        public virtual void CloseConnection()
         {
             try
             {

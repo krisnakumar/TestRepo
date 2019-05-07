@@ -8,7 +8,7 @@ using ReportBuilderAPI.IRepository;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 
 
@@ -17,7 +17,7 @@ namespace ReportBuilderAPI.Repository
     /// <summary>
     /// Class that manages the role
     /// </summary>
-    public class RoleRepository : IRole
+    public class RoleRepository : DatabaseWrapper,IRole
     {
 
         /// <summary>
@@ -28,30 +28,28 @@ namespace ReportBuilderAPI.Repository
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
             RoleResponse roleResponse = new RoleResponse();
-            List<RoleModel> roles = new List<RoleModel>();
-            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            List<RoleModel> roles = new List<RoleModel>();            
             string query = string.Empty;
+            IDataReader sqlDataReader = null;
             try
             {
                 if (roleRequest.Payload.AppType == Constants.WORKBOOK_DASHBOARD)
                 {
                     query = "EXEC dbo.Roles_GetRoles @companyId=" + roleRequest.CompanyId;
-                    using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, null))
+                    using (sqlDataReader = ExecuteDataReader(query, null))
                     {
                         if (sqlDataReader != null)
                         {
-                            if (sqlDataReader.HasRows)
+                            while (sqlDataReader.Read())
                             {
-                                while (sqlDataReader.Read())
+                                RoleModel roleModel = new RoleModel
                                 {
-                                    RoleModel roleModel = new RoleModel
-                                    {
-                                        Role = Convert.ToString(sqlDataReader["Role_Name"]),
-                                        RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
-                                    };
-                                    roles.Add(roleModel);
-                                }
+                                    Role = Convert.ToString(sqlDataReader["Role_Name"]),
+                                    RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
+                                };
+                                roles.Add(roleModel);
                             }
+
                             roleResponse.Roles = roles;
                             return roleResponse;
                         }
