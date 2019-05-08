@@ -96,7 +96,9 @@ class App extends Component {
     * @returns none
   */
   cancelAutoLogout() {
-    this.idleTimer.reset();
+    if(this.idleTimer){
+      this.idleTimer.reset()
+    }
     clearTimeout(this.timer);
     this.setState({
       modal: false
@@ -218,4 +220,4 @@ class App extends Component {
   }
 }
 
-export default hot(module)(withCookies(App));
+export default App;

@@ -20,10 +20,7 @@ class Layout extends Component {
   render() {
     return (
       <div>        
-          <Topbar
-            changeMobileSidebarVisibility={this.changeMobileSidebarVisibility}
-            changeSidebarVisibility={this.changeSidebarVisibility}
-          />
+          <Topbar />
           <TopbarWithNavigation />
       </div>
     );

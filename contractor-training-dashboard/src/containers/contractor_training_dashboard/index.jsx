@@ -1,20 +1,14 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Card, Col, Row, Container } from 'reactstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Footer from './components/Footer';
 import Layout from '../_layout/index';
 import Dashboard from './components/CTDashboard';
 
 import "babel-polyfill";
 import "isomorphic-fetch";
-// import 'core-js/fn/string/includes';
 
 class ContractorTrainingDashboard extends PureComponent {
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-  };
 
   componentDidCatch(error, info) {
     // Display fallback UI
@@ -24,16 +18,16 @@ class ContractorTrainingDashboard extends PureComponent {
   }
 
   reloadWindow() {
-    let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0; 
+    let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0;
     if (readAPIErrorCount <= 2) {
-        readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
-        sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
-        location.reload();
+      readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
+      sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);
+      location.reload();
     } else {
-        sessionStorage.removeItem('readAPIErrorCount');
-        window.location = window.location.origin;
+      sessionStorage.removeItem('readAPIErrorCount');
+      window.location = window.location.origin;
     }
-};
+  };
 
   render() {
     return (
@@ -74,4 +68,5 @@ class ContractorTrainingDashboard extends PureComponent {
   }
 }
 
-export default connect(state => ({ theme: state.theme }))(ContractorTrainingDashboard);
+// export default connect(state => ({ theme: state.theme }))(ContractorTrainingDashboard);
+export default ContractorTrainingDashboard;

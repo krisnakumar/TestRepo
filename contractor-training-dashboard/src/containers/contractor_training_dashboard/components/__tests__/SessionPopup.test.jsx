@@ -1,13 +1,13 @@
 import React from "react";
 import Enzyme, { shallow, mount } from "enzyme";
-import CTDashboard from "./CTDashboard";
+import SessionPopup from "../SessionPopup";
 import Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe("CT Dashboard", () => {
+describe("Session Popup", () => {
   test("renders", () => {
-    const wrapper = shallow(<CTDashboard />);
+    const wrapper = shallow(<SessionPopup />);
 
     expect(wrapper.exists()).toBe(true);
   });

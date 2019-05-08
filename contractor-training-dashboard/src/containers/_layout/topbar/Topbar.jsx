@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import TopbarProfile from './TopbarProfile';
-// import TopbarNotification from './TopbarNotification';
 
 const logo = `https://d2vkqsz7y0fh3j.cloudfront.net/img/content_logo.png?v=2`;
 
@@ -26,7 +25,6 @@ class Topbar extends PureComponent {
             </div>
           </div>
           <div className="topbar__right">
-            {/* <TopbarNotification /> */}
             <TopbarProfile />
           </div>
         </div>

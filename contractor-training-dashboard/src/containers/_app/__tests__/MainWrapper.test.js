@@ -1,14 +1,14 @@
 import React from "react";
 import Enzyme, { shallow, mount } from "enzyme";
-import CTDashboard from "./CTDashboard";
+import MainWrapper from "../MainWrapper";
 import Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe("CT Dashboard", () => {
+describe("Main Wrapper", () => {
   test("renders", () => {
-    const wrapper = shallow(<CTDashboard />);
-
+    // const wrapper = shallow(<p> Test </p>);
+    const wrapper = shallow(<MainWrapper />);
     expect(wrapper.exists()).toBe(true);
   });
 });

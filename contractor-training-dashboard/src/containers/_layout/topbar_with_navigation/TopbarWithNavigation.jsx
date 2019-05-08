@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { DropdownItem, DropdownToggle, DropdownMenu, UncontrolledDropdown, Dropdown } from 'reactstrap';
-import TopbarNavLink from './tobar_nav/TopbarNavLink';
 
 export default class TopbarWithNavigation extends PureComponent {
   constructor(props) {

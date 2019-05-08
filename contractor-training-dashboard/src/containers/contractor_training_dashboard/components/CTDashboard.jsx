@@ -44,11 +44,6 @@ class DataTableEmptyRowsView extends React.Component {
 };
 
 class CTDashboard extends PureComponent {
-
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
-
   constructor() {
     super();
     this.heads = [
@@ -745,4 +740,4 @@ class CTDashboard extends PureComponent {
   }
 }
 
-export default withCookies(CTDashboard);
+export default CTDashboard;
