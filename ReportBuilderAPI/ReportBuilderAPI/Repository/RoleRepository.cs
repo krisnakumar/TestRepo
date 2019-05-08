@@ -24,7 +24,7 @@ namespace ReportBuilderAPI.Repository
         /// Get shared roles based on the companyId
         /// </summary>
         /// <param name="roleRequest"></param>
-        /// <returns></returns>
+        /// <returns>Roles</returns>
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
             RoleResponse roleResponse = new RoleResponse();
@@ -76,7 +76,7 @@ namespace ReportBuilderAPI.Repository
 
 
         /// <summary>
-        /// 
+        /// Read dashboard roles from database
         /// </summary>
         /// <param name="appType"></param>
         public List<RoleModel> GetDashboardRoles(string appType)

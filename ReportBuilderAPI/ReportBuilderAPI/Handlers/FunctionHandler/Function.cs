@@ -23,30 +23,7 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
         {
             DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
         }
-        /// <summary>
-        ///  Function that helps to validate the user using user name and password
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="context"></param>
-        /// <returns>UserResponse</returns>
-        public UserResponse Login(UserRequest userRequest, ILambdaContext context = null)
-        {
-            AuthenticationRepository authenticationRepository = new AuthenticationRepository();
-            UserResponse userResponse = new UserResponse();
-            try
-            {
-                userRequest.CognitoPoolId = Environment.GetEnvironmentVariable("CognitoPoolId").ToString();
-                userRequest.CognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId").ToString();
-                return authenticationRepository.Login(userRequest, context);
-
-            }
-            catch (Exception loginException)
-            {
-                LambdaLogger.Log(loginException.ToString());
-                userResponse.Error = ResponseBuilder.InternalError();
-                return userResponse;
-            }
-        }
+        
         /// <summary>
         ///   This function generates new Identity token using refresh token
         /// </summary>

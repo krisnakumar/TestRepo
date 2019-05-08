@@ -8,8 +8,7 @@ namespace ReportBuilderAPI.IRepository
     /// Interface that helps to handle the Authentication
     /// </summary>
     public interface IAuthentication
-    {
-        UserResponse Login(UserRequest userRequest, ILambdaContext context);
+    {      
         UserResponse SilentAuth(UserRequest userRequest);
     }
 }

@@ -17,8 +17,8 @@ namespace ReportBuilderAPI.Repository
         /// <summary>
         /// Get shared companies based on the userId
         /// </summary>
-        /// <param name="roleRequest"></param>
-        /// <returns></returns>
+        /// <param name="companyRequest"></param>
+        /// <returns>CompanyResponse</returns>
         public CompanyResponse GetCompany(CompanyRequest companyRequest)
         {
             CompanyResponse companyResponse = new CompanyResponse();
@@ -37,9 +37,10 @@ namespace ReportBuilderAPI.Repository
         }
 
         /// <summary>
-        /// 
+        /// Read list of companies from Database
         /// </summary>
         /// <param name="userId"></param>
+        /// <returns>companyList</returns>
         public List<CompanyModels> ReadCompanies(int userId)
         {
             List<CompanyModels> companyList = new List<CompanyModels>();

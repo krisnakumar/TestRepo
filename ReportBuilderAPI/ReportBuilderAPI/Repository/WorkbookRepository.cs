@@ -12,7 +12,6 @@ using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 
@@ -352,91 +351,88 @@ namespace ReportBuilderAPI.Repository
             try
             {
                 //Read the data from the database
-                using (SqlDataReader sqlDataReader = databaseWrapper.ExecuteReader(query, ParameterHelper.CreateSqlParameter(parameters)))
+                using (IDataReader sqlDataReader = databaseWrapper.ExecuteDataReader(query, ParameterHelper.CreateSqlParameter(parameters)))
                 {
                     if (sqlDataReader != null)
                     {
-                        if (sqlDataReader.HasRows)
+                        while (sqlDataReader.Read())
                         {
-                            while (sqlDataReader.Read())
+                            DataTable dataTable = sqlDataReader.GetSchemaTable();
+                            //Get the workbook details from the database
+                            TaskModel taskComment = (dataTable.Select("ColumnName = 'Attempt_Comment'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Attempt_Comment"])) : null;
+
+                            WorkbookModel workbookResponse = new WorkbookModel
                             {
-                                DataTable dataTable = sqlDataReader.GetSchemaTable();
-                                //Get the workbook details from the database
-                                TaskModel taskComment = (dataTable.Select("ColumnName = 'Attempt_Comment'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(sqlDataReader["Attempt_Comment"])) : null;
 
-                                WorkbookModel workbookResponse = new WorkbookModel
-                                {
+                                EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Employee_Full_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Full_Name"]) : null,
 
-                                    EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(sqlDataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Employee_Full_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Full_Name"]) : null,
+                                WorkBookName = (dataTable.Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(sqlDataReader["workbookName"]) : (dataTable.Select("ColumnName = 'OJT_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["OJT_Name"]) : null,
 
-                                    WorkBookName = (dataTable.Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(sqlDataReader["workbookName"]) : (dataTable.Select("ColumnName = 'OJT_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["OJT_Name"]) : null,
+                                Description = (dataTable.Select("ColumnName = 'Description'").Count() == 1) ? Convert.ToString(sqlDataReader["Description"]) : null,
+                                WorkbookCreated = (dataTable.Select("ColumnName = 'datecreated'").Count() == 1) ? Convert.ToString(sqlDataReader["datecreated"]) : null,
+                                WorkbookEnabled = (dataTable.Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
 
-                                    Description = (dataTable.Select("ColumnName = 'Description'").Count() == 1) ? Convert.ToString(sqlDataReader["Description"]) : null,
-                                    WorkbookCreated = (dataTable.Select("ColumnName = 'datecreated'").Count() == 1) ? Convert.ToString(sqlDataReader["datecreated"]) : null,
-                                    WorkbookEnabled = (dataTable.Select("ColumnName = 'isEnabled'").Count() == 1) ? (bool?)(sqlDataReader["isEnabled"]) : null,
+                                WorkBookId = (dataTable.Select("ColumnName = 'Id'").Count() == 1) ? (sqlDataReader["Id"] != DBNull.Value ? (int?)sqlDataReader["Id"] : 0) : (dataTable.Select("ColumnName = 'OJT_Id'").Count() == 1) ? (sqlDataReader["OJT_Id"] != DBNull.Value ? (int?)sqlDataReader["OJT_Id"] : 0) : null,
 
-                                    WorkBookId = (dataTable.Select("ColumnName = 'Id'").Count() == 1) ? (sqlDataReader["Id"] != DBNull.Value ? (int?)sqlDataReader["Id"] : 0) : (dataTable.Select("ColumnName = 'OJT_Id'").Count() == 1) ? (sqlDataReader["OJT_Id"] != DBNull.Value ? (int?)sqlDataReader["OJT_Id"] : 0) : null,
+                                RepsRequired = (dataTable.Select("ColumnName = 'OJT_Reps_Required_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Required_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Required_Count"] : 0) : null,
 
-                                    RepsRequired = (dataTable.Select("ColumnName = 'OJT_Reps_Required_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Required_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Required_Count"] : 0) : null,
+                                RepsCompleted = (dataTable.Select("ColumnName = 'OJT_Reps_Completed_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Completed_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Completed_Count"] : 0) : null,
 
-                                    RepsCompleted = (dataTable.Select("ColumnName = 'OJT_Reps_Completed_Count'").Count() == 1) ? (sqlDataReader["OJT_Reps_Completed_Count"] != DBNull.Value ? (int?)sqlDataReader["OJT_Reps_Completed_Count"] : 0) : null,
+                                LastSignoffBy = (dataTable.Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
+                                WorkbookAssignedDate = (dataTable.Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                Repetitions = (dataTable.Select("ColumnName = 'Repetitions'").Count() == 1) ? Convert.ToString((sqlDataReader["Repetitions"])) : null,
+                                FirstAttemptDate = (dataTable.Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                LastAttemptDate = (dataTable.Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                NumberCompleted = (dataTable.Select("ColumnName = 'NumberCompleted'").Count() == 1) ? (int?)(sqlDataReader["NumberCompleted"]) : null,
 
-                                    LastSignoffBy = (dataTable.Select("ColumnName = 'LastSignOffBy'").Count() == 1) ? Convert.ToString((sqlDataReader["LastSignOffBy"])) : null,
-                                    WorkbookAssignedDate = (dataTable.Select("ColumnName = 'DateAdded'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["DateAdded"])) ? Convert.ToDateTime(sqlDataReader["DateAdded"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                    Repetitions = (dataTable.Select("ColumnName = 'Repetitions'").Count() == 1) ? Convert.ToString((sqlDataReader["Repetitions"])) : null,
-                                    FirstAttemptDate = (dataTable.Select("ColumnName = 'FirstAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["FirstAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["FirstAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                    LastAttemptDate = (dataTable.Select("ColumnName = 'LastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["LastAttemptDate"])) ? Convert.ToDateTime(sqlDataReader["LastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
-                                    NumberCompleted = (dataTable.Select("ColumnName = 'NumberCompleted'").Count() == 1) ? (int?)(sqlDataReader["NumberCompleted"]) : null,
+                                Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : (dataTable.Select("ColumnName = 'Employee_Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Role"]) : null,
 
-                                    Role = (dataTable.Select("ColumnName = 'Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Role"]) : (dataTable.Select("ColumnName = 'Employee_Role'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_Role"]) : null,
+                                CompletedWorkbook = (dataTable.Select("ColumnName = 'OJT_Completed'").Count() == 1) ? (int?)(sqlDataReader["OJT_Completed"]) : null,
 
-                                    CompletedWorkbook = (dataTable.Select("ColumnName = 'OJT_Completed'").Count() == 1) ? (int?)(sqlDataReader["OJT_Completed"]) : null,
-
-                                    TotalTasks = (dataTable.Select("ColumnName = 'OJT_Task_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Task_Count"]) : null,
+                                TotalTasks = (dataTable.Select("ColumnName = 'OJT_Task_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Task_Count"]) : null,
 
 
-                                    TotalWorkbook = (dataTable.Select("ColumnName = 'TotalWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["TotalWorkbooks"]) : null,
-                                    PastDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Past_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Past_Due_Count"]) : null,
-                                    InDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Due_Count"]) : null,
-                                    AssignedWorkBook = (dataTable.Select("ColumnName = 'OJT_Assigned_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Assigned_Count"]) : null,
-                                    UserCount = (dataTable.Select("ColumnName = 'userCount'").Count() == 1) ? (int?)(sqlDataReader["userCount"]) : null,
-                                    EntityCount = (dataTable.Select("ColumnName = 'entityCount'").Count() == 1) ? (int?)(sqlDataReader["entityCount"]) : null,
-                                    UserName = (dataTable.Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : (dataTable.Select("ColumnName = 'Employee_User_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_User_Name"]) : null,
-                                    Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
-                                    DaysToComplete = (dataTable.Select("ColumnName = 'daystocomplete'").Count() == 1) ? Convert.ToString(sqlDataReader["daystocomplete"]) : null,
-                                    AlternateName = (dataTable.Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
-                                    Email = (dataTable.Select("ColumnName = 'email'").Count() == 1) ? Convert.ToString(sqlDataReader["email"]) : null,
-                                    CreatedBy = (dataTable.Select("ColumnName = 'CreatedBy'").Count() == 1) ? Convert.ToString(sqlDataReader["CreatedBy"]) : null,
-                                    Address = (dataTable.Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
-                                    Phone = (dataTable.Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
-                                    TotalEmployees = (dataTable.Select("ColumnName = 'Subordinate_Count'").Count() == 1) ? (int?)(sqlDataReader["Subordinate_Count"]) : null,
+                                TotalWorkbook = (dataTable.Select("ColumnName = 'TotalWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["TotalWorkbooks"]) : null,
+                                PastDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Past_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Past_Due_Count"]) : null,
+                                InDueWorkBook = (dataTable.Select("ColumnName = 'OJT_Due_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Due_Count"]) : null,
+                                AssignedWorkBook = (dataTable.Select("ColumnName = 'OJT_Assigned_Count'").Count() == 1) ? (int?)(sqlDataReader["OJT_Assigned_Count"]) : null,
+                                UserCount = (dataTable.Select("ColumnName = 'userCount'").Count() == 1) ? (int?)(sqlDataReader["userCount"]) : null,
+                                EntityCount = (dataTable.Select("ColumnName = 'entityCount'").Count() == 1) ? (int?)(sqlDataReader["entityCount"]) : null,
+                                UserName = (dataTable.Select("ColumnName = 'UserName'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName"]) : (dataTable.Select("ColumnName = 'Employee_User_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Employee_User_Name"]) : null,
+                                Status = (dataTable.Select("ColumnName = 'status'").Count() == 1) ? Convert.ToString(sqlDataReader["status"]) : null,
+                                DaysToComplete = (dataTable.Select("ColumnName = 'daystocomplete'").Count() == 1) ? Convert.ToString(sqlDataReader["daystocomplete"]) : null,
+                                AlternateName = (dataTable.Select("ColumnName = 'UserName2'").Count() == 1) ? Convert.ToString(sqlDataReader["UserName2"]) : null,
+                                Email = (dataTable.Select("ColumnName = 'email'").Count() == 1) ? Convert.ToString(sqlDataReader["email"]) : null,
+                                CreatedBy = (dataTable.Select("ColumnName = 'CreatedBy'").Count() == 1) ? Convert.ToString(sqlDataReader["CreatedBy"]) : null,
+                                Address = (dataTable.Select("ColumnName = 'Address'").Count() == 1) ? Convert.ToString(sqlDataReader["Address"]) : null,
+                                Phone = (dataTable.Select("ColumnName = 'Phone'").Count() == 1) ? Convert.ToString(sqlDataReader["Phone"]) : null,
+                                TotalEmployees = (dataTable.Select("ColumnName = 'Subordinate_Count'").Count() == 1) ? (int?)(sqlDataReader["Subordinate_Count"]) : null,
 
-                                    InCompleteWorkBook = (dataTable.Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
+                                InCompleteWorkBook = (dataTable.Select("ColumnName = 'InCompletedWorkbooks'").Count() == 1) ? (int?)(sqlDataReader["InCompletedWorkbooks"]) : null,
 
-                                    UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
+                                UserId = (dataTable.Select("ColumnName = 'UserId'").Count() == 1) ? (sqlDataReader["UserId"] != DBNull.Value ? (int?)sqlDataReader["UserId"] : 0) : (dataTable.Select("ColumnName = 'Employee_Id'").Count() == 1) ? (sqlDataReader["Employee_Id"] != DBNull.Value ? (int?)sqlDataReader["Employee_Id"] : 0) : null,
 
-                                    DueDate = (dataTable.Select("ColumnName = 'OJT_Due_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["OJT_Due_Date"])) ? Convert.ToDateTime(sqlDataReader["OJT_Due_Date"]).ToString("MM/dd/yyyy") : null : null,
+                                DueDate = (dataTable.Select("ColumnName = 'OJT_Due_Date'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["OJT_Due_Date"])) ? Convert.ToDateTime(sqlDataReader["OJT_Due_Date"]).ToString("MM/dd/yyyy") : null : null,
 
-                                    TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
+                                TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (sqlDataReader["taskId"] != DBNull.Value ? (int?)sqlDataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (sqlDataReader["Task_Id"] != DBNull.Value ? (int?)sqlDataReader["Task_Id"] : 0) : null,
 
-                                    TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
+                                TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(sqlDataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Name"]) : null,
 
-                                    TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
+                                TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(sqlDataReader["Task_Code"]) : null,
 
-                                    NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
+                                NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt"]) : null,
 
-                                    LastAttemptDate_tasks = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date_Attempted"])) ? Convert.ToDateTime(sqlDataReader["Date_Attempted"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
+                                LastAttemptDate_tasks = (dataTable.Select("ColumnName = 'Date_Attempted'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(sqlDataReader["Date_Attempted"])) ? Convert.ToDateTime(sqlDataReader["Date_Attempted"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
 
-                                    Location = (dataTable.Select("ColumnName = 'Attempt_Location'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt_Location"]) : null,
-                                    Comments = taskComment?.Comment,
+                                Location = (dataTable.Select("ColumnName = 'Attempt_Location'").Count() == 1) ? Convert.ToString(sqlDataReader["Attempt_Location"]) : null,
+                                Comments = taskComment?.Comment,
 
-                                    EvaluatorName = (dataTable.Select("ColumnName = 'Submitted_By_User_Id'").Count() == 1) ? Convert.ToString(sqlDataReader["Submitted_By_User_Id"]) : null,
+                                EvaluatorName = (dataTable.Select("ColumnName = 'Submitted_By_User_Id'").Count() == 1) ? Convert.ToString(sqlDataReader["Submitted_By_User_Id"]) : null,
 
-                                    CompletedTasks = (dataTable.Select("ColumnName = 'OJT_Task_Completed_Count'").Count() == 1) ? Convert.ToString((sqlDataReader["OJT_Task_Completed_Count"])) : null
-                                };
-                                // Adding each workbook details in array list
-                                workbookList.Add(workbookResponse);
-                            }
+                                CompletedTasks = (dataTable.Select("ColumnName = 'OJT_Task_Completed_Count'").Count() == 1) ? Convert.ToString((sqlDataReader["OJT_Task_Completed_Count"])) : null
+                            };
+                            // Adding each workbook details in array list
+                            workbookList.Add(workbookResponse);
                         }
                     }
                     else
