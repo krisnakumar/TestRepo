@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SuspendedQualification from './SuspendedQualification';
+import ComingDueQualification from '../ComingDueQualification';
 
 /**
  * This Class defines the jest to test
- * the SuspendedQualification components
+ * the ComingDueQualification components
  * extending ReactDOM module.
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<SuspendedQualification />, div);
+  ReactDOM.render(<ComingDueQualification />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

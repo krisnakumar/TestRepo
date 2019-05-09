@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PastDueQualification from './PastDueQualification';
+import AssignedQualification from '../AssignedQualification';
 
 /**
  * This Class defines the jest to test
- * the PastDueQualification components
+ * the AssignedQualification components
  * extending ReactDOM module.
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<PastDueQualification />, div);
+  ReactDOM.render(<AssignedQualification />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

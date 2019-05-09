@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LockedOutQualification from './LockedOutQualification';
+import LockedOutQualification from '../LockedOutQualification';
 
 /**
  * This Class defines the jest to test

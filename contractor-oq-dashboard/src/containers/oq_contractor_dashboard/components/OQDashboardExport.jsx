@@ -12,7 +12,7 @@ componentWillReceiveProps(newProps)
 */
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
-import * as moment from 'moment';
+import moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -75,7 +75,7 @@ class OQDashboardExport extends Component {
                 data: []
             }
         ];
-
+        data = data || [];
         if (data.length > 0) {
 
             let columnKeys = [],

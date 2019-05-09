@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ComingDueQualification from './ComingDueQualification';
+import OQDashboard from '../OQDashboard';
 
 /**
  * This Class defines the jest to test
- * the ComingDueQualification components
+ * the OQDashboard components
  * extending ReactDOM module.
  */
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<ComingDueQualification />, div);
+  ReactDOM.render(<OQDashboard />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

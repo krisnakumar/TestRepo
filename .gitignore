@@ -37,3 +37,10 @@ contractor-training-dashboard/public/config/appsettings.json
 query-builder/public/config/appsettings.json
 workbooks-dashboard/public/config/appsettings.json
 *.lock
+.scannerwork/.sonar_lock
+contractor-oq-dashboard/public/config/appsettings.json
+contractor-training-dashboard/public/config/appsettings.json
+workbooks-dashboard/sonar-project.properties
+workbooks-dashboard/.scannerwork/.sonar_lock
+workbooks-dashboard/.scannerwork/report-task.txt
+workbooks-dashboard/public/config/appsettings.json
