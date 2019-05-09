@@ -1,22 +1,3 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import OQDashboardExport from '../OQDashboardExport';
-
-// jest.disableAutomock();
-
-// /**
-//  * This Class defines the jest to test
-//  * the OQDashboardExport components
-//  * extending ReactDOM module.
-//  */
-// it('renders without crashing', () => {
-//   const div = document.createElement('div');
-//   ReactDOM.render(<OQDashboardExport />, div);
-//   // ReactDOM.render(<div />, div);
-//   ReactDOM.unmountComponentAtNode(div);
-// });
-
-
 import React from "react";
 import SessionPopup from '../SessionPopup.jsx';
 import { shallow, mount } from 'enzyme';
@@ -28,7 +9,34 @@ Enzyme.configure({ adapter: new Adapter() });
 
 describe("SessionPopup component", () => {
     test("renders", () => {
-        const wrapper = shallow(<SessionPopup />);
+        const wrapper = shallow(<SessionPopup modal={false} sessionPopupType={"API"} />);
         expect(wrapper.exists()).toBe(true);
+    });
+    it("check state[modal] is false on mounting", () => {
+        const wrapper = shallow(<SessionPopup modal={false} sessionPopupType={"API"} />);  
+        expect(wrapper.state('modal')).toEqual(false);
+    });
+    it('sets loading state to true on save press', () => {
+        const component = shallow(<SessionPopup
+            modal={false} sessionPopupType={"API"} />);
+        const spy = jest.spyOn(SessionPopup.prototype, 'reloadWindow');
+        component.instance().reloadWindow();
+        expect(spy).toHaveBeenCalled();
+        component.unmount();
+    });
+    it('check state[modal] is false on after toggle()', () => {
+        const component = shallow(<SessionPopup
+            modal={false} sessionPopupType={"SESSION"} />);
+        const result = component.instance().toggle();
+        expect(component.state('modal')).toEqual(false);
+        component.unmount();
+    });
+    it('sets loading state to true on save press', () => {
+        const component = shallow(<SessionPopup
+            modal={false} sessionPopupType={"API"} />);
+        const spy = jest.spyOn(SessionPopup.prototype, 'componentWillReceiveProps');
+        component.instance().componentWillReceiveProps({ modal: true, sessionPopupType: "API"});   
+        expect(component.state('modal')).toEqual(true);
+        component.unmount();
     });
 });

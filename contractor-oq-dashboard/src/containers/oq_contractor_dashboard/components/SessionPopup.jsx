@@ -23,9 +23,6 @@ import _ from "lodash";
 import * as Constants from '../../../shared/constants';
 
 class SessionPopup extends React.Component {
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
 
     constructor(props) {
         super(props);
@@ -90,7 +87,7 @@ class SessionPopup extends React.Component {
                         <ModalHeader> Alert</ModalHeader>
                         <ModalBody>{Constants.NO_SESSION_MESSAGE}</ModalBody>
                         <ModalFooter>
-                            <button color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
+                            <button className="primary" color="primary" onClick={this.reloadWindow}>Refresh</button>{' '}
                         </ModalFooter>
                     </Modal>
                     ||
@@ -98,7 +95,7 @@ class SessionPopup extends React.Component {
                         <ModalHeader> Alert</ModalHeader>
                         <ModalBody>Your session has expired. Please login again</ModalBody>
                         <ModalFooter>
-                            <button color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
+                            <button className="primary" color="primary" onClick={this.autoLogout}>Go to Login</button>{' '}
                         </ModalFooter>
                     </Modal>
                 }
@@ -107,4 +104,4 @@ class SessionPopup extends React.Component {
     }
 }
 
-export default withCookies(SessionPopup);
+export default SessionPopup;
