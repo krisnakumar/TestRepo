@@ -1,7 +1,6 @@
 import React from "react";
 import SessionPopup from '../SessionPopup.jsx';
 import { shallow, mount } from 'enzyme';
-import { create } from "react-test-renderer";
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
@@ -16,7 +15,7 @@ describe("SessionPopup component", () => {
         const wrapper = shallow(<SessionPopup modal={false} sessionPopupType={"API"} />);  
         expect(wrapper.state('modal')).toEqual(false);
     });
-    it('sets loading state to true on save press', () => {
+    it('should call reloadWindow', () => {
         const component = shallow(<SessionPopup
             modal={false} sessionPopupType={"API"} />);
         const spy = jest.spyOn(SessionPopup.prototype, 'reloadWindow');
@@ -31,7 +30,7 @@ describe("SessionPopup component", () => {
         expect(component.state('modal')).toEqual(false);
         component.unmount();
     });
-    it('sets loading state to true on save press', () => {
+    it('should call componentWillReceiveProps', () => {
         const component = shallow(<SessionPopup
             modal={false} sessionPopupType={"API"} />);
         const spy = jest.spyOn(SessionPopup.prototype, 'componentWillReceiveProps');
@@ -39,4 +38,21 @@ describe("SessionPopup component", () => {
         expect(component.state('modal')).toEqual(true);
         component.unmount();
     });
+    it('should call autoLogout', () => {
+        const component = shallow(<SessionPopup
+            modal={false} sessionPopupType={"API"} />);
+        const spy = jest.spyOn(SessionPopup.prototype, 'autoLogout');
+        component.instance().autoLogout();
+        expect(spy).toHaveBeenCalled();
+        component.unmount();
+    });
+    it('should call render', () => {
+        const component = shallow(<SessionPopup
+            modal={false} sessionPopupType={"API"} />);
+        const spy = jest.spyOn(component.instance(), 'render');
+        //update the instance with the new spy
+        component.instance().render();
+        //invoke render
+        expect(spy).toBeCalled();
+      });
 });

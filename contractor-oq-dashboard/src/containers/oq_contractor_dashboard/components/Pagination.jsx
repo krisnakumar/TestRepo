@@ -5,7 +5,7 @@ const defaultButton = props => <button {...props}>{props.children}</button>;
 
 export default class Pagination extends React.Component {
   constructor(props) {
-    super();
+    super(props);
 
     this.changePage = this.changePage.bind(this);
 

@@ -14,10 +14,6 @@ handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
 import { CardBody, Collapse, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import { WithContext as ReactTags } from 'react-tag-input';
 import EmployeeView from '../components/EmployeeView';
 import AssignedQualification from '../components/AssignedQualification';
@@ -41,19 +37,9 @@ import "react-table/react-table.css";
  * OQDashboardEmptyRowsView Class defines the React component to render
  * the table components empty rows message if data is empty from API request
  * extending the react-data-grid module.
- */
-class OQDashboardEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
-  }
-};
+*/
 
 class OQDashboard extends PureComponent {
-
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
-
   constructor() {
     super();
     this.heads = [
@@ -62,8 +48,6 @@ class OQDashboard extends PureComponent {
         name: 'Company',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("company", props),
         cellClass: "text-left"
       },
       {
@@ -71,17 +55,13 @@ class OQDashboard extends PureComponent {
         name: 'Assigned Qualifications',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("assignedQualification", props),
         cellClass: "text-right"
       },
       {
         key: 'completedQualification',
         name: 'Qualifications',
         sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("completedQualification", props),
+        editable: false,        
         cellClass: "text-right"
       },
       {
@@ -89,46 +69,28 @@ class OQDashboard extends PureComponent {
         name: 'Disqualifications',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("inCompletedQualification", props),
         cellClass: "text-right"
       },
-      // {
-      //   key: 'suspendedQualification',//lockoutCount
-      //   name: 'Suspensions',
-      //   width: 200,
-      //   sortable: true,
-      //   editable: false,
-      //   getRowMetaData: row => row,
-      //   formatter: (props) => this.qualificationsFormatter("suspendedQualification", props),
-      //   cellClass: "text-right"
-      // },
       {
         key: 'lockoutCount',
         name: 'Locked Out 6 Months',
         width: 200,
         sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("lockoutCount", props),
+        editable: false,        
         cellClass: "text-right"
       },
       {
         key: 'comingDue',
         name: 'Expires in 30 Days',
         sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("comingDue", props),
+        editable: false,        
         cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total Employees',
         sortable: true,
-        editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.qualificationsFormatter("total", props),
+        editable: false,        
         cellClass: "text-right last-column padding-rt-2p"
       },
     ];
@@ -209,7 +171,7 @@ class OQDashboard extends PureComponent {
   */
   async componentDidMount() {
     // Do API call for loading initial table view
-  
+
     let { dashboardAPIToken } = sessionStorage || '{}',
       idToken = '';
 
@@ -276,67 +238,8 @@ class OQDashboard extends PureComponent {
       });
     }
 
-    if (length > 0) {
-      // rows.push({ company: "Total", role: "", lockoutCount: isNaN(lockoutCountCount) ? 0 : lockoutCountCount, suspendedQualification: suspendedQualificationCount, assignedQualification: assignedQualificationCount, completedQualification: completedQualificationCount, inCompletedQualification: inCompletedQualificationCount, pastDue: pastDueCount, comingDue: comingDueCount, total: totalQualificationCount });
-    }
     return rows;
   };
-
-  /**
-   * @method
-   * @name - handleGridRowsUpdated
-   * This method will update the rows of grid of the current Data Grid
-   * @param fromRow
-   * @param toRow
-   * @param updated
-   * @returns none
-   */
-  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-    const rows = this.state.rows.slice();
-
-    for (let i = fromRow; i <= toRow; i += 1) {
-      const rowToUpdate = rows[i];
-      rows[i] = update(rowToUpdate, { $merge: updated });
-    }
-
-    this.setState({ rows });
-  };
-
-  /**
-  * @method
-  * @name - handleGridSort
-  * This method will update the rows of grid of Data Grid after the sort
-  * @param sortColumn
-  * @param sortDirection
-  * @returns none
-  */
-  handleGridSort = (sortColumn, sortDirection) => {
-    const comparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-      }
-    };
-
-    const beforePopRows = this.state.rows;
-    let totalRow = "";
-    if (beforePopRows.length > 0) {
-      totalRow = beforePopRows.pop();
-    }
-
-    const sortRows = beforePopRows.slice(0),
-      rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-    if (beforePopRows.length > 0)
-      rows.push(totalRow);
-
-    this.setState({ rows });
-  };
-
-  // This method is used to setting the row data in react data grid
-  rowGetter = i => this.state.rows[i];
 
   /**
    * @method
@@ -422,7 +325,6 @@ class OQDashboard extends PureComponent {
         console.log("default", type, args);
         break;
     }
-    // this.refs.oQDashboardReactDataGrid.deselect();
   };
 
   /**
@@ -433,8 +335,6 @@ class OQDashboard extends PureComponent {
    * @returns none
    */
   async getFilterOptions() {
-    const { cookies } = this.props;
-
     let { dashboardAPIToken } = sessionStorage || '{}';
     dashboardAPIToken = JSON.parse(dashboardAPIToken);
     let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
@@ -470,7 +370,6 @@ class OQDashboard extends PureComponent {
    * @returns none
    */
   async getQualifications(userId, roles) {
-    const { cookies } = this.props;
     let rolesLength = roles.length,
       fields = [{ "Name": "USER_ID", "Value": userId, "Operator": "=" },];
     if (rolesLength > 0) {
@@ -515,7 +414,6 @@ class OQDashboard extends PureComponent {
    * @returns none
    */
   async getAssignedQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -562,7 +460,6 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   async getCompletedQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -609,7 +506,6 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   async getLockedOutQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -657,7 +553,6 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   async getInCompletedQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -704,7 +599,6 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   async getPastDueQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -751,7 +645,6 @@ class OQDashboard extends PureComponent {
   * @returns none
   */
   async getComingDueQualifications(userId, companyId) {
-    const { cookies } = this.props;
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     // get the company Id from the session storage 
@@ -847,7 +740,7 @@ class OQDashboard extends PureComponent {
      * @returns none
   */
   updateEmployeesQualificationsArray = (qualifications, contractors) => {
-    let employeesQualificationsArray = this.state.employeesQualificationsArray,
+    let employeesQualificationsArray = this.state.employeesQualificationsArray || [],
       level = this.state.level + 1,
       contractorsNames = this.state.contractorsNames,
       contractorsLength = contractorsNames.length;
@@ -855,7 +748,10 @@ class OQDashboard extends PureComponent {
     if (contractorsLength > 0)
       contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE", 'companyId': contractors.companyId });
 
-    employeesQualificationsArray.push(qualifications);
+    if(employeesQualificationsArray.constructor === Array){
+      employeesQualificationsArray.push(qualifications);
+    }
+
     this.setState({ ...this.state, level, employeesQualificationsArray, contractorsNames });
   };
 
@@ -929,7 +825,10 @@ class OQDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+
+    if(this.roleFilter.current){
+      this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+    } 
   }
 
   /**
@@ -940,12 +839,10 @@ class OQDashboard extends PureComponent {
   * @returns none
  */
   filterGoAction = () => {
-    const { cookies } = this.props;
-    // let userId = cookies.get('UserId');
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
-    let userId = contractorManagementDetails.User.Id || 0;
-    let filteredRoles = this.state.filteredRoles,
+    let userId = contractorManagementDetails ? (contractorManagementDetails.User.Id || 0) : 0;
+    let filteredRoles = this.state.filteredRoles || [ {id: 1} ],
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
     this.getQualifications(userId, roles);
@@ -1129,7 +1026,7 @@ class OQDashboard extends PureComponent {
                   {
                     Header: "Qualifications",
                     id: "completedQualification",
-                    accessor: d => d.completedQualification,
+                    accessor: "completedQualification",
                     headerClassName: 'header-wordwrap',
                     minWidth: 100,
                     className: 'text-center',
@@ -1225,12 +1122,6 @@ class OQDashboard extends PureComponent {
                 loading={!this.state.isInitial}
                 loadingText={''}
                 noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-              // defaultSorted={[
-              //   {
-              //     id: "role",
-              //     desc: false
-              //   }
-              // ]}
               />
             </div>
           </div>
@@ -1239,5 +1130,4 @@ class OQDashboard extends PureComponent {
     );
   }
 }
-
-export default withCookies(OQDashboard);
+export default OQDashboard;

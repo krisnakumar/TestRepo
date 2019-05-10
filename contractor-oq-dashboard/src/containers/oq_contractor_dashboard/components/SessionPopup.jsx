@@ -17,8 +17,6 @@ handleCellFocus(args)
 */
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import _ from "lodash";
 import * as Constants from '../../../shared/constants';
 
@@ -34,13 +32,13 @@ class SessionPopup extends React.Component {
     };
 
     /**
- * @method
- * @name - componentWillReceiveProps
- * This method will invoked whenever the props or state
- *  is update to this component class
- * @param newProps
- * @returns none
- */
+     * @method
+     * @name - componentWillReceiveProps
+     * This method will invoked whenever the props or state
+     *  is update to this component class
+     * @param newProps
+     * @returns none
+    */
     componentWillReceiveProps(newProps) {
         this.setState({
             modal: newProps.modal,
@@ -49,12 +47,12 @@ class SessionPopup extends React.Component {
     }
 
     /**
-   * @method
-   * @name - toggle
-   * This method used set state of modal to open and close
-   * @param none
-   * @returns none
-  */
+     * @method
+     * @name - toggle
+     * This method used set state of modal to open and close
+     * @param none
+     * @returns none
+    */
     toggle() {
         this.setState({
             modal: false
@@ -62,7 +60,7 @@ class SessionPopup extends React.Component {
     };
 
     reloadWindow() {
-        let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0; 
+        let readAPIErrorCount = sessionStorage.getItem('readAPIErrorCount') || 0;
         if (readAPIErrorCount < 2) {
             readAPIErrorCount = parseInt(readAPIErrorCount) + 1;
             sessionStorage.setItem('readAPIErrorCount', readAPIErrorCount);

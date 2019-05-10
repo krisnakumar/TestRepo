@@ -13,7 +13,6 @@ componentWillReceiveProps(newProps)
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
 import moment from 'moment';
-import { withCookies, Cookies } from 'react-cookie';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -54,7 +53,6 @@ class OQDashboardExport extends Component {
      * @returns multiDataSet
     */
     formatData(data, heads) {
-        const { cookies } = this.props;
    
         let { contractorManagementDetails } = sessionStorage || {};
         contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
@@ -121,4 +119,4 @@ class OQDashboardExport extends Component {
     }
 }
 
-export default withCookies(OQDashboardExport);
+export default OQDashboardExport;
