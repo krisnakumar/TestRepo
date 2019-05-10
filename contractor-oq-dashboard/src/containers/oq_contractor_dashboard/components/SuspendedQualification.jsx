@@ -14,10 +14,6 @@ handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
 import { CardBody, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import ReactDataGrid from 'react-data-grid';
-import update from 'immutability-helper';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import Export from './OQDashboardExport';
 import _ from "lodash";
 
@@ -39,7 +35,6 @@ class SuspendedQualification extends PureComponent {
                 name: 'Task Code',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
                 formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
@@ -48,7 +43,6 @@ class SuspendedQualification extends PureComponent {
                 name: 'OQ Task',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
                 formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
@@ -57,7 +51,6 @@ class SuspendedQualification extends PureComponent {
                 name: 'Employee',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
                 formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
@@ -66,7 +59,6 @@ class SuspendedQualification extends PureComponent {
                 name: 'Assigned Date',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
                 formatter: this.cellFormatter,
                 cellClass: "text-center last-column"
             }
@@ -180,9 +172,6 @@ class SuspendedQualification extends PureComponent {
         );
     };
 
-    // This method is used to setting the row data in react data grid
-    rowGetter = i => this.state.rows[i];
-
     render() {
         const { rows } = this.state;
         let pgSize = (rows.length > 10) ? rows.length : 10;
@@ -227,7 +216,7 @@ class SuspendedQualification extends PureComponent {
                                         {
                                             Header: "Employee",
                                             id: "employee",
-                                            accessor: d => d.employee,
+                                            accessor: "employee",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 300,
