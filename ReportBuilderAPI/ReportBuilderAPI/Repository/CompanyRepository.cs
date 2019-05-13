@@ -1,18 +1,18 @@
 ﻿using Amazon.Lambda.Core;
-using OnBoardLMS.WebAPI.Models;
+using DataInterface.Database;
 using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 namespace ReportBuilderAPI.Repository
 {
     /// <summary>
     /// Class that manages the Companies
     /// </summary>
-    public class CompanyRepository
+    public class CompanyRepository : DatabaseWrapper
     {
         /// <summary>
         /// Get shared companies based on the userId
@@ -22,48 +22,40 @@ namespace ReportBuilderAPI.Repository
         public CompanyResponse GetCompany(CompanyRequest companyRequest)
         {
             CompanyResponse companyResponse = new CompanyResponse();
+            IDataReader IDataReader = null;
+            List<CompanyModels> companyList = new List<CompanyModels>();
+            string query = string.Empty;
             try
             {
-                companyResponse.Companies = ReadCompanies(companyRequest.UserId);
+                query = "SELECT c.Id [company_id], c.Name [company_name] FROM dbo.UserCompany uc JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany WHERE uc.IsDefault=1 	AND uc.IsEnabled=1	AND uc.UserId=" + companyRequest.UserId + " 	AND cc.IsEnabled=1	and c.IsEnabled=1	AND cc.ClientCompany!=uc.CompanyId ";
+                using (IDataReader = ExecuteDataReader(query, null))
+                {
+                    if (IDataReader != null)
+                    {
+                        while (IDataReader.Read())
+                        {
+                            CompanyModels roleModel = new CompanyModels
+                            {
+                                CompanyId = Convert.ToInt32(IDataReader["Role_Name"]),
+                                CompanyName = Convert.ToString(IDataReader["Role_Id"])
+                            };
+                            companyList.Add(roleModel);
+                        }
+                        companyResponse.Companies = companyList;
+                    }
+                    else
+                    {
+                        companyResponse.Error = ResponseBuilder.InternalError();
+                        return companyResponse;
+                    }
+                }
                 return companyResponse;
-
             }
             catch (Exception getCompanyException)
             {
                 LambdaLogger.Log(getCompanyException.ToString());
                 companyResponse.Error = ResponseBuilder.InternalError();
                 return companyResponse;
-            }
-        }
-
-        /// <summary>
-        /// Read list of companies from Database
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>companyList</returns>
-        public List<CompanyModels> ReadCompanies(int userId)
-        {
-            List<CompanyModels> companyList = new List<CompanyModels>();
-            try
-            {
-                using (DBEntity context = new DBEntity())
-                {
-                    companyList = (from uc in context.UserCompany
-                                   join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
-                                   join c in context.Company on cc.ClientCompany equals c.Id
-                                   where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && c.IsEnabled && uc.UserId == userId && cc.ClientCompany != uc.CompanyId
-                                   select new CompanyModels
-                                   {
-                                       CompanyId = Convert.ToInt32(c.Id),
-                                       CompanyName = Convert.ToString(c.Name)
-                                   }).ToList();
-                    return companyList;
-                }
-            }
-            catch (Exception readCompaniesException)
-            {
-                LambdaLogger.Log(readCompaniesException.ToString());
-                return companyList;
             }
         }
     }

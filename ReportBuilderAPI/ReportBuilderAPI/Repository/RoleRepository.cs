@@ -33,37 +33,41 @@ namespace ReportBuilderAPI.Repository
             IDataReader sqlDataReader = null;
             try
             {
+                if (string.IsNullOrEmpty(roleRequest.Payload.AppType))
+                {
+                    throw new ArgumentException(Constants.APP_TYPE);
+                }
+
                 if (roleRequest.Payload.AppType == Constants.WORKBOOK_DASHBOARD)
                 {
                     query = "EXEC dbo.Roles_GetRoles @companyId=" + roleRequest.CompanyId;
-                    using (sqlDataReader = ExecuteDataReader(query, null))
-                    {
-                        if (sqlDataReader != null)
-                        {
-                            while (sqlDataReader.Read())
-                            {
-                                RoleModel roleModel = new RoleModel
-                                {
-                                    Role = Convert.ToString(sqlDataReader["Role_Name"]),
-                                    RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
-                                };
-                                roles.Add(roleModel);
-                            }
-
-                            roleResponse.Roles = roles;
-                            return roleResponse;
-                        }
-                        else
-                        {
-                            roleResponse.Error = ResponseBuilder.InternalError();
-                            return roleResponse;
-                        }
-                    }
                 }
                 else
                 {
-                    roleResponse.Roles = GetDashboardRoles(roleRequest.Payload.AppType);
-                    return roleResponse;
+                    query = "SELECT r.Id as Role_Id,r.Name as Role_Name  FROM Role r JOIN Reporting_DashboardRole rdr ON rdr.RoleId=r.Id JOIN Reporting_Dashboard rd on  rdr.DashboardID=rd.Id  WHERE rd.DashboardName='" + roleRequest.Payload.AppType + "'";
+                }
+                using (sqlDataReader = ExecuteDataReader(query, null))
+                {
+                    if (sqlDataReader != null)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            RoleModel roleModel = new RoleModel
+                            {
+                                Role = Convert.ToString(sqlDataReader["Role_Name"]),
+                                RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
+                            };
+                            roles.Add(roleModel);
+                        }
+
+                        roleResponse.Roles = roles;
+                        return roleResponse;
+                    }
+                    else
+                    {
+                        roleResponse.Error = ResponseBuilder.InternalError();
+                        return roleResponse;
+                    }
                 }
             }
             catch (Exception getRolesException)
@@ -72,37 +76,6 @@ namespace ReportBuilderAPI.Repository
                 roleResponse.Error = ResponseBuilder.InternalError();
                 return roleResponse;
             }
-        }
-
-
-        /// <summary>
-        /// Read dashboard roles from database
-        /// </summary>
-        /// <param name="appType"></param>
-        public List<RoleModel> GetDashboardRoles(string appType)
-        {
-            List<RoleModel> roleList = new List<RoleModel>();
-            try
-            {
-                using (DBEntity context = new DBEntity())
-                {
-                    roleList = (from r in context.Role
-                                join rdr in context.Reporting_DashboardRole on r.Id equals rdr.RoleId
-                                join rd in context.Reporting_Dashboard on rdr.DashboardID equals rd.Id
-                                where rd.DashboardName == appType
-                                select new RoleModel
-                                {
-                                    RoleId = Convert.ToInt32(r.Id),
-                                    Role = Convert.ToString(r.Name)
-                                }).ToList();
-                    return roleList;
-                }
-            }
-            catch (Exception getDashboardRolesException)
-            {
-                LambdaLogger.Log(getDashboardRolesException.ToString());
-                return roleList;
-            }
-        }
+        }        
     }
 }
