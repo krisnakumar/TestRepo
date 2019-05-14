@@ -168,7 +168,7 @@ describe("EmployeeView component", () => {
 
   it('should call async getInCompletedQualifications', () => {
     const wrapper = shallow(<EmployeeView />);
-    const spy = jest.spyOn(wrapper.instance(), 'getInCompletedQualificationsgetCompletedQualifications');
+    const spy = jest.spyOn(wrapper.instance(), 'getInCompletedQualifications');
     //update the instance with the new spy
     wrapper.instance().getInCompletedQualifications(1, 2);
     //invoke getInCompletedQualifications

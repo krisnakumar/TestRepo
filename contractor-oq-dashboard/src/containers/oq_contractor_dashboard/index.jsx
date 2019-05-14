@@ -1,25 +1,11 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { Card, Col, Row, Container } from 'reactstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Footer from './components/Footer';
-import { changeThemeToDark, changeThemeToLight } from '../../redux/actions/themeActions';
 import Layout from '../_layout/index';
 import OQDashboard from './components/OQDashboard';
 
 class OQContractorDashboard extends PureComponent {
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-  };
-
-  changeToDark = () => {
-    this.props.dispatch(changeThemeToDark());
-  };
-
-  changeToLight = () => {
-    this.props.dispatch(changeThemeToLight());
-  };
 
   componentDidCatch(error, info) {
     // Display fallback UI
@@ -51,4 +37,5 @@ class OQContractorDashboard extends PureComponent {
   }
 }
 
-export default connect(state => ({ theme: state.theme }))(OQContractorDashboard);
+// export default connect(state => ({ theme: state.theme }))(OQContractorDashboard);
+export default OQContractorDashboard;
