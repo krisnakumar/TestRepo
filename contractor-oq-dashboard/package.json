@@ -148,7 +148,8 @@
   "jest": {
     "setupTestFrameworkScriptFile": "mock-local-storage",
     "collectCoverageFrom": [
-      "src/**/*.{jsx,mjs}"
+      "src/**/*.{jsx,mjs}",
+      "!src/shared/utils/APIUtils.jsx"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"

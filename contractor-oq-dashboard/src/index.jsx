@@ -32,6 +32,6 @@ ReactDOM.render(
       </I18nextProvider>
     </BrowserRouter>
   </Provider>,
-  // document.getElementById('root') || document.createElement('div'),
-  document.getElementById('root'),
+  document.getElementById('root') || document.createElement('div'),
+  // document.getElementById('root'),
 );

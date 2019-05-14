@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { PureComponent } from 'react';
 import { DropdownItem, DropdownToggle, DropdownMenu, UncontrolledDropdown, Dropdown } from 'reactstrap';
-import TopbarNavLink from './tobar_nav/TopbarNavLink';
 
 export default class TopbarWithNavigation extends PureComponent {
   constructor(props) {
@@ -15,15 +14,15 @@ export default class TopbarWithNavigation extends PureComponent {
     };
   }
 
-  componentWillMount(){
-    var nav_menus = JSON.parse(localStorage.getItem('menus')),
-        _self = this;
-    if(nav_menus !== null) {
-        nav_menus.map(function(mainMenu, index) {  
-          _self.state.isHover[index] =  false
-        });
-      }
-  }
+  // componentWillMount(){
+  //   var nav_menus = JSON.parse(localStorage.getItem('menus')),
+  //       _self = this;
+  //   if(nav_menus !== null) {
+  //       nav_menus.map(function(mainMenu, index) {  
+  //         _self.state.isHover[index] =  false
+  //       });
+  //     }
+  // }
 
   onMouseEnter(i) {
     return () => {
