@@ -1,14 +1,74 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import AssignedQualification from '../AssignedQualification';
+import React from "react";
+import AssignedQualification from '../AssignedQualification.jsx';
+import { shallow, mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-/**
- * This Class defines the jest to test
- * the AssignedQualification components
- * extending ReactDOM module.
- */
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<AssignedQualification />, div);
-  ReactDOM.unmountComponentAtNode(div);
+Enzyme.configure({ adapter: new Adapter() });
+
+describe("AssignedQualification component", () => {
+  test("check renders", () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    expect(wrapper.exists()).toBe(true);
+  });
+  it("check state[modal] is false on mounting", () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    expect(wrapper.state('isInitial')).toEqual(false);
+  });
+  it('should call cellFormatter', () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    const spy = jest.spyOn(wrapper.instance(), 'cellFormatter');
+    //update the instance with the new spy
+    wrapper.instance().cellFormatter({ value: "" });
+    //invoke cellFormatter
+    expect(spy).toBeCalled();
+  });
+  it('should call componentDidCatch', () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    const spy = jest.spyOn(wrapper.instance(), 'componentDidCatch');
+    //update the instance with the new spy
+    wrapper.instance().componentDidCatch("Test Error", "This is error from test case");
+    //invoke componentDidCatch
+    expect(spy).toBeCalled();
+  });
+  it('should call createRows', () => {
+    let qualifications = [{ TaskCode: "", TaskName: "", EmployeeName: "", QualificationAssignedDate: "", }]
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    const spy = jest.spyOn(wrapper.instance(), 'createRows');
+    //update the instance with the new spy
+    wrapper.instance().createRows(qualifications);
+    //invoke createRows
+    expect(spy).toBeCalled();
+  });
+  it('should call componentWillReceiveProps', () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    const spy = jest.spyOn(wrapper.instance(), 'componentWillReceiveProps');
+    //update the instance with the new spy
+    wrapper.instance().componentWillReceiveProps({ assignedQualifications: [], modal: true });
+    //invoke componentWillReceiveProps
+    expect(wrapper.state('modal')).toEqual(true);
+  });
+  it('should call toggle', () => {
+    const clickFn = jest.fn();
+    const wrapper = shallow(<AssignedQualification updateState={clickFn} modal={false} pastDueQualifications={[]} />);
+    wrapper.instance().toggle();
+    expect(clickFn).toHaveBeenCalled();
+    wrapper.unmount();
+  });
+  it('should call customCell', () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);
+    const spy = jest.spyOn(wrapper.instance(), 'customCell');
+    //update the instance with the new spy
+    wrapper.instance().customCell({ value: "" });
+    //invoke customCell
+    expect(spy).toBeCalled();
+  });
+  it('should call render', () => {
+    const wrapper = shallow(<AssignedQualification modal={false} assignedQualifications={[]} />);;
+    const spy = jest.spyOn(wrapper.instance(), 'render');
+    //update the instance with the new spy
+    wrapper.instance().render();
+    //invoke render
+    expect(spy).toBeCalled();
+  });
 });

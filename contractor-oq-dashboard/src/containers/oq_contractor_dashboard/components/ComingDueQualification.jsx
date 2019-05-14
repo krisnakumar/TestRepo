@@ -14,7 +14,6 @@ handleGridSort(sortColumn, sortDirection)
 */
 import React, { PureComponent } from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
 import { instanceOf, PropTypes } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
@@ -29,18 +28,8 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-data-grid module.
  */
-class ComingDueQualificationEmptyRowsView extends React.Component {
-    render() {
-        return (<div className="no-records-found-modal">Sorry, no records</div>)
-    }
-};
 
 class ComingDueQualification extends PureComponent {
-
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
-
     constructor(props) {
         super(props);
         this.heads = [
@@ -49,8 +38,6 @@ class ComingDueQualification extends PureComponent {
                 name: 'Task Code',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
-                formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
             {
@@ -58,8 +45,6 @@ class ComingDueQualification extends PureComponent {
                 name: 'OQ Task',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
-                formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
             {
@@ -67,8 +52,6 @@ class ComingDueQualification extends PureComponent {
                 name: 'Employee',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
-                formatter: this.cellFormatter,
                 cellClass: "text-left"
             },
             {
@@ -76,8 +59,6 @@ class ComingDueQualification extends PureComponent {
                 name: 'Expiration Date',
                 sortable: true,
                 editable: false,
-                getRowMetaData: row => row,
-                formatter: this.cellFormatter,
                 cellClass: "text-center last-column"
             }
         ];
@@ -176,48 +157,6 @@ class ComingDueQualification extends PureComponent {
         this.props.updateState("isComingDueQualificationView");
     }
 
-    /**
-     * @method
-     * @name - handleGridRowsUpdated
-     * This method will update the rows of grid of the current Data Grid
-     * @param fromRow
-     * @param toRow
-     * @param updated
-     * @returns none
-     */
-    handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-        const rows = this.state.rows.slice();
-        for (let i = fromRow; i <= toRow; i += 1) {
-            const rowToUpdate = rows[i];
-            rows[i] = update(rowToUpdate, { $merge: updated });
-        }
-        this.setState({ rows });
-    };
-
-    /**
-    * @method
-    * @name - handleGridSort
-    * This method will update the rows of grid of Data Grid after the sort
-    * @param sortColumn
-    * @param sortDirection
-    * @returns none
-    */
-    handleGridSort = (sortColumn, sortDirection) => {
-        const comparer = (a, b) => {
-            if (sortDirection === 'ASC') {
-                return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-            } else if (sortDirection === 'DESC') {
-                return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-            }
-        };
-
-        const sortRows = this.state.rows.slice(0),
-            rowsLength = this.state.rows.length || 0;
-        const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-        this.setState({ rows });
-    };
-
     customCell(props) {
         let self = this;
         return (
@@ -226,9 +165,6 @@ class ComingDueQualification extends PureComponent {
             </span> || <span>{props.value}</span>
         );
     };
-
-    // This method is used to setting the row data in react data grid
-    rowGetter = i => this.state.rows[i];
 
     render() {
         const { rows } = this.state;
@@ -252,19 +188,6 @@ class ComingDueQualification extends PureComponent {
                     <ModalBody>
                         <div className="grid-container">
                             <div className="table">
-                                {/* <ReactDataGrid
-                                    ref={'comingDueQualificationReactDataGrid'}
-                                    onGridSort={this.handleGridSort}
-                                    enableCellSelect={false}
-                                    enableCellAutoFocus={false}
-                                    columns={this.heads}
-                                    rowGetter={this.rowGetter}
-                                    rowsCount={rows.length}
-                                    onGridRowsUpdated={this.handleGridRowsUpdated}
-                                    rowHeight={35}
-                                    minColumnWidth={100}
-                                    emptyRowsView={this.state.isInitial && ComingDueQualificationEmptyRowsView}
-                                /> */}
                                 <ReactTable
                                     minRows={1}
                                     data={rows}
@@ -287,7 +210,7 @@ class ComingDueQualification extends PureComponent {
                                         {
                                             Header: "Employee",
                                             id: "employee",
-                                            accessor: d => d.employee,
+                                            accessor: "employee",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 300,
@@ -314,12 +237,6 @@ class ComingDueQualification extends PureComponent {
                                     loading={!this.state.isInitial}
                                     loadingText={''}
                                     noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                                    // defaultSorted={[
-                                    //   {
-                                    //     id: "role",
-                                    //     desc: false
-                                    //   }
-                                    // ]}
                                     style={{
                                         maxHeight: "550px"
                                     }}
@@ -333,4 +250,4 @@ class ComingDueQualification extends PureComponent {
     }
 }
 
-export default withCookies(ComingDueQualification);
+export default ComingDueQualification;
