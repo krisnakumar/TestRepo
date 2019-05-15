@@ -777,7 +777,7 @@ class MyEmployees extends React.Component {
         <Modal backdropClassName={this.props.backdropClassName} backdrop={"static"} isOpen={this.state.modal} toggle={this.toggle} fade={false} centered={true} className="custom-modal-grid grid-modal-popup">
           <ModalHeader className="text-left" toggle={this.toggle}>
             My Employees{supervisorName}
-            <p className="section-info-description">Shows the progress of the direct subordinates of employee</p>
+            <p className="section-info-description">View the progress of the direct subordinates of employee</p>
           </ModalHeader>
           <div>
             <div className="export-menu-one">

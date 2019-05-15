@@ -460,6 +460,7 @@ class WorkBookProgress extends React.Component {
               </div>
             </div>
             <div className="grid-description">
+              <h5 className="pad-bt-10">View the workbook completion percentage and the total number of tasks in each workbook</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
             </div>

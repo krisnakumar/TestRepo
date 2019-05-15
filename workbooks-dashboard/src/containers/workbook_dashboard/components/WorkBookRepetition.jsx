@@ -282,6 +282,7 @@ class WorkBookRepetition extends React.Component {
               </div>
             </div>
             <div className="grid-description">
+              <h5 className="pad-bt-10">View the workbook attempts of the employee for each task</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.workbookName : ""} | {this.state.selectedWorkbook ? this.state.selectedWorkbook.percentageCompleted : ""}</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.taskCode : ""} {this.state.selectedWorkbook ? this.state.selectedWorkbook.taskName : ""}</h5>
               <h5 className="pad-bt-10">{this.state.selectedWorkbook ? this.state.selectedWorkbook.employee : ""}, {this.state.selectedWorkbook ? this.state.selectedWorkbook.role : ""}</h5>
@@ -351,14 +352,7 @@ class WorkBookRepetition extends React.Component {
                   loading={!this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                  // defaultSorted={[
-                  //   {
-                  //     id: "role",
-                  //     desc: false
-                  //   }
-                  // ]}
                   style={{
-                    // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
                     maxHeight: "550px"
                   }}
                 />
