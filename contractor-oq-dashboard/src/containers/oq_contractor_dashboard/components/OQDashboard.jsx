@@ -22,6 +22,7 @@ import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
 import LockedOutQualification from '../components/LockedOutQualification';
+import SuspendedQualification from '../components/SuspendedQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import FilterModal from './FilterModal';
@@ -61,7 +62,14 @@ class OQDashboard extends PureComponent {
         key: 'completedQualification',
         name: 'Qualifications',
         sortable: true,
-        editable: false,        
+        editable: false,
+        cellClass: "text-right"
+      },
+      {
+        key: 'suspendedQualification',
+        name: 'Suspensions',
+        sortable: true,
+        editable: false,
         cellClass: "text-right"
       },
       {
@@ -76,21 +84,21 @@ class OQDashboard extends PureComponent {
         name: 'Locked Out 6 Months',
         width: 200,
         sortable: true,
-        editable: false,        
+        editable: false,
         cellClass: "text-right"
       },
       {
         key: 'comingDue',
         name: 'Expires in 30 Days',
         sortable: true,
-        editable: false,        
+        editable: false,
         cellClass: "text-right"
       },
       {
         key: 'total',
         name: 'Total Employees',
         sortable: true,
-        editable: false,        
+        editable: false,
         cellClass: "text-right last-column padding-rt-2p"
       },
     ];
@@ -107,6 +115,8 @@ class OQDashboard extends PureComponent {
       isPastDueQualificationView: false,
       isComingDueQualificationView: false,
       isLockoutQualificationView: false,
+      isSuspendedQualificationView: false,
+      suspendedQualifications: {},
       lockoutQualifications: {},
       employeeQualifications: {},
       employeesQualificationsArray: {},
@@ -308,6 +318,9 @@ class OQDashboard extends PureComponent {
         break;
       case "completedQualification":
         this.getCompletedQualifications(userId, companyId);
+        break;
+      case "suspendedQualification":
+        this.getSuspendedQualifications(userId, companyId);
         break;
       case "inCompletedQualification":
         this.getInCompletedQualifications(userId, companyId);
@@ -593,6 +606,52 @@ class OQDashboard extends PureComponent {
 
   /**
   * @method
+  * @name - getSuspendedQualifications
+  * This method will used to get Suspended Qualifications
+  * @param userId
+  * @returns none
+  */
+  async getSuspendedQualifications(userId, companyId) {
+    let { contractorManagementDetails } = sessionStorage || '{}';
+    contractorManagementDetails = JSON.parse(contractorManagementDetails);
+    // get the company Id from the session storage 
+    let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+    let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+    const payLoad = {
+      "Fields": [
+        { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+        { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" }
+      ],
+      "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS,
+      "AppType": "OQ_DASHBOARD"
+    };
+
+    let isSuspendedQualificationView = this.state.isSuspendedQualificationView,
+      suspendedQualifications = {};
+    isSuspendedQualificationView = true;
+    this.setState({ isSuspendedQualificationView, suspendedQualifications });
+
+    let { dashboardAPIToken } = sessionStorage || '{}';
+    dashboardAPIToken = JSON.parse(dashboardAPIToken);
+    let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+    let token = idToken,
+      url = "/company/" + contractorCompanyId + "/tasks",
+      response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+    if (response == 401) {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+    } else if (response == 'API_ERROR') {
+      this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+    } else {
+      suspendedQualifications = response;
+      isSuspendedQualificationView = true;
+      this.setState({ ...this.state, isSuspendedQualificationView, suspendedQualifications });
+    }
+  };
+
+  /**
+  * @method
   * @name - getPastDueQualifications
   * This method will used to get Past Due Qualifications
   * @param userId
@@ -748,7 +807,7 @@ class OQDashboard extends PureComponent {
     if (contractorsLength > 0)
       contractorsNames.push({ 'name': contractors.employee, 'column': "NONE", 'order': "NONE", 'companyId': contractors.companyId });
 
-    if(employeesQualificationsArray.constructor === Array){
+    if (employeesQualificationsArray.constructor === Array) {
       employeesQualificationsArray.push(qualifications);
     }
 
@@ -826,9 +885,9 @@ class OQDashboard extends PureComponent {
       filteredRoles: filteredRoles,
     });
 
-    if(this.roleFilter.current){
+    if (this.roleFilter.current) {
       this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
-    } 
+    }
   }
 
   /**
@@ -842,7 +901,7 @@ class OQDashboard extends PureComponent {
     let { contractorManagementDetails } = sessionStorage || '{}';
     contractorManagementDetails = JSON.parse(contractorManagementDetails);
     let userId = contractorManagementDetails ? (contractorManagementDetails.User.Id || 0) : 0;
-    let filteredRoles = this.state.filteredRoles || [ {id: 1} ],
+    let filteredRoles = this.state.filteredRoles || [{ id: 1 }],
       roles = [];
     Object.keys(filteredRoles).map(function (i) { roles.push(filteredRoles[i].id) });
     this.getQualifications(userId, roles);
@@ -920,6 +979,12 @@ class OQDashboard extends PureComponent {
           updateState={this.updateModalState.bind(this)}
           modal={this.state.isCompletedQualificationView}
           completedQualifications={this.state.completedQualifications}
+        />
+        <SuspendedQualification
+          backdropClassName={"backdrop"}
+          updateState={this.updateModalState.bind(this)}
+          modal={this.state.isSuspendedQualificationView}
+          suspendedQualifications={this.state.suspendedQualifications}
         />
         <InCompletedQualification
           backdropClassName={"backdrop"}
@@ -1036,6 +1101,23 @@ class OQDashboard extends PureComponent {
                         <strong>
                           {
                             _.sumBy(_.values(rows), 'completedQualification')
+                          }
+                        </strong>
+                      </span>
+                    )
+                  },
+                  {
+                    Header: "Suspensions",
+                    accessor: "suspendedQualification",
+                    headerClassName: 'header-wordwrap',
+                    minWidth: 100,
+                    className: 'text-center',
+                    Cell: this.customCell,
+                    Footer: (
+                      <span>
+                        <strong>
+                          {
+                            _.sumBy(_.values(rows), 'suspendedQualification')
                           }
                         </strong>
                       </span>

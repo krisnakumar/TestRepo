@@ -189,12 +189,22 @@ describe("OQDashboard component", () => {
     expect(spy).toBeCalled();
   });
 
+
   it('should call async getInCompletedQualifications', () => {
     const wrapper = shallow(<OQDashboard />);
     const spy = jest.spyOn(wrapper.instance(), 'getInCompletedQualifications');
     //update the instance with the new spy
     wrapper.instance().getInCompletedQualifications(1, 2);
     //invoke getInCompletedQualifications
+    expect(spy).toBeCalled();
+  });
+
+  it('should call async getSuspendedQualifications', () => {
+    const wrapper = shallow(<OQDashboard />);
+    const spy = jest.spyOn(wrapper.instance(), 'getSuspendedQualifications');
+    //update the instance with the new spy
+    wrapper.instance().getSuspendedQualifications(1, 2);
+    //invoke getSuspendedQualifications
     expect(spy).toBeCalled();
   });
 

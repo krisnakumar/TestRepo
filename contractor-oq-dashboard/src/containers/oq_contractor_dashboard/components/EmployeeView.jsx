@@ -20,6 +20,7 @@ import InCompletedQualification from '../components/InCompletedQualification';
 import PastDueQualification from '../components/PastDueQualification';
 import ComingDueQualification from '../components/ComingDueQualification';
 import LockedOutQualification from '../components/LockedOutQualification';
+import SuspendedQualification from '../components/SuspendedQualification';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import Export from './OQDashboardExport';
@@ -68,6 +69,13 @@ class EmployeeView extends PureComponent {
                 cellClass: "text-right"
             },
             {
+                key: 'suspendedQualification',
+                name: 'Suspensions',
+                sortable: true,
+                editable: false,
+                cellClass: "text-right"
+            },
+            {
                 key: 'inCompletedQualification',
                 name: 'Disqualifications',
                 sortable: true,
@@ -105,6 +113,8 @@ class EmployeeView extends PureComponent {
             isPastDueQualificationView: false,
             isComingDueQualificationView: false,
             isLockoutQualificationView: false,
+            isSuspendedQualificationView: false,
+            suspendedQualifications: {},
             lockoutQualifications: {},
             assignedQualifications: {},
             completedQualifications: {},
@@ -166,14 +176,14 @@ class EmployeeView extends PureComponent {
                 companyId: qualifications[i].CompanyId,
                 employee: qualifications[i].EmployeeName + " (" + qualifications[i].UserName + " | " + qualifications[i].UserId + ")",
                 role: qualifications[i].Role || "",
-                assignedQualification: qualifications[i].AssignedQualification,
-                completedQualification: qualifications[i].CompletedQualification,
-                suspendedQualification: qualifications[i].SuspendedQualification,
-                lockoutCount: qualifications[i].LockoutCount,
-                inCompletedQualification: qualifications[i].DisQualification,
-                pastDue: qualifications[i].PastDueQualification,
-                comingDue: qualifications[i].InDueQualification,
-                total: qualifications[i].TotalEmployees,
+                assignedQualification: qualifications[i].AssignedQualification || 0,
+                completedQualification: qualifications[i].CompletedQualification || 0,
+                suspendedQualification: qualifications[i].SuspendedQualification || 0,
+                lockoutCount: qualifications[i].LockoutCount || 0,
+                inCompletedQualification: qualifications[i].DisQualification || 0,
+                pastDue: qualifications[i].PastDueQualification || 0,
+                comingDue: qualifications[i].InDueQualification || 0,
+                total: qualifications[i].TotalEmployees || 0,
             });
         }
 
@@ -298,6 +308,9 @@ class EmployeeView extends PureComponent {
                 break;
             case "completedQualification":
                 this.getCompletedQualifications(userId, companyId);
+                break;
+            case "suspendedQualification":
+                this.getSuspendedQualifications(userId, companyId);
                 break;
             case "inCompletedQualification":
                 this.getInCompletedQualifications(userId, companyId);
@@ -519,6 +532,52 @@ class EmployeeView extends PureComponent {
     };
 
     /**
+  * @method
+  * @name - getSuspendedQualifications
+  * This method will used to get Suspended Qualifications
+  * @param userId
+  * @returns none
+  */
+    async getSuspendedQualifications(userId, companyId) {
+        let { contractorManagementDetails } = sessionStorage || '{}';
+        contractorManagementDetails = JSON.parse(contractorManagementDetails);
+        // get the company Id from the session storage 
+        let adminId = parseInt(contractorManagementDetails.User.Id) || 0;
+        let contractorCompanyId = parseInt(contractorManagementDetails.Company.Id) || 0;
+        const payLoad = {
+            "Fields": [
+                { "Name": "CONTRACTOR_COMPANY", "Value": companyId, "Operator": "=" },
+                { "Name": "IN_COMPLETE", "Value": "true", "Operator": "=", "Bitwise": "and" }
+            ],
+            "ColumnList": Constants.GET_IN_COMPLETED_QUALIFICATION_COLUMNS,
+            "AppType": "OQ_DASHBOARD"
+        };
+
+        let isSuspendedQualificationView = this.state.isSuspendedQualificationView,
+            suspendedQualifications = {};
+        isSuspendedQualificationView = true;
+        this.setState({ isSuspendedQualificationView, suspendedQualifications });
+
+        let { dashboardAPIToken } = sessionStorage || '{}';
+        dashboardAPIToken = JSON.parse(dashboardAPIToken);
+        let idToken = dashboardAPIToken.dashboardAPIToken.IdToken || "";
+
+        let token = idToken,
+            url = "/company/" + contractorCompanyId + "/tasks",
+            response = await API.ProcessAPI(url, payLoad, token, false, "POST", true);
+
+        if (response == 401) {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'SESSION' });
+        } else if (response == 'API_ERROR') {
+            this.setState({ isSessionPopup: true, sessionPopupType: 'API' });
+        } else {
+            suspendedQualifications = response;
+            isSuspendedQualificationView = true;
+            this.setState({ ...this.state, isSuspendedQualificationView, suspendedQualifications });
+        }
+    };
+
+    /**
     * @method
     * @name - getPastDueQualifications
     * This method will used to get Past Due Qualifications
@@ -714,6 +773,12 @@ class EmployeeView extends PureComponent {
                     modal={this.state.isCompletedQualificationView}
                     completedQualifications={this.state.completedQualifications}
                 />
+                <SuspendedQualification
+                    backdropClassName={"backdrop"}
+                    updateState={this.updateModalState.bind(this)}
+                    modal={this.state.isSuspendedQualificationView}
+                    suspendedQualifications={this.state.suspendedQualifications}
+                />
                 <InCompletedQualification
                     backdropClassName={"no-backdrop"}
                     updateState={this.updateModalState.bind(this)}
@@ -748,7 +813,7 @@ class EmployeeView extends PureComponent {
                     </div>
                     <ModalBody>
                         <div className="grid-container">
-                            <div className="table">                                
+                            <div className="table">
                                 <ReactTable
                                     minRows={1}
                                     data={rows}
@@ -783,6 +848,14 @@ class EmployeeView extends PureComponent {
                                             minWidth: 100,
                                             className: 'text-center',
                                             Cell: this.customCell
+                                        },
+                                        {
+                                            Header: "Suspensions",
+                                            accessor: "suspendedQualification",
+                                            headerClassName: 'header-wordwrap',
+                                            minWidth: 100,
+                                            className: 'text-center',
+                                            Cell: this.customCell,
                                         },
                                         {
                                             Header: "Disqualifications",
@@ -820,7 +893,7 @@ class EmployeeView extends PureComponent {
                                     pageSize={this.state.isInitial ? 5 : pgSize}
                                     loading={this.state.isInitial}
                                     loadingText={''}
-                                    noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}                    
+                                    noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
                                     style={{
                                         maxHeight: "550px"
                                     }}

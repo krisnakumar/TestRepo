@@ -51,6 +51,13 @@ class LockedOutQualification extends PureComponent {
                 cellClass: "text-left"
             },
             {
+                key: 'reason',
+                name: 'Reason',
+                sortable: true,
+                editable: false,
+                cellClass: "text-left"
+            },
+            {
                 key: 'unlockDate',
                 name: 'Unlock Date',
                 sortable: true,
@@ -112,6 +119,7 @@ class LockedOutQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 taskName: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
+                reason: qualifications[i].Reason,
                 unlockDate: qualifications[i].UnlockDate
             });
         }
@@ -197,6 +205,15 @@ class LockedOutQualification extends PureComponent {
                                             Header: "Employee",
                                             id: "employee",
                                             accessor: "employee",
+                                            headerClassName: 'header-wordwrap',
+                                            minWidth: 100,
+                                            maxWidth: 300,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Reason",
+                                            id: "reason",
+                                            accessor: "reason",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 300,

@@ -55,6 +55,13 @@ class SuspendedQualification extends PureComponent {
                 cellClass: "text-left"
             },
             {
+                key: 'reason',
+                name: 'Reason',
+                sortable: true,
+                editable: false,
+                cellClass: "text-left"
+            },
+            {
                 key: 'assignedDate',
                 name: 'Assigned Date',
                 sortable: true,
@@ -123,10 +130,11 @@ class SuspendedQualification extends PureComponent {
                 taskCode: qualifications[i].TaskCode,
                 oQTask: qualifications[i].TaskName,
                 employee: qualifications[i].EmployeeName,
-                assignedDate: qualifications[i].AssignedDate
+                reason: qualifications[i].Reason,
+                assignedDate: qualifications[i].QualificationAssignedDate
             });
         }
-
+        debugger
         return rows;
     };
 
@@ -139,6 +147,7 @@ class SuspendedQualification extends PureComponent {
      * @returns none
     */
     componentWillReceiveProps(newProps) {
+        debugger
         let rows = this.createRows(newProps.suspendedQualifications),
             isArray = Array.isArray(newProps.suspendedQualifications),
             isInitial = isArray;
@@ -217,6 +226,15 @@ class SuspendedQualification extends PureComponent {
                                             Header: "Employee",
                                             id: "employee",
                                             accessor: "employee",
+                                            headerClassName: 'header-wordwrap',
+                                            minWidth: 100,
+                                            maxWidth: 300,
+                                            className: 'text-left'
+                                        },
+                                        {
+                                            Header: "Reason",
+                                            id: "reason",
+                                            accessor: "reason",
                                             headerClassName: 'header-wordwrap',
                                             minWidth: 100,
                                             maxWidth: 300,
