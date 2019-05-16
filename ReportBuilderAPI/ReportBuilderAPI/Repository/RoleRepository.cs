@@ -1,15 +1,14 @@
 ﻿using Amazon.Lambda.Core;
 using DataInterface.Database;
-using OnBoardLMS.WebAPI.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 
 namespace ReportBuilderAPI.Repository
@@ -30,10 +29,10 @@ namespace ReportBuilderAPI.Repository
             RoleResponse roleResponse = new RoleResponse();
             List<RoleModel> roles = new List<RoleModel>();
             string query = string.Empty;
-            IDataReader sqlDataReader = null;
+            IDataReader dataReader = null;
             try
             {
-                if (string.IsNullOrEmpty(roleRequest.Payload.AppType))
+                if (roleRequest.Payload == null && string.IsNullOrEmpty(roleRequest.Payload.AppType))
                 {
                     throw new ArgumentException(Constants.APP_TYPE);
                 }
@@ -46,16 +45,16 @@ namespace ReportBuilderAPI.Repository
                 {
                     query = "SELECT r.Id as Role_Id,r.Name as Role_Name  FROM Role r JOIN Reporting_DashboardRole rdr ON rdr.RoleId=r.Id JOIN Reporting_Dashboard rd on  rdr.DashboardID=rd.Id  WHERE rd.DashboardName='" + roleRequest.Payload.AppType + "'";
                 }
-                using (sqlDataReader = ExecuteDataReader(query, null))
+                using (dataReader = ExecuteDataReader(query, null))
                 {
-                    if (sqlDataReader != null)
+                    if (dataReader != null)
                     {
-                        while (sqlDataReader.Read())
+                        while (dataReader.Read())
                         {
                             RoleModel roleModel = new RoleModel
                             {
-                                Role = Convert.ToString(sqlDataReader["Role_Name"]),
-                                RoleId = Convert.ToInt32(sqlDataReader["Role_Id"])
+                                Role = Convert.ToString(dataReader["Role_Name"]),
+                                RoleId = Convert.ToInt32(dataReader["Role_Id"])
                             };
                             roles.Add(roleModel);
                         }
@@ -73,9 +72,9 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getRolesException)
             {
                 LambdaLogger.Log(getRolesException.ToString());
-                roleResponse.Error = ResponseBuilder.InternalError();
+                roleResponse.Error = new ExceptionHandler(getRolesException).ExceptionResponse();
                 return roleResponse;
             }
-        }        
+        }
     }
 }

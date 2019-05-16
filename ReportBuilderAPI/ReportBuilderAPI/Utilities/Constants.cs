@@ -258,5 +258,11 @@ namespace ReportBuilderAPI.Utilities
         public const string WORKBOOK_DASHBOARD = "WORKBOOK_DASHBOARD"; 
         public const string OQ_DASHBOARD = "OQ_DASHBOARD";
 
+        public const string APP_TYPE = "APPTYPE";
+
+        public const string SQLException = "SQLException";
+
+        public const string DEFAULT_MESSAGE = "DEFAULT_MESSAGE";
+
     }
 }

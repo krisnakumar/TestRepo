@@ -15,33 +15,7 @@ namespace ReportBuilderAPI.Helpers
     /// </summary>
     public class SessionGenerator
     {
-        /// <summary>
-        ///     Get token from Cognito using username  and password
-        /// </summary>
-        /// <param name="userRequest"></param>
-        /// <returns>AuthFlowResponse</returns>
-        public AuthFlowResponse GenerateAccessToken(UserRequest userRequest)
-        {
-            AuthFlowResponse authResponse;
-            try
-            {
-                AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
-                CognitoUserPool userPool = new CognitoUserPool(userRequest.CognitoPoolId, userRequest.CognitoClientId, provider);
-                CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider);
-                InitiateSrpAuthRequest authRequest = new InitiateSrpAuthRequest()
-                {
-                    Password = userRequest.Password
-                };
-                authResponse = user.StartWithSrpAuthAsync(authRequest).Result;
-                return authResponse;
-            }
-            catch (Exception sessionGeneratorException)
-            {
-                LambdaLogger.Log(sessionGeneratorException.ToString());
-                return null;
-            }
-        }
-
+       
 
         /// <summary>
         ///     Get refreshed token from Cognito using for the current user
@@ -53,6 +27,7 @@ namespace ReportBuilderAPI.Helpers
             AuthFlowResponse authResponse;
             try
             {
+               
                 AmazonCognitoIdentityProviderClient provider = new AmazonCognitoIdentityProviderClient(new AnonymousAWSCredentials(), RegionEndpoint.USWest2);
                 CognitoUserPool userPool = new CognitoUserPool("XXX_XXX", userRequest.CognitoClientId, provider);
                 CognitoUser user = new CognitoUser(userRequest.UserName, userRequest.CognitoClientId, userPool, provider, userRequest.ClientSecret) { SessionTokens = new CognitoUserSession(null, null, userRequest.Payload.RefreshToken, DateTime.Now, DateTime.Now.AddDays(10)) };

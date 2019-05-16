@@ -27,6 +27,7 @@ namespace ReportBuilderAPI.Repository
             string query = string.Empty;
             try
             {
+                if (companyRequest.UserId==0) throw new ArgumentException("UserId");
                 query = "SELECT c.Id [company_id], c.Name [company_name] FROM dbo.UserCompany uc JOIN dbo.CompanyClient cc ON uc.CompanyId=cc.OwnerCompany JOIN dbo.Company c ON c.Id = cc.ClientCompany WHERE uc.IsDefault=1 	AND uc.IsEnabled=1	AND uc.UserId=" + companyRequest.UserId + " 	AND cc.IsEnabled=1	and c.IsEnabled=1	AND cc.ClientCompany!=uc.CompanyId ";
                 using (IDataReader = ExecuteDataReader(query, null))
                 {
@@ -36,8 +37,8 @@ namespace ReportBuilderAPI.Repository
                         {
                             CompanyModels roleModel = new CompanyModels
                             {
-                                CompanyId = Convert.ToInt32(IDataReader["Role_Name"]),
-                                CompanyName = Convert.ToString(IDataReader["Role_Id"])
+                                CompanyId = Convert.ToInt32(IDataReader["company_id"]),
+                                CompanyName = Convert.ToString(IDataReader["company_name"])
                             };
                             companyList.Add(roleModel);
                         }

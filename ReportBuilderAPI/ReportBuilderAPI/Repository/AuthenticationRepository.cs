@@ -5,6 +5,7 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Resource;
 using System;
 
@@ -27,6 +28,15 @@ namespace ReportBuilderAPI.Repository
             UserResponse userResponse = new UserResponse();
             try
             {
+                if (string.IsNullOrEmpty(userRequest.CognitoClientId)) throw new ArgumentException("CognitoClientId");
+                
+                if (string.IsNullOrEmpty(userRequest.Payload.RefreshToken)) throw new ArgumentException("RefreshToken");
+
+                if (string.IsNullOrEmpty(userRequest.ClientSecret)) throw new ArgumentException("ClientSecret");
+
+                if (string.IsNullOrEmpty(userRequest.UserName)) throw new ArgumentException("UserName");
+                
+
                 //Generate Id token from the refresh token
                 AuthFlowResponse authResponse = sessionGenerator.ProcessRefreshToken(userRequest);
                 
@@ -57,9 +67,9 @@ namespace ReportBuilderAPI.Repository
             catch (Exception silentAuthException)
             {
                 LambdaLogger.Log(silentAuthException.ToString());
-                userResponse.Error = ResponseBuilder.InternalError();
+                userResponse.Error = new ExceptionHandler(silentAuthException).ExceptionResponse();
                 return userResponse;
             }
-        }
+        }        
     }
 }

@@ -70,11 +70,29 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Input: AppType.
+        /// </summary>
+        internal static string APPTYPE {
+            get {
+                return ResourceManager.GetString("APPTYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string CHECK_INPUT {
             get {
                 return ResourceManager.GetString("CHECK_INPUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oops, there was a problem..
+        /// </summary>
+        internal static string DEFAULT_MESSAGE {
+            get {
+                return ResourceManager.GetString("DEFAULT_MESSAGE", resourceCulture);
             }
         }
         
@@ -106,7 +124,7 @@ namespace ReportBuilderAPI.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid input.
+        ///   Looks up a localized string similar to Invalid input :.
         /// </summary>
         internal static string INVALID_INPUT {
             get {
@@ -165,6 +183,15 @@ namespace ReportBuilderAPI.Resource {
         internal static string SERVER_ERROR {
             get {
                 return ResourceManager.GetString("SERVER_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oops, there was a problem. Please report this to your administrator..
+        /// </summary>
+        internal static string SQLException {
+            get {
+                return ResourceManager.GetString("SQLException", resourceCulture);
             }
         }
         

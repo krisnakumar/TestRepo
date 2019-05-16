@@ -12,7 +12,7 @@ namespace ReportBuilderAPI.Helpers
     /// <summary>
     /// Class that helps to validate the user against company
     /// </summary>
-    public class Authorizer
+    public class Authorizer : DatabaseWrapper
     {
         /// <summary>
         /// Validate the user against company
@@ -60,7 +60,7 @@ namespace ReportBuilderAPI.Helpers
                         if (appType == Constants.TRAINING_DASHBOARD || appType == Constants.OQ_DASHBOARD)
                         {
                             bool clientCompany = (from uc in context.UserCompany
-                                                  join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany                   
+                                                  join cc in context.CompanyClient on uc.CompanyId equals cc.OwnerCompany
                                                   where uc.IsDefault && uc.IsEnabled && uc.Status == 1 && cc.IsEnabled && uc.UserId == userId && cc.ClientCompany == companyId
                                                   select uc.UserId).ToList().Count > 0;
                             if (clientCompany)
@@ -96,7 +96,7 @@ namespace ReportBuilderAPI.Helpers
             bool hasPermission = false;
             try
             {
-                switch(appType)
+                switch (appType)
                 {
                     case Constants.OQ_DASHBOARD:
                         hasPermission = permissionManager.Contains(ReportPerms.ViewContractorOQDashboard);
@@ -131,8 +131,7 @@ namespace ReportBuilderAPI.Helpers
         /// <returns></returns>
         public bool IsMyStudent(string studentDetails, UserCompany userCompany, int userId, int companyId, bool EnabledUsersOnly = true, bool DirectSupervisionUsersOnly = false, string altStudentQuery = "", bool RequiresCompanyManagePerm = true, bool RequireIsVisible = true)
         {
-            int userDetails = 0, studentCount = 0;
-            DatabaseWrapper databaseWrapper = new DatabaseWrapper();
+            int userDetails = 0, studentCount = 0;            
             try
             {
                 //validate
@@ -147,7 +146,7 @@ namespace ReportBuilderAPI.Helpers
                 }
                 if (studentDetails == "")
                 {
-                    studentCount = Validator.GetInt(databaseWrapper.ExecuteScalar(string.Format("select count(*) from ( {0} ) T1;", altStudentQuery)));
+                    studentCount = Validator.GetInt(ExecuteScalar(string.Format("select count(*) from ( {0} ) T1;", altStudentQuery)));
                 }
                 else
                 {

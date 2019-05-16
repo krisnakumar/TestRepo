@@ -120,8 +120,14 @@
   <data name="ACCOUNT_NOT_HAVING_PERMISSION" xml:space="preserve">
     <value>Account doesn’t have login permission</value>
   </data>
+  <data name="APPTYPE" xml:space="preserve">
+    <value>Invalid Input: AppType</value>
+  </data>
   <data name="CHECK_INPUT" xml:space="preserve">
     <value />
+  </data>
+  <data name="DEFAULT_MESSAGE" xml:space="preserve">
+    <value>Oops, there was a problem.</value>
   </data>
   <data name="DELETE_SUCCESS_MESSAGE" xml:space="preserve">
     <value>Query has been deleted succcessfully!</value>
@@ -133,7 +139,7 @@
     <value>Invalid username or password</value>
   </data>
   <data name="INVALID_INPUT" xml:space="preserve">
-    <value>Invalid input</value>
+    <value>Invalid input :</value>
   </data>
   <data name="PASSWORD_REQ" xml:space="preserve">
     <value>New password is required</value>
@@ -152,6 +158,9 @@
   </data>
   <data name="SERVER_ERROR" xml:space="preserve">
     <value>Internal error</value>
+  </data>
+  <data name="SQLException" xml:space="preserve">
+    <value>Oops, there was a problem. Please report this to your administrator.</value>
   </data>
   <data name="SYSTEM_ERROR" xml:space="preserve">
     <value>System Error</value>

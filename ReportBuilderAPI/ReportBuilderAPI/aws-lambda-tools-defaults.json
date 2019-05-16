@@ -12,8 +12,8 @@
     "framework"     : "netcoreapp2.1",
     "s3-prefix"     : "ReportBuilder.API/",
     "template"      : "serverless.template",
-    "s3-bucket"     : "reportbuilder-sandbox",
-    "stack-name"    : "reportbuilder-dev",
+    "s3-bucket"     : "reportbuilder-sandbox-dev",
+    "stack-name"    : "reportbuilder",
     "mode"          : "merge",
-    "template-parameters" : "\"ConnectionString\"=\"Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True\";\"LambdaMemory\"=\"256\";\"LambdaTimeout\"=\"30\";\"CognitoPoolId\"=\"us-west-2_nrrZaoTAs\";\"CognitoClientId\"=\"4efougb8nqj7f72ku183rudmqm\""
+    "template-parameters" : "\"ConnectionString\"=\"Server=ec2-54-214-122-184.us-west-2.compute.amazonaws.com;Initial Catalog=lms;User ID=lms_user;Password=vine@2018!;Pooling=true;Min Pool Size=20;Max Pool Size=400;MultipleActiveResultSets=True\";\"LambdaMemory\"=\"256\";\"BucketName\"=\"reportbuilder-sandbox\";\"CodeKey\"=\"ReportBuilder.API/ReportBuilderAPI-636869549205441346.zip\";\"LambdaTimeout\"=\"30\";\"CognitoPoolId\"=\"us-west-2_nrrZaoTAs\";\"CognitoClientId\"=\"4efougb8nqj7f72ku183rudmqm\";\"AWSAccountNumber\"=\"901456820714\";\"AWSRegion\"=\"us-east-2\";\"ITSEnvironment\"=\"dev\""
 }
