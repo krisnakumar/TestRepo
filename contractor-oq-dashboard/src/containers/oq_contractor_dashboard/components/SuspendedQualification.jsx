@@ -134,7 +134,6 @@ class SuspendedQualification extends PureComponent {
                 assignedDate: qualifications[i].QualificationAssignedDate
             });
         }
-        debugger
         return rows;
     };
 
@@ -147,7 +146,6 @@ class SuspendedQualification extends PureComponent {
      * @returns none
     */
     componentWillReceiveProps(newProps) {
-        debugger
         let rows = this.createRows(newProps.suspendedQualifications),
             isArray = Array.isArray(newProps.suspendedQualifications),
             isInitial = isArray;
