@@ -30,6 +30,7 @@
     "html-webpack-plugin": "2.29.0",
     "i18next": "^11.9.0",
     "immutability-helper": "^2.8.0",
+    "inline-css": "^2.4.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "20.0.4",
     "json-loader": "^0.5.7",
@@ -115,7 +116,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom --coverage"
+    "test": "node scripts/test.js --env=jsdom --coverage",
+    "posttest": "node scripts/process-coverage-report.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
