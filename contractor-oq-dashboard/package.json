@@ -155,6 +155,11 @@
       "src/**/*.{jsx,mjs}",
       "!src/shared/utils/APIUtils.jsx"
     ],
+    "coverageReporters": [
+      "html",
+      "text",
+      "cobertura"
+    ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],

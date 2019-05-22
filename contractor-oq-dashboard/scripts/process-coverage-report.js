@@ -2,8 +2,8 @@ let fs = require("fs"),
     path = require("path"),
     inline = require("inline-css");
 
-const TEST_RESULTS_DIRECTORY = "./coverage";
-const CODE_COVERAGE_DIRECTORY = "./coverage/lcov-report";
+const TEST_RESULTS_DIRECTORY = "./";
+const CODE_COVERAGE_DIRECTORY = "./coverage";
 
 fs.readdir(CODE_COVERAGE_DIRECTORY, (err, files)=> {
     if(err) { throw new Error(err); }
