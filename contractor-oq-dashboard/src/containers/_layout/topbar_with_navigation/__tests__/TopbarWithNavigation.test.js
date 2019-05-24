@@ -1,5 +1,6 @@
 
 import React from "react";
+import 'babel-polyfill';
 import TopbarWithNavigation from '../TopbarWithNavigation.jsx';
 import { shallow, mount } from 'enzyme';
 import Enzyme from 'enzyme';
