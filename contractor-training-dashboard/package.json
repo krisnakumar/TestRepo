@@ -31,6 +31,7 @@
     "immutability-helper": "^2.8.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "20.0.4",
+    "jest-trx-results-processor": "^0.1.0",
     "json-loader": "^0.5.7",
     "jsonwebtoken": "^8.5.1",
     "lodash.range": "^3.2.0",
@@ -146,9 +147,15 @@
   },
   "jest": {
     "setupTestFrameworkScriptFile": "mock-local-storage",
+    "testResultsProcessor": "./jestTrxProcessor.js",
     "collectCoverageFrom": [
       "src/**/*.{jsx,mjs}",
       "!src/shared/utils/APIUtils.jsx"
+    ],
+    "coverageReporters": [
+      "html",
+      "text",
+      "cobertura"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
