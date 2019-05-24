@@ -12,7 +12,7 @@ componentWillReceiveProps(newProps)
 */
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
-import * as moment from 'moment';
+import moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -60,8 +60,11 @@ class CTDashboardExport extends Component {
            contractorManagementDetails = contractorManagementDetails ? JSON.parse(contractorManagementDetails) : {};
         let runByUser = contractorManagementDetails.User ? contractorManagementDetails.User.FullName : "";
 
-        let runByUserMock = cookies.get('UserName') || "",
-            runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
+        let runByUserMock = "";
+        if(cookies){
+            runByUserMock = cookies.get('UserName')
+        }
+        let runByDateTime = moment().format('MM/DD/YYYY hh:mm:ss A'),
             userDetails = "Run By " + runByUser + " " + runByDateTime;
 
         let multiDataSet = [
@@ -122,4 +125,4 @@ class CTDashboardExport extends Component {
     }
 }
 
-export default withCookies(CTDashboardExport);
+export default CTDashboardExport;

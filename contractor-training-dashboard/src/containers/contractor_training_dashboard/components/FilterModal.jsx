@@ -11,17 +11,11 @@ METHODS
 */
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input } from 'reactstrap';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import { WithContext as ReactTags } from 'react-tag-input';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
 class FilterModal extends React.Component {
-
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
 
     constructor(props) {
         super(props);
@@ -134,7 +128,10 @@ class FilterModal extends React.Component {
     */
     refreshList() {
         let element = document.getElementById('filterSearchInput'),
-            value = element.value || "";
+            value = "";
+        if(element && element.value){
+            value = element.value;
+        }
         this.setState({
             filterSearchValue: value.trim()
         });
@@ -274,4 +271,4 @@ class FilterModal extends React.Component {
     }
 }
 
-export default withCookies(FilterModal);
+export default FilterModal;

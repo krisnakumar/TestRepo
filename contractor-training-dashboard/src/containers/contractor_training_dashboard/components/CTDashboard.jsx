@@ -15,10 +15,7 @@ handleGridSort(sortColumn, sortDirection)
 import React, { PureComponent } from 'react';
 import { Collapse, Button, CardBody, Card, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'whatwg-fetch'
-import ReactDataGrid from 'react-data-grid';
 import update from 'immutability-helper';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import { WithContext as ReactTags } from 'react-tag-input';
 import * as API from '../../../shared/utils/APIUtils';
 import ContractorCompanyDetail from './ContractorCompanyDetail';
@@ -37,11 +34,6 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class DataTableEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found">Sorry, no records</div>)
-  }
-};
 
 class CTDashboard extends PureComponent {
   constructor() {
@@ -53,8 +45,6 @@ class CTDashboard extends PureComponent {
         sortable: true,
         editable: false,
         width: 700,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -62,8 +52,6 @@ class CTDashboard extends PureComponent {
         name: 'Incomplete Companies',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.roleDetailsFormatter("incompleteCompanies", props),
         cellClass: "text-center"
       },
       {
@@ -71,8 +59,6 @@ class CTDashboard extends PureComponent {
         name: 'Completed Companies',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.roleDetailsFormatter("completedCompanies", props),
         cellClass: "text-center last-column padding-rt-2p"
       }
     ];
@@ -395,50 +381,6 @@ class CTDashboard extends PureComponent {
   };
 
   /**
-   * @method
-   * @name - handleGridRowsUpdated
-   * This method will update the rows of grid of the current Data Grid
-   * @param fromRow
-   * @param toRow
-   * @param updated
-   * @returns none
-   */
-  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-    const rows = this.state.rows.slice();
-
-    for (let i = fromRow; i <= toRow; i += 1) {
-      const rowToUpdate = rows[i];
-      rows[i] = update(rowToUpdate, { $merge: updated });
-    }
-
-    this.setState({ rows });
-  };
-
-  /**
-   * @method
-   * @name - handleGridSort
-   * This method will update the rows of grid of Data Grid after the sort
-   * @param sortColumn
-   * @param sortDirection
-   * @returns none
-   */
-  handleGridSort = (sortColumn, sortDirection) => {
-    const comparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-      }
-    };
-
-    const sortRows = this.state.rows.slice(0),
-      rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-    this.setState({ rows });
-  };
-
-  /**
   * @method
   * @name - handleCellClick
   * This method will trigger the event of API's respective to cell clicked Data Grid
@@ -461,9 +403,6 @@ class CTDashboard extends PureComponent {
     }
     // this.refs.contractorDashboardDataGrid.deselect();
   };
-
-  // This method is used to setting the row data in react data grid
-  rowGetter = i => this.state.rows[i];
 
   /**
   * @method
@@ -539,7 +478,9 @@ class CTDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+    if(this.roleFilter.current){
+      this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+    }
   }
 
   /**
@@ -555,7 +496,9 @@ class CTDashboard extends PureComponent {
     this.setState({
       filteredCompanies: filteredCompanies,
     });
-    this.companyFilter.current.selectMultipleOption(true, this, filteredCompanies);
+    if(this.companyFilter.current){
+      this.companyFilter.current.selectMultipleOption(true, this, filteredCompanies);
+    }
   }
 
   /** handleCompanyDelete
@@ -695,7 +638,7 @@ class CTDashboard extends PureComponent {
                   {
                     Header: "Incomplete Companies",
                     id: "incompleteCompanies",
-                    accessor: d => d.incompleteCompanies,
+                    accessor: "incompleteCompanies",
                     headerClassName: 'header-wordwrap',
                     minWidth: 200,
                     maxWidth: 300,

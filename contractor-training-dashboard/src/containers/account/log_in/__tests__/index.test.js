@@ -8,7 +8,6 @@ Enzyme.configure({ adapter: new Adapter() });
 describe("CT Dashboard Layout", () => {
   test("renders", () => {
     const wrapper = shallow(<LoginFormIndex />);
-
     expect(wrapper.exists()).toBe(true);
   });
 });

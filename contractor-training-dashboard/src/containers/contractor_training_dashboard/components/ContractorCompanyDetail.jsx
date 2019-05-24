@@ -18,9 +18,7 @@ handleCellFocus(args)
 import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'whatwg-fetch'
-import ReactDataGrid from 'react-data-grid';
 import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import CompanyUserDetail from './CompanyUserDetail';
 import SessionPopup from './SessionPopup';
@@ -35,17 +33,8 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react data grid module.
  */
-class ContractorCompanyDetailEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
-  }
-};
 
 class ContractorCompanyDetail extends React.Component {
-
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -57,8 +46,6 @@ class ContractorCompanyDetail extends React.Component {
         sortable: true,
         width: 500,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
         cellClass: "text-left"
       },
       {
@@ -66,8 +53,6 @@ class ContractorCompanyDetail extends React.Component {
         name: 'Incomplete Users',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.cellClickFormatter("incompleteUsers", props),
         cellClass: "text-center"
       },
       {
@@ -75,8 +60,6 @@ class ContractorCompanyDetail extends React.Component {
         name: 'Completed Users',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.cellClickFormatter("completedUsers", props),
         cellClass: "text-center"
       },
       {
@@ -84,8 +67,6 @@ class ContractorCompanyDetail extends React.Component {
         name: 'Total',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: (props) => this.cellClickFormatter("total", props),
         cellClass: "text-center"
       },
       {
@@ -93,8 +74,6 @@ class ContractorCompanyDetail extends React.Component {
         name: 'Percentage Completed',
         sortable: true,
         editable: false,
-        getRowMetaData: row => row,
-        formatter: this.cellFormatter,
         cellClass: "text-center last-column"
       },
     ];
@@ -182,7 +161,6 @@ class ContractorCompanyDetail extends React.Component {
       this.state.rows = rows;
       this.state.isInitial = isInitial;
       this.state.title = newProps.title || "";
-      this.handleGridSort("company", "ASC");
     } else {
       this.setState({
         modal: newProps.modal,
@@ -280,64 +258,6 @@ class ContractorCompanyDetail extends React.Component {
 
   /**
    * @method
-   * @name - handleGridRowsUpdated
-   * This method will update the rows of grid of the current Data Grid
-   * @param fromRow
-   * @param toRow
-   * @param updated
-   * @returns none
-   */
-  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-    const rows = this.state.rows.slice();
-
-    for (let i = fromRow; i <= toRow; i += 1) {
-      const rowToUpdate = rows[i];
-      rows[i] = update(rowToUpdate, { $merge: updated });
-    }
-
-    this.setState({ rows });
-  };
-
-  /**
-   * @method
-   * @name - handleGridSort
-   * This method will update the rows of grid of Data Grid after the sort
-   * @param sortColumn
-   * @param sortDirection
-   * @returns none
-   */
-  handleGridSort = (sortColumn, sortDirection) => {
-    let isPercentage = sortColumn.includes('percentage');
-
-    const comparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-      }
-    };
-
-    const percentageComparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (parseInt(a[sortColumn]) <= parseInt(b[sortColumn])) ? 1 : -1;
-      }
-    };
-
-    const sortRows = this.state.rows.slice(0),
-      rowsLength = this.state.rows.length || 0;
-
-    let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-    if (isPercentage)
-      rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
-
-    this.setState({ rows });
-  };
-
-  /**
-   * @method
    * @name - handleCellClick
    * This method will trigger the event of APIs respective to cell clicked Data Grid
    * @param type
@@ -411,9 +331,6 @@ class ContractorCompanyDetail extends React.Component {
     );
   }
 
-  // This method is used to setting the row data in react data grid
-  rowGetter = i => this.state.rows[i];
-
   render() {
     const { rows, title } = this.state;
     let titleText = title || "";
@@ -469,7 +386,7 @@ class ContractorCompanyDetail extends React.Component {
                     {
                       Header: "Incomplete Users",
                       id: "incompleteUsers",
-                      accessor: d => d.incompleteUsers,
+                      accessor: "incompleteUsers",
                       headerClassName: 'header-wordwrap',
                       minWidth: 150,
                       maxWidth: 200,
@@ -537,4 +454,4 @@ class ContractorCompanyDetail extends React.Component {
   }
 }
 
-export default withCookies(ContractorCompanyDetail);
+export default ContractorCompanyDetail;

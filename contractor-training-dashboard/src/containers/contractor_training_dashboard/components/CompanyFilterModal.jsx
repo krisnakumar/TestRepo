@@ -19,10 +19,6 @@ import "react-picky/dist/picky.css";
 
 class CompanyFilterModal extends React.Component {
 
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
-
     constructor(props) {
         super(props);
 
@@ -134,7 +130,10 @@ class CompanyFilterModal extends React.Component {
     */
     refreshList() {
         let element = document.getElementById('companyFilterSearchInput'),
-            value = element.value || "";
+            value = "";
+            if(element && element.value){
+                value = element.value;
+            }
         this.setState({
             companyFilterSearchValue: value.trim()
         });
@@ -273,4 +272,4 @@ class CompanyFilterModal extends React.Component {
     }
 }
 
-export default withCookies(CompanyFilterModal);
+export default CompanyFilterModal;

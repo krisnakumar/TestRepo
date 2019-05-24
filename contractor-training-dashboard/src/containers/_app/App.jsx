@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../../scss/app.scss';
 import Router from './Router';
 import IdleTimer from 'react-idle-timer'
-import { withCookies, Cookies } from 'react-cookie';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import * as Constants from '../../shared/constants';
 import * as API from '../../shared/utils/APIUtils';

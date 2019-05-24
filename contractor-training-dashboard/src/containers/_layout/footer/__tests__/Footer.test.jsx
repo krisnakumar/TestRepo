@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Footer from './Footer';
+import Footer from '../Footer';
 
 /**
  * This Class defines the jest to test
