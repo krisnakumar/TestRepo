@@ -8,6 +8,7 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
@@ -264,7 +265,7 @@ namespace ReportBuilderAPI.Repository
 
                 if (queryBuilderRequest.AppType == Constants.WORKBOOK_DASHBOARD)
                 {
-                    if (queryBuilderRequest.ColumnList.Contains(Constants.ASSIGNED_WORKBOOK))
+                    if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.WORKBOOK_DETAILS).Select(y => y.Name).FirstOrDefault() == Constants.WORKBOOK_DETAILS)
                     {
                         userId = parameterList["userId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetDashboardSummary  @companyId  =" + companyId + " , @supervisorId  = " + userId + " , @showTopLevel = " + CheckSupervisor(companyId, Convert.ToInt32(userId));
@@ -294,14 +295,14 @@ namespace ReportBuilderAPI.Repository
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetAssignedOJTs   @companyId  =" + companyId + " , @supervisorId  = " + userId;
                     }
 
-                    else if (queryBuilderRequest.ColumnList.Contains(Constants.TASK_ID))
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.TASK_PROGRESS).Select(y => y.Name).FirstOrDefault() == Constants.TASK_PROGRESS)
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
                         query = "EXEC  dbo.Training_OJT_Dashboard_GetTaskProgress   @companyId  =" + companyId + " , @studentId   = " + userId + ", @OJTId =" + workbookID;
                     }
 
-                    else if (queryBuilderRequest.ColumnList.Contains(Constants.NUMBER_OF_ATTEMPTS))
+                    else if (queryBuilderRequest.Fields.Where(x => x.Name == Constants.REP_PROGRESS).Select(y => y.Name).FirstOrDefault() == Constants.REP_PROGRESS)
                     {
                         userId = parameterList["userId"].ToString();
                         workbookID = parameterList["workbookId"].ToString();
@@ -341,7 +342,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getEmployeeDetails)
             {
                 LambdaLogger.Log(getEmployeeDetails.ToString());
-                workbookResponse.Error = ResponseBuilder.InternalError();
+                workbookResponse.Error = new ExceptionHandler(getEmployeeDetails).ExceptionResponse();
                 return workbookResponse;
             }
         }

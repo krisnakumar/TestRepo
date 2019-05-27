@@ -74,6 +74,8 @@ namespace ReportBuilderAPI.Utilities
         public const string SUPERVISOR_NAME = "SUPERVISOR_NAME";
         public const string CONTRACTOR_NAME = "CONTRACTOR_NAME";
         public const string ASSIGNED_WORKBOOK = "ASSIGNED_WORKBOOK";
+        public const string TASK_PROGRESS = "TASK_PROGRESS";
+        public const string REP_PROGRESS = "REP_PROGRESS";
         public const string WORKBOOK_NAME = "WORKBOOK_NAME";
         public const string WORKBOOK_DUE = "WORKBOOK_DUE";
         public const string PAST_DUE_WORKBOOK = "PAST_DUE_WORKBOOK";
@@ -131,6 +133,9 @@ namespace ReportBuilderAPI.Utilities
         public const string DATE_ADDED = "DATE_ADDED";
 
         public const string ASSIGNED = "ASSIGNED";
+
+        public const string WORKBOOK_DETAILS = "WORKBOOK_DETAILS";
+
         public const string NULL = "NULL";
         public const string COMPLETED = "COMPLETED";
         public const string LOCKOUT_COUNT = "LOCKOUT_COUNT";

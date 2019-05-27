@@ -6,6 +6,7 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
@@ -227,7 +228,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getEmployeeDetailsException)
             {
                 LambdaLogger.Log(getEmployeeDetailsException.ToString());
-                employeeResponse.Error = ResponseBuilder.InternalError();
+                employeeResponse.Error = new ExceptionHandler(getEmployeeDetailsException).ExceptionResponse();
                 return employeeResponse;
             }           
         }

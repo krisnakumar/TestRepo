@@ -14,6 +14,7 @@ namespace ReportBuilderAPI.Helpers
     /// </summary>
     public class Authorizer : DatabaseWrapper
     {
+
         /// <summary>
         /// Validate the user against company
         /// </summary>
@@ -23,6 +24,7 @@ namespace ReportBuilderAPI.Helpers
         {
             try
             {
+          
                 using (DBEntity context = new DBEntity())
                 {
                     //check whether the user has access to the company  

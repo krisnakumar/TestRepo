@@ -7,12 +7,13 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Resource;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+
 
 
 namespace ReportBuilderAPI.Repository
@@ -122,7 +123,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception saveQueryException)
             {
                 LambdaLogger.Log(saveQueryException.ToString());
-                queryResponse.Error = ResponseBuilder.InternalError();
+                queryResponse.Error = new ExceptionHandler(saveQueryException).ExceptionResponse();
                 return queryResponse;
             }
             finally
@@ -180,7 +181,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getUserQueriesException)
             {
                 LambdaLogger.Log(getUserQueriesException.ToString());
-                queryResponse.Error = ResponseBuilder.InternalError();
+                queryResponse.Error = new ExceptionHandler(getUserQueriesException).ExceptionResponse();
                 return queryResponse;
             }
             finally
@@ -235,7 +236,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception renameQueryException)
             {
                 LambdaLogger.Log(renameQueryException.ToString());
-                queryResponse.Error = ResponseBuilder.InternalError();
+                queryResponse.Error = new ExceptionHandler(renameQueryException).ExceptionResponse();
                 return queryResponse;
             }
             finally
@@ -287,7 +288,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception deleteQueryException)
             {
                 LambdaLogger.Log(deleteQueryException.ToString());
-                queryResponse.Error = ResponseBuilder.InternalError();
+                queryResponse.Error = new ExceptionHandler(deleteQueryException).ExceptionResponse();
                 return queryResponse;
             }
             finally
@@ -344,7 +345,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getUserQueriesException)
             {
                 LambdaLogger.Log(getUserQueriesException.ToString());
-                queryResponse.Error = ResponseBuilder.InternalError();
+                queryResponse.Error = new ExceptionHandler(getUserQueriesException).ExceptionResponse();
                 return queryResponse;
             }
             finally

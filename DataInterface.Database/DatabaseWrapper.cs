@@ -19,7 +19,14 @@ namespace DataInterface.Database
         /// </summary>
         public DatabaseWrapper()
         {
-            sqlConnection = new SqlConnection(string.Format(_connectionString));
+            try
+            {
+                sqlConnection = new SqlConnection(string.Format(_connectionString));
+            }
+            catch(Exception connectionString)
+            {
+                LambdaLogger.Log(connectionString.ToString());
+            }
         }
 
         /// <summary>
@@ -257,7 +264,7 @@ namespace DataInterface.Database
         /// </summary>
         /// <param name="command"></param>
         /// <returns>id</returns>
-        public int ExecuteScalar(string command)
+        public virtual int ExecuteScalar(string command)
         {
             try
             {

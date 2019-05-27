@@ -29,7 +29,6 @@ namespace ReportBuilderAPI.Repository
             RoleResponse roleResponse = new RoleResponse();
             List<RoleModel> roles = new List<RoleModel>();
             string query = string.Empty;
-            IDataReader dataReader = null;
             try
             {
                 if (roleRequest.Payload == null && string.IsNullOrEmpty(roleRequest.Payload.AppType))
@@ -45,6 +44,39 @@ namespace ReportBuilderAPI.Repository
                 {
                     query = "SELECT r.Id as Role_Id,r.Name as Role_Name  FROM Role r JOIN Reporting_DashboardRole rdr ON rdr.RoleId=r.Id JOIN Reporting_Dashboard rd on  rdr.DashboardID=rd.Id  WHERE rd.DashboardName='" + roleRequest.Payload.AppType + "'";
                 }
+                var roleList = ReadRole(query);
+                if (roleList != null)
+                {
+                    roleResponse.Roles = roleList;
+                    return roleResponse;
+                }
+                else
+                {
+                    roleResponse.Error = ResponseBuilder.InternalError();
+                    return roleResponse;
+                }
+
+            }
+            catch (Exception getRolesException)
+            {
+                LambdaLogger.Log(getRolesException.ToString());
+                roleResponse.Error = new ExceptionHandler(getRolesException).ExceptionResponse();
+                return roleResponse;
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        private List<RoleModel> ReadRole(string query)
+        {
+            List<RoleModel> roleList = new List<RoleModel>();
+            IDataReader dataReader = null;
+            try
+            {
                 using (dataReader = ExecuteDataReader(query, null))
                 {
                     if (dataReader != null)
@@ -56,24 +88,17 @@ namespace ReportBuilderAPI.Repository
                                 Role = Convert.ToString(dataReader["Role_Name"]),
                                 RoleId = Convert.ToInt32(dataReader["Role_Id"])
                             };
-                            roles.Add(roleModel);
+                            roleList.Add(roleModel);
                         }
-
-                        roleResponse.Roles = roles;
-                        return roleResponse;
-                    }
-                    else
-                    {
-                        roleResponse.Error = ResponseBuilder.InternalError();
-                        return roleResponse;
+                        return roleList;
                     }
                 }
+                return roleList;
             }
-            catch (Exception getRolesException)
+            catch (Exception roleException)
             {
-                LambdaLogger.Log(getRolesException.ToString());
-                roleResponse.Error = new ExceptionHandler(getRolesException).ExceptionResponse();
-                return roleResponse;
+                LambdaLogger.Log(roleException.ToString());
+                return null;
             }
         }
     }

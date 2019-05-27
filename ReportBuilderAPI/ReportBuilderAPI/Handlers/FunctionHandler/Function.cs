@@ -21,9 +21,20 @@ namespace ReportBuilderAPI.Handlers.FunctionHandler
     {
         public Function()
         {
-            DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+            try
+            {
+                DatabaseWrapper._connectionString = Environment.GetEnvironmentVariable("ConnectionString").ToString();
+            }
+            catch (Exception connectionException)
+            {
+                LambdaLogger.Log(connectionException.ToString());
+            }
         }
-        
+
+        public Function(string connectionString)
+        {
+            DatabaseWrapper._connectionString = connectionString;
+        }
         /// <summary>
         ///   This function generates new Identity token using refresh token
         /// </summary>

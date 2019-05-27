@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Amazon.Lambda.APIGatewayEvents;
-using Newtonsoft.Json;
+
 using ReportBuilder.Models.Models;
 using ReportBuilderAPI.Handlers.FunctionHandler;
 using ReportBuilder.Models.Request;
@@ -46,24 +45,13 @@ namespace ReportBuilder.UnitTest.TestModules.Tasks
             };
             tasksList.Add(task1);
 
-            //Dictionary<string, string> pathValues = new Dictionary<string, string>
-            //{
-            //    { "companyId", "6" }
-            //};
-
-            //APIGatewayProxyRequest aPIGatewayProxyRequest = new APIGatewayProxyRequest
-            //{
-            //    Body = JsonConvert.SerializeObject(taskRequest),
-            //    PathParameters = pathValues
-            //};
-
             TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
             List <TaskModel> tasksResponse = taskResponse.Tasks;
             Assert.AreNotEqual(0, tasksResponse.Count);
             Assert.AreEqual(90, tasksResponse[0].TaskId);
             Assert.AreNotEqual("", tasksResponse[0].TaskName);
             Assert.IsTrue(tasksResponse[0].EvaluatorName != "");
-            // Assert.AreEqual(200, taskResponse.StatusCode);
+            
         }
 
         [TestMethod]

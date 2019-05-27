@@ -7,6 +7,7 @@ using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Helpers;
 using ReportBuilderAPI.IRepository;
+using ReportBuilderAPI.Logger;
 using ReportBuilderAPI.Utilities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace ReportBuilderAPI.Repository
     /// </summary>
     public class TaskRepository : DatabaseWrapper, ITask
     {
+
         /// <summary>
         /// Create the query to depends upon the request
         /// </summary>
@@ -32,7 +34,6 @@ namespace ReportBuilderAPI.Repository
             int companyId = 0;
             try
             {
-
                 companyId = queryBuilderRequest.CompanyId;
                 selectQuery = "SELECT  DISTINCT";
 
@@ -115,16 +116,34 @@ namespace ReportBuilderAPI.Repository
             Dictionary<string, string> parameterList;
             TaskResponse taskResponse = new TaskResponse();
             int companyId = 0, reportId = 0, userId = 0;
-            string contractorCompanyId = string.Empty, adminId = string.Empty;            
+            string contractorCompanyId = string.Empty, adminId = string.Empty;
             string status = string.Empty;
             try
             {
-                if (queryBuilderRequest.CompanyId == 0) throw new ArgumentException("CompanyId");
-                if (queryBuilderRequest.UserId == 0) throw new ArgumentException("UserId");
-                if (queryBuilderRequest.Payload == null) throw new ArgumentException("Fields and ColumnList");
+                if (queryBuilderRequest.CompanyId == 0)
+                {
+                    throw new ArgumentException("CompanyId");
+                }
 
-                if (queryBuilderRequest.Payload.Fields == null) throw new ArgumentException("Fields ");
-                if (queryBuilderRequest.Payload.ColumnList == null) throw new ArgumentException("Columns");
+                if (queryBuilderRequest.UserId == 0)
+                {
+                    throw new ArgumentException("UserId");
+                }
+
+                if (queryBuilderRequest.Payload == null)
+                {
+                    throw new ArgumentException("Fields and ColumnList");
+                }
+
+                if (queryBuilderRequest.Payload.Fields == null)
+                {
+                    throw new ArgumentException("Fields ");
+                }
+
+                if (queryBuilderRequest.Payload.ColumnList == null)
+                {
+                    throw new ArgumentException("Columns");
+                }
 
                 //Assign the request details to corresponding objects
                 companyId = Convert.ToInt32(queryBuilderRequest.CompanyId);
@@ -201,7 +220,7 @@ namespace ReportBuilderAPI.Repository
             catch (Exception getEmployeeDetails)
             {
                 LambdaLogger.Log(getEmployeeDetails.ToString());
-                taskResponse.Error = ResponseBuilder.InternalError();
+                taskResponse.Error = new ExceptionHandler(getEmployeeDetails).ExceptionResponse();
                 return taskResponse;
             }
         }
@@ -342,16 +361,20 @@ namespace ReportBuilderAPI.Repository
             List<TaskModel> taskList = new List<TaskModel>();
             try
             {
+                System.Data.SqlClient.SqlParameter[] _parameters = ParameterHelper.CreateSqlParameter(parameters);
                 //Read the data from the database
-                using (IDataReader dataReader = ExecuteDataReader(query, ParameterHelper.CreateSqlParameter(parameters)))
+                using (IDataReader dataReader = ExecuteDataReader(query, _parameters))
                 {
                     if (dataReader != null)
                     {
                         while (dataReader.Read())
                         {
                             DataTable dataTable = dataReader.GetSchemaTable();
+
+                            List<string> columnList = GetColumnList(dataReader);
+
                             //Get the taskcomment from the payload
-                            TaskModel taskComment = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(dataReader["Comments"])) : null;
+                            TaskModel taskComment = columnList.Contains("Comments") ? JsonConvert.DeserializeObject<TaskModel>(Convert.ToString(dataReader["Comments"])) : null;
 
                             //Get the task details from the database
                             TaskModel taskModel = new TaskModel
@@ -359,6 +382,7 @@ namespace ReportBuilderAPI.Repository
                                 TaskId = (dataTable.Select("ColumnName = 'taskId'").Count() == 1) ? (dataReader["taskId"] != DBNull.Value ? (int?)dataReader["taskId"] : 0) : (dataTable.Select("ColumnName = 'Task_Id'").Count() == 1) ? (dataReader["Task_Id"] != DBNull.Value ? (int?)dataReader["Task_Id"] : 0) : null,
 
                                 TaskName = (dataTable.Select("ColumnName = 'taskName'").Count() == 1) ? Convert.ToString(dataReader["taskName"]) : (dataTable.Select("ColumnName = 'Task_Name'").Count() == 1) ? Convert.ToString(dataReader["Task_Name"]) : null,
+
                                 AssignedTo = (dataTable.Select("ColumnName = 'assignee'").Count() == 1) ? Convert.ToString(dataReader["assignee"]) : null,
                                 EvaluatorName = (dataTable.Select("ColumnName = 'evaluatorName'").Count() == 1) ? Convert.ToString(dataReader["evaluatorName"]) : null,
 
@@ -370,13 +394,17 @@ namespace ReportBuilderAPI.Repository
                                 TaskCode = (dataTable.Select("ColumnName = 'Code'").Count() == 1) ? Convert.ToString(dataReader["Code"]) : (dataTable.Select("ColumnName = 'Task_Code'").Count() == 1) ? Convert.ToString(dataReader["Task_Code"]) : null,
 
                                 CompletedTasksCount = (dataTable.Select("ColumnName = 'CompletedTasks'").Count() == 1) ? (dataReader["CompletedTasks"] != DBNull.Value ? (int?)dataReader["CompletedTasks"] : 0) : null,
+
                                 TotalTasks = (dataTable.Select("ColumnName = 'TotalTasks'").Count() == 1) ? (dataReader["TotalTasks"] != DBNull.Value ? (int?)dataReader["TotalTasks"] : 0) : null,
+
                                 IncompletedTasksCount = (dataTable.Select("ColumnName = 'InCompleteTask'").Count() == 1) ? (dataReader["InCompleteTask"] != DBNull.Value ? (int?)dataReader["InCompleteTask"] : 0) : null,
 
                                 UserId = (dataTable.Select("ColumnName = 'userId'").Count() == 1) ? (dataReader["userId"] != DBNull.Value ? (int?)dataReader["userId"] : 0) : (dataTable.Select("ColumnName = 'Contractor_User_Id'").Count() == 1) ? (dataReader["Contractor_User_Id"] != DBNull.Value ? (int?)dataReader["Contractor_User_Id"] : 0) : null,
 
                                 WorkbookId = (dataTable.Select("ColumnName = 'workbookId'").Count() == 1) ? (dataReader["workbookId"] != DBNull.Value ? (int?)dataReader["workbookId"] : 0) : null,
+
                                 NumberofAttempts = (dataTable.Select("ColumnName = 'Attempt'").Count() == 1) ? Convert.ToString(dataReader["Attempt"]) : null,
+
                                 LastAttemptDate = (dataTable.Select("ColumnName = 'lastAttemptDate'").Count() == 1) ? !string.IsNullOrEmpty(Convert.ToString(dataReader["lastAttemptDate"])) ? Convert.ToDateTime(dataReader["lastAttemptDate"]).ToString("MM/dd/yyyy") : default(DateTime).ToString("MM/dd/yyyy") : null,
                                 Location = (dataTable.Select("ColumnName = 'location'").Count() == 1) ? Convert.ToString(dataReader["location"]) : null,
                                 Comments = (dataTable.Select("ColumnName = 'Comments'").Count() == 1) ? taskComment != null ? taskComment.Comment : string.Empty : null,
@@ -535,7 +563,22 @@ namespace ReportBuilderAPI.Repository
             {
                 LambdaLogger.Log(readTaskDetailsException.ToString());
                 return null;
-            }          
+            }
+        }
+
+        public virtual List<string> GetColumnList(IDataReader dataReader)
+        {
+            List<string> columnList = new List<string>();
+            try
+            {                
+                columnList = dataReader.GetSchemaTable().Rows.Cast<DataRow>().Select(r => (string)r["ColumnName"]).ToList();
+                return columnList;
+            }
+            catch (Exception getColumnListException)
+            {
+                LambdaLogger.Log(getColumnListException.ToString());
+                return columnList;
+            }
         }
 
 
