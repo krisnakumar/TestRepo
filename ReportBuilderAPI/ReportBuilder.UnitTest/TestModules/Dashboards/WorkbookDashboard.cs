@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Amazon.Lambda.APIGatewayEvents;
-using Newtonsoft.Json;
-using ReportBuilderAPI.Handlers.FunctionHandler;
+using Moq;
 using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilder.UnitTest.Utilities;
+using ReportBuilderAPI.Repository;
 using ReportBuilderAPI.Utilities;
 
 namespace ReportBuilder.UnitTest.TestModules.Dashboards
@@ -26,6 +23,7 @@ namespace ReportBuilder.UnitTest.TestModules.Dashboards
         [TestMethod]
         public void GetDashboardForAUser()
         {
+            
             List<EmployeeModel> wbList = new List<EmployeeModel>();
             TestExecution testExecute = new TestExecution();
             string[] ColumnList = new string[] { Constants.USERID, Constants.SUPERVISOR_ID, Constants.EMPLOYEE_NAME, Constants.ROLE, Constants.ASSIGNED_WORKBOOK, Constants.WORKBOOK_DUE, Constants.PAST_DUE_WORKBOOK, Constants.COMPLETED_WORKBOOK, Constants.TOTAL_EMPLOYEES };
@@ -154,14 +152,45 @@ namespace ReportBuilder.UnitTest.TestModules.Dashboards
             EmployeeModel wbFilter2 = testExecute.CreateFields(Constants.STATUS, Constants.COMPLETED, "=", "AND");
             EmployeeModel wbFilter4 = testExecute.CreateFields(Constants.WORKBOOK_ID, "22", "=", "AND");
             EmployeeModel wbFilter3 = testExecute.CreateFields(Constants.TASK_ID, "32934", "=", "AND");
+            EmployeeModel wbFilter5 = testExecute.CreateFields(Constants.REP_PROGRESS, "", "=", "AND");
             wbList.Add(wbFilter1);
             wbList.Add(wbFilter2);
             wbList.Add(wbFilter3);
             wbList.Add(wbFilter4);
+            wbList.Add(wbFilter5);
 
-            WorkbookResponse wbResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.WORKBOOK_DASHBOARD, wbList);
-            List<WorkbookModel> workbookList = wbResponse.Workbooks;
-            Assert.IsTrue(workbookList.Count == 0);
+            Mock<WorkbookRepository> workbookMock = new Mock<WorkbookRepository>();
+            workbookMock.Setup(r => r.ReadWorkBookDetails(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>())).Returns(GetTaskRepetitions());
+
+            QueryBuilderRequest queryRequest = testExecute.CreateQueryRequest(2288, 331535, ColumnList, Constants.WORKBOOK_DASHBOARD, wbList);
+
+
+            WorkbookResponse workbookResponse = workbookMock.Object.GetWorkbookDetails(queryRequest);
+            Assert.IsTrue(workbookResponse.Workbooks != null);
+            Assert.IsTrue(workbookResponse.Workbooks.Count> 0);
+            Assert.IsTrue(workbookResponse.Error==null);
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<WorkbookModel> GetTaskRepetitions()
+        {
+            List<WorkbookModel> workbookList = new List<WorkbookModel>();
+            WorkbookModel workbookModel = new WorkbookModel
+            {
+                LastAttemptDate_tasks = "04/01/2019",
+                Location = "loc",
+                EvaluatorName = "test",
+                Status = "Completed",
+                NumberofAttempts = "1",
+            };
+
+            workbookList.Add(workbookModel);
+            return workbookList;
         }
     }
 }

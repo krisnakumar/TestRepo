@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using ReportBuilderAPI.Handlers.FunctionHandler;
-using ReportBuilder.Models.Models;
+﻿using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
+using ReportBuilderAPI.Handlers.FunctionHandler;
 using ReportBuilderAPI.Utilities;
+using System.Collections.Generic;
 
 namespace ReportBuilder.UnitTest.Utilities
 {
-    class TestExecution
+    internal class TestExecution
     {
         internal dynamic ExecuteTests(int companyId, int userId, string[] columns, string appType, List<EmployeeModel> fieldset)
         {
@@ -38,6 +37,24 @@ namespace ReportBuilder.UnitTest.Utilities
             }
             return testResponse;
         }
+
+
+        public QueryBuilderRequest CreateQueryRequest(int companyId, int userId, string[] columns, string appType, List<EmployeeModel> fieldset)
+        {
+            QueryBuilderRequest queryRequest = new QueryBuilderRequest
+            {
+                CompanyId = companyId,
+                UserId = userId,
+                Payload = new QueryBuilderRequest
+                {
+                    ColumnList = columns,
+                    Fields = fieldset,
+                    AppType = appType
+                }
+            };
+            return queryRequest;
+        }
+
 
         internal EmployeeModel CreateFields(string name, string value, string oparator, string bitwise)
         {
