@@ -4,8 +4,6 @@ using Amazon.Extensions.CognitoAuthentication;
 using Amazon.Lambda.Core;
 using Amazon.Runtime;
 using ReportBuilder.Models.Request;
-using ReportBuilder.Models.Response;
-using ReportBuilderAPI.Handlers.ResponseHandler;
 using ReportBuilderAPI.Resource;
 using System;
 
@@ -24,11 +22,9 @@ namespace ReportBuilderAPI.Helpers
         /// </summary>
         /// <param name="userRequest"></param>
         /// <returns>AuthFlowResponse</returns>
-        public UserResponse ProcessRefreshToken(UserRequest userRequest)
+        public AuthFlowResponse ProcessRefreshToken(UserRequest userRequest)
         {
             AuthFlowResponse authResponse;
-            UserResponse userResponse = new UserResponse();
-            
             try
             {
                
@@ -40,31 +36,8 @@ namespace ReportBuilderAPI.Helpers
                 {
                     AuthFlowType = AuthFlowType.REFRESH_TOKEN
                 };
-                authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;                
-                
-                //Check if user having any challenges 
-                if (authResponse != null && authResponse.AuthenticationResult == null)
-                {
-                    string message = CheckChallenge(authResponse.ChallengeName);
-                    userResponse.Error = ResponseBuilder.UnAuthorized(message);
-                    return userResponse;
-                }
-                //Create user response for valid token
-                else if (authResponse != null && authResponse.AuthenticationResult != null)
-                {
-                    userResponse = new UserResponse
-                    {
-                        AccessToken = authResponse.AuthenticationResult.AccessToken,
-                        IdentityToken = authResponse.AuthenticationResult.IdToken
-                    };
-                    return userResponse;
-                }
-                //Send bad request if user name is invalid
-                else
-                {
-                    userResponse.Error = ResponseBuilder.BadRequest(DataResource.USERNAME);
-                    return userResponse;
-                }                
+                authResponse = user.StartWithRefreshTokenAuthAsync(authRequest).Result;
+                return authResponse;
             }
             catch (Exception processRefreshTokenException)
             {
