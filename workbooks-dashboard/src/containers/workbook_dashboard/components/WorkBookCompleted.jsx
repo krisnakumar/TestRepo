@@ -34,11 +34,6 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class WorkBookCompletedEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
-  }
-};
 
 class WorkBookCompleted extends React.Component {
   constructor(props) {
@@ -202,50 +197,6 @@ class WorkBookCompleted extends React.Component {
     this.props.updateState("isCompletedModal");
   }
 
-  /**
-   * @method
-   * @name - handleGridRowsUpdated
-   * This method will update the rows of grid of the current Data Grid
-   * @param fromRow
-   * @param toRow
-   * @param updated
-   * @returns none
-   */
-  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-    const rows = this.state.rows.slice();
-
-    for (let i = fromRow; i <= toRow; i += 1) {
-      const rowToUpdate = rows[i];
-      rows[i] = update(rowToUpdate, { $merge: updated });
-    }
-
-    this.setState({ rows });
-  };
-
-  /**
-   * @method
-   * @name - handleGridSort
-   * This method will update the rows of grid of Data Grid after the sort
-   * @param sortColumn
-   * @param sortDirection
-   * @returns none
-   */
-  handleGridSort = (sortColumn, sortDirection) => {
-    const comparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-      }
-    };
-
-    const sortRows = this.state.rows.slice(0),
-      rowsLength = this.state.rows.length || 0;
-    const rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-    this.setState({ rows });
-  };
-
   customCell(props) {
     let self = this;
     return (
@@ -338,9 +289,6 @@ class WorkBookCompleted extends React.Component {
       this.setState({ ...this.state, isWorkBookProgressModal, workBooksProgress });
     }
   };
-
-  // This method is used to setting the row data in react data grid
-  rowGetter = i => this.state.rows[i];
 
   componentDidUpdate(prevProps, prevState) {
     // One possible fix...
@@ -465,12 +413,6 @@ class WorkBookCompleted extends React.Component {
                   loading={!this.state.isInitial}
                   loadingText={''}
                   noDataText={!this.state.isInitial ? '' : 'Sorry, no records'}
-                  // defaultSorted={[
-                  //   {
-                  //     id: "role",
-                  //     desc: false
-                  //   }
-                  // ]}
                   style={{
                     // minHeight: "575px", // This will force the table body to overflow and scroll, since there is not enough room
                     maxHeight: "550px"

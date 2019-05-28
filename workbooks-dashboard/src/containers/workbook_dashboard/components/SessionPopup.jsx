@@ -17,15 +17,10 @@ handleCellFocus(args)
 */
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import _ from "lodash";
 import * as Constants from '../../../shared/constants';
 
 class SessionPopup extends React.Component {
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
 
     constructor(props) {
         super(props);
@@ -107,4 +102,4 @@ class SessionPopup extends React.Component {
     }
 }
 
-export default withCookies(SessionPopup);
+export default SessionPopup;

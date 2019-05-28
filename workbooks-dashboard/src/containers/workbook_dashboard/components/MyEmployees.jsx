@@ -27,8 +27,6 @@ import WorkBookDuePast from './WorkBookDuePast';
 import WorkBookComingDue from './WorkBookComingDue';
 import WorkBookCompleted from './WorkBookCompleted';
 import AssignedWorkBook from './AssignedWorkBook';
-import { instanceOf, PropTypes } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 import * as API from '../../../shared/utils/APIUtils';
 import * as Constants from '../../../shared/constants';
 import SessionPopup from './SessionPopup';
@@ -44,16 +42,8 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-data-grid module.
  */
-class EmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
-  }
-};
 
 class MyEmployees extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -938,4 +928,4 @@ class MyEmployees extends React.Component {
   }
 }
 
-export default withCookies(MyEmployees);
+export default MyEmployees;

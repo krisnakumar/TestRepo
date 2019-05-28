@@ -12,7 +12,7 @@ componentWillReceiveProps(newProps)
 */
 import React, { Component } from 'react';
 import ReactExport from "react-data-export";
-import * as moment from 'moment';
+import moment from 'moment';
 import { withCookies, Cookies } from 'react-cookie';
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -25,7 +25,7 @@ class WorkBookDashboardExport extends Component {
         this.state = {
             data: this.formatData(this.props.data, this.props.heads),
             heads: this.props.heads || [],
-            sheetName: this.props.sheetName || "",
+            sheetName: this.props.sheetName || ""
         };
         this.formatData = this.formatData.bind(this);
     };
@@ -120,4 +120,4 @@ class WorkBookDashboardExport extends Component {
     }
 }
 
-export default withCookies(WorkBookDashboardExport);
+export default WorkBookDashboardExport;

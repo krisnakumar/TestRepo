@@ -24,9 +24,6 @@ import * as Constants from '../../../../shared/constants';
 import WorkbookDashboard from '../../../workbook_dashboard/index'
 
 class LogInForm extends PureComponent {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -77,6 +74,8 @@ class LogInForm extends PureComponent {
   }
 }
 
-export default reduxForm({
-  form: 'log_in_form', // A unique identifier for this form 
-})(withCookies(LogInForm));
+// export default reduxForm({
+//   form: 'log_in_form', // A unique identifier for this form 
+// })(withCookies(LogInForm));
+
+export default LogInForm;

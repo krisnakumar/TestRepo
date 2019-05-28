@@ -11,7 +11,7 @@ class ScrollToTop extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
+    if (this.props.location && this.props.location.pathname !== prevProps.location.pathname) {
       window.scrollTo(0, 0);
     }
   }
@@ -21,4 +21,4 @@ class ScrollToTop extends PureComponent {
   }
 }
 
-export default withRouter(ScrollToTop);
+export default ScrollToTop;

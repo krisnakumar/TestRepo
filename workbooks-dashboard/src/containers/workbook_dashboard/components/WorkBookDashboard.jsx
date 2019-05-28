@@ -50,17 +50,8 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class DataTableEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found">Sorry, no records</div>)
-  }
-};
 
 class WorkBookDashboard extends PureComponent {
-
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor() {
     super();
@@ -287,7 +278,7 @@ class WorkBookDashboard extends PureComponent {
    * @returns none
    */
   updateMyEmployeesArray = (employees, supervisor) => {
-    let myEmployeesArray = this.state.myEmployeesArray,
+    let myEmployeesArray = this.state.myEmployeesArray || [],
       level = this.state.level + 1,
       supervisorNames = this.state.supervisorNames,
       employeesLength = employees.length;
@@ -295,7 +286,9 @@ class WorkBookDashboard extends PureComponent {
     if (employeesLength > 0)
       supervisorNames.push({ 'name': supervisor.employee, 'column': "NONE", 'order': "NONE", 'userId': supervisor.userId });
 
-    myEmployeesArray.push(employees);
+    if(Array.isArray(myEmployeesArray))
+      myEmployeesArray.push(employees);
+
     this.setState({ ...this.state, myEmployeesArray, level, supervisorNames });
   };
 
@@ -843,7 +836,9 @@ class WorkBookDashboard extends PureComponent {
     this.setState({
       filteredRoles: filteredRoles,
     });
-    this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+    if(this.roleFilter.current){
+      this.roleFilter.current.selectMultipleOption(true, this, filteredRoles);
+    }
   };
 
   /**
@@ -1173,4 +1168,4 @@ class WorkBookDashboard extends PureComponent {
   }
 }
 
-export default withCookies(WorkBookDashboard);
+export default WorkBookDashboard;

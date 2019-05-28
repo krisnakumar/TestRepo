@@ -30,6 +30,7 @@ class Layout extends Component {
   }
 }
 
-export default withRouter(connect(state => ({
-  theme: state.theme,
-}))(Layout));
+// export default withRouter(connect(state => ({
+//   theme: state.theme,
+// }))(Layout));
+export default Layout;

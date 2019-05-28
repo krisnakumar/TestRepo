@@ -36,16 +36,8 @@ import "react-table/react-table.css";
  * the table components empty rows message if data is empty from API request
  * extending the react-table module.
  */
-class WorkBookProgressEmptyRowsView extends React.Component {
-  render() {
-    return (<div className="no-records-found-modal">Sorry, no records</div>)
-  }
-};
 
 class WorkBookProgress extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -249,73 +241,6 @@ class WorkBookProgress extends React.Component {
 
   /**
    * @method
-   * @name - handleGridRowsUpdated
-   * This method will update the rows of grid of the current Data Grid
-   * @param fromRow
-   * @param toRow
-   * @param updated
-   * @returns none
-   */
-  handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
-    const rows = this.state.rows.slice();
-
-    for (let i = fromRow; i <= toRow; i += 1) {
-      const rowToUpdate = rows[i];
-      rows[i] = update(rowToUpdate, { $merge: updated });
-    }
-
-    this.setState({ rows });
-  };
-
-  /**
-  * @method
-  * @name - handleGridSort
-  * This method will update the rows of grid of Data Grid after the sort
-  * @param sortColumn
-  * @param sortDirection
-  * @returns none
-  */
-  handleGridSort = (sortColumn, sortDirection) => {
-    let isPercentage = sortColumn.includes('Precentage');
-
-    const comparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (a[sortColumn] >= b[sortColumn]) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (a[sortColumn] <= b[sortColumn]) ? 1 : -1;
-      }
-    };
-
-    const percentageComparer = (a, b) => {
-      if (sortDirection === 'ASC') {
-        return (parseInt(a[sortColumn]) >= parseInt(b[sortColumn])) ? 1 : -1;
-      } else if (sortDirection === 'DESC') {
-        return (parseInt(a[sortColumn]) <= parseInt(b[sortColumn])) ? 1 : -1;
-      }
-    };
-
-    const beforePopRows = this.state.rows;
-    let totalRow = "";
-    if (beforePopRows.length > 0) {
-      totalRow = beforePopRows.pop();
-    }
-
-    const sortRows = beforePopRows.slice(0),
-      rowsLength = this.state.rows.length || 0;
-
-    let rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(comparer).slice(0, rowsLength);
-
-    if (isPercentage)
-      rows = sortDirection === 'NONE' ? this.state.rows.slice(0, rowsLength) : sortRows.sort(percentageComparer).slice(0, rowsLength);
-
-    if (beforePopRows.length > 0)
-      rows.push(totalRow);
-
-    this.setState({ rows });
-  };
-
-  /**
-   * @method
    * @name - updateModalState
    * This method will update the modal window state of parent
    * @param modelName
@@ -339,7 +264,7 @@ class WorkBookProgress extends React.Component {
   handleCellClick = (type, args) => {
     let userId = 0,
       workBookId = 0,
-      taskId = 0;
+      taskId = 0,
     status = type == "incompletedTasksCount" ? "FAILED" : "COMPLETED";
 
     this.state.selectedWorkbook.taskCode = args.taskCode;
@@ -424,9 +349,6 @@ class WorkBookProgress extends React.Component {
       </span> || <span>{props.value}</span>
     );
   }
-
-  // This method is used to setting the row data in react data grid
-  rowGetter = i => this.state.rows[i];
 
   render() {
     const { rows } = this.state;
@@ -559,4 +481,4 @@ class WorkBookProgress extends React.Component {
   }
 }
 
-export default withCookies(WorkBookProgress);
+export default WorkBookProgress;

@@ -185,4 +185,5 @@ class App extends Component {
   }
 }
 
-export default hot(module)(withCookies(App));
+// export default hot(module)(withCookies(App));
+export default App;
