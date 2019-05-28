@@ -1,3 +1,4 @@
+
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
@@ -44,3 +45,11 @@ workbooks-dashboard/sonar-project.properties
 workbooks-dashboard/.scannerwork/.sonar_lock
 workbooks-dashboard/.scannerwork/report-task.txt
 workbooks-dashboard/public/config/appsettings.json
+
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/DataInterface.Database/obj
+/.vs
+/ReportBuilder.Models/ReportBuilder.Models/obj/BNB
+/ReportBuilderAPI
