@@ -1,0 +1,46 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/query-builder/node_modules
+/workbooks-dashboard/node_modules
+/contractor-oq-dashboard/node_modules
+/contractor-training-dashboard/node_modules
+
+# testing
+/coverage
+/query-builder/coverage
+/workbooks-dashboard/coverage
+/contractor-oq-dashboard/coverage
+/contractor-training-dashboard/coverage
+
+# production
+/build
+/query-builder/build
+/workbooks-dashboard/build
+/contractor-oq-dashboard/build
+/contractor-training-dashboard/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/launch.json
+contractor-oq-dashboard/public/config/appsettings.json
+contractor-training-dashboard/public/config/appsettings.json
+query-builder/public/config/appsettings.json
+workbooks-dashboard/public/config/appsettings.json
+*.lock
+.scannerwork/.sonar_lock
+contractor-oq-dashboard/public/config/appsettings.json
+contractor-training-dashboard/public/config/appsettings.json
+workbooks-dashboard/sonar-project.properties
+workbooks-dashboard/.scannerwork/.sonar_lock
+workbooks-dashboard/.scannerwork/report-task.txt
+workbooks-dashboard/public/config/appsettings.json
