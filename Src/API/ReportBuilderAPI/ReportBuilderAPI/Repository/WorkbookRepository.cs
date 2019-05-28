@@ -353,7 +353,7 @@ namespace ReportBuilderAPI.Repository
         /// <param name="query"></param>
         /// <param name="parameters"></param>
         /// <returns>WorkbookModel</returns>
-        public List<WorkbookModel> ReadWorkBookDetails(string query, Dictionary<string, string> parameters)
+        public virtual List<WorkbookModel> ReadWorkBookDetails(string query, Dictionary<string, string> parameters)
         {
             List<WorkbookModel> workbookList = new List<WorkbookModel>();
             try
@@ -371,7 +371,6 @@ namespace ReportBuilderAPI.Repository
 
                             WorkbookModel workbookResponse = new WorkbookModel
                             {
-
                                 EmployeeName = (dataTable.Select("ColumnName = 'employeeName'").Count() == 1) ? Convert.ToString(dataReader["employeeName"]) : (dataTable.Select("ColumnName = 'Employee_Full_Name'").Count() == 1) ? Convert.ToString(dataReader["Employee_Full_Name"]) : null,
 
                                 WorkBookName = (dataTable.Select("ColumnName = 'workbookName'").Count() == 1) ? Convert.ToString(dataReader["workbookName"]) : (dataTable.Select("ColumnName = 'OJT_Name'").Count() == 1) ? Convert.ToString(dataReader["OJT_Name"]) : null,
