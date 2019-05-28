@@ -264,6 +264,7 @@ namespace ReportBuilderAPI.Utilities
         public const string OQ_DASHBOARD = "OQ_DASHBOARD";
 
         public const string APP_TYPE = "APPTYPE";
+        public const string PAYLOAD = "PAYLOAD";
 
         public const string SQLException = "SQLException";
 

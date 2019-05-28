@@ -10,6 +10,7 @@ using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Utilities;
+using ReportBuilder.UnitTest.Utilities;
 
 namespace ReportBuilder.UnitTest.TestModules.Dashboards
 {
@@ -23,32 +24,16 @@ namespace ReportBuilder.UnitTest.TestModules.Dashboards
         /////////////////////////////////////////////////////////////////
 
         [TestMethod]
-        public void GetCompanyQualificationsDetails()
+        public void GetOQDashboardForAUser()
         {
             List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.COMPANY_ID, Constants.COMPANY_NAME, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.LOCK_OUT_COUNT },
-                    Fields = tasksList,
-                    AppType = Constants.OQ_DASHBOARD
-                }
-            };
-            var supervisor_company_id = "6";
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.USERID,
-                Value = supervisor_company_id,
-                Operator = "=",
-                Bitwise = ""
-            };
-            tasksList.Add(task1);
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.COMPANY_ID, Constants.COMPANY_NAME, Constants.SUSPENDED_QUALIFICATION, Constants.DISQUALIFIED_QUALIFICATION, Constants.ASSIGNED_COMPANY_QUALIFICATION, Constants.COMPLETED_COMPANY_QUALIFICATION, Constants.IN_COMPLETE_COMPANY_QUALIFICATION, Constants.PAST_DUE_COMPANY_QUALIFICATION, Constants.IN_DUE_COMPANY_QUALIFICATION, Constants.TOTAL_COMPANY_EMPLOYEES, Constants.LOCK_OUT_COUNT };
 
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.USERID, "331535", "=", "");
+            tasksList.Add(taskFilter1);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
             List<TaskModel> tasksResponse = taskResponse.Tasks;
             //int userIndex = tasksResponse.FindIndex(x => x.UserId.ToString() == supervisor_company_id);
             //Assert.IsTrue(userIndex >= 0);
@@ -59,207 +44,264 @@ namespace ReportBuilder.UnitTest.TestModules.Dashboards
         }
 
         [TestMethod]
-        public void GetEmployeesQualificationsDetails()
+        public void GetEmployeesQualificationsUnderACompany()
         {
             List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.USERID, Constants.ROLE, Constants.COMPANY_ID, Constants.EMPLOYEE_NAME, Constants.TOTAL_EMPLOYEES, Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION },
-                    Fields = tasksList,
-                    AppType = Constants.OQ_DASHBOARD
-                }
-            };
-            var supervisor_company_id = "6";
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.SUPERVISOR_ID,
-                Value = supervisor_company_id,
-                Operator = "=",
-                Bitwise = ""
-            };
-            tasksList.Add(task1);
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.USERID, Constants.COMPANY_ID, Constants.SUSPENDED_QUALIFICATION, Constants.DISQUALIFIED_QUALIFICATION, Constants.ROLE, Constants.EMPLOYEE_NAME, Constants.TOTAL_EMPLOYEES, Constants.ASSIGNED_QUALIFICATION, Constants.COMPLETED_QUALIFICATION, Constants.IN_DUE_QUALIFICATION, Constants.PAST_DUE_QUALIFICATION, Constants.IN_COMPLETE_QUALIFICATION, Constants.LOCK_OUT_COUNT };
 
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            tasksList.Add(taskFilter1);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
             List<TaskModel> tasksResponse = taskResponse.Tasks;
-            int userIndex = tasksResponse.FindIndex(x => x.UserId.ToString() == supervisor_company_id);
             Assert.IsTrue(tasksResponse.Count > 0);
-            Assert.AreNotEqual("", tasksResponse[0].Role);
-            Assert.AreNotEqual("", tasksResponse[0].EmployeeName);
-            Assert.IsTrue(userIndex < 0);
-            Assert.IsTrue(tasksResponse[0].TotalEmployees >= 0);
+            Assert.AreNotEqual("", tasksResponse[0].UserId);
+            Assert.AreNotEqual(null, tasksResponse[0].LockoutCount);
         }
 
         [TestMethod]
-        public void GetAssignedQualificationsForCompany()
+        public void GetAllQualificationsForACompany()
         {
             List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE },
-                    Fields = tasksList,
-                    AppType = Constants.OQ_DASHBOARD,
-                    EntityName = "Task"
-                }
-            };
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE, "REASON" };
 
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ASSIGNED, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
             List<TaskModel> tasksResponse = taskResponse.Tasks;
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskId);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskName);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
-            Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
-            Assert.AreNotEqual("", tasksResponse[0].AssignedDate);
-        }
-
-        [TestMethod]
-        public void GetPassedQualificationsForCompany()
-        {
-            List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE },
-                    Fields = tasksList,
-                    AppType = Constants.OQ_DASHBOARD,
-                    EntityName = "Task"
-                }
-            };
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.COMPLETED,
-                Operator = "=",
-                Value = "true"
-            };
-            tasksList.Add(task1);
-
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
-            List<TaskModel> tasksResponse = taskResponse.Tasks;
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.IsTrue(tasksResponse[0].TaskId > 0);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskName);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
-            Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
-            Assert.AreNotEqual("", tasksResponse[0].ExpirationDate);
-        }
-
-        [TestMethod]
-        public void GetDisqualificationsForCompany()
-        {
-            List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE },
-                    Fields = tasksList,
-                    AppType = Constants.OQ_DASHBOARD,
-                    EntityName = "Task"
-                }
-            };
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.IN_COMPLETE,
-                Operator = "=",
-                Value = "true"
-            };
-            tasksList.Add(task1);
-
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
-            List<TaskModel> tasksResponse = taskResponse.Tasks;
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.IsTrue(tasksResponse[0].TaskId > 0);
-            Assert.AreNotEqual("", tasksResponse[0].TaskName);
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreNotEqual("", tasksResponse[0].UserId);
             Assert.AreNotEqual("", tasksResponse[0].TaskCode);
-            Assert.AreNotEqual("", tasksResponse[0].EmployeeName);
-            Assert.AreNotEqual("", tasksResponse[0].AssignedDate);
         }
 
         [TestMethod]
-        public void GetExpiredQualificationsForCompany()
+        public void GetQualifiedForACompany()
         {
             List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE },
-                    Fields = tasksList,
-                    AppType = Constants.QUERY_BUILDER,
-                    EntityName = "Task"
-                }
-            };
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
 
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.PAST_DUE,
-                Operator = "=",
-                Value = "30"
-            };
-            tasksList.Add(task1);
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.COMPLETED, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
 
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
             List<TaskModel> tasksResponse = taskResponse.Tasks;
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.IsTrue(tasksResponse[0].TaskId > 0);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskName);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
-            Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreNotEqual("", tasksResponse[0].UserId);
+            Assert.AreEqual(Constants.QUALIFIED, tasksResponse[0].Status.ToUpper());
+        }
+
+        [TestMethod]
+        public void GetDisqualifiedForACompany()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.IN_COMPLETE, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreNotEqual("", tasksResponse[0].UserId);
+            Assert.AreEqual(Constants.NOT_QUALIFIED, tasksResponse[0].Status.ToUpper());
+        }
+
+        [TestMethod]
+        public void GetLockOutForACompanyHavingLockOutData()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.LOCKOUT_COUNT, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreNotEqual(null, tasksResponse[0].UnlockDate);
+        }
+
+        [TestMethod]
+        public void GetLockOutForACompanyWithoutLockOutData()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4738", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.LOCKOUT_COUNT, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count == 0);
+        }
+
+        [TestMethod]
+        public void GetInDueQualificationsForACompany()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.IN_DUE, "30", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
             Assert.AreNotEqual(null, tasksResponse[0].ExpirationDate);
         }
 
         [TestMethod]
-        public void Get30DaysInDueQualificationsForCompany()
+        public void GetAllQualificationsForASupervisor()
         {
             List<EmployeeModel> tasksList = new List<EmployeeModel>();
-            Function function = new Function();
-            QueryBuilderRequest taskRequest = new QueryBuilderRequest
-            {
-                CompanyId = 6,
-                UserId = 6,
-                Payload = new QueryBuilderRequest
-                {
-                    ColumnList = new string[] { Constants.TASK_ID, Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE },
-                    Fields = tasksList,
-                    AppType = Constants.QUERY_BUILDER,
-                    EntityName = "Task"
-                }
-            };
-            EmployeeModel task1 = new EmployeeModel
-            {
-                Name = Constants.IN_DUE,
-                Operator = "=",
-                Value = "30"
-            };
-            tasksList.Add(task1);
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE, "REASON" };
 
-            TaskResponse taskResponse = function.GetTaskQueryBuilder(taskRequest, null);
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "370043", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.ASSIGNED, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
             List<TaskModel> tasksResponse = taskResponse.Tasks;
-            Assert.AreNotEqual(0, tasksResponse.Count);
-            Assert.IsTrue(tasksResponse[0].TaskId > 0);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskName);
-            Assert.AreNotEqual(null, tasksResponse[0].TaskCode);
-            Assert.AreNotEqual(null, tasksResponse[0].EmployeeName);
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreEqual(370043, tasksResponse[0].UserId);
+        }
+
+        [TestMethod]
+        public void GetQualifiedForASupervisor()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "370043", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.COMPLETED, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreEqual(370043, tasksResponse[0].UserId);
+            Assert.AreEqual(Constants.QUALIFIED, tasksResponse[0].Status.ToUpper());
+        }
+
+        [TestMethod]
+        public void GetDisqualifiedForASupervisor()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.ASSIGNED_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "370043", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.IN_COMPLETE, "true", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreEqual(370043, tasksResponse[0].UserId);
+            Assert.AreEqual(Constants.NOT_QUALIFIED, tasksResponse[0].Status.ToUpper());
+        }
+
+        [TestMethod]
+        public void GetLockOutForASupervisorHavingLockOutData()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.LOCKOUT_COUNT, "true", "=", "AND");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "370043", "=", "");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count > 0);
+            Assert.AreEqual(370043, tasksResponse[0].UserId);
+            Assert.AreNotEqual(null, tasksResponse[0].UnlockDate);
+        }
+
+        [TestMethod]
+        public void GetLockOutForASupervisorWithoutLockOutData()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.LOCKOUT_COUNT, "true", "=", "AND");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "377151", "=", "");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count == 0);
+        }
+
+        [TestMethod]
+        public void GetInDueQualificationForASupervisor()
+        {
+            List<EmployeeModel> tasksList = new List<EmployeeModel>();
+            TestExecution testExecute = new TestExecution();
+            string[] ColumnList = new string[] { Constants.TASK_CODE, Constants.TASK_NAME, Constants.EMPLOYEE_NAME, Constants.COURSE_EXPIRATION_DATE, "REASON" };
+
+            EmployeeModel taskFilter1 = testExecute.CreateFields(Constants.CONTRACTOR_COMPANY, "4065", "=", "");
+            EmployeeModel taskFilter2 = testExecute.CreateFields(Constants.ADMIN_ID, "331535", "=", "AND");
+            EmployeeModel taskFilter3 = testExecute.CreateFields(Constants.SUPERVISOR_ID, "377151", "=", "");
+            EmployeeModel taskFilter4 = testExecute.CreateFields(Constants.IN_DUE, "30", "=", "AND");
+            tasksList.Add(taskFilter1);
+            tasksList.Add(taskFilter2);
+            tasksList.Add(taskFilter3);
+            tasksList.Add(taskFilter4);
+
+            TaskResponse taskResponse = testExecute.ExecuteTests(2288, 331535, ColumnList, Constants.OQ_DASHBOARD, tasksList);
+            List<TaskModel> tasksResponse = taskResponse.Tasks;
+            Assert.IsTrue(tasksResponse.Count == 0);
+            Assert.AreEqual(377151, tasksResponse[0].UserId);
             Assert.AreNotEqual(null, tasksResponse[0].ExpirationDate);
         }
     }

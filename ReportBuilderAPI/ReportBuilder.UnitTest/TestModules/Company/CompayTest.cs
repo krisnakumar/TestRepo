@@ -3,7 +3,6 @@ using Moq;
 using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
-using ReportBuilderAPI.Handlers.FunctionHandler;
 using ReportBuilderAPI.Repository;
 using System.Collections.Generic;
 
@@ -27,8 +26,19 @@ namespace ReportBuilder.UnitTest.TestModules.Company
             Mock<CompanyRepository> companyMock = new Mock<CompanyRepository>();
             companyMock.Setup(r => r.ReadCompanies(It.IsAny<string>())).Returns(companyList);
             CompanyResponse companyResponse = companyMock.Object.GetCompany(companyRequest);
-            //Assert.Is
+            Assert.IsTrue(companyResponse.Companies.Count > 0);
+            Assert.IsTrue(companyResponse.Error==null);            
+        }
 
+
+        [TestMethod]
+        public void CheckException()
+        {
+            CompanyRequest companyRequest = new CompanyRequest { };       
+            Mock<CompanyRepository> companyMock = new Mock<CompanyRepository>();
+            CompanyResponse companyResponse = companyMock.Object.GetCompany(companyRequest);            
+            Assert.IsTrue(companyResponse.Error != null);
+            Assert.IsTrue(companyResponse.Error.Message == "Invalid input :UserId");
         }
 
         /// <summary>
@@ -46,7 +56,7 @@ namespace ReportBuilder.UnitTest.TestModules.Company
             companyList.Add(companyModels);
             CompanyModels companyModel = new CompanyModels
             {
-                CompanyId = 1,
+                CompanyId = 2,
                 CompanyName = "OQ"
             };
             companyList.Add(companyModel);

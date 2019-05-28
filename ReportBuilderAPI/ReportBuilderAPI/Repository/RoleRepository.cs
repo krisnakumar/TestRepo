@@ -26,14 +26,22 @@ namespace ReportBuilderAPI.Repository
         /// <returns>Roles</returns>
         public RoleResponse GetRoles(RoleRequest roleRequest)
         {
-            RoleResponse roleResponse = new RoleResponse();
-            List<RoleModel> roles = new List<RoleModel>();
+            RoleResponse roleResponse = new RoleResponse();            
             string query = string.Empty;
             try
             {
-                if (roleRequest.Payload == null && string.IsNullOrEmpty(roleRequest.Payload.AppType))
+                if (roleRequest.Payload == null)
+                {
+                    throw new ArgumentException(Constants.PAYLOAD);
+                }
+                if (roleRequest.Payload != null && string.IsNullOrEmpty(roleRequest.Payload.AppType))
                 {
                     throw new ArgumentException(Constants.APP_TYPE);
+                }
+
+                if (roleRequest.CompanyId==0)
+                {
+                    throw new ArgumentException(Constants.COMPANY_ID);
                 }
 
                 if (roleRequest.Payload.AppType == Constants.WORKBOOK_DASHBOARD)
@@ -71,7 +79,7 @@ namespace ReportBuilderAPI.Repository
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        private List<RoleModel> ReadRole(string query)
+        public virtual List<RoleModel> ReadRole(string query)
         {
             List<RoleModel> roleList = new List<RoleModel>();
             IDataReader dataReader = null;

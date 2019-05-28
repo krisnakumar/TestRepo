@@ -10,7 +10,7 @@ using ReportBuilder.Models.Models;
 using ReportBuilder.Models.Request;
 using ReportBuilder.Models.Response;
 using ReportBuilderAPI.Utilities;
-using ReportBuilder.UnitTest.TestModules.Utilities;
+using ReportBuilder.UnitTest.Utilities;
 
 namespace ReportBuilder.UnitTest.TestModules.Employees
 {

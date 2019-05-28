@@ -8,7 +8,7 @@ using ReportBuilder.Models.Models;
 using ReportBuilderAPI.Handlers.FunctionHandler;
 using ReportBuilder.Models.Request;
 using ReportBuilderAPI.Utilities;
-using ReportBuilder.UnitTest.TestModules.Utilities;
+using ReportBuilder.UnitTest.Utilities;
 using ReportBuilder.Models.Response;
 
 namespace ReportBuilder.UnitTest.TestModules.Workbooks
