@@ -41,6 +41,18 @@ namespace ReportBuilder.UnitTest.TestModules.Company
             Assert.IsTrue(companyResponse.Error.Message == "Invalid input :UserId");
         }
 
+
+        [TestMethod]
+        public void CheckInternalServer()
+        {
+            CompanyRequest companyRequest = new CompanyRequest { UserId = 10 };
+            List<CompanyModels> companyList = null; 
+            Mock<CompanyRepository> companyMock = new Mock<CompanyRepository>();
+            companyMock.Setup(r => r.ReadCompanies(It.IsAny<string>())).Returns(companyList);
+            CompanyResponse companyResponse = companyMock.Object.GetCompany(companyRequest);
+            Assert.IsTrue(companyResponse.Error.Message == "System Error");
+        }
+
         /// <summary>
         /// 
         /// </summary>
