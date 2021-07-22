@@ -105,7 +105,7 @@
     "url-loader": "0.6.2",
     "validator": "^10.9.0",
     "whatwg-fetch": "2.0.3",
-    "xlsx": "^0.14.1",
+    "xlsx": "^0.17.0",
     "xlsx-style": "^0.8.13"
   },
   "scripts": {
