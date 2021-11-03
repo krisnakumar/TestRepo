@@ -108,7 +108,7 @@
     "tempa-xlsx": "0.0.1",
     "text-mask-addons": "^3.8.0",
     "url-loader": "0.6.2",
-    "validator": "^10.9.0",
+    "validator": "^13.7.0",
     "whatwg-fetch": "2.0.3",
     "xlsx": "^0.14.1",
     "xlsx-style": "^0.8.13"
